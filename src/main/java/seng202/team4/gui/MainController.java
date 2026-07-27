@@ -26,20 +26,18 @@ public class MainController {
 
     private final WindowManager windowManager;
 
+    /**
+     * Initialise the window
+     *
+     * @param windowManager Reference for window manager
+     */
     public MainController(WindowManager windowManager) {
         this.windowManager = windowManager;
         this.counterService = new CounterService();
 
     }
 
-    /**
-     * Initialize the window
-     *
-     * @param stage Top level container for this window
-     */
-    public void init(Stage stage) {
-        counterService = new CounterService();
-    }
+
 
     /**
      * Method to call when our counter button is clicked
