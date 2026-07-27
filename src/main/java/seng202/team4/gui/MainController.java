@@ -24,6 +24,14 @@ public class MainController {
 
     private CounterService counterService;
 
+    private final WindowManager windowManager;
+
+    public MainController(WindowManager windowManager) {
+        this.windowManager = windowManager;
+        this.counterService = new CounterService();
+
+    }
+
     /**
      * Initialize the window
      *
@@ -44,5 +52,6 @@ public class MainController {
 
         int count = counterService.getCurrentCount();
         defaultLabel.setText(Integer.toString(count));
+
     }
 }
