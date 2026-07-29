@@ -24,14 +24,20 @@ public class MainController {
 
     private CounterService counterService;
 
+    private final WindowManager windowManager;
+
     /**
-     * Initialize the window
+     * Initialise the window
      *
-     * @param stage Top level container for this window
+     * @param windowManager Reference for window manager
      */
-    public void init(Stage stage) {
-        counterService = new CounterService();
+    public MainController(WindowManager windowManager) {
+        this.windowManager = windowManager;
+        this.counterService = new CounterService();
+
     }
+
+
 
     /**
      * Method to call when our counter button is clicked
@@ -44,5 +50,6 @@ public class MainController {
 
         int count = counterService.getCurrentCount();
         defaultLabel.setText(Integer.toString(count));
+
     }
 }

@@ -15,22 +15,25 @@ import java.io.IOException;
 public class MainWindow extends Application {
 
     /**
-     * Opens the gui with the fxml content specified in resources/fxml/main.fxml
+     * Loads FXWrapper class with empty scene in resources/fxml/fx_wrapper.fxml
      * @param primaryStage The current fxml stage, handled by javaFX Application class
      * @throws IOException if there is an issue loading fxml file
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/fx_wrapper.fxml"));
         Parent root = baseLoader.load();
+        FXWrapper fxWrapper = baseLoader.getController();
+        Scene scene = new Scene(root);
 
-        MainController baseController = baseLoader.getController();
-        baseController.init(primaryStage);
+        //MainController baseController = baseLoader.getController();
+        //baseController.init(primaryStage);
 
         primaryStage.setTitle("Your SENG202 App");
-        Scene scene = new Scene(root, 600, 400);
+        //Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
+        fxWrapper.init(primaryStage);
     }
 
     /**
