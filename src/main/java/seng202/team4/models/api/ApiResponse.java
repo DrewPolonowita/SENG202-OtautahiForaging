@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ApiResponse(
         @JsonProperty String type,
-        @JsonProperty Tree[] featureTrees,
+        @JsonProperty("features") Tree[] featureTrees,
         @JsonProperty boolean exceededTransferLimit
 ) {
 }
