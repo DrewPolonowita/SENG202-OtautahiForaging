@@ -82,6 +82,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testImplementation 'org.mockito:mockito-core:5.4.0'
+
+    // https://central.sonatype.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    // Used for parsing strings into JSON Objects
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.1'
 }
 
 application {
