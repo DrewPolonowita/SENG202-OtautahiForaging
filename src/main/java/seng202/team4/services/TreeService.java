@@ -11,11 +11,15 @@ import java.util.List;
 
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
-    private ApiHandler apiHandler;
+    private final ApiHandler apiHandler;
 
     public TreeService()
     {
         this.apiHandler = new ApiHandler();
+    }
+
+    public TreeService(ApiHandler apiHandler) {
+        this.apiHandler = apiHandler;
     }
 
     private TreeModel createTreeObject(Tree treeRecord)
@@ -42,7 +46,7 @@ public class TreeService {
 
         return treeRecords.stream()
                 .limit(5)
-                .map(treeRecord -> createTreeObject(treeRecord))
+                .map(this::createTreeObject)
                 .toList();
 
     }
