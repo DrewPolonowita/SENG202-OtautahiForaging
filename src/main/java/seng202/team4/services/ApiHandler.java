@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import seng202.team4.models.api.ApiResponse;
+import seng202.team4.models.api.Request;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -79,13 +80,18 @@ public class ApiHandler {
      *
      * @return {@link ApiResponse} if the request is valid, otherwise returns a null
      */
-    public ApiResponse getTrees(String params, String outFields) {
+    public Request<ApiResponse> getTrees(String params, String outFields) {
         try {
             Dotenv dotenv = Dotenv.load();
-            System.out.println(dotenv.get("API_LINK") + urlEncodeParams(params, outFields));
-            return getJsonData(createConnection(dotenv.get("API_LINK") + urlEncodeParams(params, outFields)));
+            HttpsURLConnection connection = createConnection(dotenv.get("API_LINK") + urlEncodeParams(params, outFields));
+            try {
+                ApiResponse apiResponse = getJsonData(connection);
+                return new Request<>(apiResponse, connection.getResponseCode());
+            } catch (IOException e) {
+                return new Request<>(null, connection.getResponseCode());
+            }
         } catch (IOException e) {
-            return null;
+            return new Request<>(null, -1);
         }
     }
 }
