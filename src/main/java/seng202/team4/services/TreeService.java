@@ -32,7 +32,7 @@ public class TreeService {
         );
     }
     public List<TreeModel> getAllTrees(){
-        ApiResponse response = apiHandler.getTrees("", "").getApiResponse();
+        ApiResponse response = apiHandler.getTrees("Genus='Malus'", "TreeID,Ownership,Genus").getApiResponse();
 
         if (response == null) {
             log.info("API Response null");
@@ -45,7 +45,6 @@ public class TreeService {
         );
 
         return treeRecords.stream()
-                .limit(5)
                 .map(this::createTreeObject)
                 .toList();
 

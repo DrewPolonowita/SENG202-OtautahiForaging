@@ -1,9 +1,7 @@
 package seng202.team4.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.services.CounterService;
@@ -19,8 +17,7 @@ public class MainController {
     @FXML
     private Label defaultLabel;
 
-    @FXML
-    private Button defaultButton;
+
 
     private CounterService counterService;
 
@@ -50,8 +47,9 @@ public class MainController {
 
         int count = counterService.getCurrentCount();
         defaultLabel.setText(Integer.toString(count));
-        windowManager.launchTableView();
         windowManager.closeMainScreen();
+        windowManager.launchTableView();
+
 
     }
 }
