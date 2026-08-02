@@ -11,6 +11,8 @@ public class WindowManager {
      * stores launcher method
      */
     private final Consumer<WindowManager> mainLauncher;
+
+    private final Consumer<WindowManager> tableViewLauncher;
     /**
      * stores clear scene method
      */
@@ -23,8 +25,10 @@ public class WindowManager {
      */
     public WindowManager(
             Consumer<WindowManager> mainLauncher,
+            Consumer<WindowManager> tableViewLauncher,
             Runnable clearScreen) {
         this.mainLauncher = mainLauncher;
+        this.tableViewLauncher = tableViewLauncher;
         this.clearScreen = clearScreen;
         launchMainScreen();
 
@@ -42,4 +46,7 @@ public class WindowManager {
     public void closeMainScreen() {
         clearScreen.run();
     }
+
+    public void launchTableView() {tableViewLauncher.accept(this);}
+    public void closeTableView() { clearScreen.run();}
 }

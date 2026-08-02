@@ -24,6 +24,7 @@ public class FXWrapper {
         this.stage = stage;
         new WindowManager(
                 this::launchMain,
+                this::launchTableView,
                 this::clearPane
                 // for each scene repeat this
         );
@@ -43,6 +44,25 @@ public class FXWrapper {
     public void launchMain(WindowManager windowManager){
         try {
             FXMLLoader setupLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+
+            setupLoader.setControllerFactory(param -> new MainController(windowManager));
+            Parent setupParent  = setupLoader.load();
+            borderPane.setCenter(setupParent);
+            stage.setTitle("App");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * Launches main screen
+     * @param windowManager Used as the interface for switching between windows
+     */
+    public void launchTableView(WindowManager windowManager){
+        try {
+            FXMLLoader setupLoader = new FXMLLoader(getClass().getResource("/fxml/tableview.fxml"));
 
             setupLoader.setControllerFactory(param -> new MainController(windowManager));
             Parent setupParent  = setupLoader.load();

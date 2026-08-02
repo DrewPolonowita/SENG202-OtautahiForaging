@@ -50,6 +50,8 @@ public class MainController {
 
         int count = counterService.getCurrentCount();
         defaultLabel.setText(Integer.toString(count));
+        windowManager.launchTableView();
+        windowManager.closeMainScreen();
 
     }
 }
