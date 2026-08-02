@@ -47,7 +47,7 @@ public class MainController {
 
         int count = counterService.getCurrentCount();
         defaultLabel.setText(Integer.toString(count));
-        windowManager.closeMainScreen();
+        windowManager.closeScreen();
         windowManager.launchTableView();
 
 

@@ -41,12 +41,11 @@ public class WindowManager {
     public void launchMainScreen() { mainLauncher.accept(this);}
 
     /**
-     * Closes main screen
+     * Closes current screen
      */
-    public void closeMainScreen() {
+    public void closeScreen() {
         clearScreen.run();
     }
 
     public void launchTableView() {tableViewLauncher.accept(this);}
-    public void closeTableView() { clearScreen.run();}
 }
