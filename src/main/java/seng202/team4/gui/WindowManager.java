@@ -1,45 +1,74 @@
 package seng202.team4.gui;
 
-import java.util.function.Consumer;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team4.services.StateManager;
+
+import java.io.IOException;
 
 /**
- * Handles requests from GUI controllers to change scenes, calls FXWrapper methods
+ * Handles requests from GUI controllers to change scenes
  */
 public class WindowManager {
 
-    /**
-     * stores launcher method
-     */
-    private final Consumer<WindowManager> mainLauncher;
-    /**
-     * stores clear scene method
-     */
-    private final Runnable clearScreen;
+    private static final Logger LOG = LogManager.getLogger(WindowManager.class);
+
+    private final Stage stage;
+
+    private final BorderPane rootPane;
 
     /**
-     * Constructor for window manager
-     * @param mainLauncher method to load the main screen
-     * @param clearScreen method to clear the scene
+     * Launches the application and creates a base border pane for the screens to be built with
+     * This method should eventually own its own FXML screen instead of constructing the element
+     *
+     * @param primaryStage The JavaFX stage
      */
-    public WindowManager(
-            Consumer<WindowManager> mainLauncher,
-            Runnable clearScreen) {
-        this.mainLauncher = mainLauncher;
-        this.clearScreen = clearScreen;
-        launchMainScreen();
+    public WindowManager(Stage primaryStage) {
+        this.stage = primaryStage;
+        stage.setResizable(true);
 
-
+        // Use a border pane as the root component to allow children to be resizable.
+        rootPane = new BorderPane();
+        rootPane.setPrefHeight(400);
+        rootPane.setPrefWidth(600);
+        stage.setScene(new Scene(rootPane));
+        stage.show();
     }
 
     /**
-     * Launches main screen
+     * Launches the main screen
+     *
+     * @param stateManager the state manager for the application
      */
-    public void launchMainScreen() { mainLauncher.accept(this);}
+    public void launchMainScreen(StateManager stateManager) {
+        ScreenController controller = new MainScreenController(stateManager);
+        launchScreen(controller);
+    }
 
     /**
-     * Closes main screen
+     * Launches a screen using a given screen controller. This is done by replacing the
+     * root border pane with the screen defined by {@link ScreenController}
+     *
+     * @param controller the screen being launched
      */
-    public void closeMainScreen() {
-        clearScreen.run();
+    private void launchScreen(ScreenController controller) {
+        try {
+            FXMLLoader setupLoader = new FXMLLoader(getClass().getResource(controller.getFxmlFile()));
+
+            // Set a controller factory that returns the given ScreenController.
+            // This allows us to have screen controllers that take argument(s) in their constructor.
+            setupLoader.setControllerFactory(param -> controller);
+            Parent setupParent = setupLoader.load();
+
+            rootPane.setCenter(setupParent);
+            stage.setTitle(controller.getTitle());
+        } catch (IOException e) {
+            LOG.error(e);
+        }
     }
 }
