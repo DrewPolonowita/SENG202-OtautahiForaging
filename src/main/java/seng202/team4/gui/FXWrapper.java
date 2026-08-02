@@ -64,10 +64,10 @@ public class FXWrapper {
         try {
             FXMLLoader setupLoader = new FXMLLoader(getClass().getResource("/fxml/tableview.fxml"));
 
-            setupLoader.setControllerFactory(param -> new MainController(windowManager));
+            setupLoader.setControllerFactory(param -> new TableViewController(windowManager));
             Parent setupParent  = setupLoader.load();
             borderPane.setCenter(setupParent);
-            stage.setTitle("App");
+            stage.setTitle("TableView");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,13 +1,17 @@
 package seng202.team4.models;
 
-public class Tree {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class TreeModel {
+    private static final Logger log = LogManager.getLogger(TreeModel.class);
 
     private int id;
     private int[] coordinates;
     private String ownership;
     private String genus;
 
-    public Tree(int id, int[] coordinates, String ownership, String genus) {
+    public TreeModel(int id, int[] coordinates, String ownership, String genus) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
@@ -15,6 +19,7 @@ public class Tree {
     }
 
     public int getId(){
+
         return id;
     }
     public int[] getCoordinates() {

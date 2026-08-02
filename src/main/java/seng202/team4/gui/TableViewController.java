@@ -1,22 +1,27 @@
 package seng202.team4.gui;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.models.Tree;
-import seng202.team4.services.CounterService;
+import seng202.team4.models.TreeModel;
+import seng202.team4.services.TreeService;
+
+import java.util.List;
 
 public class TableViewController {
 
     private static final Logger log = LogManager.getLogger(TableViewController.class);
 
     private final WindowManager windowManager;
+    private final TreeService treeService;
 
     @FXML
-    private TableView<Tree> treeTableView;
+    private TableView<TreeModel> treeTableView;
 
     /**
      * Initialise the window
@@ -25,26 +30,39 @@ public class TableViewController {
      */
     public TableViewController(WindowManager windowManager) {
         this.windowManager = windowManager;
+        treeService = new TreeService();
+
+    }
+    @FXML
+    private void initialize(){
         initTable();
     }
 
-
     private void initTable() {
-        TableColumn<Tree, String> itemCol = new TableColumn<>("Tree Id");
-        itemCol.setCellValueFactory(new PropertyValueFactory<>("Id"));
+        TableColumn<TreeModel, Integer> idCol = new TableColumn<>("Tree Id");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<Tree, Float> coordsCol = new TableColumn<>("Coordinates");
-        coordsCol.setCellValueFactory(new PropertyValueFactory<>("coordinates"));
+        //TableColumn<TreeModel, Float> coordsCol = new TableColumn<>("Coordinates");
+        //coordsCol.setCellValueFactory(new PropertyValueFactory<>("coordinates"));
 
-        TableColumn<Tree, String> ownerCol = new TableColumn<>("Ownership");
+        TableColumn<TreeModel, String> ownerCol = new TableColumn<>("Ownership");
         ownerCol.setCellValueFactory(new PropertyValueFactory<>("ownership"));
 
-        TableColumn<Tree, String> genusCol = new TableColumn<>("Genus");
+        TableColumn<TreeModel, String> genusCol = new TableColumn<>("Genus");
         genusCol.setCellValueFactory(new PropertyValueFactory<>("genus"));
 
-        treeTableView.getColumns().add(itemCol);
-        treeTableView.getColumns().add(coordsCol);
+        treeTableView.getColumns().add(idCol);
+        //treeTableView.getColumns().add(coordsCol);
         treeTableView.getColumns().add(ownerCol);
         treeTableView.getColumns().add(genusCol);
+
+        List<TreeModel> trees = treeService.getAllTrees();
+
+
+        treeTableView.setItems(
+                FXCollections.observableArrayList(
+                        trees
+                )
+        );
     }
 }
