@@ -1,6 +1,5 @@
 package seng202.team4.gui;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -13,6 +12,10 @@ import seng202.team4.services.TreeService;
 
 import java.util.List;
 
+/**
+ * Controls tableview.fxml
+ * @author George Mounce
+ */
 public class TableViewController {
 
     private static final Logger log = LogManager.getLogger(TableViewController.class);
@@ -33,11 +36,18 @@ public class TableViewController {
         treeService = new TreeService();
 
     }
+
+    /**
+     * Method to initialize table after constructor
+     */
     @FXML
     private void initialize(){
         initTable();
     }
 
+    /**
+     * Initialise table of trees with ID, Ownership and Genus
+     */
     private void initTable() {
         TableColumn<TreeModel, Integer> idCol = new TableColumn<>("Tree Id");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
