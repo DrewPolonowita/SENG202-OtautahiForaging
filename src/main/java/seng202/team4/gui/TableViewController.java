@@ -46,6 +46,15 @@ public class TableViewController {
     }
 
     /**
+     * Method to send user back to main screen
+     */
+    @FXML
+    private void onBackClicked(){
+        windowManager.closeScreen();
+        windowManager.launchMainScreen();
+    }
+
+    /**
      * Initialise table of trees with ID, Ownership and Genus
      */
     private void initTable() {

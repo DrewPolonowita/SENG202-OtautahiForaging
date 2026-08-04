@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.MainController">
-   <children>
-      <Label fx:id="defaultLabel" text="Welcome To SENG202!" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="100.0" />
-      <Button fx:id="defaultButton" text="Click Me" onMouseClicked="#onButtonClicked" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="120.0" />
-   </children>
-</AnchorPane>
+<?import javafx.scene.layout.VBox?>
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.MainController" stylesheets="@../css/styles.css">
+   <left>
+      <VBox fx:id="sideBar" styleClass="sideBar" spacing="8">
+         <Label fx:id="titleLabel" text="Ōtautahi Foraging" />
+         <Button fx:id="mapButton" text="Map" maxWidth="Infinity" styleClass="sideBar-button, sideBar-button-selected"/>
+         <Button fx:id="tableButton" onMouseClicked="#onButtonClicked" text="View Table" maxWidth="Infinity" styleClass="sideBar-button"/>
+         <Button fx:id="journalsButton" text="Journals" maxWidth="Infinity" styleClass="sideBar-button"/>
+         <Button fx:id="recipesButton" text="Recipes" maxWidth="Infinity" styleClass="sideBar-button"/>
+         <Button fx:id="settingsButton" text="Settings" maxWidth="Infinity" styleClass="sideBar-button"/>
+      </VBox>
+   </left>
+   <center>
+   </center>
+</BorderPane>

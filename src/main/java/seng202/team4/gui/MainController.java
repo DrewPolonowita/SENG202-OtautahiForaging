@@ -15,11 +15,8 @@ public class MainController {
     private static final Logger log = LogManager.getLogger(MainController.class);
 
     @FXML
-    private Label defaultLabel;
+    private Label titleLabel;
 
-
-
-    private CounterService counterService;
 
     private final WindowManager windowManager;
 
@@ -30,8 +27,6 @@ public class MainController {
      */
     public MainController(WindowManager windowManager) {
         this.windowManager = windowManager;
-        this.counterService = new CounterService();
-
     }
 
 
@@ -42,11 +37,6 @@ public class MainController {
      */
     @FXML
     public void onButtonClicked() {
-        log.info("Button has been clicked");
-        counterService.incrementCounter();
-
-        int count = counterService.getCurrentCount();
-        defaultLabel.setText(Integer.toString(count));
         windowManager.closeScreen();
         windowManager.launchTableView();
 
