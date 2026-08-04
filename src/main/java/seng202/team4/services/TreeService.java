@@ -20,8 +20,7 @@ public class TreeService {
     /**
      * Constructor
      */
-    public TreeService()
-    {
+    public TreeService() {
         this.apiHandler = new ApiHandler();
     }
 
@@ -38,8 +37,7 @@ public class TreeService {
      * @param treeRecord tree record
      * @return TreeModel tree model object
      */
-    private TreeModel createTreeObject(Tree treeRecord)
-    {
+    private TreeModel createTreeObject(Tree treeRecord) {
         return new TreeModel(
                 treeRecord.properties().treeId(),
                 treeRecord.geometry().coordinates(),
@@ -52,7 +50,7 @@ public class TreeService {
      * Method to return all trees from API
      * @return List of all trees from API
      */
-    public List<TreeModel> getAllTrees(){
+    public List<TreeModel> getAllTrees() {
         ApiResponse response = apiHandler.getTrees("", "").getApiResponse();
 
         if (response == null) {

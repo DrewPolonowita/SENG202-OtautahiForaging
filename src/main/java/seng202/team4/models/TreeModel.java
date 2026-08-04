@@ -36,7 +36,7 @@ public class TreeModel {
      * Getter for tree id
      * @return returns integer id
      */
-    public int getId(){
+    public int getId() {
 
         return id;
     }
@@ -72,8 +72,12 @@ public class TreeModel {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         TreeModel treeModel = (TreeModel) o;
         return id == treeModel.id
                 && Arrays.equals(coordinates, treeModel.coordinates)

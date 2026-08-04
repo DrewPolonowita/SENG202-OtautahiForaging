@@ -83,7 +83,8 @@ public class ApiHandler {
     public Request<ApiResponse> getTrees(String params, String outFields) {
         try {
             Dotenv dotenv = Dotenv.load();
-            HttpsURLConnection connection = createConnection(dotenv.get("API_LINK") + urlEncodeParams(params, outFields));
+            HttpsURLConnection connection = createConnection(dotenv.get("API_LINK")
+                    + urlEncodeParams(params, outFields));
             try {
                 ApiResponse apiResponse = getJsonData(connection);
                 return new Request<>(apiResponse, connection.getResponseCode());

@@ -53,7 +53,7 @@ public class WindowManager {
     /**
      * Launches Table View
      */
-    public void launchTableView(StateManager stateManager){
+    public void launchTableView(StateManager stateManager) {
         ScreenController controller = new TableViewController(stateManager);
         launchScreen(controller);
     }

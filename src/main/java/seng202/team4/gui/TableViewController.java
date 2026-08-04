@@ -49,7 +49,7 @@ public class TableViewController extends ScreenController {
      * Method to initialize table after constructor
      */
     @FXML
-    private void initialize(){
+    private void initialize() {
         initTable();
     }
 
@@ -57,7 +57,7 @@ public class TableViewController extends ScreenController {
      * Method to send user back to main screen
      */
     @FXML
-    private void onBackClicked(){
+    private void onBackClicked() {
         getStateManager().getWindowManager().launchMainScreen(getStateManager());
     }
 
