@@ -18,6 +18,10 @@ public class StateManager {
     public StateManager(WindowManager windowManager) {
         this.windowManager = windowManager;
         this.windowManager.launchMainScreen(this);
-        //windowManager.launchMainScreen(this);
+
+    }
+
+    public WindowManager getWindowManager() {
+        return windowManager;
     }
 }

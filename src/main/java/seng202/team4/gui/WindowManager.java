@@ -46,7 +46,15 @@ public class WindowManager {
      * @param stateManager the state manager for the application
      */
     public void launchMainScreen(StateManager stateManager) {
-        ScreenController controller = new MainScreenController(stateManager);
+        ScreenController controller = new MainController(stateManager);
+        launchScreen(controller);
+    }
+
+    /**
+     * Launches Table View
+     */
+    public void launchTableView(StateManager stateManager){
+        ScreenController controller = new TableViewController(stateManager);
         launchScreen(controller);
     }
 

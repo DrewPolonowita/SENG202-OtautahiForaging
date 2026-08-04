@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.TableViewController" stylesheets="@../css/styles.css">
+   <center>
+      <TableView fx:id="treeTableView" prefHeight="200.0" prefWidth="200.0" style="-fx-text-background-color: black;" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <VBox styleClass="sideBar">
+         <Button fx:id="backButton" onMouseClicked="#onBackClicked" text="Back" styleClass="sideBar-button-selected"/>
+      </VBox>
+   </left>
+</BorderPane>
