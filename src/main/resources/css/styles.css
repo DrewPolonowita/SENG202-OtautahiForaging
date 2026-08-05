@@ -1,0 +1,27 @@
+.sideBar {
+    -fx-border-color: transparent #cccccc transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.sideBar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4a8c3f;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 6;
+}
+
+.sideBar-button:hover {
+    -fx-background-color: #e8f2e6;
+}
+
+.sideBar-button-selected {
+    -fx-background-color: #4a8c3f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.sideBar-button-selected:hover {
+    -fx-background-color: #3d7534;
+}
