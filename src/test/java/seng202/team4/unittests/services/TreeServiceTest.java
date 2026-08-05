@@ -56,9 +56,9 @@ public class TreeServiceTest {
         );
         Tree[] fakeTrees = {testRecord};
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
-        Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 100);
+        Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
 
-        when(apiHandler.getTrees("","")).thenReturn(fakeRequest);
+        when(apiHandler.getTrees("CommonName like '%apple%'", "TreeID,Ownership,Genus", 100)).thenReturn(fakeRequest);
 
         List<TreeModel> result = testTreeService.getAllTrees();
         TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Acer");

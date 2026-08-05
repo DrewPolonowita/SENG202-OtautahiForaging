@@ -66,13 +66,13 @@ public class ApiHandler {
      * @param outFields and ARC-GIS outField clause e.g. TreeID,Ownership,Genus
      * @return a {@link String} to be appended to the end of an API link
      */
-    public String urlEncodeParams(String params, String outFields) {
+    public String urlEncodeParams(String params, String outFields, int maxTuples) {
         return "query?where=" + URLEncoder
                 .encode(params.isEmpty() ? "1=1" : params, StandardCharsets.UTF_8)
                 .replace("+", "%20")
                 + "&outFields=" + URLEncoder
                 .encode(outFields.isEmpty() ? "*" : outFields, StandardCharsets.UTF_8)
-                + "&f=geojson";
+                + String.format("&resultRecordCount=%d", maxTuples) + "&f=geojson";
     }
 
     /**
@@ -80,11 +80,11 @@ public class ApiHandler {
      *
      * @return {@link ApiResponse} if the request is valid, otherwise returns a null
      */
-    public Request<ApiResponse> getTrees(String params, String outFields) {
+    public Request<ApiResponse> getTrees(String params, String outFields, int maxTuples) {
         try {
             Dotenv dotenv = Dotenv.load();
             HttpsURLConnection connection = createConnection(dotenv.get("API_LINK")
-                    + urlEncodeParams(params, outFields));
+                    + urlEncodeParams(params, outFields, maxTuples));
             try {
                 ApiResponse apiResponse = getJsonData(connection);
                 return new Request<>(apiResponse, connection.getResponseCode());
