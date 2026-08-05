@@ -1,15 +1,27 @@
+.root {
+    -primary-color: #86CA82;
+    -primary-bg-color: #ffffff;
+    -secondary-bg-color: #dcdcdc;
+    -fx-background-color: -secondary-bg-color;
+}
+.titleBarText {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+
 .sideBar {
-    -fx-border-color: transparent #cccccc transparent transparent;
+    -fx-background-color: -primary-bg-color;
     -fx-border-width: 0 1 0 0;
 }
 
 .sideBar-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #4a8c3f;
-    -fx-font-size: 13px;
-    -fx-alignment: CENTER_LEFT;
-    -fx-padding: 8 12 8 12;
-    -fx-background-radius: 6;
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
 }
 
 .sideBar-button:hover {
@@ -17,11 +29,11 @@
 }
 
 .sideBar-button-selected {
-    -fx-background-color: #4a8c3f;
+    -fx-background-color: -primary-color;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
 .sideBar-button-selected:hover {
-    -fx-background-color: #3d7534;
+    -fx-background-color: -primary-color;
 }

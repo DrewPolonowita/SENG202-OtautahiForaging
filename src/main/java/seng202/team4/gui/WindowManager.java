@@ -37,6 +37,7 @@ public class WindowManager {
         rootPane.setPrefHeight(400);
         rootPane.setPrefWidth(600);
         stage.setScene(new Scene(rootPane));
+        stage.setMaximized(true);
         stage.show();
     }
 

@@ -24,7 +24,6 @@
         <property name="optional" value="true"/>
     </module>
 
-
     <module name="TreeWalker">
 
 
@@ -46,7 +45,12 @@
 
         <module name="LocalVariableName"/>
 
-        <module name="ConstantName"/>
+        <module name="ConstantName">
+            <property name="applyToPublic" value="true"/>
+            <property name="applyToProtected" value="true"/>
+            <property name="applyToPackage" value="true"/>
+            <property name="applyToPrivate" value="false"/>
+        </module>
 
         <module name="ClassTypeParameterName">
             <property name="format" value="^[A-Z][A-Z0-9]*$"/>
