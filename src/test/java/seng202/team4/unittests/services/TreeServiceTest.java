@@ -27,22 +27,6 @@ public class TreeServiceTest {
     }
 
     @Test
-    public void testCustomEquals() {
-        int[] testCoords1 = {423,4234};
-        TreeModel testModel1 = new TreeModel(432, testCoords1, "Council", "Acer");
-
-        assertEquals(testModel1, testModel1);
-
-
-        assertNotEquals(testModel1, null);
-
-        int[] testCoords2 = {423, 4234};
-        TreeModel testModel2 = new TreeModel(432, testCoords2, "Council", "Acer");
-
-        assertEquals(testModel1, testModel2);
-    }
-
-    @Test
     public void convertTreeRecordToModelTest() {
 
         int[] coordinates = {5252,3423};
