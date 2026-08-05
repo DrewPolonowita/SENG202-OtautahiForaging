@@ -40,14 +40,28 @@ public class TreeService {
      * @return TreeModel tree model object
      */
     private TreeModel createTreeObject(Tree treeRecord) {
+        String genus = treeRecord.properties().genus();
+        String fruitType = getFruitType(genus);
         return new TreeModel(
                 treeRecord.properties().treeId(),
                 treeRecord.geometry().coordinates(),
                 treeRecord.properties().ownership(),
-                treeRecord.properties().genus()
-        );
+                genus,
+                fruitType);
     }
 
+    /**
+     * Mapping the genus to a fruit tyoe in a new coloumn
+     * @param genus
+     * @return the fruit type based on genus
+     */
+    private String getFruitType(String genus) {
+        return switch (genus) {
+            case "Malus" -> "Apple";
+            case "Eucalyptus" -> "Not a Fruit";
+            default -> "N/A";
+        };
+    }
     /**
      * Method to return all trees from API
      * @return List of all trees from API

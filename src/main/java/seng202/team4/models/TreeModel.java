@@ -17,6 +17,7 @@ public class TreeModel {
     private final int[] coordinates;
     private final String ownership;
     private final String genus;
+    private final String fruit;
 
     /**
      * Constructor
@@ -24,12 +25,14 @@ public class TreeModel {
      * @param coordinates Tree location
      * @param ownership Who owns the tree
      * @param genus Genus of tree
+     * @param fruit Fruit type of a tree
      */
-    public TreeModel(int id, int[] coordinates, String ownership, String genus) {
+    public TreeModel(int id, int[] coordinates, String ownership, String genus, String fruit) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
         this.genus = genus;
+        this.fruit = fruit;
     }
 
     /**
@@ -66,6 +69,14 @@ public class TreeModel {
     }
 
     /**
+     * Getter method for fruit type
+     * @return returns String fruit
+     */
+    public String getFruit() {
+        return fruit;
+    }
+
+    /**
      * Equals operator rewrite so 2 trees with the same attributes can be evaluated as the same
      * @param o object to compare
      * @return returns boolean, true if this equals o
@@ -82,7 +93,8 @@ public class TreeModel {
         return id == treeModel.id
                 && Arrays.equals(coordinates, treeModel.coordinates)
                 && Objects.equals(ownership, treeModel.ownership)
-                && Objects.equals(genus, treeModel.genus);
+                && Objects.equals(genus, treeModel.genus)
+                && Objects.equals(fruit, treeModel.fruit);
     }
 
     /**
@@ -91,7 +103,7 @@ public class TreeModel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus);
+        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, fruit);
     }
 
 }
