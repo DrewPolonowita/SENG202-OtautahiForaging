@@ -34,7 +34,7 @@ public class ApiHandler {
     }
 
     /**
-     * Takes an {@link HttpsURLConnection} from an API request and returns an {@link ApiResponse} with the JSON data
+         * Takes an {@link HttpsURLConnection} from an API request and returns an {@link ApiResponse} with the JSON data
      *
      * @param connection an object with request information and JSON data
      * @return null if the connection is not HTTP ok and an object with the JSON data if the connection is HTTP ok
