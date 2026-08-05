@@ -71,9 +71,17 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testMaxRequests() {
+    public void testMaxRequests1() {
         String urlEncode = apiHandeler.urlEncodeParams("", "", 100);
         String expectedUrl = "query?where=1%3D1&outFields=*&resultRecordCount=100&f=geojson";
+
+        Assertions.assertEquals(expectedUrl, urlEncode);
+    }
+
+    @Test
+    public void testMaxRequests2() {
+        String urlEncode = apiHandeler.urlEncodeParams("", "", 10);
+        String expectedUrl = "query?where=1%3D1&outFields=*&resultRecordCount=10&f=geojson";
 
         Assertions.assertEquals(expectedUrl, urlEncode);
     }
