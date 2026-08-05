@@ -1,5 +1,6 @@
 .root {
     -primary-color: #86CA82;
+    -primary-color-highlight: #7cbf82;
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
     -fx-background-color: -secondary-bg-color;
@@ -18,22 +19,21 @@
 }
 
 .sideBar-button {
-    -fx-background-color: transparent;
+    -fx-background-color: -primary-bg-color;
     -fx-text-fill: -primary-color;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
 .sideBar-button:hover {
-    -fx-background-color: #e8f2e6;
+    -fx-background-color: -primary-color-highlight;
+    -fx-text-fill: -primary-bg-color;
 }
+.sideBar-button:hover .icon {
+     -fx-background-color: -primary-bg-color;
+ }
 
 .sideBar-button-selected {
     -fx-background-color: -primary-color;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-.sideBar-button-selected:hover {
-    -fx-background-color: -primary-color;
+    -fx-text-fill: -primary-bg-color;
 }
