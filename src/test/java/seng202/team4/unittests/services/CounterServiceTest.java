@@ -59,4 +59,14 @@ public class CounterServiceTest
 
         assertEquals(0, testCounterServiceMock.getCurrentCount());
     }
+    @Test
+    public void testmultipleincrements(){
+        assertEquals(0, testCounterService.getCurrentCount());
+        testCounterService.incrementCounter();
+        testCounterService.incrementCounter();
+        testCounterService.incrementCounter();
+        testCounterService.incrementCounter();
+
+        assertEquals(4, testCounterService.getCurrentCount());
+    }
 }
