@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import seng202.team4.services.CounterService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -59,6 +60,7 @@ public class CounterServiceTest
 
         assertEquals(0, testCounterServiceMock.getCurrentCount());
     }
+
     @Test
     public void testmultipleincrements(){
         assertEquals(0, testCounterService.getCurrentCount());
@@ -68,5 +70,15 @@ public class CounterServiceTest
         testCounterService.incrementCounter();
 
         assertEquals(4, testCounterService.getCurrentCount());
+    }
+
+    @Test
+    public void testmultipleincrement(){
+        assertEquals(0, testCounterService.getCurrentCount());
+        testCounterService.incrementCounter();
+        testCounterService.incrementCounter();
+        testCounterService.incrementCounter();
+
+        assertNotEquals(4, testCounterService.getCurrentCount());
     }
 }
