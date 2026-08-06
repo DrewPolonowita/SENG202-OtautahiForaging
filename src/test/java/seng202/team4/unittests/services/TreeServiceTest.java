@@ -41,7 +41,7 @@ public class TreeServiceTest {
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
 
-        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus", 100)).thenReturn(fakeRequest);
+        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100)).thenReturn(fakeRequest);
 
         List<TreeModel> result = testTreeService.getAppleTrees();
         TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Apple" );

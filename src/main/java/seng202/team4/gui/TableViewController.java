@@ -9,7 +9,6 @@ import javafx.scene.layout.GridPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
-import seng202.team4.models.api.Tree;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.TreeService;
 
