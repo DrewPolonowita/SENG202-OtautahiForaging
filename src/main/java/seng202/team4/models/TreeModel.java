@@ -78,6 +78,10 @@ public class TreeModel {
         return fruit;
     }
 
+    /**
+     * Getter method for tree common name
+     * @return returns String commonName
+     */
     public String getCommonName() {
         return commonName;
     }

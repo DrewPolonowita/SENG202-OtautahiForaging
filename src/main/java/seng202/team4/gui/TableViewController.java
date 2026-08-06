@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
+import seng202.team4.models.api.Tree;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.TreeService;
 
@@ -99,11 +100,15 @@ public class TableViewController extends ScreenController {
         TableColumn<TreeModel, String> fruitCol = new TableColumn<>("Fruit Type");
         fruitCol.setCellValueFactory(new PropertyValueFactory<>("fruit"));
 
+        TableColumn<TreeModel, String> nameCol = new TableColumn<>("Common Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("commonName"));
+
         treeTableView.getColumns().add(idCol);
         //treeTableView.getColumns().add(coordsCol);
         treeTableView.getColumns().add(ownerCol);
         treeTableView.getColumns().add(genusCol);
         treeTableView.getColumns().add(fruitCol);
+        treeTableView.getColumns().add(nameCol);
         List<TreeModel> trees = treeService.getAllTrees();
 
 
