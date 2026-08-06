@@ -30,7 +30,7 @@ public class TreeServiceTest {
 
         int[] coordinates = {5252,3423};
         Geometry testGeometry = new Geometry("location", coordinates );
-        Properties testProperties = new Properties(2452, "Council", "Malus");
+        Properties testProperties = new Properties(2452, "Council", "Malus", "Apple");
         Tree testRecord = new Tree(
                 "A",
                 123,
@@ -44,7 +44,7 @@ public class TreeServiceTest {
         when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus", 100)).thenReturn(fakeRequest);
 
         List<TreeModel> result = testTreeService.getAppleTrees();
-        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple" );
+        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Apple" );
         assertEquals(result.getFirst(), expectedTree);
 
 

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record Properties(
         @JsonProperty("TreeID") int treeId,
         @JsonProperty("Ownership") String ownership,
-        @JsonProperty("Genus") String genus
+        @JsonProperty("Genus") String genus,
+        @JsonProperty("CommonName") String commonName
 ) {
 }

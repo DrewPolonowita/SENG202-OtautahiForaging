@@ -42,25 +42,30 @@ public class TreeService {
      */
     private TreeModel createTreeObject(Tree treeRecord) {
         String genus = treeRecord.properties().genus();
-        String fruitType = getFruitType(genus);
+        String commonName = treeRecord.properties().commonName();
+        String fruitType = getFruitType(commonName);
+
         return new TreeModel(
                 treeRecord.properties().treeId(),
                 treeRecord.geometry().coordinates(),
                 treeRecord.properties().ownership(),
                 genus,
-                fruitType);
+                fruitType,
+                commonName);
     }
 
     /**
      * Mapping the genus to a fruit type in a new column
-     * @param genus tree genus
+     * @param commonName common name
      * @return the fruit type based on genus
      */
-    private String getFruitType(String genus) {
-        return switch (genus) {
-            case "Malus" -> "Apple";
-            case "Pyrus" -> "Pear";
-            case "Prunus" -> "Cherry";
+    private String getFruitType(String commonName) {
+        return switch (commonName) {
+            case "Apple" -> "Apple";
+            case "Pear" -> "Pear";
+            case "Cherry" -> "Cherry";
+            case "Peach" -> "Peach";
+            case "Apricot" -> "Apricot";
             case "Juglans" -> "Walnut";
             default -> "N/A";
         };
@@ -87,7 +92,7 @@ public class TreeService {
      * @return List of apple trees from API
      */
     public List<TreeModel> getAppleTrees() {
-        Request request = apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus", 100);
+        Request request = apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             log.info("API connection failed with a " + request.getResponseCode());
@@ -111,7 +116,7 @@ public class TreeService {
      * @return List of pear trees from API
      */
     public List<TreeModel> getPearTrees() {
-        Request request = apiHandler.getTrees("CommonName='Pear'", "TreeID,Ownership,Genus", 100);
+        Request request = apiHandler.getTrees("CommonName='Pear'", "TreeID,Ownership,Genus, CommonName", 100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             log.info("API connection failed with a " + request.getResponseCode());
@@ -135,7 +140,7 @@ public class TreeService {
      * @return List of cherry trees from API
      */
     public List<TreeModel> getCherryTrees() {
-        Request request = apiHandler.getTrees("CommonName='Cherry'", "TreeID,Ownership,Genus", 100);
+        Request request = apiHandler.getTrees("CommonName='Cherry'", "TreeID,Ownership,Genus,CommonName", 100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             log.info("API connection failed with a " + request.getResponseCode());
@@ -159,7 +164,7 @@ public class TreeService {
      * @return List of peach trees from API
      */
     public List<TreeModel> getPeachTrees() {
-        Request request = apiHandler.getTrees("CommonName='Peach'", "TreeID,Ownership,Genus", 100);
+        Request request = apiHandler.getTrees("CommonName='Peach'", "TreeID,Ownership,Genus,CommonName", 100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             log.info("API connection failed with a " + request.getResponseCode());
@@ -183,7 +188,7 @@ public class TreeService {
      * @return List of apricot trees from API
      */
     public List<TreeModel> getApricotTrees() {
-        Request request = apiHandler.getTrees("CommonName='Apricot'", "TreeID,Ownership,Genus", 100);
+        Request request = apiHandler.getTrees("CommonName='Apricot'", "TreeID,Ownership,Genus,CommonName", 100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             log.info("API connection failed with a " + request.getResponseCode());

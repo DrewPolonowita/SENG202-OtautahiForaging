@@ -18,6 +18,7 @@ public class TreeModel {
     private final String ownership;
     private final String genus;
     private final String fruit;
+    private final String commonName;
 
     /**
      * Constructor
@@ -27,12 +28,13 @@ public class TreeModel {
      * @param genus Genus of tree
      * @param fruit Fruit type of a tree
      */
-    public TreeModel(int id, int[] coordinates, String ownership, String genus, String fruit) {
+    public TreeModel(int id, int[] coordinates, String ownership, String genus, String fruit, String commonName) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
         this.genus = genus;
         this.fruit = fruit;
+        this.commonName = commonName;
     }
 
     /**
@@ -76,6 +78,10 @@ public class TreeModel {
         return fruit;
     }
 
+    public String getCommonName() {
+        return commonName;
+    }
+
     /**
      * Equals operator rewrite so 2 trees with the same attributes can be evaluated as the same
      * @param o object to compare
@@ -94,7 +100,8 @@ public class TreeModel {
                 && Arrays.equals(coordinates, treeModel.coordinates)
                 && Objects.equals(ownership, treeModel.ownership)
                 && Objects.equals(genus, treeModel.genus)
-                && Objects.equals(fruit, treeModel.fruit);
+                && Objects.equals(fruit, treeModel.fruit)
+                && Objects.equals(commonName, treeModel.commonName);
     }
 
     /**
@@ -103,7 +110,7 @@ public class TreeModel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, fruit);
+        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, fruit, commonName);
     }
 
 }
