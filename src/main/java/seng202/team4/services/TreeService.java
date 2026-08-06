@@ -8,6 +8,7 @@ import seng202.team4.models.api.Request;
 import seng202.team4.models.api.Tree;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,24 +70,15 @@ public class TreeService {
      * @return List of all trees from API
      */
     public List<TreeModel> getAllTrees() {
-        Request request = apiHandler.getTrees("CommonName like '%apple%'", "TreeID,Ownership,Genus", 100);
+        List<TreeModel> allTrees = new ArrayList<>();
 
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            log.info("API connection failed with a " + request.getResponseCode());
-            return List.of();
-        }
+        allTrees.addAll(getAppleTrees());
+        allTrees.addAll(getPearTrees());
+        allTrees.addAll(getCherryTrees());
+        allTrees.addAll(getPeachTrees());
+        allTrees.addAll(getApricotTrees());
 
-        ApiResponse response = (ApiResponse) request.getApiResponse();
-
-        log.info(response);
-
-        List<Tree> treeRecords = Arrays.asList(
-                response.featureTrees()
-        );
-
-        return treeRecords.stream()
-                .map(this::createTreeObject)
-                .toList();
+        return allTrees;
 
     }
 
