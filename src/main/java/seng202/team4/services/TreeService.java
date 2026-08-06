@@ -127,9 +127,14 @@ public class TreeService {
         return getTreeOfType("Apricot");
     }
 
+    /**
+     * Logic for requesting trees of a type from API
+     * @param type tree type requested
+     * @return List of tree models of requested type from API
+     */
     public List<TreeModel> getTreeOfType(String type) {
-        Request request = apiHandler.getTrees("CommonName='" + type + "'"
-                , "TreeID,Ownership,Genus,CommonName",
+        Request request = apiHandler.getTrees("CommonName='" + type + "'",
+                "TreeID,Ownership,Genus,CommonName",
                 100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
