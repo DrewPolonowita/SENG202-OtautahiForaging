@@ -10,6 +10,7 @@ import seng202.team4.services.TreeService;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +48,28 @@ public class TreeServiceTest {
         TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Apple" );
         assertEquals(result.getFirst(), expectedTree);
 
+
+    }
+
+    @Test
+    public void testWrongResponseCode() {
+        int[] coordinates = {5252,3423};
+        Geometry testGeometry = new Geometry("location", coordinates );
+        Properties testProperties = new Properties(2452, "Council", "Malus", "Apple");
+        Tree testRecord = new Tree(
+                "A",
+                123,
+                testGeometry,
+                testProperties
+        );
+
+        Tree[] fakeTrees = {testRecord};
+        ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
+        Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 404);
+
+        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100)).thenReturn(fakeRequest);
+        List<TreeModel> result = testTreeService.getAppleTrees();
+        assertTrue(result.isEmpty());
 
     }
 }
