@@ -58,7 +58,9 @@ public class TreeService {
     private String getFruitType(String genus) {
         return switch (genus) {
             case "Malus" -> "Apple";
-            case "Eucalyptus" -> "Not a Fruit";
+            case "Pyrus" -> "Pear";
+            case "Prunus" -> "Cherry";
+            case "Juglans" -> "Walnut";
             default -> "N/A";
         };
     }
