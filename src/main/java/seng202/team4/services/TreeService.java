@@ -92,23 +92,7 @@ public class TreeService {
      * @return List of apple trees from API
      */
     public List<TreeModel> getAppleTrees() {
-        Request request = apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100);
-
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            log.info("API connection failed with a " + request.getResponseCode());
-            return List.of();
-        }
-
-        ApiResponse response = (ApiResponse) request.getApiResponse();
-
-        log.info(response);
-
-        List<Tree> treeRecords = Arrays.asList(
-                response.featureTrees()
-        );
-
-        return treeRecords.stream().map(this::createTreeObject)
-                .toList();
+        return getTreeOfType("Apple");
     }
 
     /**
@@ -116,23 +100,7 @@ public class TreeService {
      * @return List of pear trees from API
      */
     public List<TreeModel> getPearTrees() {
-        Request request = apiHandler.getTrees("CommonName='Pear'", "TreeID,Ownership,Genus, CommonName", 100);
-
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            log.info("API connection failed with a " + request.getResponseCode());
-            return List.of();
-        }
-
-        ApiResponse response = (ApiResponse) request.getApiResponse();
-
-        log.info(response);
-
-        List<Tree> treeRecords = Arrays.asList(
-                response.featureTrees()
-        );
-
-        return treeRecords.stream().map(this::createTreeObject)
-                .toList();
+        return getTreeOfType("Pear");
     }
 
     /**
@@ -140,23 +108,7 @@ public class TreeService {
      * @return List of cherry trees from API
      */
     public List<TreeModel> getCherryTrees() {
-        Request request = apiHandler.getTrees("CommonName='Cherry'", "TreeID,Ownership,Genus,CommonName", 100);
-
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            log.info("API connection failed with a " + request.getResponseCode());
-            return List.of();
-        }
-
-        ApiResponse response = (ApiResponse) request.getApiResponse();
-
-        log.info(response);
-
-        List<Tree> treeRecords = Arrays.asList(
-                response.featureTrees()
-        );
-
-        return treeRecords.stream().map(this::createTreeObject)
-                .toList();
+        return getTreeOfType("Cherry");
     }
 
     /**
@@ -164,23 +116,7 @@ public class TreeService {
      * @return List of peach trees from API
      */
     public List<TreeModel> getPeachTrees() {
-        Request request = apiHandler.getTrees("CommonName='Peach'", "TreeID,Ownership,Genus,CommonName", 100);
-
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            log.info("API connection failed with a " + request.getResponseCode());
-            return List.of();
-        }
-
-        ApiResponse response = (ApiResponse) request.getApiResponse();
-
-        log.info(response);
-
-        List<Tree> treeRecords = Arrays.asList(
-                response.featureTrees()
-        );
-
-        return treeRecords.stream().map(this::createTreeObject)
-                .toList();
+        return getTreeOfType("Peach");
     }
 
     /**
@@ -188,7 +124,13 @@ public class TreeService {
      * @return List of apricot trees from API
      */
     public List<TreeModel> getApricotTrees() {
-        Request request = apiHandler.getTrees("CommonName='Apricot'", "TreeID,Ownership,Genus,CommonName", 100);
+        return getTreeOfType("Apricot");
+    }
+
+    public List<TreeModel> getTreeOfType(String type) {
+        Request request = apiHandler.getTrees("CommonName='" + type + "'"
+                , "TreeID,Ownership,Genus,CommonName",
+                100);
 
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             log.info("API connection failed with a " + request.getResponseCode());
@@ -206,4 +148,6 @@ public class TreeService {
         return treeRecords.stream().map(this::createTreeObject)
                 .toList();
     }
+
+
 }
