@@ -52,8 +52,8 @@ public class TreeService {
     }
 
     /**
-     * Mapping the genus to a fruit tyoe in a new coloumn
-     * @param genus
+     * Mapping the genus to a fruit type in a new column
+     * @param genus tree genus
      * @return the fruit type based on genus
      */
     private String getFruitType(String genus) {
@@ -65,13 +65,13 @@ public class TreeService {
             default -> "N/A";
         };
     }
+
     /**
      * Method to return all trees from API
      * @return List of all trees from API
      */
     public List<TreeModel> getAllTrees() {
         List<TreeModel> allTrees = new ArrayList<>();
-
         allTrees.addAll(getAppleTrees());
         allTrees.addAll(getPearTrees());
         allTrees.addAll(getCherryTrees());
