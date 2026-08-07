@@ -1,8 +1,11 @@
-.root {
+* {
     -primary-color: #86CA82;
     -primary-color-highlight: #7cbf82;
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
+}
+.root {
+
     -fx-background-color: -secondary-bg-color;
 }
 .titleBarText {
