@@ -3,6 +3,7 @@ package seng202.team4.gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,8 @@ public class MainController extends ScreenController {
     private Label titleLabel;
     @FXML private Button closeButton;
     @FXML private VBox sideBar;
+    @FXML private Button menuOpenButton;
+    @FXML private StackPane sideBarPane;
 
     /**
      * Initialise the window
@@ -59,5 +62,25 @@ public class MainController extends ScreenController {
     @FXML
     public void closeClicked() {
         sideBar.setVisible(false);
+        sideBar.setManaged(false);
+
+        menuOpenButton.setVisible(true);
+        menuOpenButton.setManaged(true);
+
+        sideBarPane.setMinWidth(50);
+        sideBarPane.setPrefWidth(50);
+        sideBarPane.setMaxWidth(50);
+    }
+    @FXML
+    public void openMenuClicked() {
+        sideBar.setVisible(true);
+        sideBar.setManaged(true);
+
+        menuOpenButton.setVisible(false);
+        menuOpenButton.setManaged(false);
+
+        sideBarPane.setMinWidth(300);
+        sideBarPane.setPrefWidth(300);
+        sideBarPane.setMaxWidth(300);
     }
 }
