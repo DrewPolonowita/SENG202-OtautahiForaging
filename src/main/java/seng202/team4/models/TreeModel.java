@@ -17,6 +17,8 @@ public class TreeModel {
     private final int[] coordinates;
     private final String ownership;
     private final String genus;
+    private final String fruit;
+    private final String commonName;
 
     /**
      * Constructor
@@ -24,12 +26,15 @@ public class TreeModel {
      * @param coordinates Tree location
      * @param ownership Who owns the tree
      * @param genus Genus of tree
+     * @param fruit Fruit type of a tree
      */
-    public TreeModel(int id, int[] coordinates, String ownership, String genus) {
+    public TreeModel(int id, int[] coordinates, String ownership, String genus, String fruit, String commonName) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
         this.genus = genus;
+        this.fruit = fruit;
+        this.commonName = commonName;
     }
 
     /**
@@ -66,6 +71,22 @@ public class TreeModel {
     }
 
     /**
+     * Getter method for fruit type
+     * @return returns String fruit
+     */
+    public String getFruit() {
+        return fruit;
+    }
+
+    /**
+     * Getter method for tree common name
+     * @return returns String commonName
+     */
+    public String getCommonName() {
+        return commonName;
+    }
+
+    /**
      * Equals operator rewrite so 2 trees with the same attributes can be evaluated as the same
      * @param o object to compare
      * @return returns boolean, true if this equals o
@@ -82,7 +103,9 @@ public class TreeModel {
         return id == treeModel.id
                 && Arrays.equals(coordinates, treeModel.coordinates)
                 && Objects.equals(ownership, treeModel.ownership)
-                && Objects.equals(genus, treeModel.genus);
+                && Objects.equals(genus, treeModel.genus)
+                && Objects.equals(fruit, treeModel.fruit)
+                && Objects.equals(commonName, treeModel.commonName);
     }
 
     /**
@@ -91,7 +114,7 @@ public class TreeModel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus);
+        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, fruit, commonName);
     }
 
 }

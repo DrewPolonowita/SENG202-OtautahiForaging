@@ -82,3 +82,4 @@ public class CounterServiceTest
         assertNotEquals(4, testCounterService.getCurrentCount());
     }
 }
+
