@@ -71,6 +71,11 @@ public class MainController extends ScreenController {
         sideBarPane.setPrefWidth(50);
         sideBarPane.setMaxWidth(50);
     }
+
+    /**
+     * Method to call to open sidebar
+     *
+     */
     @FXML
     public void openMenuClicked() {
         sideBar.setVisible(true);
