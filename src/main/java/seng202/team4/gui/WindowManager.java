@@ -14,6 +14,7 @@ import java.io.IOException;
 
 /**
  * Handles requests from GUI controllers to change scenes
+ * @author Team 4
  */
 public class WindowManager {
 

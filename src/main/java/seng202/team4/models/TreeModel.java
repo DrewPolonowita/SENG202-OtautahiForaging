@@ -8,7 +8,7 @@ import java.util.Objects;
 
 /**
  * Model representation of a tree
- * @author George Mounce
+ * @author Team 4
  */
 public class TreeModel {
     private static final Logger log = LogManager.getLogger(TreeModel.class);

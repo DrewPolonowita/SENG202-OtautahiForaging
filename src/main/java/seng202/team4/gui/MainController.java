@@ -10,7 +10,7 @@ import seng202.team4.services.StateManager;
 
 /**
  * Controller for the main.fxml window
- * @author seng202 teaching team
+ * @author Team 4
  */
 public class MainController extends ScreenController {
 

@@ -5,6 +5,7 @@ import seng202.team4.gui.WindowManager;
 /**
  * The class which stores information related to the state of the entire app in a given instance
  * This class also has the ability to launch screens using the {@link WindowManager}
+ * @author Team 4
  */
 public class StateManager {
 

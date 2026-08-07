@@ -17,8 +17,7 @@ import java.util.List;
 
 /**
  * Controls tableview.fxml
- * @author George Mounce
- * @author Bridget Candy
+ * @author Team 4
  */
 public class TableViewController extends ScreenController {
 

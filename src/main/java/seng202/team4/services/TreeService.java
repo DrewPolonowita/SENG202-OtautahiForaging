@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Service class to handle business logic for managing trees
- * @author George Mounce
+ * @author Team 4
  */
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
