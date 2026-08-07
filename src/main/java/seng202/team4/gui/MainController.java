@@ -1,7 +1,9 @@
 package seng202.team4.gui;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.services.StateManager;
@@ -16,7 +18,8 @@ public class MainController extends ScreenController {
 
     @FXML
     private Label titleLabel;
-
+    @FXML private Button closeButton;
+    @FXML private VBox sideBar;
 
     /**
      * Initialise the window
@@ -47,5 +50,14 @@ public class MainController extends ScreenController {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchTableView(stateManager);
 
+    }
+
+    /**
+     * Method to call to close sidebar
+     *
+     */
+    @FXML
+    public void closeClicked() {
+        sideBar.setVisible(false);
     }
 }
