@@ -100,14 +100,6 @@
                         <Insets />
                      </opaqueInsets>
                   </Button>
-                  <Button fx:id="tableButton" alignment="TOP_LEFT" maxWidth="Infinity" onMouseClicked="#onButtonClicked" styleClass="sideBar-button" text="  View Table">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                     <graphic>
-                        <Region styleClass="icon, icon-table" />
-                     </graphic>
-                  </Button>
                   <Button fx:id="journalsButton" alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Journals">
                      <font>
                         <Font size="24.0" />
@@ -124,6 +116,14 @@
                   <Button fx:id="recipesButton" alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Recipes">
                      <graphic>
                         <Region styleClass="icon, icon-recipe" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="tableButton" alignment="TOP_LEFT" maxWidth="Infinity" onMouseClicked="#onButtonClicked" styleClass="sideBar-button" text="  View Table">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                     <graphic>
+                        <Region styleClass="icon, icon-table" />
                      </graphic>
                   </Button>
                   <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
