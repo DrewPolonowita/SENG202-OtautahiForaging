@@ -31,6 +31,7 @@ public class NavController extends ScreenController {
     @FXML private Button recipesButton;
     @FXML private Button tableButton;
     @FXML private Button settingsButton;
+    @FXML private Button selectedButton;
 
     /**
      * Initialise the window
@@ -49,7 +50,11 @@ public class NavController extends ScreenController {
     public String getTitle() {
         return "Map";
     }
-    private Button selectedButton;
+
+    /**
+     * Initialises the fxml gui
+     *
+     */
     @FXML
     public void initialize() {
         setSelectedButton(mapButton);
@@ -58,6 +63,7 @@ public class NavController extends ScreenController {
      * Method to call to close sidebar
      *
      */
+
     @FXML
     public void closeClicked() {
         sideBar.setVisible(false);
