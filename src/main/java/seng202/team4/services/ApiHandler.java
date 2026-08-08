@@ -20,6 +20,9 @@ import java.util.Scanner;
  * @author Team 4
  */
 public class ApiHandler {
+
+    static final String API_LINK = "https://gis.ccc.govt.nz/server/rest/services/OpenData/Tree/FeatureServer/0/";
+
     /**
      * Creates a connection to the server
      *
@@ -82,8 +85,7 @@ public class ApiHandler {
      */
     public Request<ApiResponse> getTrees(String params, String outFields, int maxTuples) {
         try {
-            Dotenv dotenv = Dotenv.load();
-            HttpsURLConnection connection = createConnection(dotenv.get("API_LINK")
+            HttpsURLConnection connection = createConnection(API_LINK
                     + urlEncodeParams(params, outFields, maxTuples));
             try {
                 ApiResponse apiResponse = getJsonData(connection);
