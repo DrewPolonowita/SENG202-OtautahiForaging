@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.TableViewController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.TableViewController">
    <center>
       <TableView fx:id="treeTableView" prefHeight="200.0" prefWidth="518.0" style="-fx-text-background-color: black;" BorderPane.alignment="CENTER" />
    </center>

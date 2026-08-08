@@ -1,4 +1,4 @@
-package seng202.team4.gui;
+package seng202.team4.gui.screens;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.ScreenController;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.TreeService;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controls tableview.fxml
+ * Controls table_view.fxml
  * @author Team 4
  */
 public class TableViewController extends ScreenController {
@@ -55,7 +56,7 @@ public class TableViewController extends ScreenController {
     }
 
     public String getFxmlFile() {
-        return "/fxml/tableview.fxml";
+        return "/fxml/table_view.fxml";
     }
 
     public String getTitle() {

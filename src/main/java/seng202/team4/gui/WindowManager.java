@@ -9,6 +9,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.screens.MapController;
+import seng202.team4.gui.screens.TableViewController;
 import seng202.team4.services.StateManager;
 
 import java.io.IOException;
