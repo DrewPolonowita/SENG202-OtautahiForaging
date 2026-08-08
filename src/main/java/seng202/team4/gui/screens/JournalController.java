@@ -24,7 +24,7 @@ public class JournalController extends ScreenController {
     }
 
     public String getFxmlFile() {
-        return "/fxml/map_screen.fxml";
+        return "/fxml/journal_screen.fxml";
     }
 
     public String getTitle() {

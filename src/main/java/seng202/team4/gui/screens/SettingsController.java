@@ -24,7 +24,7 @@ public class SettingsController extends ScreenController {
     }
 
     public String getFxmlFile() {
-        return "/fxml/map_screen.fxml";
+        return "/fxml/settings_screen.fxml";
     }
 
     public String getTitle() {

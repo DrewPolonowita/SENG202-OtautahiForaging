@@ -45,18 +45,6 @@ public class NavController extends ScreenController {
     }
 
     /**
-     * Method to call when our counter button is clicked
-     *
-     */
-    @FXML
-    public void onButtonClicked() {
-
-        StateManager stateManager = getStateManager();
-        stateManager.getWindowManager().launchTableView(stateManager);
-
-    }
-
-    /**
      * Method to call to close sidebar
      *
      */
@@ -99,5 +87,60 @@ public class NavController extends ScreenController {
         navBar.setMinWidth(width);
         navBar.setPrefWidth(width);
         navBar.setMaxWidth(width);
+    }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onMapButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchMapScreen(stateManager);
+
+    }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onJournalsButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchJournalScreen(stateManager);
+
+    }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onRecipesButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchRecipesScreen(stateManager);
+
+    }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onTableButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchTableScreen(stateManager);
+
+    }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onSettingsButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchSettingsScreen(stateManager);
+
     }
 }

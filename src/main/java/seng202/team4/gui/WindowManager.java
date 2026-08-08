@@ -9,8 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.MapController;
-import seng202.team4.gui.screens.TableViewController;
+import seng202.team4.gui.screens.*;
 import seng202.team4.services.StateManager;
 
 import java.io.IOException;
@@ -80,10 +79,38 @@ public class WindowManager {
     }
 
     /**
-     * Launches Table View
+     * Launches the journals screen
+     *
+     * @param stateManager the state manager for the application
      */
-    public void launchTableView(StateManager stateManager) {
+    public void launchJournalScreen(StateManager stateManager) {
+        ScreenController controller = new JournalController(stateManager);
+        launchScreen(controller, rootPane);
+    }
+
+    /**
+     * Launches the recipes screen
+     *
+     * @param stateManager the state manager for the application
+     */
+    public void launchRecipesScreen(StateManager stateManager) {
+        ScreenController controller = new RecipesController(stateManager);
+        launchScreen(controller, rootPane);
+    }
+
+    /**
+     * Launches the table screen
+     */
+    public void launchTableScreen(StateManager stateManager) {
         ScreenController controller = new TableViewController(stateManager);
+        launchScreen(controller, rootPane);
+    }
+
+    /**
+     * Launches the table screen
+     */
+    public void launchSettingsScreen(StateManager stateManager) {
+        ScreenController controller = new SettingsController(stateManager);
         launchScreen(controller, rootPane);
     }
 

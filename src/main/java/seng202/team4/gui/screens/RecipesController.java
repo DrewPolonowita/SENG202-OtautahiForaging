@@ -24,7 +24,7 @@ public class RecipesController extends ScreenController {
     }
 
     public String getFxmlFile() {
-        return "/fxml/map_screen.fxml";
+        return "/fxml/recipe_screen.fxml";
     }
 
     public String getTitle() {

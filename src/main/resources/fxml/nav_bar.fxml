@@ -80,7 +80,7 @@
                         <URL value="@../css/icons.css" />
                      </stylesheets>
                   </GridPane>
-                  <Button fx:id="mapButton" alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sideBar-button, sideBar-button-selected" text="  Map">
+                  <Button fx:id="mapButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onMapButtonClicked" styleClass="sideBar-button, sideBar-button-selected" text="  Map">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -100,7 +100,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Button>
-                  <Button fx:id="journalsButton" alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Journals">
+                  <Button fx:id="journalsButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onJournalsButtonClicked" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Journals">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -113,12 +113,12 @@
                         </Region>
                      </graphic>
                   </Button>
-                  <Button fx:id="recipesButton" alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Recipes">
+                  <Button fx:id="recipesButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onRecipesButtonClicked" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Recipes">
                      <graphic>
                         <Region styleClass="icon, icon-recipe" />
                      </graphic>
                   </Button>
-                  <Button fx:id="tableButton" alignment="TOP_LEFT" maxWidth="Infinity" onMouseClicked="#onButtonClicked" styleClass="sideBar-button" text="  View Table">
+                  <Button fx:id="tableButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onTableButtonClicked" styleClass="sideBar-button" text="  View Table">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -127,7 +127,7 @@
                      </graphic>
                   </Button>
                   <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <Button fx:id="settingsButton" alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Settings">
+                  <Button fx:id="settingsButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onSettingsButtonClicked" styleClass="sideBar-button" stylesheets="@../css/icons.css" text="  Settings">
                      <graphic>
                         <Region styleClass="icon, icon-settings" />
                      </graphic>
