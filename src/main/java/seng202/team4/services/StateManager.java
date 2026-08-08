@@ -18,7 +18,8 @@ public class StateManager {
      */
     public StateManager(WindowManager windowManager) {
         this.windowManager = windowManager;
-        this.windowManager.launchMainScreen(this);
+        this.windowManager.launchMapScreen(this);
+        this.windowManager.launchNavScreen(this);
 
     }
 

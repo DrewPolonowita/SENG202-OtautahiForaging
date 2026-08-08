@@ -10,12 +10,12 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.services.StateManager;
 
 /**
- * Controller for the main.fxml window
+ * Controller for the map_screen.fxml window which controls the map
  * @author Team 4
  */
-public class MainController extends ScreenController {
+public class MapController extends ScreenController {
 
-    private static final Logger log = LogManager.getLogger(MainController.class);
+    private static final Logger LOG = LogManager.getLogger(MapController.class);
 
     @FXML
     private Label titleLabel;
@@ -29,18 +29,18 @@ public class MainController extends ScreenController {
      *
      * @param stateManager Reference for window manager
      */
-    public MainController(StateManager stateManager) {
+    public MapController(StateManager stateManager) {
 
         super(stateManager);
     }
 
 
     public String getFxmlFile() {
-        return "/fxml/main.fxml";
+        return "/fxml/map_screen.fxml";
     }
 
     public String getTitle() {
-        return "Main Window";
+        return "Map";
     }
 
     /**

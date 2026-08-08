@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,8 +22,8 @@ public class WindowManager {
     private static final Logger LOG = LogManager.getLogger(WindowManager.class);
 
     private final Stage stage;
-
     private final BorderPane rootPane;
+    private final BorderPane navPane;
 
     /**
      * Launches the application and creates a base border pane for the screens to be built with
@@ -34,14 +35,36 @@ public class WindowManager {
         this.stage = primaryStage;
         stage.setResizable(true);
 
-        // Use a border pane as the root component to allow children to be resizable.
+        // Creates a GridPane and sets it as the primaryStage
+        GridPane gridPane = new GridPane();
+        stage.setScene(new Scene(gridPane));
+
+        // Initial sizes for the GUI
+        gridPane.setPrefHeight(400);
+        gridPane.setPrefWidth(600);
+
+        // Creates the BorderPane for the navBar and the mainScreen
         rootPane = new BorderPane();
-        rootPane.setPrefHeight(400);
-        rootPane.setPrefWidth(600);
-        stage.setScene(new Scene(rootPane));
+        navPane = new BorderPane();
+
+        // Places the navBar and the mainScreen into the primaryStage
+        gridPane.add(navPane, 0, 0);
+        gridPane.add(rootPane, 1, 0);
+
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
+
         stage.show();
+    }
+
+    /**
+     * Launches the nav screen
+     *
+     * @param stateManager the state manager for the application
+     */
+    public void launchNavScreen(StateManager stateManager) {
+        ScreenController controller = new NavController(stateManager);
+        launchScreen(controller, navPane);
     }
 
     /**
@@ -49,9 +72,9 @@ public class WindowManager {
      *
      * @param stateManager the state manager for the application
      */
-    public void launchMainScreen(StateManager stateManager) {
-        ScreenController controller = new MainController(stateManager);
-        launchScreen(controller);
+    public void launchMapScreen(StateManager stateManager) {
+        ScreenController controller = new MapController(stateManager);
+        launchScreen(controller, rootPane);
     }
 
     /**
@@ -59,7 +82,7 @@ public class WindowManager {
      */
     public void launchTableView(StateManager stateManager) {
         ScreenController controller = new TableViewController(stateManager);
-        launchScreen(controller);
+        launchScreen(controller, rootPane);
     }
 
     /**
@@ -67,17 +90,15 @@ public class WindowManager {
      * root border pane with the screen defined by {@link ScreenController}
      *
      * @param controller the screen being launched
+     * @param pane the {@link BorderPane} being displayed onto
      */
-    private void launchScreen(ScreenController controller) {
+    private void launchScreen(ScreenController controller, BorderPane pane) {
         try {
             FXMLLoader setupLoader = new FXMLLoader(getClass().getResource(controller.getFxmlFile()));
-
-            // Set a controller factory that returns the given ScreenController.
-            // This allows us to have screen controllers that take argument(s) in their constructor.
             setupLoader.setControllerFactory(param -> controller);
             Parent setupParent = setupLoader.load();
 
-            rootPane.setCenter(setupParent);
+            pane.setCenter(setupParent);
             stage.setTitle(controller.getTitle());
         } catch (IOException e) {
             LOG.error(e);

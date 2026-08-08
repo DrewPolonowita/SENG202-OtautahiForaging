@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class TableViewController extends ScreenController {
 
-    private static final Logger log = LogManager.getLogger(TableViewController.class);
+    private static final Logger LOG = LogManager.getLogger(TableViewController.class);
 
     private final TreeService treeService;
 
@@ -76,7 +76,7 @@ public class TableViewController extends ScreenController {
      */
     @FXML
     private void onBackClicked() {
-        getStateManager().getWindowManager().launchMainScreen(getStateManager());
+        getStateManager().getWindowManager().launchMapScreen(getStateManager());
     }
 
     /**
