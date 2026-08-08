@@ -26,6 +26,12 @@ public class NavController extends ScreenController {
     @FXML private Button menuOpenButton;
     @FXML private StackPane sideBarPane;
 
+    @FXML private Button mapButton;
+    @FXML private Button journalsButton;
+    @FXML private Button recipesButton;
+    @FXML private Button tableButton;
+    @FXML private Button settingsButton;
+
     /**
      * Initialise the window
      *
@@ -43,7 +49,11 @@ public class NavController extends ScreenController {
     public String getTitle() {
         return "Map";
     }
-
+    private Button selectedButton;
+    @FXML
+    public void initialize() {
+        setSelectedButton(mapButton);
+    }
     /**
      * Method to call to close sidebar
      *
@@ -97,7 +107,7 @@ public class NavController extends ScreenController {
     public void onMapButtonClicked() {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchMapScreen(stateManager);
-
+        setSelectedButton(mapButton);
     }
 
     /**
@@ -108,6 +118,7 @@ public class NavController extends ScreenController {
     public void onJournalsButtonClicked() {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchJournalScreen(stateManager);
+        setSelectedButton(journalsButton);
 
     }
 
@@ -119,6 +130,7 @@ public class NavController extends ScreenController {
     public void onRecipesButtonClicked() {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchRecipesScreen(stateManager);
+        setSelectedButton(recipesButton);
 
     }
 
@@ -130,6 +142,7 @@ public class NavController extends ScreenController {
     public void onTableButtonClicked() {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchTableScreen(stateManager);
+        setSelectedButton(tableButton);
 
     }
 
@@ -141,6 +154,20 @@ public class NavController extends ScreenController {
     public void onSettingsButtonClicked() {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchSettingsScreen(stateManager);
+        setSelectedButton(settingsButton);
 
+    }
+
+    /**
+     * Updates sidebar styling to reflect which tab is currently active.
+     */
+    private void setSelectedButton(Button newSelection) {
+        if (selectedButton != null) {
+            selectedButton.getStyleClass().remove("sideBar-button-selected");
+            selectedButton.getGraphic().getStyleClass().remove("icon-selected");
+        }
+        newSelection.getStyleClass().add("sideBar-button-selected");
+        newSelection.getGraphic().getStyleClass().add("icon-selected");
+        selectedButton = newSelection;
     }
 }

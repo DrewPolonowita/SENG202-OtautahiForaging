@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="navBar" prefHeight="1080.0" prefWidth="200.0" styleClass="root" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.NavController">
+<BorderPane fx:id="navBar" prefHeight="1080.0" prefWidth="200.0" styleClass="root" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.NavController">
    <left>
       <StackPane fx:id="sideBarPane" minWidth="300.0" styleClass="sideBar">
          <BorderPane.margin>
@@ -80,7 +80,7 @@
                         <URL value="@../css/icons.css" />
                      </stylesheets>
                   </GridPane>
-                  <Button fx:id="mapButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onMapButtonClicked" styleClass="sideBar-button, sideBar-button-selected" text="  Map">
+                  <Button fx:id="mapButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onMapButtonClicked" styleClass="sideBar-button" text="  Map">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -89,7 +89,6 @@
                            <styleClass>
                               <String fx:value="icon" />
                               <String fx:value="icon-map" />
-                              <String fx:value="icon-selected" />
                            </styleClass>
                            <opaqueInsets>
                               <Insets />
