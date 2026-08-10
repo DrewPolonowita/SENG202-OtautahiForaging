@@ -25,6 +25,7 @@ public class WindowManager {
     private final Stage stage;
     private final BorderPane rootPane;
     private final BorderPane navPane;
+    private final GridPane gridPane;
 
     /**
      * Launches the application and creates a base border pane for the screens to be built with
@@ -37,7 +38,7 @@ public class WindowManager {
         stage.setResizable(true);
 
         // Creates a GridPane and sets it as the primaryStage
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         stage.setScene(new Scene(gridPane));
 
         // Initial sizes for the GUI
@@ -54,6 +55,7 @@ public class WindowManager {
 
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
+        gridPane.getScene().getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
         stage.show();
     }
@@ -131,6 +133,18 @@ public class WindowManager {
             stage.setTitle(controller.getTitle());
         } catch (IOException e) {
             LOG.error(e);
+        }
+    }
+
+    /**
+     * Method for toggling dark mode on/off
+     * @param darkMode true to enable dark mode, false to disable it
+     */
+    public void setDarkMode(boolean darkMode) {
+        if (darkMode) {
+            stage.getScene().getStylesheets().add(getClass().getResource("/css/dark-theme.css").toExternalForm());
+        } else {
+            stage.getScene().getStylesheets().remove(getClass().getResource("/css/dark-theme.css").toExternalForm());
         }
     }
 }
