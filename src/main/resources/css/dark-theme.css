@@ -1,6 +1,7 @@
 .root {
     -fx-background-color: #1e1e1e;
-    -fx-test-fill: #eaeaea;
+    -fx-text-fill: #eaeaea;
+    -text-color: #dcdcdc;
 }
 
 .settings-title {
@@ -20,6 +21,12 @@
     -fx-text-fill: #86CA82;
 }
 
+.sideBar-button .icon {
+    -fx-background-color: #7cbf82;
+    -fx-text-fill: #86CA82;
+}
+
+
 .sideBar-button:hover {
     -fx-background-color: #7cbf82;
     -fx-text-fill: #2b2b2b;
@@ -33,9 +40,18 @@
     -fx-text-fill: #2b2b2b;
 }
 
-.switch-track {
+.sideBar-button-selected .icon {
     -fx-background-color: #1e1e1e;
 }
+
+.switch-track {
+    -fx-background-color: #eaeaea;
+}
 .switch:selected .switch-track {
-    -fx-background-color: #86CA82;
+    -fx-background-color: #eaeaea;
+}
+
+.generic-text {
+    -fx-text-fill: #dcdcdc;
+    -fx-font-size: 12px;
 }

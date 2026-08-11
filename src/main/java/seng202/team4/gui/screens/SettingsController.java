@@ -36,6 +36,16 @@ public class SettingsController extends ScreenController {
         super(stateManager);
     }
 
+    /**
+     * Method to be called automatically after FXML files loaded
+     */
+    @FXML
+    public void initialize() {
+        boolean isDark = getStateManager().getWindowManager().isDarkMode();
+        darkModeToggle.setSelected(isDark);
+        switchCircle.setTranslateX(isDark ? 24 : 2);
+    }
+
     public String getFxmlFile() {
         return "/fxml/settings_screen.fxml";
     }
@@ -44,15 +54,14 @@ public class SettingsController extends ScreenController {
         return "Map";
     }
 
+    /**
+     * On click plays animation and sets dark mode on/off
+     */
     @FXML
     public void onDarkModeToggle() {
         boolean isDark = darkModeToggle.isSelected();
         TranslateTransition slide = new TranslateTransition(Duration.millis(150), switchCircle);
-        if (isDark) {
-            slide.setToX(24);
-        } else {
-            slide.setToX(2);
-        }
+        slide.setToX(isDark ? 24 : 2);
         slide.play();
         getStateManager().getWindowManager().setDarkMode(isDark);
     }
