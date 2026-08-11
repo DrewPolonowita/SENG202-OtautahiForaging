@@ -3,11 +3,13 @@
     -primary-color-highlight: #7cbf82;
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
+    -text-color: #1a1a1a;
 }
 .root {
-
     -fx-background-color: -secondary-bg-color;
+    -fx-text-fill: -text-color;
 }
+
 .titleBarText {
     -fx-text-fill: -primary-color;
     -fx-font-size: 32px;
@@ -39,4 +41,45 @@
 .sideBar-button-selected {
     -fx-background-color: -primary-color;
     -fx-text-fill: -primary-bg-color;
+}
+
+.switch {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.switch-track {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 20;
+    -fx-min-width:46;
+    -fx-max-width: 46;
+    -fx-min-height: 24;
+    -fx-max-height: 24;
+}
+
+.switch:selected .switch-track {
+    -fx-background-color: -primary-bg-color;
+}
+
+.switch-thumb {
+    -fx-fill: white;
+}
+
+.switch-circle {
+    -fx-background-color: -primary-bg-color;
+}
+
+.switch:selected .switch-circle {
+    -fx-fill: -primary-color;
+}
+
+.settings-text {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.generic-text {
+    -fx-text-fill: -text-color;
+    -fx-font-size: 12px;
 }

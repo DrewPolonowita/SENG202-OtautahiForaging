@@ -1,5 +1,11 @@
 package seng202.team4.gui.screens;
 
+import javafx.animation.TranslateTransition;
+import javafx.fxml.FXML;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
@@ -10,6 +16,13 @@ import seng202.team4.services.StateManager;
  * @author Team 4
  */
 public class SettingsController extends ScreenController {
+
+    @FXML
+    private ToggleButton darkModeToggle;
+    @FXML
+    private StackPane switchTrack;
+    @FXML
+    private Circle switchCircle;
 
     private static final Logger LOG = LogManager.getLogger(SettingsController.class);
 
@@ -23,11 +36,33 @@ public class SettingsController extends ScreenController {
         super(stateManager);
     }
 
+    /**
+     * Method to be called automatically after FXML files loaded
+     */
+    @FXML
+    public void initialize() {
+        boolean isDark = getStateManager().getWindowManager().isDarkMode();
+        darkModeToggle.setSelected(isDark);
+        switchCircle.setTranslateX(isDark ? 24 : 2);
+    }
+
     public String getFxmlFile() {
         return "/fxml/settings_screen.fxml";
     }
 
     public String getTitle() {
         return "Map";
+    }
+
+    /**
+     * On click plays animation and sets dark mode on/off
+     */
+    @FXML
+    public void onDarkModeToggle() {
+        boolean isDark = darkModeToggle.isSelected();
+        TranslateTransition slide = new TranslateTransition(Duration.millis(150), switchCircle);
+        slide.setToX(isDark ? 24 : 2);
+        slide.play();
+        getStateManager().getWindowManager().setDarkMode(isDark);
     }
 }
