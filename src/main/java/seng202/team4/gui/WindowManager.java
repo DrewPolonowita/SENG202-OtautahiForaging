@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,7 @@ import seng202.team4.gui.screens.*;
 import seng202.team4.services.StateManager;
 
 import java.io.IOException;
+import seng202.team4.gui.utilities.CssUtilities;
 
 /**
  * Handles requests from GUI controllers to change scenes
@@ -56,7 +58,7 @@ public class WindowManager {
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         gridPane.getScene().getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-
+        gridPane.getScene().getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
         stage.show();
     }
 
@@ -158,5 +160,15 @@ public class WindowManager {
         } else {
             stylesheets.remove(darkCSS);
         }
+    }
+
+    /**
+     * Meathod used to change the primary scene colour
+     */
+    public void setPrimaryColor(Color color) {
+        String hex = CssUtilities.toHex(color);
+        String highlightHex = CssUtilities.toHex(color.deriveColor(0, 1, 0.9, 1));
+        gridPane.setStyle(String.format("-primary-color: %s; -primary-color-highlight: %s;", hex, highlightHex));
+        CssUtilities.refreshStylesheets(stage.getScene());
     }
 }

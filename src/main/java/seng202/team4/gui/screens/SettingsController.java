@@ -2,6 +2,7 @@ package seng202.team4.gui.screens;
 
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -23,6 +24,8 @@ public class SettingsController extends ScreenController {
     private StackPane switchTrack;
     @FXML
     private Circle switchCircle;
+    @FXML
+    private ColorPicker colorPicker;
 
     private static final Logger LOG = LogManager.getLogger(SettingsController.class);
 
@@ -64,5 +67,13 @@ public class SettingsController extends ScreenController {
         slide.setToX(isDark ? 24 : 2);
         slide.play();
         getStateManager().getWindowManager().setDarkMode(isDark);
+    }
+
+    /**
+     * Javafx color picker for changing primary colour
+     */
+    @FXML
+    public void changeThemeColour() {
+        getStateManager().getWindowManager().setPrimaryColor(colorPicker.getValue());
     }
 }

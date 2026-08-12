@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.ToggleButton?>
-
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.SettingsController">
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.SettingsController">
    <center>
       <VBox prefHeight="400.0" prefWidth="400.0" spacing="10">
-         <Label text="SETTINGS" BorderPane.alignment="CENTER" styleClass="titleBarText"/>
-         <Label text="Appearance" styleClass="settings-text"/>
+         <Label styleClass="titleBarText" text="SETTINGS" BorderPane.alignment="CENTER" />
+         <Label styleClass="settings-text" text="Appearance" />
          <HBox alignment="CENTER_LEFT" spacing="20">
-            <Label text="Dark Mode" styleClass="generic-text"/>
-            <ToggleButton fx:id="darkModeToggle" styleClass="switch" onAction="#onDarkModeToggle">
+            <Label styleClass="generic-text" text="Dark Mode" />
+            <ToggleButton fx:id="darkModeToggle" onAction="#onDarkModeToggle" styleClass="switch">
                <graphic>
-                  <StackPane fx:id="switchTrack" styleClass="switch-track" alignment="CENTER_LEFT">
+                  <StackPane fx:id="switchTrack" alignment="CENTER_LEFT" styleClass="switch-track">
                      <children>
-                        <Circle fx:id="switchCircle" styleClass="switch-circle" radius="9" translateX="2"/>
+                        <Circle fx:id="switchCircle" radius="9" styleClass="switch-circle" translateX="2" />
                      </children>
                   </StackPane>
                </graphic>
             </ToggleButton>
          </HBox>
+         <ColorPicker fx:id="colorPicker" onAction="#changeThemeColour" />
       </VBox>
    </center>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </BorderPane>
