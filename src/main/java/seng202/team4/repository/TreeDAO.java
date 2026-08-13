@@ -13,6 +13,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * DAOInterface implementation for trees, handles tree related actions to database
+ */
 public class TreeDAO implements DAOInterface<TreeModel> {
     private static final Logger log = LogManager.getLogger(TreeDAO.class);
 
@@ -20,6 +23,11 @@ public class TreeDAO implements DAOInterface<TreeModel> {
     public TreeDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
+
+    /**
+     * Method to return all trees stored in the database
+     * @return returns a list of TreeModels, empty list if failed
+     */
     @Override
     public List<TreeModel> getAll() {
        List<TreeModel> trees = new ArrayList<>();
@@ -46,6 +54,12 @@ public class TreeDAO implements DAOInterface<TreeModel> {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * Method to return the tree model of choice by id
+     * @param id id of object to get
+     * @return TreeModel object of specific id, null if failed
+     */
     @Override
     public TreeModel getOne(int id) {
         TreeModel tree = null;
@@ -80,6 +94,12 @@ public class TreeDAO implements DAOInterface<TreeModel> {
 
 
     }
+
+    /**
+     * Add a tree object to the database
+     * @param toAdd object of type T to add
+     * @return id of tree if success, -1 if failed
+     */
     @Override
     public int add(TreeModel toAdd) {
         String sql = """
@@ -113,6 +133,10 @@ public class TreeDAO implements DAOInterface<TreeModel> {
         }
     }
 
+    /**
+     * delete a specific tree from database
+     * @param id id of object to delete
+     */
     @Override
     public void delete (int id){
         String sql = "DELETE FROM trees WHERE id=?";
@@ -125,6 +149,11 @@ public class TreeDAO implements DAOInterface<TreeModel> {
         }
     }
 
+    /**
+     * Not implemented
+     * @param toUpdate Object that needs to be updated
+     * (this object must be able to identify itself and its previous self)
+     */
     @Override
     public void update (TreeModel toUpdate){
         throw new NotImplementedException();
