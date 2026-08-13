@@ -51,7 +51,7 @@ public class TableViewController extends ScreenController {
      */
     public TableViewController(StateManager stateManager) {
         super(stateManager);
-        treeService = new TreeService();
+        treeService = new TreeService(stateManager);
 
     }
 

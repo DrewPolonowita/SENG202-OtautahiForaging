@@ -6,6 +6,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.ApiResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.models.api.Tree;
+import seng202.team4.repository.TreeDAO;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -19,12 +20,16 @@ import java.util.List;
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final ApiHandler apiHandler;
+    private final StateManager stateManager;
+    private final TreeDAO treeDAO;
 
     /**
      * Constructor
      */
-    public TreeService() {
+    public TreeService(StateManager stateManager) {
         this.apiHandler = new ApiHandler();
+        this.stateManager = stateManager;
+        this.treeDAO = new TreeDAO(this.stateManager.getDatabaseManager());
     }
 
     /**
@@ -33,6 +38,8 @@ public class TreeService {
      */
     public TreeService(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
+        this.stateManager = null;
+        this.treeDAO = null;
     }
 
     /**
