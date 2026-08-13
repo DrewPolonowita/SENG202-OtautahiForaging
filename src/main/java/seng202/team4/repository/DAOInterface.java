@@ -1,4 +1,4 @@
-package seng202.team4.repositories;
+package seng202.team4.repository;
 
 import seng202.team4.exceptions.DuplicateEntryException;
 import java.util.List;

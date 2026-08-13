@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS trees;
+--SPLIT
+CREATE TABLE IF NOT EXISTS trees (
+    id INTEGER PRIMARY KEY,
+    x INTEGER NOT NULL,
+    y INTEGER NOT NULL,
+    ownership TEXT NOT NULL,
+    genus TEXT NOT NULL,
+    fruit TEXT NOT NULL,
+    common_name TEXT NOT NULL
+
+)
