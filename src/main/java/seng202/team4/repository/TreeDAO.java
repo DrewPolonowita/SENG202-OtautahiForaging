@@ -31,7 +31,7 @@ public class TreeDAO implements DAOInterface<TreeModel> {
     @Override
     public List<TreeModel> getAll() {
        List<TreeModel> trees = new ArrayList<>();
-       String sql = "SELECT * FROM sales";
+       String sql = "SELECT * FROM trees";
         try (Connection conn = databaseManager.connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
