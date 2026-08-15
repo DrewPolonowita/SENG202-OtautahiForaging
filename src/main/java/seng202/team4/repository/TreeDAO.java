@@ -159,7 +159,11 @@ public class TreeDAO implements DAOInterface<TreeModel> {
         throw new NotImplementedException();
     }
 
-
+    /**
+     * retrieve all trees of a specified common name
+     * @param type the common name specified
+     * @return all trees with the common name
+     */
     public List<TreeModel> getTreesByCommonName(String type) {
         List<TreeModel> trees = new ArrayList<>();
         String sql = "SELECT * FROM trees WHERE common_name=?";
