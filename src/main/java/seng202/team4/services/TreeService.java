@@ -36,10 +36,10 @@ public class TreeService {
      * Constructor for testing
      * @param apiHandler mock apiHandler
      */
-    public TreeService(ApiHandler apiHandler) {
+    public TreeService(ApiHandler apiHandler, TreeDAO treeDAO) {
         this.apiHandler = apiHandler;
         this.stateManager = null;
-        this.treeDAO = null;
+        this.treeDAO = treeDAO;
     }
 
     /**
