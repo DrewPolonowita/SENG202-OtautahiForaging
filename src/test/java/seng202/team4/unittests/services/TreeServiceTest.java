@@ -12,8 +12,6 @@ import seng202.team4.services.ApiHandler;
 import seng202.team4.services.TreeService;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

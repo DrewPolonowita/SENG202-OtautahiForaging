@@ -182,6 +182,7 @@ public class TreeService {
         databaseTrees = treeDAO.getTreesByCommonName(type);
         return databaseTrees;
     }
+
     /**
      * Logic for requesting trees of a type from API
      * @param type tree type requested by common name

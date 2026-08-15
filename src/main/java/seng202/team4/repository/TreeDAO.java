@@ -20,6 +20,11 @@ public class TreeDAO implements DAOInterface<TreeModel> {
     private static final Logger log = LogManager.getLogger(TreeDAO.class);
 
     private final DatabaseManager databaseManager;
+
+    /**
+     * Constructor
+     * @param databaseManager means of connecting to the database
+     */
     public TreeDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
@@ -30,8 +35,8 @@ public class TreeDAO implements DAOInterface<TreeModel> {
      */
     @Override
     public List<TreeModel> getAll() {
-       List<TreeModel> trees = new ArrayList<>();
-       String sql = "SELECT * FROM trees";
+        List<TreeModel> trees = new ArrayList<>();
+        String sql = "SELECT * FROM trees";
         try (Connection conn = databaseManager.connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -112,7 +117,7 @@ public class TreeDAO implements DAOInterface<TreeModel> {
                 fruit,
                 common_name
             ) VALUES (?, ?, ?, ?, ?, ?, ?);
-            """;
+        """;
 
         try (Connection conn = databaseManager.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -189,8 +194,7 @@ public class TreeDAO implements DAOInterface<TreeModel> {
                 }
             }
             return trees;
-        }
-        catch (SQLException sqlException) {
+        } catch (SQLException sqlException) {
             log.error(sqlException);
             return new ArrayList<>();
         }
