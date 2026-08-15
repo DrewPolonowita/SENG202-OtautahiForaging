@@ -82,24 +82,46 @@ public class TreeService {
      * Method to return all trees from API
      * @return List of all trees from API
      */
-    public List<TreeModel> getAllTrees() {
+    public List<TreeModel> getAllTreesFromApi() {
+
         List<TreeModel> allTrees = new ArrayList<>();
-        allTrees.addAll(getAppleTrees());
-        allTrees.addAll(getPearTrees());
-        allTrees.addAll(getCherryTrees());
-        allTrees.addAll(getPeachTrees());
-        allTrees.addAll(getApricotTrees());
+        allTrees.addAll(getTreesFromApiByType("Apple"));
+        allTrees.addAll(getTreesFromApiByType("Pear"));
+        allTrees.addAll(getTreesFromApiByType("Cherry"));
+        allTrees.addAll(getTreesFromApiByType("Peach"));
+        allTrees.addAll(getTreesFromApiByType("Apricot"));
 
         return allTrees;
 
     }
+
+    public List<TreeModel> getAllTrees() {
+
+        List<TreeModel> databaseTrees = treeDAO.getAll();
+
+        if (!databaseTrees.isEmpty()) {
+            log.info("Loaded {} trees from database", databaseTrees.size());
+            return databaseTrees;
+        }
+
+        List<TreeModel> apiTrees = getAllTreesFromApi();
+        log.info("Loaded {} trees from api", apiTrees.size());
+        for (TreeModel tree: apiTrees) {
+            treeDAO.add(tree);
+        }
+        databaseTrees = treeDAO.getAll();
+
+        return databaseTrees;
+    }
+
+
 
     /**
      * Method to filter and return apple trees from API
      * @return List of apple trees from API
      */
     public List<TreeModel> getAppleTrees() {
-        return getTreeOfType("Apple");
+        return getTreesByType("Apple");
     }
 
     /**
@@ -107,7 +129,7 @@ public class TreeService {
      * @return List of pear trees from API
      */
     public List<TreeModel> getPearTrees() {
-        return getTreeOfType("Pear");
+        return getTreesByType("Pear");
     }
 
     /**
@@ -115,7 +137,7 @@ public class TreeService {
      * @return List of cherry trees from API
      */
     public List<TreeModel> getCherryTrees() {
-        return getTreeOfType("Cherry");
+        return getTreesByType("Cherry");
     }
 
     /**
@@ -123,7 +145,7 @@ public class TreeService {
      * @return List of peach trees from API
      */
     public List<TreeModel> getPeachTrees() {
-        return getTreeOfType("Peach");
+        return getTreesByType("Peach");
     }
 
     /**
@@ -131,15 +153,30 @@ public class TreeService {
      * @return List of apricot trees from API
      */
     public List<TreeModel> getApricotTrees() {
-        return getTreeOfType("Apricot");
+        return getTreesByType("Apricot");
     }
 
+    public List<TreeModel> getTreesByType(String type) {
+        List<TreeModel> databaseTrees = treeDAO.getTreesByCommonName(type);
+
+        if (!databaseTrees.isEmpty()) {
+            log.info("Loaded {} {} trees from database", databaseTrees.size(), type);
+            return databaseTrees;
+        }
+
+        List<TreeModel> apiTreesByType = getTreesFromApiByType(type);
+        for (TreeModel tree : apiTreesByType) {
+            treeDAO.add(tree);
+        }
+        databaseTrees = treeDAO.getTreesByCommonName(type);
+        return databaseTrees;
+    }
     /**
      * Logic for requesting trees of a type from API
      * @param type tree type requested
      * @return List of tree models of requested type from API
      */
-    public List<TreeModel> getTreeOfType(String type) {
+    public List<TreeModel> getTreesFromApiByType(String type) {
         Request request = apiHandler.getTrees("CommonName='" + type + "'",
                 "TreeID,Ownership,Genus,CommonName",
                 100);

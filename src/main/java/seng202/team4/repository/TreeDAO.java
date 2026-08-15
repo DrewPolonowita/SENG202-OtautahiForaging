@@ -138,7 +138,7 @@ public class TreeDAO implements DAOInterface<TreeModel> {
      * @param id id of object to delete
      */
     @Override
-    public void delete (int id){
+    public void delete (int id) {
         String sql = "DELETE FROM trees WHERE id=?";
         try (Connection conn = databaseManager.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -155,7 +155,41 @@ public class TreeDAO implements DAOInterface<TreeModel> {
      * (this object must be able to identify itself and its previous self)
      */
     @Override
-    public void update (TreeModel toUpdate){
+    public void update (TreeModel toUpdate) {
         throw new NotImplementedException();
+    }
+
+
+    public List<TreeModel> getTreesByCommonName(String type) {
+        List<TreeModel> trees = new ArrayList<>();
+        String sql = "SELECT * FROM trees WHERE common_name=?";
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, type);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int[] coords = new int[] {
+                            rs.getInt("x"),
+                            rs.getInt("y")
+                    };
+
+                    trees.add(new TreeModel(
+                            rs.getInt("id"),
+                            coords,
+                            rs.getString("ownership"),
+                            rs.getString("genus"),
+                            rs.getString("fruit"),
+                            rs.getString("common_name")
+                    ));
+                }
+            }
+            return trees;
+        }
+        catch (SQLException sqlException) {
+            log.error(sqlException);
+            return new ArrayList<>();
+        }
+
     }
 }
