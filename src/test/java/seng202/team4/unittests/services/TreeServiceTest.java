@@ -3,6 +3,7 @@ package seng202.team4.unittests.services;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
+import seng202.team4.helpers.TestTreeData;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.*;
 import seng202.team4.repository.DatabaseManager;
@@ -47,12 +48,7 @@ public class TreeServiceTest {
     }
     //region creating specific models and records
     private List<TreeModel> fillDatabase() {
-        List<TreeModel> testTrees = new ArrayList<>();
-        testTrees.add(new TreeModel(2452, new int[]{5252, 3423}, "Council", "Malus", "Apple", "Apple"));
-        testTrees.add(new TreeModel(2454, new int[]{2252, 5423}, "Council", "Malus", "Apple", "Apple"));
-        testTrees.add(new TreeModel(2453, new int[]{5253, 8424}, "Council", "Pyrus", "Pear", "Pear"));
-        testTrees.add(new TreeModel(724, new int[]{4313, 8591}, "Council", "Prunus", "Cherry", "Cherry"));
-        testTrees.add(new TreeModel(2042, new int[]{4539, 7854}, "Council", "Prunus", "Apricot", "Apricot"));
+        List<TreeModel> testTrees = TestTreeData.createTreeModels();
 
         for (TreeModel tree : testTrees) {
             treeDAO.add(tree);
@@ -61,61 +57,8 @@ public class TreeServiceTest {
 
     }
 
-    private Tree createFakeRecord(int x, int y, int id, String owner, String genus, String commonName ) {
-        int[] coordinates = {x,y};
-        Geometry testGeometry = new Geometry("location", coordinates );
-        Properties testProperties = new Properties(id, owner, genus, commonName);
-        Tree testRecord = new Tree(
-                "A",
-                123,
-                testGeometry,
-                testProperties
-        );
-        return testRecord;
-    }
 
-    private Tree[] createFakeRecords() {
-        List<Tree> fakeTreeList = new ArrayList<>();
 
-        fakeTreeList.addAll(Arrays.asList(createFakeAppleRecords()));
-        fakeTreeList.addAll(Arrays.asList(createFakePearRecords()));
-        fakeTreeList.addAll(Arrays.asList(createFakeCherryRecords()));
-        fakeTreeList.addAll(Arrays.asList(createFakePeachRecords()));
-        fakeTreeList.addAll(Arrays.asList(createFakeApricotRecords()));
-
-        return fakeTreeList.toArray(new Tree[0]);
-    }
-    private Tree[] createFakeAppleRecords() {
-        List<Tree> fakeTreeList = new ArrayList<>();
-        fakeTreeList.add(createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Apple"));
-        fakeTreeList.add(createFakeRecord(2252, 5423, 2454, "Council", "Malus", "Apple"));
-
-        return fakeTreeList.toArray(new Tree[0]);
-    }
-
-    private Tree[] createFakePearRecords() {
-        List<Tree> fakeTreeList = new ArrayList<>();
-        fakeTreeList.add(createFakeRecord(5253, 8424, 2453, "Council", "Pyrus", "Pear"));
-
-        return fakeTreeList.toArray(new Tree[0]);
-    }
-
-    private Tree[] createFakeCherryRecords() {
-        List<Tree> fakeTreeList = new ArrayList<>();
-        fakeTreeList.add(createFakeRecord(4313, 8591, 724, "Council", "Prunus", "Cherry"));
-        return fakeTreeList.toArray(new Tree[0]);
-    }
-
-    private Tree[] createFakePeachRecords() {
-        List<Tree> fakeTreeList = new ArrayList<>();
-        return fakeTreeList.toArray(new Tree[0]);
-    }
-
-    private Tree[] createFakeApricotRecords() {
-        List<Tree> fakeTreeList = new ArrayList<>();
-        fakeTreeList.add(createFakeRecord(4539, 7854, 2042, "Council", "Prunus", "Apricot"));
-        return fakeTreeList.toArray(new Tree[0]);
-    }
     //endregion
 
 
@@ -135,7 +78,7 @@ public class TreeServiceTest {
 
     @Test
     public void testGetTreesByTypeWithoutPopulatedDatabase() {
-        Tree[] fakeTrees = createFakeAppleRecords();
+        Tree[] fakeTrees = TestTreeData.createFakeAppleRecords();
 
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
@@ -160,7 +103,7 @@ public class TreeServiceTest {
 
         int[] coordinates = {5252,3423};
 
-        Tree testRecord = createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Apple");
+        Tree testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Apple");
 
         Tree[] fakeTrees = {testRecord};
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
@@ -192,15 +135,15 @@ public class TreeServiceTest {
     public void testGetAllTreesWithoutDatabase() {
 
         when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100))
-                .thenReturn(new Request<>(new ApiResponse("Feature", createFakeAppleRecords(), false), 200));
+                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
         when(apiHandler.getTrees("CommonName='Pear'", "TreeID,Ownership,Genus,CommonName", 100))
-                .thenReturn(new Request<>(new ApiResponse("Feature", createFakePearRecords(), false), 200));
+                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
         when(apiHandler.getTrees("CommonName='Cherry'", "TreeID,Ownership,Genus,CommonName", 100))
-                .thenReturn(new Request<>(new ApiResponse("Feature", createFakeCherryRecords(), false), 200));
+                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeCherryRecords(), false), 200));
         when(apiHandler.getTrees("CommonName='Peach'", "TreeID,Ownership,Genus,CommonName", 100))
-                .thenReturn(new Request<>(new ApiResponse("Feature", createFakePeachRecords(), false), 200));
+                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
         when(apiHandler.getTrees("CommonName='Apricot'", "TreeID,Ownership,Genus,CommonName", 100))
-                .thenReturn(new Request<>(new ApiResponse("Feature", createFakeApricotRecords(), false), 200));
+                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeApricotRecords(), false), 200));
 
         List<TreeModel> allTrees = testTreeService.getAllTrees();
 
@@ -218,15 +161,10 @@ public class TreeServiceTest {
 
     @Test
     public void testWrongResponseCode() {
-        int[] coordinates = {5252,3423};
-        Geometry testGeometry = new Geometry("location", coordinates );
-        Properties testProperties = new Properties(2452, "Council", "Malus", "Apple");
-        Tree testRecord = new Tree(
-                "A",
-                123,
-                testGeometry,
-                testProperties
-        );
+
+        Tree testRecord = TestTreeData
+                .createFakeRecord(5252,3423, 2452, "Council", "Malus", "Apple");
+
 
         Tree[] fakeTrees = {testRecord};
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
