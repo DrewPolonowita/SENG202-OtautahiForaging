@@ -12,6 +12,7 @@ import seng202.team4.services.TreeService;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,8 +45,8 @@ public class TreeServiceTest {
 
 
     }
-
-    private void fillDatabase() {
+    //region creating specific models and records
+    private List<TreeModel> fillDatabase() {
         List<TreeModel> testTrees = new ArrayList<>();
         testTrees.add(new TreeModel(2452, new int[]{5252, 3423}, "Council", "Malus", "Apple", "Apple"));
         testTrees.add(new TreeModel(2454, new int[]{2252, 5423}, "Council", "Malus", "Apple", "Apple"));
@@ -56,6 +57,7 @@ public class TreeServiceTest {
         for (TreeModel tree : testTrees) {
             treeDAO.add(tree);
         }
+        return testTrees;
 
     }
 
@@ -74,11 +76,13 @@ public class TreeServiceTest {
 
     private Tree[] createFakeRecords() {
         List<Tree> fakeTreeList = new ArrayList<>();
-        fakeTreeList.add(createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Apple"));
-        fakeTreeList.add(createFakeRecord(2252, 5423, 2454, "Council", "Malus", "Apple"));
-        fakeTreeList.add(createFakeRecord(5253, 8424, 2453, "Council", "Pyrus", "Pear"));
-        fakeTreeList.add(createFakeRecord(4313, 8591, 724, "Council", "Prunus", "Cherry"));
-        fakeTreeList.add(createFakeRecord(4539, 7854, 2042, "Council", "Prunus", "Apricot"));
+
+        fakeTreeList.addAll(Arrays.asList(createFakeAppleRecords()));
+        fakeTreeList.addAll(Arrays.asList(createFakePearRecords()));
+        fakeTreeList.addAll(Arrays.asList(createFakeCherryRecords()));
+        fakeTreeList.addAll(Arrays.asList(createFakePeachRecords()));
+        fakeTreeList.addAll(Arrays.asList(createFakeApricotRecords()));
+
         return fakeTreeList.toArray(new Tree[0]);
     }
     private Tree[] createFakeAppleRecords() {
@@ -88,6 +92,32 @@ public class TreeServiceTest {
 
         return fakeTreeList.toArray(new Tree[0]);
     }
+
+    private Tree[] createFakePearRecords() {
+        List<Tree> fakeTreeList = new ArrayList<>();
+        fakeTreeList.add(createFakeRecord(5253, 8424, 2453, "Council", "Pyrus", "Pear"));
+
+        return fakeTreeList.toArray(new Tree[0]);
+    }
+
+    private Tree[] createFakeCherryRecords() {
+        List<Tree> fakeTreeList = new ArrayList<>();
+        fakeTreeList.add(createFakeRecord(4313, 8591, 724, "Council", "Prunus", "Cherry"));
+        return fakeTreeList.toArray(new Tree[0]);
+    }
+
+    private Tree[] createFakePeachRecords() {
+        List<Tree> fakeTreeList = new ArrayList<>();
+        return fakeTreeList.toArray(new Tree[0]);
+    }
+
+    private Tree[] createFakeApricotRecords() {
+        List<Tree> fakeTreeList = new ArrayList<>();
+        fakeTreeList.add(createFakeRecord(4539, 7854, 2042, "Council", "Prunus", "Apricot"));
+        return fakeTreeList.toArray(new Tree[0]);
+    }
+    //endregion
+
 
     @Test
     public void testGetTreesByTypeWithPopulatedDatabase() {
@@ -143,6 +173,47 @@ public class TreeServiceTest {
         assertEquals(result.getFirst(), expectedTree);
 
 
+    }
+
+    @Test
+    public void testGetAllTreesWithPopulatedDatabase() {
+        List<TreeModel> populatedList = fillDatabase();
+
+        List<TreeModel> allTrees = testTreeService.getAllTrees();
+
+        assertEquals(5, allTrees.size());
+
+        for (TreeModel expectedTree : populatedList) {
+            assertTrue(allTrees.contains(expectedTree));
+        }
+    }
+
+    @Test
+    public void testGetAllTreesWithoutDatabase() {
+
+        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100))
+                .thenReturn(new Request<>(new ApiResponse("Feature", createFakeAppleRecords(), false), 200));
+        when(apiHandler.getTrees("CommonName='Pear'", "TreeID,Ownership,Genus,CommonName", 100))
+                .thenReturn(new Request<>(new ApiResponse("Feature", createFakePearRecords(), false), 200));
+        when(apiHandler.getTrees("CommonName='Cherry'", "TreeID,Ownership,Genus,CommonName", 100))
+                .thenReturn(new Request<>(new ApiResponse("Feature", createFakeCherryRecords(), false), 200));
+        when(apiHandler.getTrees("CommonName='Peach'", "TreeID,Ownership,Genus,CommonName", 100))
+                .thenReturn(new Request<>(new ApiResponse("Feature", createFakePeachRecords(), false), 200));
+        when(apiHandler.getTrees("CommonName='Apricot'", "TreeID,Ownership,Genus,CommonName", 100))
+                .thenReturn(new Request<>(new ApiResponse("Feature", createFakeApricotRecords(), false), 200));
+
+        List<TreeModel> allTrees = testTreeService.getAllTrees();
+
+        assertEquals(5, allTrees.size());
+
+        List<String> types = List.of("Apple", "Pear", "Cherry", "Peach", "Apricot");
+
+        for (String type : types) {
+            verify(apiHandler, times(1  ))
+                    .getTrees("CommonName='" + type + "'",
+                            "TreeID,Ownership,Genus,CommonName",
+                            100);
+        }
     }
 
     @Test
