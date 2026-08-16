@@ -18,6 +18,7 @@ import seng202.team4.services.StateManager;
  */
 public class SettingsController extends ScreenController {
 
+    private static final Logger LOG = LogManager.getLogger(SettingsController.class);
     @FXML
     private ToggleButton darkModeToggle;
     @FXML
@@ -26,8 +27,6 @@ public class SettingsController extends ScreenController {
     private Circle switchCircle;
     @FXML
     private ColorPicker colorPicker;
-
-    private static final Logger LOG = LogManager.getLogger(SettingsController.class);
 
     /**
      * Initialise the window
@@ -44,7 +43,7 @@ public class SettingsController extends ScreenController {
      */
     @FXML
     public void initialize() {
-        boolean isDark = getStateManager().getWindowManager().isDarkMode();
+        boolean isDark = getStateManager().getWindowManager().getThemeService().isDarkMode();
         darkModeToggle.setSelected(isDark);
         switchCircle.setTranslateX(isDark ? 24 : 2);
     }
@@ -66,7 +65,7 @@ public class SettingsController extends ScreenController {
         TranslateTransition slide = new TranslateTransition(Duration.millis(150), switchCircle);
         slide.setToX(isDark ? 24 : 2);
         slide.play();
-        getStateManager().getWindowManager().setDarkMode(isDark);
+        getStateManager().getWindowManager().getThemeService().setDarkMode(isDark);
     }
 
     /**
@@ -74,6 +73,6 @@ public class SettingsController extends ScreenController {
      */
     @FXML
     public void changeThemeColour() {
-        getStateManager().getWindowManager().setPrimaryColor(colorPicker.getValue());
+        getStateManager().getWindowManager().getThemeService().setPrimaryColor(colorPicker.getValue());
     }
 }

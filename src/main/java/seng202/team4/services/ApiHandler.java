@@ -2,7 +2,6 @@ package seng202.team4.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.cdimascio.dotenv.Dotenv;
 import seng202.team4.models.api.ApiResponse;
 import seng202.team4.models.api.Request;
 
