@@ -10,11 +10,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.*;
+import seng202.team4.gui.screens.JournalController;
+import seng202.team4.gui.screens.MapController;
+import seng202.team4.gui.screens.RecipesController;
+import seng202.team4.gui.screens.SettingsController;
+import seng202.team4.gui.screens.TableViewController;
+import seng202.team4.gui.utilities.CssUtilities;
 import seng202.team4.services.StateManager;
 
 import java.io.IOException;
-import seng202.team4.gui.utilities.CssUtilities;
 
 /**
  * Handles requests from GUI controllers to change scenes
@@ -143,7 +147,8 @@ public class WindowManager {
      * @return true/false bool
      */
     public boolean isDarkMode() {
-        return stage.getScene().getStylesheets().contains(getClass().getResource("/css/dark-theme.css").toExternalForm());
+        return stage.getScene().getStylesheets().contains(getClass()
+                .getResource("/css/dark-theme.css").toExternalForm());
     }
 
     /**

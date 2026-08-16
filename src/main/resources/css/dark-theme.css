@@ -5,3 +5,15 @@
     -secondary-bg-color: #1e1e1e;
     -text-color: #dcdcdc;
 }
+.custom-color-dialog .label,
+.custom-color-dialog .text-field,
+.custom-color-dialog .toggle-button,
+.custom-color-dialog .button {
+    -fx-text-fill: #1a1a1a;
+    -fx-background-color: #ffffff;
+}
+
+.custom-color-dialog .toggle-button:selected {
+    -fx-background-color: #86CA82;
+    -fx-text-fill: #ffffff;
+}
