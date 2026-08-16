@@ -132,7 +132,7 @@ public class WindowManager {
             pane.setCenter(setupParent);
             stage.setTitle(controller.getTitle());
         } catch (IOException e) {
-            LOG.error(e);
+            LOG.error("Failed to load screen: " + controller.getFxmlFile(), e);
         }
     }
 

@@ -1,9 +1,17 @@
 package seng202.team4.gui.screens;
 
+import com.sun.javafx.webkit.WebConsoleListener;
+import javafx.concurrent.Worker;
+import javafx.fxml.FXML;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.services.StateManager;
+import seng202.team4.services.TreeService;
 
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -13,6 +21,14 @@ public class MapController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(MapController.class);
 
+    private final TreeService treeService; // TODO: used once tree-click lookup is implemented
+
+    @FXML
+    private WebView webView;
+    private WebEngine webEngine;
+    private JavaScriptBridge javaScriptBridge;
+    private JSObject javaScriptConnector;
+
     /**
      * Initialise the window
      *
@@ -21,6 +37,40 @@ public class MapController extends ScreenController {
     public MapController(StateManager stateManager) {
 
         super(stateManager);
+        treeService = new TreeService();
+    }
+
+    /**
+     * Initialises the bridge and loads the map once FXML is loaded
+     */
+    @FXML
+    private void initialize() {
+        LOG.info("MapController initialize() called");
+        javaScriptBridge = new JavaScriptBridge(tree -> { }, id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
+        initMap();
+
+    }
+
+    /**
+     * Loads the Leaflet map HTML into the WebView and wires up the JS bridge
+     */
+    private void initMap() {
+        webEngine = webView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
+        webEngine.load(getClass().getClassLoader().getResource("html/foraging_map.html").toExternalForm());
+        WebConsoleListener.setDefaultListener((view, message, lineNumber, sourceId) ->
+                LOG.info(String.format("Map WebView console log line: %d, message : %s", lineNumber, message)));
+
+        webEngine.getLoadWorker().stateProperty().addListener(
+                (ov, oldState, newState) -> {
+                    if (newState == Worker.State.SUCCEEDED) {
+                        JSObject window = (JSObject) webEngine.executeScript("window");
+                        window.setMember("javaScriptBridge", javaScriptBridge);
+                        javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
+
+                        javaScriptConnector.call("initMap");
+                    }
+                });
     }
 
     public String getFxmlFile() {
