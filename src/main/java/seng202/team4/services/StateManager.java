@@ -2,6 +2,8 @@ package seng202.team4.services;
 
 import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
+import seng202.team4.repository.TreeDAO;
+import seng202.team4.repository.TreeRepository;
 
 /**
  * The class which stores information related to the state of the entire app in a given instance
@@ -12,6 +14,9 @@ public class StateManager {
 
     private final WindowManager windowManager;
     private final DatabaseManager databaseManager;
+    private final TreeRepository treeRepository;
+    private final TreeService treeService;
+
 
     /**
      * A constructor which launches the mainScreen of the application
@@ -22,6 +27,11 @@ public class StateManager {
     public StateManager(WindowManager windowManager) {
         this.windowManager = windowManager;
         this.databaseManager = new DatabaseManager(null);
+
+        this.treeRepository = new TreeDAO(databaseManager);
+        this.treeService = new TreeService(treeRepository);
+
+
         this.windowManager.launchMapScreen(this);
         this.windowManager.launchNavScreen(this);
 
@@ -33,5 +43,9 @@ public class StateManager {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public TreeService getTreeService() {
+        return treeService;
     }
 }

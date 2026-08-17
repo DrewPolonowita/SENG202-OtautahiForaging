@@ -22,16 +22,14 @@ import java.util.List;
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final ApiHandler apiHandler;
-    private final StateManager stateManager;
     private final TreeRepository treeDAO;
 
     /**
      * Constructor
      */
-    public TreeService(StateManager stateManager) {
+    public TreeService(TreeRepository treeRepository) {
         this.apiHandler = new ApiHandler();
-        this.stateManager = stateManager;
-        this.treeDAO = new TreeDAO(this.stateManager.getDatabaseManager());
+        this.treeDAO = treeRepository;
     }
 
     /**
@@ -40,7 +38,6 @@ public class TreeService {
      */
     public TreeService(ApiHandler apiHandler, TreeDAO treeDAO) {
         this.apiHandler = apiHandler;
-        this.stateManager = null;
         this.treeDAO = treeDAO;
     }
 
