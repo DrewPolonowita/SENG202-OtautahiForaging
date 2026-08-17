@@ -2,11 +2,13 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.ApiResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.models.api.Tree;
 import seng202.team4.repository.TreeDAO;
+import seng202.team4.repository.TreeRepository;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final ApiHandler apiHandler;
     private final StateManager stateManager;
-    private final TreeDAO treeDAO;
+    private final TreeRepository treeDAO;
 
     /**
      * Constructor
@@ -112,7 +114,11 @@ public class TreeService {
         List<TreeModel> apiTrees = getAllTreesFromApi();
         log.info("Loaded {} trees from api", apiTrees.size());
         for (TreeModel tree: apiTrees) {
-            treeDAO.add(tree);
+            try {
+                treeDAO.add(tree);
+            } catch (DuplicateEntryException e) {
+                log.warn("Skip duplicate id: {}", tree.getId());
+            }
         }
         databaseTrees = treeDAO.getAll();
 
@@ -136,7 +142,11 @@ public class TreeService {
 
         List<TreeModel> apiTreesByType = getTreesFromApiByType(type);
         for (TreeModel tree : apiTreesByType) {
-            treeDAO.add(tree);
+            try {
+                treeDAO.add(tree);
+            } catch (DuplicateEntryException e) {
+                log.warn("Skip duplicate id: {}", tree.getId());
+            }
         }
         databaseTrees = treeDAO.getTreesByCommonName(type);
         return databaseTrees;
@@ -147,7 +157,7 @@ public class TreeService {
      * @param type tree type requested by common name
      * @return List of tree models of requested type from API
      */
-    public List<TreeModel> getTreesFromApiByType(String type) {
+    private List<TreeModel> getTreesFromApiByType(String type) {
         Request request = apiHandler.getTrees("CommonName='" + type + "'",
                 "TreeID,Ownership,Genus,CommonName",
                 100);

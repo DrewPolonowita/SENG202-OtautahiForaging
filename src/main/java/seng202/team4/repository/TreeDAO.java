@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * DAOInterface implementation for trees, handles tree related actions to database
  */
-public class TreeDAO implements DAOInterface<TreeModel> {
+public class TreeDAO implements TreeRepository {
     private static final Logger log = LogManager.getLogger(TreeDAO.class);
 
     private final DatabaseManager databaseManager;
