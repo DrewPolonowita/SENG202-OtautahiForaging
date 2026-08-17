@@ -152,11 +152,11 @@ public class TableViewController extends ScreenController {
     @FXML
     private void appleFilterChecked() {
         if (!appleFiltered) {
-            filteredTrees.addAll(treeService.getAppleTrees());
+            filteredTrees.addAll(treeService.getTreesByType("Apple"));
             appleFiltered = true;
             reloadTable();
         } else {
-            filteredTrees.removeAll(treeService.getAppleTrees());
+            filteredTrees.removeAll(treeService.getTreesByType("Apple"));
             appleFiltered = false;
             reloadTable();
         }
@@ -168,11 +168,11 @@ public class TableViewController extends ScreenController {
     @FXML
     private void pearFilterChecked() {
         if (!pearFiltered) {
-            filteredTrees.addAll(treeService.getPearTrees());
+            filteredTrees.addAll(treeService.getTreesByType("Pear"));
             pearFiltered = true;
             reloadTable();
         } else {
-            filteredTrees.removeAll(treeService.getPearTrees());
+            filteredTrees.removeAll(treeService.getTreesByType("Pear"));
             pearFiltered = false;
             reloadTable();
         }
@@ -184,11 +184,11 @@ public class TableViewController extends ScreenController {
     @FXML
     private void cherryFilterChecked() {
         if (!cherryFiltered) {
-            filteredTrees.addAll(treeService.getCherryTrees());
+            filteredTrees.addAll(treeService.getTreesByType("Cherry"));
             cherryFiltered = true;
             reloadTable();
         } else {
-            filteredTrees.removeAll(treeService.getCherryTrees());
+            filteredTrees.removeAll(treeService.getTreesByType("Cherry"));
             cherryFiltered = false;
             reloadTable();
         }
@@ -200,11 +200,11 @@ public class TableViewController extends ScreenController {
     @FXML
     private void peachFilterChecked() {
         if (!peachFiltered) {
-            filteredTrees.addAll(treeService.getPeachTrees());
+            filteredTrees.addAll(treeService.getTreesByType("Peach"));
             peachFiltered = true;
             reloadTable();
         } else {
-            filteredTrees.removeAll(treeService.getPeachTrees());
+            filteredTrees.removeAll(treeService.getTreesByType("Peach"));
             peachFiltered = false;
             reloadTable();
         }
@@ -216,11 +216,11 @@ public class TableViewController extends ScreenController {
     @FXML
     private void apricotFilterChecked() {
         if (!apricotFiltered) {
-            filteredTrees.addAll(treeService.getApricotTrees());
+            filteredTrees.addAll(treeService.getTreesByType("Apricot"));
             apricotFiltered = true;
             reloadTable();
         } else {
-            filteredTrees.removeAll(treeService.getApricotTrees());
+            filteredTrees.removeAll(treeService.getTreesByType("Apricot"));
             apricotFiltered = false;
             reloadTable();
         }

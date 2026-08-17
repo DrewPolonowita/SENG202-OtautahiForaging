@@ -120,47 +120,6 @@ public class TreeService {
     }
 
 
-
-    /**
-     * Method to filter and return apple trees
-     * @return List of apple trees
-     */
-    public List<TreeModel> getAppleTrees() {
-        return getTreesByType("Apple");
-    }
-
-    /**
-     * Method to filter and return pear trees
-     * @return List of pear trees
-     */
-    public List<TreeModel> getPearTrees() {
-        return getTreesByType("Pear");
-    }
-
-    /**
-     * Method to filter and return cherry trees
-     * @return List of cherry trees
-     */
-    public List<TreeModel> getCherryTrees() {
-        return getTreesByType("Cherry");
-    }
-
-    /**
-     * Method to filter and return peach trees
-     * @return List of peach trees
-     */
-    public List<TreeModel> getPeachTrees() {
-        return getTreesByType("Peach");
-    }
-
-    /**
-     * Method to filter and return apricot trees
-     * @return List of apricot trees
-     */
-    public List<TreeModel> getApricotTrees() {
-        return getTreesByType("Apricot");
-    }
-
     /**
      * Return all trees of a particular type in the database (using common name)
      * If the database has none of the type, use the api to populate database
