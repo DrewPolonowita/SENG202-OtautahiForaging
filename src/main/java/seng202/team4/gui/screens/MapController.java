@@ -37,7 +37,7 @@ public class MapController extends ScreenController {
     public MapController(StateManager stateManager) {
 
         super(stateManager);
-        treeService = new TreeService();
+        treeService = stateManager.getTreeService();
     }
 
     /**

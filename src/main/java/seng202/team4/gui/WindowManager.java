@@ -161,28 +161,4 @@ public class WindowManager {
             LOG.error(e);
         }
     }
-
-    /**
-     * Checks to see if darkmode theme is applied
-     * @return true/false bool
-     */
-    public boolean isDarkMode() {
-        return stage.getScene().getStylesheets().contains(getClass().getResource("/css/dark-theme.css").toExternalForm());
-    }
-
-    /**
-     * Method for toggling dark mode on/off
-     * @param darkMode true to enable dark mode, false to disable it
-     */
-    public void setDarkMode(boolean darkMode) {
-        String darkCSS = getClass().getResource("/css/dark-theme.css").toExternalForm();
-        var stylesheets = stage.getScene().getStylesheets();
-        if (darkMode) {
-            if (!stylesheets.contains(darkCSS)) {
-                stylesheets.add(darkCSS);
-            }
-        } else {
-            stylesheets.remove(darkCSS);
-        }
-    }
 }

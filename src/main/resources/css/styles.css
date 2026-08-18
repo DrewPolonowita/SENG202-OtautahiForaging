@@ -4,8 +4,6 @@
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
     -text-color: #1a1a1a;
-}
-.root {
     -fx-background-color: -secondary-bg-color;
     -fx-text-fill: -text-color;
 }
