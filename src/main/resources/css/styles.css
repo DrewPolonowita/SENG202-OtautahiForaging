@@ -4,7 +4,6 @@
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
     -text-color: #1a1a1a;
-
     -fx-background-color: -secondary-bg-color;
     -fx-text-fill: -text-color;
 }
@@ -77,9 +76,18 @@
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
+
 .generic-text {
     -fx-text-fill: -text-color;
     -fx-font-size: 12px;
+}
+.filters {
+    -fx-background-color: -primary-bg-color;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-width: 32px;
+    -fx-max-height: 32px;
+    -fx-background-radius: 8px;
 }
 
 .color-picker {

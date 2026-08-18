@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Foraging Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="../css/map.css" />
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+<script>
+    let map;
+    let markers = [];
+    var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
+
+    /**
+     * This object can be returned to our java code, where we can call the functions we define inside of it
+     */
+    let jsConnector = {
+        addMarker: addMarker,
+        removeMarkers: removeMarkers,
+        displayMarkers: displayMarkers,
+        initMap: initMap
+    };
+
+    /**
+     * creates and initialises the Leaflet map, also defines on click event that calls java code
+     */
+    function initMap() {
+        let mapOptions = {
+            center: [-43.53, 172.63],
+            zoom: 13
+        }
+        map = new L.map('map', mapOptions);
+        new L.TileLayer('https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png', { // UCs tilemap server
+            attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
+        }).addTo(map)
+
+        L.circleMarker([-43.53, 172.63], {
+            radius: 6,
+            fillColor: 'green',
+            fillOpacity: 1,
+            color: 'black',
+            weight: 3
+        }).addTo(map);
+    }
+
+
+    /**
+     * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
+     * @param title tooltip to display on hover
+     * @param lat latitude to place marker at
+     * @param lng longitude to place marker at
+     */
+    function addMarker(id, title, lat, lng) {
+        let m = new L.Marker([lat, lng])
+        m.bindPopup(title).openPopup()
+        // Add marker to map, and specify our own on click function which passes the id of the sale back to java,
+        // so we can reference it
+        m.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id))
+        markers.push(m)
+    }
+
+    function removeMarkers() {
+        markers.forEach(m => m.remove())
+    }
+
+    function displayMarkers() {
+        markers.forEach(m => m.addTo(map))
+    }
+
+</script>
+</body>
+</html>

@@ -5,7 +5,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,6 +62,14 @@ public class WindowManager {
         gridPane.add(rootPane, 1, 0);
 
         themeService = new ThemeService(stage.getScene(), gridPane);
+        // Setup Row and Column constraints to stretch content correctly
+        ColumnConstraints navigationColumn = new ColumnConstraints();
+        navigationColumn.setHgrow(Priority.NEVER);
+        ColumnConstraints contentColumn = new ColumnConstraints();
+        contentColumn.setHgrow(Priority.ALWAYS);
+        gridPane.getColumnConstraints().addAll(navigationColumn, contentColumn);
+
+
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         gridPane.getScene().getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
