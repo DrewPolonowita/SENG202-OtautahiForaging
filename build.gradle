@@ -102,6 +102,10 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web' ]
 }
 
+run {
+    jvmArgs = ['--module-path', classpath.asPath, '--add-exports', 'javafx.web/com.sun.javafx.webkit=ALL-UNNAMED']
+}
+
 test {
     useJUnitPlatform()
 
