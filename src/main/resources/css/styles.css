@@ -109,4 +109,19 @@
 .color-picker .arrow-button .arrow {
     -fx-background-color: -primary-color;
 }
+.filterTab {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 8;
+}
+.filters:hover {
+    -fx-background-color: -primary-color-highlight;
+    -fx-text-fill: -primary-bg-color;
+}
+.filters:hover .icon {
+    -fx-background-color: -primary-bg-color;
+}
 
+.filters-selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -primary-bg-color;
+}

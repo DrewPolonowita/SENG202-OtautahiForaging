@@ -3,6 +3,8 @@ package seng202.team4.gui.screens;
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
@@ -25,6 +27,11 @@ public class MapController extends ScreenController {
 
     @FXML
     private WebView webView;
+    @FXML
+    private VBox filterBox;
+    private boolean filterOpened;
+    @FXML
+    private Button filterButton;
     private WebEngine webEngine;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
@@ -79,5 +86,22 @@ public class MapController extends ScreenController {
 
     public String getTitle() {
         return "Map";
+    }
+
+    @FXML
+    public void filterClicked() {
+        if (filterOpened) {
+            filterBox.setVisible(false);
+            filterOpened = false;
+            filterButton.getStyleClass().remove("filters-selected");
+            filterButton.getGraphic().getStyleClass().remove("icon-selected");
+        }
+        else {
+            filterBox.setVisible(true);
+            filterOpened = true;
+            filterButton.getStyleClass().add("filters-selected");
+            filterButton.getGraphic().getStyleClass().add("icon-selected");
+            System.out.println(filterButton.getStyleClass());
+        }
     }
 }

@@ -1,4 +1,4 @@
-package seng202.team4.gui;
+package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.ScreenController;
 import seng202.team4.services.StateManager;
 
 /**

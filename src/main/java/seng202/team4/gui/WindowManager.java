@@ -11,11 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.JournalController;
-import seng202.team4.gui.screens.MapController;
-import seng202.team4.gui.screens.RecipesController;
-import seng202.team4.gui.screens.SettingsController;
-import seng202.team4.gui.screens.TableViewController;
+import seng202.team4.gui.screens.*;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 
