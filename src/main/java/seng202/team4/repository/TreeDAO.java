@@ -1,0 +1,203 @@
+package seng202.team4.repository;
+
+import org.apache.commons.lang3.NotImplementedException;
+import seng202.team4.models.TreeModel;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * DAOInterface implementation for trees, handles tree related actions to database
+ */
+public class TreeDAO implements TreeRepository {
+    private static final Logger log = LogManager.getLogger(TreeDAO.class);
+
+    private final DatabaseManager databaseManager;
+
+    /**
+     * Constructor
+     * @param databaseManager means of connecting to the database
+     */
+    public TreeDAO(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
+    }
+
+    /**
+     * Method to return all trees stored in the database
+     * @return returns a list of TreeModels, empty list if failed
+     */
+    @Override
+    public List<TreeModel> getAll() {
+        List<TreeModel> trees = new ArrayList<>();
+        String sql = "SELECT * FROM trees";
+        try (Connection conn = databaseManager.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int[] coords = new int[] {
+                        rs.getInt("x"),
+                        rs.getInt("y")
+                };
+                trees.add(new TreeModel(
+                        rs.getInt("id"),
+                        coords,
+                        rs.getString("ownership"),
+                        rs.getString("genus"),
+                        rs.getString("fruit"),
+                        rs.getString("common_name")));
+            }
+            return trees;
+        } catch (SQLException sqlException) {
+            log.error(sqlException);
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Method to return the tree model of choice by id
+     * @param id id of object to get
+     * @return TreeModel object of specific id, null if failed
+     */
+    @Override
+    public TreeModel getOne(int id) {
+        TreeModel tree = null;
+        String sql = "SELECT * FROM trees WHERE id=?";
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int[] coords = new int[] {
+                            rs.getInt("x"),
+                            rs.getInt("y")
+                    };
+
+                    tree = new TreeModel(
+                            rs.getInt("id"),
+                            coords,
+                            rs.getString("ownership"),
+                            rs.getString("genus"),
+                            rs.getString("fruit"),
+                            rs.getString("common_name")
+                    );
+
+                }
+            }
+        } catch (SQLException sqlException) {
+            log.error(sqlException);
+            return null;
+        }
+        return tree;
+
+
+
+    }
+
+    /**
+     * Add a tree object to the database
+     * @param toAdd object of type T to add
+     * @return id of tree if success, -1 if failed
+     */
+    @Override
+    public int add(TreeModel toAdd) {
+        String sql = """
+            INSERT INTO trees (
+                id,
+                x,
+                y,
+                ownership,
+                genus,
+                fruit,
+                common_name
+            ) VALUES (?, ?, ?, ?, ?, ?, ?);
+        """;
+
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, toAdd.getId());
+            ps.setInt(2, toAdd.getXCoord());
+            ps.setInt(3, toAdd.getYCoord());
+            ps.setString(4, toAdd.getOwnership());
+            ps.setString(5, toAdd.getGenus());
+            ps.setString(6, toAdd.getFruit());
+            ps.setString(7, toAdd.getCommonName());
+
+            ps.executeUpdate();
+            return toAdd.getId();
+        } catch (SQLException sqlException) {
+            log.error(sqlException);
+            return -1;
+        }
+    }
+
+    /**
+     * delete a specific tree from database
+     * @param id id of object to delete
+     */
+    @Override
+    public void delete (int id) {
+        String sql = "DELETE FROM trees WHERE id=?";
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException sqlException) {
+            log.error(sqlException);
+        }
+    }
+
+    /**
+     * Not implemented
+     * @param toUpdate Object that needs to be updated
+     * (this object must be able to identify itself and its previous self)
+     */
+    @Override
+    public void update (TreeModel toUpdate) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * retrieve all trees of a specified common name
+     * @param type the common name specified
+     * @return all trees with the common name
+     */
+    public List<TreeModel> getTreesByCommonName(String type) {
+        List<TreeModel> trees = new ArrayList<>();
+        String sql = "SELECT * FROM trees WHERE common_name=?";
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, type);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int[] coords = new int[] {
+                            rs.getInt("x"),
+                            rs.getInt("y")
+                    };
+
+                    trees.add(new TreeModel(
+                            rs.getInt("id"),
+                            coords,
+                            rs.getString("ownership"),
+                            rs.getString("genus"),
+                            rs.getString("fruit"),
+                            rs.getString("common_name")
+                    ));
+                }
+            }
+            return trees;
+        } catch (SQLException sqlException) {
+            log.error(sqlException);
+            return new ArrayList<>();
+        }
+
+    }
+}

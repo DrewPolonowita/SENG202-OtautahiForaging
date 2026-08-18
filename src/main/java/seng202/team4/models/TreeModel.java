@@ -54,6 +54,14 @@ public class TreeModel {
         return coordinates;
     }
 
+    public int getXCoord() {
+        return coordinates[0];
+    }
+
+    public int getYCoord() {
+        return coordinates[1];
+    }
+
     /**
      * Getter for ownership
      * @return returns String ownership
