@@ -3,6 +3,9 @@
     --primary-bg-color: #ffffff;
     --primary-color-highlight: #7cbf82;
 }
+html.dark-theme {
+    --primary-bg-color: #2b2b2b;
+}
 html, body {
     height: 100%;
     margin: 0;

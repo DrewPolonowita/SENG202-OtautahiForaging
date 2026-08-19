@@ -48,17 +48,17 @@ public class MapController extends ScreenController {
     @FXML
     private Button apricotButton;
 
-    //private final ThemeService themeService;
+    private final ThemeService themeService;
     /**
      * Initialise the window
      *
      * @param stateManager Reference for window manager
      */
-    public MapController(StateManager stateManager) {
+    public MapController(StateManager stateManager, ThemeService themeService) {
 
         super(stateManager);
         treeService = stateManager.getTreeService();
-        //this.themeService = themeService; , ThemeService themeService
+        this.themeService = themeService;
     }
 
     /**
@@ -69,7 +69,6 @@ public class MapController extends ScreenController {
         LOG.info("MapController initialize() called");
         javaScriptBridge = new JavaScriptBridge(tree -> { }, id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
         initMap();
-
     }
 
     /**
@@ -85,6 +84,7 @@ public class MapController extends ScreenController {
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ov, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
+                        themeService.setWebEngine(webEngine);
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");

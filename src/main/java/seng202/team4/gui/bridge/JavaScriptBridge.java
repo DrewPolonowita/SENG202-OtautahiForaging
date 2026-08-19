@@ -16,7 +16,6 @@ public class JavaScriptBridge {
     private final AddTreeInterface addTreeInterface;
     private final TreeClickedInterface treeClickedInterface;
 
-
     /**
      * Creates javascript bridge object with a callback lambda function for displaying the tree on the map after creation
      * @param addTreeLambda add tree lambda function to add tree to js map

@@ -98,10 +98,9 @@ public class WindowManager {
      * @param stateManager the state manager for the application
      */
     public void launchMapScreen(StateManager stateManager) {
-        ScreenController controller = new MapController(stateManager);
+        ScreenController controller = new MapController(stateManager, themeService);
         launchScreen(controller, rootPane);
     }
-
     /**
      * Launches the journals screen
      *
