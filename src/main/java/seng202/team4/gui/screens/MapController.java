@@ -137,6 +137,15 @@ public class MapController extends ScreenController {
                     tree.getYCoord(), tree.getXCoord());
         }
     }
+    public void filterButtonClicked(Button buttons) {
+        if (buttons.getStyleClass().contains("sideBar-button-selected")) {
+            buttons.getStyleClass().remove("sideBar-button-selected");
+            buttons.getGraphic().getStyleClass().remove("icon-selected");
+        } else {
+            buttons.getStyleClass().add("sideBar-button-selected");
+            buttons.getGraphic().getStyleClass().add("icon-selected");
+        }
+    }
     @FXML
     public void appleButtonClicked() {
         filterButtonClicked(appleButton);
