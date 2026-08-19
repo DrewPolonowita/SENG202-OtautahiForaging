@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.services.StateManager;
+import seng202.team4.services.ThemeService;
 import seng202.team4.services.TreeService;
 
 /**
@@ -47,6 +48,7 @@ public class MapController extends ScreenController {
     @FXML
     private Button apricotButton;
 
+    //private final ThemeService themeService;
     /**
      * Initialise the window
      *
@@ -56,6 +58,7 @@ public class MapController extends ScreenController {
 
         super(stateManager);
         treeService = stateManager.getTreeService();
+        //this.themeService = themeService; , ThemeService themeService
     }
 
     /**
@@ -142,4 +145,5 @@ public class MapController extends ScreenController {
     public void apricotButtonClicked() {
         filterButtonClicked(apricotButton);
     }
+
 }
