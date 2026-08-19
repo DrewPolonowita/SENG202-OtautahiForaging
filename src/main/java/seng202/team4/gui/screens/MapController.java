@@ -36,6 +36,17 @@ public class MapController extends ScreenController {
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
 
+    @FXML
+    private Button appleButton;
+    @FXML
+    private Button pearButton;
+    @FXML
+    private Button cherryButton;
+    @FXML
+    private Button peachButton;
+    @FXML
+    private Button apricotButton;
+
     /**
      * Initialise the window
      *
@@ -95,13 +106,43 @@ public class MapController extends ScreenController {
             filterOpened = false;
             filterButton.getStyleClass().remove("filters-selected");
             filterButton.getGraphic().getStyleClass().remove("icon-selected");
-        }
-        else {
+        } else {
             filterBox.setVisible(true);
             filterOpened = true;
             filterButton.getStyleClass().add("filters-selected");
             filterButton.getGraphic().getStyleClass().add("icon-selected");
-            System.out.println(filterButton.getStyleClass());
         }
     }
+    public void filterButtonClicked(Button buttons) {
+        if (buttons.getStyleClass().contains("sideBar-button-selected")) {
+            buttons.getStyleClass().remove("sideBar-button-selected");
+            buttons.getGraphic().getStyleClass().remove("icon-selected");
+        } else {
+            buttons.getStyleClass().add("sideBar-button-selected");
+            buttons.getGraphic().getStyleClass().add("icon-selected");
+        }
+    }
+    @FXML
+    public void appleButtonClicked() {
+        filterButtonClicked(appleButton);
+    }
+    @FXML
+    public void pearButtonClicked() {
+        filterButtonClicked(pearButton);
+    }
+    @FXML
+    public void cherryButtonClicked() {
+        filterButtonClicked(cherryButton);
+    }
+    @FXML
+    public void peachButtonClicked() {
+        filterButtonClicked(peachButton);
+    }
+    @FXML
+    public void apricotButtonClicked() {
+        filterButtonClicked(apricotButton);
+    }
+
+
+
 }
