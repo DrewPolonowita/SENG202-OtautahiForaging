@@ -55,7 +55,6 @@ public class MapController extends ScreenController {
         LOG.info("MapController initialize() called");
         javaScriptBridge = new JavaScriptBridge(tree -> { }, id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
         initMap();
-
     }
 
     /**
@@ -122,7 +121,7 @@ public class MapController extends ScreenController {
                     tree.getOwnership(), tree.getGenus(), tree.getId()
             );
             javaScriptConnector.call("addMarker", tree.getId(), popup,
-                    tree.getXCoord(), tree.getYCoord());
+                    tree.getYCoord(), tree.getXCoord());
         }
     }
 }
