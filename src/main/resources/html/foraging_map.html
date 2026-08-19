@@ -50,8 +50,13 @@
             fillColor: 'green',
             fillOpacity: 1,
             color: 'black',
-            weight: 2
-        }).addTo(map);
+            weight: 3
+        }).addTo(map)
+            .bindPopup("<b>Common Name: </b>Pear<br>"
+                + "<b>Ownership: </b>Chirstchurch City Council<br>"
+                + "<b>Genus: </b>Perus<br>"
+                + "<b>Tree ID: </b>201247"); // Running test popup on center red marker
+
     }
 
 
