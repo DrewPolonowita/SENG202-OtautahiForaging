@@ -14,7 +14,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.TreeService;
-
+import seng202.team4.models.TreeModel;
 /**
  * Controller for the map_screen.fxml window which controls the map
  * @author Team 4
@@ -66,7 +66,6 @@ public class MapController extends ScreenController {
         LOG.info("MapController initialize() called");
         javaScriptBridge = new JavaScriptBridge(tree -> { }, id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
         initMap();
-
     }
 
     /**
@@ -87,6 +86,7 @@ public class MapController extends ScreenController {
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
 
                         javaScriptConnector.call("initMap");
+                        showTreeDescription();
                     }
                 });
     }
@@ -113,33 +113,24 @@ public class MapController extends ScreenController {
             filterButton.getGraphic().getStyleClass().add("icon-selected");
         }
     }
-    public void filterButtonClicked(Button buttons) {
-        if (buttons.getStyleClass().contains("sideBar-button-selected")) {
-            buttons.getStyleClass().remove("sideBar-button-selected");
-            buttons.getGraphic().getStyleClass().remove("icon-selected");
-        } else {
-            buttons.getStyleClass().add("sideBar-button-selected");
-            buttons.getGraphic().getStyleClass().add("icon-selected");
+
+    /**
+     * Formatting the string popup for tree data points on Leaflet
+     * Each tree added as a marker will have a popup description
+     * Potential space for development: addition of "add to Journal" button
+     * on the popup.
+     */
+    private void showTreeDescription() {
+        for (TreeModel tree : treeService.getAllTrees()) {
+            String popup = String.format(
+                    "<b>Common Name: </b>%s<br>"
+                            + "<b>Ownership: </b>%s<br>"
+                            + "<b>Genus: </b>%s<br>"
+                            + "<b>Tree ID:</b> %d", tree.getCommonName(),
+                    tree.getOwnership(), tree.getGenus(), tree.getId()
+            );
+            javaScriptConnector.call("addMarker", tree.getId(), popup,
+                    tree.getYCoord(), tree.getXCoord());
         }
-    }
-    @FXML
-    public void appleButtonClicked() {
-        filterButtonClicked(appleButton);
-    }
-    @FXML
-    public void pearButtonClicked() {
-        filterButtonClicked(pearButton);
-    }
-    @FXML
-    public void cherryButtonClicked() {
-        filterButtonClicked(cherryButton);
-    }
-    @FXML
-    public void peachButtonClicked() {
-        filterButtonClicked(peachButton);
-    }
-    @FXML
-    public void apricotButtonClicked() {
-        filterButtonClicked(apricotButton);
     }
 }
