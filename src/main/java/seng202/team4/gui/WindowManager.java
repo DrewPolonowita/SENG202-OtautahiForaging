@@ -45,9 +45,9 @@ public class WindowManager {
         gridPane = new GridPane();
         stage.setScene(new Scene(gridPane));
 
-        // Initial sizes for the GUI
-        gridPane.setPrefHeight(400);
-        gridPane.setPrefWidth(600);
+        // Scaling minimum sizes
+        stage.setMinWidth(600);
+        stage.setMinHeight(360);
 
         // Creates the BorderPane for the navBar and the mainScreen
         rootPane = new BorderPane();

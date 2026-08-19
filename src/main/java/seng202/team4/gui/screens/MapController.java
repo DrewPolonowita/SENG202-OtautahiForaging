@@ -142,7 +142,4 @@ public class MapController extends ScreenController {
     public void apricotButtonClicked() {
         filterButtonClicked(apricotButton);
     }
-
-
-
 }
