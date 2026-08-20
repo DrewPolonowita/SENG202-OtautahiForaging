@@ -9,15 +9,18 @@ import seng202.team4.models.api.*;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.services.ApiHandler;
+import seng202.team4.services.FoodService;
 import seng202.team4.services.TreeService;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -30,6 +33,7 @@ public class TreeServiceTest {
     private ApiHandler apiHandler;
     private DatabaseManager databaseManager;
     private TreeDAO treeDAO;
+    private FoodService foodService;
 
     @TempDir
     Path tempDirectory;
@@ -41,6 +45,7 @@ public class TreeServiceTest {
         databaseManager = new DatabaseManager(testUrl);
         treeDAO = new TreeDAO(databaseManager);
         testTreeService = new TreeService(apiHandler, treeDAO);
+        foodService = new FoodService();
 
 
     }
@@ -98,19 +103,20 @@ public class TreeServiceTest {
 
     @Test
     public void convertTreeRecordToModelTest() {
+        Map<String, List<String>> foodMap = foodService.getFoodMap();
 
         int[] coordinates = {5252,3423};
 
-        Tree testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Apple");
+        Tree testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Chinese Crab Apple");
 
         Tree[] fakeTrees = {testRecord};
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
 
-        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100)).thenReturn(fakeRequest);
+        when(apiHandler.getTrees(anyString(), eq("TreeID,Ownership,Genus,CommonName"), eq(100))).thenReturn(fakeRequest);
 
         List<TreeModel> result = testTreeService.getTreesByType("Apple");
-        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Apple" );
+        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Chinese Crab Apple" );
         assertEquals(result.getFirst(), expectedTree);
 
 

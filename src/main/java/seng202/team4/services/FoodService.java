@@ -17,7 +17,7 @@ public class FoodService {
     public FoodService(){
         createFoodMap();
     }
-    public void createFoodMap() {
+    private void createFoodMap() {
         foodMap.put("Apple", List.of(
                 "Chinese Crab Apple",
                 "Midget Crab Apple",
