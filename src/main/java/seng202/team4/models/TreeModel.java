@@ -17,7 +17,7 @@ public class TreeModel {
     private final int[] coordinates;
     private final String ownership;
     private final String genus;
-    private final String fruit;
+    private final String food;
     private final String commonName;
 
     /**
@@ -33,7 +33,7 @@ public class TreeModel {
         this.coordinates = coordinates;
         this.ownership = ownership;
         this.genus = genus;
-        this.fruit = fruit;
+        this.food = fruit;
         this.commonName = commonName;
     }
 
@@ -79,11 +79,11 @@ public class TreeModel {
     }
 
     /**
-     * Getter method for fruit type
-     * @return returns String fruit
+     * Getter method for food type
+     * @return returns String food
      */
-    public String getFruit() {
-        return fruit;
+    public String getFood() {
+        return food;
     }
 
     /**
@@ -112,7 +112,7 @@ public class TreeModel {
                 && Arrays.equals(coordinates, treeModel.coordinates)
                 && Objects.equals(ownership, treeModel.ownership)
                 && Objects.equals(genus, treeModel.genus)
-                && Objects.equals(fruit, treeModel.fruit)
+                && Objects.equals(food, treeModel.food)
                 && Objects.equals(commonName, treeModel.commonName);
     }
 
@@ -122,7 +122,7 @@ public class TreeModel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, fruit, commonName);
+        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, food, commonName);
     }
 
 }

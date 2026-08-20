@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS trees (
     y INTEGER NOT NULL,
     ownership TEXT NOT NULL,
     genus TEXT NOT NULL,
-    fruit TEXT NOT NULL,
+    food TEXT NOT NULL,
     common_name TEXT NOT NULL
 
 )

@@ -50,7 +50,7 @@ public class TreeDAO implements TreeRepository {
                         coords,
                         rs.getString("ownership"),
                         rs.getString("genus"),
-                        rs.getString("fruit"),
+                        rs.getString("food"),
                         rs.getString("common_name")));
             }
             return trees;
@@ -84,7 +84,7 @@ public class TreeDAO implements TreeRepository {
                             coords,
                             rs.getString("ownership"),
                             rs.getString("genus"),
-                            rs.getString("fruit"),
+                            rs.getString("food"),
                             rs.getString("common_name")
                     );
 
@@ -114,7 +114,7 @@ public class TreeDAO implements TreeRepository {
                 y,
                 ownership,
                 genus,
-                fruit,
+                food,
                 common_name
             ) VALUES (?, ?, ?, ?, ?, ?, ?);
         """;
@@ -127,7 +127,7 @@ public class TreeDAO implements TreeRepository {
             ps.setInt(3, toAdd.getYCoord());
             ps.setString(4, toAdd.getOwnership());
             ps.setString(5, toAdd.getGenus());
-            ps.setString(6, toAdd.getFruit());
+            ps.setString(6, toAdd.getFood());
             ps.setString(7, toAdd.getCommonName());
 
             ps.executeUpdate();
@@ -166,15 +166,15 @@ public class TreeDAO implements TreeRepository {
 
     /**
      * retrieve all trees of a specified common name
-     * @param type the common name specified
+     * @param food the common name specified
      * @return all trees with the common name
      */
-    public List<TreeModel> getTreesByCommonName(String type) {
+    public List<TreeModel> getTreesByFoodName(String food) {
         List<TreeModel> trees = new ArrayList<>();
-        String sql = "SELECT * FROM trees WHERE common_name=?";
+        String sql = "SELECT * FROM trees WHERE food=?";
         try (Connection conn = databaseManager.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, type);
+            ps.setString(1, food);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -188,7 +188,7 @@ public class TreeDAO implements TreeRepository {
                             coords,
                             rs.getString("ownership"),
                             rs.getString("genus"),
-                            rs.getString("fruit"),
+                            rs.getString("food"),
                             rs.getString("common_name")
                     ));
                 }

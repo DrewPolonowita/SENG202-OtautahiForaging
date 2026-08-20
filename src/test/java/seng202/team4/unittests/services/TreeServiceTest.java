@@ -69,7 +69,7 @@ public class TreeServiceTest {
     public void testGetTreesByTypeWithPopulatedDatabase() {
         fillDatabase();
 
-        List<TreeModel> appleTrees = testTreeService.getTreesByType("Apple");
+        List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
 
         for (TreeModel tree : appleTrees) {
             assertEquals("Apple", tree.getCommonName());
@@ -88,7 +88,7 @@ public class TreeServiceTest {
 
         when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100))
                 .thenReturn(fakeRequest);
-        List<TreeModel> appleTrees = testTreeService.getTreesByType("Apple");
+        List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
 
         for (TreeModel tree : appleTrees) {
             assertEquals("Apple", tree.getCommonName());
@@ -115,7 +115,7 @@ public class TreeServiceTest {
 
         when(apiHandler.getTrees(anyString(), eq("TreeID,Ownership,Genus,CommonName"), eq(100))).thenReturn(fakeRequest);
 
-        List<TreeModel> result = testTreeService.getTreesByType("Apple");
+        List<TreeModel> result = testTreeService.getTreesByFood("Apple");
         TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Chinese Crab Apple" );
         assertEquals(result.getFirst(), expectedTree);
 
@@ -175,7 +175,7 @@ public class TreeServiceTest {
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 404);
 
         when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100)).thenReturn(fakeRequest);
-        List<TreeModel> result = testTreeService.getTreesByType("Apple");
+        List<TreeModel> result = testTreeService.getTreesByFood("Apple");
         assertTrue(result.isEmpty());
 
     }
