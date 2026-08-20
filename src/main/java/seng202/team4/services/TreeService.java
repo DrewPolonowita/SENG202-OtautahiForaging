@@ -42,7 +42,7 @@ public class TreeService {
     public TreeService(ApiHandler apiHandler, TreeDAO treeDAO) {
         this.apiHandler = apiHandler;
         this.treeDAO = treeDAO;
-        this.foodService = null;
+        this.foodService = new FoodService();
     }
 
     /**
@@ -70,15 +70,18 @@ public class TreeService {
      * @return the fruit type based on genus
      */
     private String getFruitType(String commonName) {
-        return switch (commonName) {
-            case "Apple" -> "Apple";
-            case "Pear" -> "Pear";
-            case "Cherry" -> "Cherry";
-            case "Peach" -> "Peach";
-            case "Apricot" -> "Apricot";
-            case "Juglans" -> "Walnut";
-            default -> "N/A";
-        };
+
+        Map<String, List<String>> foodMap = foodService.getFoodMap();
+
+        for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
+            List<String> commonNames = entry.getValue();
+            for (String name : commonNames) {
+                if (name.equals(commonName)) {
+                    return entry.getKey();
+                }
+            }
+        }
+        return "N/A";
     }
 
     /**
