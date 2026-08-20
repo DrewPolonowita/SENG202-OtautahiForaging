@@ -1,14 +1,22 @@
 package seng202.team4.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FoodService {
+    private static final Logger log = LogManager.getLogger(FoodService.class);
 
     private Map<String, List<String>> foodMap = new HashMap<>();
 
+
+    public FoodService(){
+        createFoodMap();
+    }
     public void createFoodMap() {
         foodMap.put("Apple", List.of(
                 "Chinese Crab Apple",
@@ -16,7 +24,7 @@ public class FoodService {
                 "Pillar Crab Apple",
                 "Siberian Crab",
                 "Southern crabapple",
-                "Hall's Crab Apple",
+                "Hall''s Crab Apple",
                 "Zumi Crab Apple",
                 "Common Apple"
         ));
@@ -83,10 +91,9 @@ public class FoodService {
         foodMap.put("Juniper", List.of(
                 "Common Juniper"
         ));
-
-
-
-
     }
 
+    public Map<String, List<String>> getFoodMap() {
+        return foodMap;
+    }
 }

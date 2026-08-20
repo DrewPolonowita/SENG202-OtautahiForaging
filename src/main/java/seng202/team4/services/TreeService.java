@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service class to handle business logic for managing trees
@@ -23,6 +24,7 @@ public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final ApiHandler apiHandler;
     private final TreeRepository treeDAO;
+    private final FoodService foodService;
 
     /**
      * Constructor
@@ -30,6 +32,7 @@ public class TreeService {
     public TreeService(TreeRepository treeRepository) {
         this.apiHandler = new ApiHandler();
         this.treeDAO = treeRepository;
+        this.foodService = new FoodService();
     }
 
     /**
@@ -39,6 +42,7 @@ public class TreeService {
     public TreeService(ApiHandler apiHandler, TreeDAO treeDAO) {
         this.apiHandler = apiHandler;
         this.treeDAO = treeDAO;
+        this.foodService = null;
     }
 
     /**
@@ -149,13 +153,34 @@ public class TreeService {
         return databaseTrees;
     }
 
+    private String createTypeQuery(String type) {
+        Map<String, List<String>> foodMap = foodService.getFoodMap();
+
+        List<String> commonNames = foodMap.get(type);
+
+        StringBuilder queryString = new StringBuilder();
+        for (int i = 0; i < commonNames.size(); i++) {
+            String commonName = commonNames.get(i);
+            if (i > 0) {
+                queryString.append(" OR ");
+            }
+            queryString.append("CommonName='");
+            queryString.append(commonName);
+            queryString.append("'");
+        }
+
+        return queryString.toString();
+
+    }
+
     /**
      * Logic for requesting trees of a type from API
      * @param type tree type requested by common name
      * @return List of tree models of requested type from API
      */
     private List<TreeModel> getTreesFromApiByType(String type) {
-        Request request = apiHandler.getTrees("CommonName='" + type + "'",
+        String queryString = createTypeQuery(type);
+        Request request = apiHandler.getTrees(queryString,
                 "TreeID,Ownership,Genus,CommonName",
                 100);
 
