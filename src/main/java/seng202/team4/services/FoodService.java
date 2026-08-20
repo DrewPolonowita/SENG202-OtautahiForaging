@@ -3,20 +3,30 @@ package seng202.team4.services;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service for handling food related business logic
+ * @author Team 4
+ */
 public class FoodService {
     private static final Logger log = LogManager.getLogger(FoodService.class);
 
     private Map<String, List<String>> foodMap = new HashMap<>();
 
-
-    public FoodService(){
+    /**
+     * Constructor
+     */
+    public FoodService() {
         createFoodMap();
     }
+
+    /**
+     * Creates the map of each common name that a tree growing a particular fruit can be known by,
+     * mapped to the particular fruit. Created when FoodService class is created
+     */
     private void createFoodMap() {
         foodMap.put("Apple", List.of(
                 "Chinese Crab Apple",
@@ -93,6 +103,10 @@ public class FoodService {
         ));
     }
 
+    /**
+     * Getter for food map
+     * @return the food map
+     */
     public Map<String, List<String>> getFoodMap() {
         return foodMap;
     }

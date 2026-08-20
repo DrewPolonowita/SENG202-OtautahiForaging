@@ -81,6 +81,7 @@ public class TreeService {
                 }
             }
         }
+        log.warn("No fruit mapping available for {}", commonName);
         return "N/A";
     }
 
@@ -121,7 +122,7 @@ public class TreeService {
             try {
                 treeDAO.add(tree);
             } catch (DuplicateEntryException e) {
-                log.warn("Skip duplicate id: {}", tree.getId());
+                log.warn("(All Trees) Skip duplicate id: {}", tree.getId());
             }
         }
         databaseTrees = treeDAO.getAll();
@@ -149,7 +150,7 @@ public class TreeService {
             try {
                 treeDAO.add(tree);
             } catch (DuplicateEntryException e) {
-                log.warn("Skip duplicate id: {}", tree.getId());
+                log.warn("(Tree by food: {}) Skip duplicate id: {}", tree.getFood(), tree.getId());
             }
         }
         databaseTrees = treeDAO.getTreesByFoodName(food);
