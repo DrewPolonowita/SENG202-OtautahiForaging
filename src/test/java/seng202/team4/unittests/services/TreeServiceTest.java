@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -35,6 +36,9 @@ public class TreeServiceTest {
     private TreeDAO treeDAO;
     private FoodService foodService;
 
+    int tuple_max;
+    String returning_string;
+
     @TempDir
     Path tempDirectory;
 
@@ -46,6 +50,8 @@ public class TreeServiceTest {
         treeDAO = new TreeDAO(databaseManager);
         testTreeService = new TreeService(apiHandler, treeDAO);
         foodService = new FoodService();
+        returning_string = "TreeID,Ownership,Genus,CommonName";
+        tuple_max = 100;
 
 
     }
@@ -80,22 +86,23 @@ public class TreeServiceTest {
     }
 
     @Test
-    public void testGetTreesByTypeWithoutPopulatedDatabase() {
+    public void testGetTreesByFoodWithoutPopulatedDatabase() {
         Tree[] fakeTrees = TestTreeData.createFakeAppleRecords();
 
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
 
-        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100))
+        when(apiHandler.getTrees(anyString(), eq(returning_string), eq(tuple_max)))
                 .thenReturn(fakeRequest);
         List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
 
         for (TreeModel tree : appleTrees) {
-            assertEquals("Apple", tree.getCommonName());
+            assertEquals("Apple", tree.getFood());
         }
 
+        // invoke just once because just the call for getting apples should be made
         verify(apiHandler, times(1))
-                .getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100);
+                .getTrees(anyString(), eq(returning_string), eq(tuple_max));
     }
 
 
@@ -103,7 +110,6 @@ public class TreeServiceTest {
 
     @Test
     public void convertTreeRecordToModelTest() {
-        Map<String, List<String>> foodMap = foodService.getFoodMap();
 
         int[] coordinates = {5252,3423};
 
@@ -113,7 +119,7 @@ public class TreeServiceTest {
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
 
-        when(apiHandler.getTrees(anyString(), eq("TreeID,Ownership,Genus,CommonName"), eq(100))).thenReturn(fakeRequest);
+        when(apiHandler.getTrees(anyString(), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
 
         List<TreeModel> result = testTreeService.getTreesByFood("Apple");
         TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Chinese Crab Apple" );
@@ -136,45 +142,44 @@ public class TreeServiceTest {
     }
 
     @Test
-    public void testGetAllTreesWithoutDatabase() {
+    public void testGetAllTreesWithoutPopulatedDatabase() {
 
-        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100))
+
+        when(apiHandler.getTrees(contains("Chinese Crab Apple"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
-        when(apiHandler.getTrees("CommonName='Pear'", "TreeID,Ownership,Genus,CommonName", 100))
+
+        when(apiHandler.getTrees(eq("CommonName='Pear'"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
-        when(apiHandler.getTrees("CommonName='Cherry'", "TreeID,Ownership,Genus,CommonName", 100))
+
+        when(apiHandler.getTrees(eq("CommonName='Bird Cherry'"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeCherryRecords(), false), 200));
-        when(apiHandler.getTrees("CommonName='Peach'", "TreeID,Ownership,Genus,CommonName", 100))
+
+        when(apiHandler.getTrees(eq("CommonName='Peach'"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
-        when(apiHandler.getTrees("CommonName='Apricot'", "TreeID,Ownership,Genus,CommonName", 100))
+
+        when(apiHandler.getTrees(contains("Apricot"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeApricotRecords(), false), 200));
 
         List<TreeModel> allTrees = testTreeService.getAllTrees();
-
         assertEquals(5, allTrees.size());
 
-        List<String> types = List.of("Apple", "Pear", "Cherry", "Peach", "Apricot");
-
-        for (String type : types) {
-            verify(apiHandler, times(1  ))
-                    .getTrees("CommonName='" + type + "'",
-                            "TreeID,Ownership,Genus,CommonName",
-                            100);
-        }
+        // invoke 5 separate times, because 5 api calls should be used
+        verify(apiHandler, times(5))
+                .getTrees(anyString(), eq(returning_string), eq(tuple_max));
     }
 
     @Test
     public void testWrongResponseCode() {
 
         Tree testRecord = TestTreeData
-                .createFakeRecord(5252,3423, 2452, "Council", "Malus", "Apple");
+                .createFakeRecord(5252,3423, 2452, "Council", "Malus", "Chinese Crab Apple");
 
 
         Tree[] fakeTrees = {testRecord};
         ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
         Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 404);
 
-        when(apiHandler.getTrees("CommonName='Apple'", "TreeID,Ownership,Genus,CommonName", 100)).thenReturn(fakeRequest);
+        when(apiHandler.getTrees(contains("Apple"), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
         List<TreeModel> result = testTreeService.getTreesByFood("Apple");
         assertTrue(result.isEmpty());
 
