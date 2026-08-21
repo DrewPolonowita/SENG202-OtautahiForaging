@@ -78,6 +78,28 @@ public class ApiHandler {
     }
 
     /**
+     * Takes a {@link String} of where clauses and of outField clauses for an
+     * ARC-GIS API and returns the URL encoded query link bounded by coordinates provided in lat and lon
+     *
+     * @param params an ARC-GIS where clause e.g. TreeID=38083 and Genus='Malus'
+     * @param outFields and ARC-GIS outField clause e.g. TreeID,Ownership,Genus
+     * @return a {@link String} to be appended to the end of an API link
+     */
+    public String urlEncodeParams(
+            String params, String outFields, int maxTuples, double north, double east, double south, double west
+    ) {
+        String url = urlEncodeParams(params, outFields, maxTuples)
+                + "&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&inSR=4326&"
+                + "geometry=" + URLEncoder.encode(
+                String.format("%f,%f,%f,%f", west, south, east, north), StandardCharsets.UTF_8
+        );
+
+        System.out.println(API_LINK + url);
+
+        return url;
+    }
+
+    /**
      * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
      *
      * @return {@link ApiResponse} if the request is valid, otherwise returns a null
@@ -86,6 +108,28 @@ public class ApiHandler {
         try {
             HttpsURLConnection connection = createConnection(API_LINK
                     + urlEncodeParams(params, outFields, maxTuples));
+            try {
+                ApiResponse apiResponse = getJsonData(connection);
+                return new Request<>(apiResponse, connection.getResponseCode());
+            } catch (IOException e) {
+                return new Request<>(null, connection.getResponseCode());
+            }
+        } catch (IOException e) {
+            return new Request<>(null, -1);
+        }
+    }
+
+    /**
+     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     *
+     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     */
+    public Request<ApiResponse> getTrees(
+            String params, String outFields, int maxTuples,  double north, double east, double south, double west
+    ) {
+        try {
+            HttpsURLConnection connection = createConnection(API_LINK
+                    + urlEncodeParams(params, outFields, maxTuples, north, east, south, west));
             try {
                 ApiResponse apiResponse = getJsonData(connection);
                 return new Request<>(apiResponse, connection.getResponseCode());
