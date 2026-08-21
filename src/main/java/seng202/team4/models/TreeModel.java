@@ -14,7 +14,7 @@ public class TreeModel {
     private static final Logger log = LogManager.getLogger(TreeModel.class);
 
     private final int id;
-    private final int[] coordinates;
+    private final float[] coordinates;
     private final String ownership;
     private final String genus;
     private final String food;
@@ -28,7 +28,7 @@ public class TreeModel {
      * @param genus Genus of tree
      * @param fruit Fruit type of a tree
      */
-    public TreeModel(int id, int[] coordinates, String ownership, String genus, String fruit, String commonName) {
+    public TreeModel(int id, float[] coordinates, String ownership, String genus, String fruit, String commonName) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
@@ -50,15 +50,15 @@ public class TreeModel {
      * Getter for coordinates
      * @return returns integer array coordinates
      */
-    public int[] getCoordinates() {
+    public float[] getCoordinates() {
         return coordinates;
     }
 
-    public int getXCoord() {
+    public float getXCoord() {
         return coordinates[0];
     }
 
-    public int getYCoord() {
+    public float getYCoord() {
         return coordinates[1];
     }
 
@@ -68,6 +68,10 @@ public class TreeModel {
      */
     public String getOwnership() {
         return ownership;
+    }
+
+    public String getFruit() {
+        return food;
     }
 
     /**

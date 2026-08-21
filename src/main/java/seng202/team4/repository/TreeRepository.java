@@ -15,4 +15,16 @@ public interface TreeRepository extends DAOInterface<TreeModel> {
      * @return all trees with the common name
      */
     List<TreeModel> getTreesByFoodName(String food);
+
+    /**
+     * Returns a {@link List<TreeModel>}
+     *
+     * @param type
+     * @param north
+     * @param east
+     * @param south
+     * @param west
+     * @return
+     */
+    List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west);
 }

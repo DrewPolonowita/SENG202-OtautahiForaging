@@ -12,6 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Geometry(
         @JsonProperty String type,
-        @JsonProperty int[] coordinates
+        @JsonProperty float[] coordinates
 ) {
 }

@@ -2,11 +2,10 @@ DROP TABLE IF EXISTS trees;
 --SPLIT
 CREATE TABLE IF NOT EXISTS trees (
     id INTEGER PRIMARY KEY,
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
+    x REAL NOT NULL,
+    y REAL NOT NULL,
     ownership TEXT NOT NULL,
     genus TEXT NOT NULL,
     food TEXT NOT NULL,
     common_name TEXT NOT NULL
-
 )
