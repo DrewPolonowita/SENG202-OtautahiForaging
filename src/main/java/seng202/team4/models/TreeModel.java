@@ -3,6 +3,7 @@ package seng202.team4.models;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -19,6 +20,8 @@ public class TreeModel {
     private final String genus;
     private final String food;
     private final String commonName;
+    private LocalDateTime lastUpdated;
+    private String serviceStatus;
 
     /**
      * Constructor
@@ -26,15 +29,18 @@ public class TreeModel {
      * @param coordinates Tree location
      * @param ownership Who owns the tree
      * @param genus Genus of tree
-     * @param fruit Fruit type of a tree
+     * @param food Food type of a tree
      */
-    public TreeModel(int id, float[] coordinates, String ownership, String genus, String fruit, String commonName) {
+    public TreeModel(int id, float[] coordinates, String ownership, String genus, String food, String commonName, LocalDateTime lastUpdated, String serviceStatus) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
         this.genus = genus;
-        this.food = fruit;
+        this.food = food;
         this.commonName = commonName;
+        this.lastUpdated = lastUpdated;
+        this.serviceStatus = serviceStatus;
+
     }
 
     /**
@@ -70,9 +76,6 @@ public class TreeModel {
         return ownership;
     }
 
-    public String getFruit() {
-        return food;
-    }
 
     /**
      * Getter for genus
@@ -129,4 +132,11 @@ public class TreeModel {
         return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, food, commonName);
     }
 
+    public String getServiceStatus() {
+        return serviceStatus;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
 }

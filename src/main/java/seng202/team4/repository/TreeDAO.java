@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +38,7 @@ public class TreeDAO implements TreeRepository {
     @Override
     public List<TreeModel> getAll() {
         List<TreeModel> trees = new ArrayList<>();
-        String sql = "SELECT * FROM trees";
+        String sql = "SELECT id, x, y, ownership, genus, food, common_name, last_modified, service_status FROM trees";
         try (Connection conn = databaseManager.connect();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)
@@ -46,13 +48,20 @@ public class TreeDAO implements TreeRepository {
                         rs.getFloat("x"),
                         rs.getFloat("y")
                 };
+
+                Timestamp timestamp = rs.getTimestamp("last_modified");
+                LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
+
                 trees.add(new TreeModel(
                         rs.getInt("id"),
                         coords,
                         rs.getString("ownership"),
                         rs.getString("genus"),
-                        rs.getString("fruit"),
-                        rs.getString("common_name")));
+                        rs.getString("food"),
+                        rs.getString("common_name"),
+                        lastUpdated,
+                        rs.getString("service_status")
+                        ));
             }
             return trees;
         } catch (SQLException sqlException) {
@@ -81,13 +90,18 @@ public class TreeDAO implements TreeRepository {
                             rs.getFloat("y")
                     };
 
+                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
+
                     tree = new TreeModel(
                             rs.getInt("id"),
                             coords,
                             rs.getString("ownership"),
                             rs.getString("genus"),
-                            rs.getString("fruit"),
-                            rs.getString("common_name")
+                            rs.getString("food"),
+                            rs.getString("common_name"),
+                            lastUpdated,
+                            rs.getString("service_status")
                     );
 
                 }
@@ -116,10 +130,11 @@ public class TreeDAO implements TreeRepository {
                         y,
                         ownership,
                         genus,
-                        fruit,
+                        food,
                         common_name,
-                        last_modified
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);
+                        last_modified,
+                        service_status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?);
                     """;
 
         try (Connection conn = databaseManager.connect();
@@ -130,8 +145,9 @@ public class TreeDAO implements TreeRepository {
             ps.setFloat(3, toAdd.getYCoord());
             ps.setString(4, toAdd.getOwnership());
             ps.setString(5, toAdd.getGenus());
-            ps.setString(6, toAdd.getFruit());
+            ps.setString(6, toAdd.getFood());
             ps.setString(7, toAdd.getCommonName());
+            ps.setString(8, toAdd.getServiceStatus());
 
             ps.executeUpdate();
             return toAdd.getId();
@@ -187,13 +203,19 @@ public class TreeDAO implements TreeRepository {
                             rs.getFloat("y")
                     };
 
+                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
+
                     trees.add(new TreeModel(
                             rs.getInt("id"),
                             coords,
                             rs.getString("ownership"),
                             rs.getString("genus"),
-                            rs.getString("fruit"),
-                            rs.getString("common_name")
+                            rs.getString("food"),
+                            rs.getString("common_name"),
+                            lastUpdated,
+                            rs.getString("service_status")
+
                     ));
                 }
             }
@@ -227,13 +249,18 @@ public class TreeDAO implements TreeRepository {
                             rs.getFloat("y")
                     };
 
+                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
+
                     trees.add(new TreeModel(
                             rs.getInt("id"),
                             coords,
                             rs.getString("ownership"),
                             rs.getString("genus"),
-                            rs.getString("fruit"),
-                            rs.getString("common_name")
+                            rs.getString("food"),
+                            rs.getString("common_name"),
+                            lastUpdated,
+                            rs.getString("service_status")
                     ));
                 }
             }
@@ -263,13 +290,18 @@ public class TreeDAO implements TreeRepository {
                             rs.getInt("y")
                     };
 
+                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
+
                     trees.add(new TreeModel(
                             rs.getInt("id"),
                             coords,
                             rs.getString("ownership"),
                             rs.getString("genus"),
                             rs.getString("food"),
-                            rs.getString("common_name")
+                            rs.getString("common_name"),
+                            lastUpdated,
+                            rs.getString("service_status")
                     ));
                 }
             }
@@ -279,5 +311,17 @@ public class TreeDAO implements TreeRepository {
             return new ArrayList<>();
         }
 
+    }
+
+
+    private LocalDateTime retrieveTimestamp(Timestamp timestamp) {
+        LocalDateTime lastUpdated;
+        if (timestamp != null) {
+            lastUpdated = timestamp.toLocalDateTime();
+        }
+        else {
+            lastUpdated = null;
+        }
+        return lastUpdated;
     }
 }

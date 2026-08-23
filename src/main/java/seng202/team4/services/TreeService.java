@@ -61,7 +61,9 @@ public class TreeService {
                 treeRecord.properties().ownership(),
                 genus,
                 foodType,
-                commonName);
+                commonName,
+                null,
+                null);
     }
 
     /**

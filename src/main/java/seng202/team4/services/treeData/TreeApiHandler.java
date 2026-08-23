@@ -45,7 +45,10 @@ public class TreeApiHandler {
                 treeRecord.properties().ownership(),
                 genus,
                 fruitType,
-                commonName);
+                commonName,
+                null,
+                null
+                );
     }
 
     /**
