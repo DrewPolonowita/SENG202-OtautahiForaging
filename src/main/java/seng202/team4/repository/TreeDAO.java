@@ -153,6 +153,8 @@ public class TreeDAO implements TreeRepository {
             return toAdd.getId();
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
+
+            System.out.println("here");
             return -1;
         }
     }

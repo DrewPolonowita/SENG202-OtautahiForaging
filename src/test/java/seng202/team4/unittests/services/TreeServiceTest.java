@@ -52,9 +52,8 @@ public class TreeServiceTest {
         foodService = new FoodService();
         returning_string = "TreeID,Ownership,Genus,CommonName";
         tuple_max = 100;
-
-
     }
+
     //region creating specific models and records
     private List<TreeModel> fillDatabase() {
         List<TreeModel> testTrees = TestTreeData.createTreeModels();
@@ -65,11 +64,6 @@ public class TreeServiceTest {
         return testTrees;
 
     }
-
-
-
-    //endregion
-
 
     @Test
     public void testGetTreesByTypeWithPopulatedDatabase() {
@@ -105,13 +99,10 @@ public class TreeServiceTest {
                 .getTrees(anyString(), eq(returning_string), eq(tuple_max));
     }
 
-
-
-
     @Test
     public void convertTreeRecordToModelTest() {
 
-        int[] coordinates = {5252,3423};
+        float[] coordinates = {5252,3423};
 
         Tree testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Chinese Crab Apple");
 
@@ -122,10 +113,8 @@ public class TreeServiceTest {
         when(apiHandler.getTrees(anyString(), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
 
         List<TreeModel> result = testTreeService.getTreesByFood("Apple");
-        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Chinese Crab Apple" );
+        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Chinese Crab Apple", null, "Serviced");
         assertEquals(result.getFirst(), expectedTree);
-
-
     }
 
     @Test

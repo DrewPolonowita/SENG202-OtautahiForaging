@@ -54,14 +54,6 @@ public class TreeService implements TreeDataManager {
      */
     public List<TreeModel> updateTreesByRegion(String type, double north, double east, double south, double west) {
         return treeService.getTreesByRegion(type, north, east, south, west);
-
-        // REQUIRED IS UPDATING THE TREES
-
-//        System.out.println(trees.size());
-//
-//        for (TreeModel tree: trees) {
-//            System.out.printf("(%f, %f)\n", tree.getXCoord(), tree.getYCoord());
-//        }
     }
 
     /**
