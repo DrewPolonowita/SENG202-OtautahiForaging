@@ -6,11 +6,14 @@ CREATE TABLE IF NOT EXISTS trees (
     y REAL NOT NULL,
     ownership TEXT NOT NULL,
     genus TEXT NOT NULL,
-    food TEXT NOT NULL, -- food_name?
+    food TEXT NOT NULL,
     common_name TEXT NOT NULL,
-    last_modified DATETIME NOT NULL,
-    service_status TEXT NOT NULL
+    last_modified DATETIME,
+    service_status TEXT
 );
+
+
+
 --SPLIT
 -- Trees subclass table 1
 DROP TABLE IF EXISTS from_api;
@@ -18,16 +21,16 @@ DROP TABLE IF EXISTS from_api;
 CREATE TABLE IF NOT EXISTS from_api (
     tree_id INTEGER PRIMARY KEY,
     date_retrieved DATETIME NOT NULL,
-    FOREIGN KEY (tree_id) REFERENCES tree(id)
+    FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
--SPLIT
+--SPLIT
 -- Trees subclass table 2
 DROP TABLE IF EXISTS from_user;
 --SPLIT
 CREATE TABLE IF NOT EXISTS from_user (
     tree_id INTEGER PRIMARY KEY,
     when_created DATETIME NOT NULL,
-    FOREIGN KEY (tree_id) REFERENCES tree(id)
+    FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
 --SPLIT
 DROP TABLE IF EXISTS recipe;
@@ -93,3 +96,4 @@ CREATE TABLE IF NOT EXISTS region_contains_tree (
     food TEXT NOT NULL,
     common_name TEXT NOT NULL
 )
+*/

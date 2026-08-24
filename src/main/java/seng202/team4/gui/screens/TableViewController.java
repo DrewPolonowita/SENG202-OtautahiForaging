@@ -96,8 +96,8 @@ public class TableViewController extends ScreenController {
         TableColumn<TreeModel, String> genusCol = new TableColumn<>("Genus");
         genusCol.setCellValueFactory(new PropertyValueFactory<>("genus"));
 
-        TableColumn<TreeModel, String> fruitCol = new TableColumn<>("Fruit Type");
-        fruitCol.setCellValueFactory(new PropertyValueFactory<>("fruit"));
+        TableColumn<TreeModel, String> fruitCol = new TableColumn<>("Food Type");
+        fruitCol.setCellValueFactory(new PropertyValueFactory<>("food"));
 
         TableColumn<TreeModel, String> nameCol = new TableColumn<>("Common Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("commonName"));
