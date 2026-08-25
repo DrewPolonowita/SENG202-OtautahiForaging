@@ -5,11 +5,13 @@ public class Food {
 
     private String name;
     private String type;
+    private String nutritionalInformation;
 
 
-    public Food(String name, String type) {
+    public Food(String name, String type, String nutritionalInformation) {
         this.name = name;
         this.type = type;
+        this.nutritionalInformation = nutritionalInformation;
 
     }
 
@@ -28,4 +30,6 @@ public class Food {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getNutritionalInformation() { return nutritionalInformation; }
 }

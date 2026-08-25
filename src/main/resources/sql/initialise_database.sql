@@ -58,7 +58,7 @@ DROP TABLE IF EXISTS food;
 CREATE TABLE IF NOT EXISTS food (
     common_name TEXT PRIMARY KEY,
     food_type TEXT NOT NULL,
-    nutritional_information NOT NULL,
+    nutritional_information TEXT,
 );
 --SPLIT
 DROP TABLE IF EXISTS region;

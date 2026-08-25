@@ -2,6 +2,7 @@ package seng202.team4.services;
 
 import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
+import seng202.team4.repository.FoodDAO;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
 
@@ -16,6 +17,8 @@ public class StateManager {
     private final DatabaseManager databaseManager;
     private final TreeRepository treeRepository;
     private final TreeService treeService;
+    private final FoodDAO foodDAO;
+    private final FoodService foodService;
 
 
     /**
@@ -30,6 +33,8 @@ public class StateManager {
 
         this.treeRepository = new TreeDAO(databaseManager);
         this.treeService = new TreeService(treeRepository);
+        this.foodDAO = new FoodDAO(databaseManager);
+        this.foodService = new FoodService(foodDAO);
 
 
         this.windowManager.launchMapScreen(this);

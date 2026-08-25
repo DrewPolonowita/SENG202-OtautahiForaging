@@ -118,7 +118,7 @@ public class TreeDAO implements TreeRepository {
 
     /**
      * Add a tree object to the database
-     * @param toAdd object of type T to add
+     * @param toAdd tree object to add
      * @return id of tree if success, -1 if failed
      */
     @Override
