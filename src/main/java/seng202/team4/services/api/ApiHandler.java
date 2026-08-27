@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 /**
  * A service class to create a connection to the tree API and get the required data
- *
+ * TODO Delete and use new interfaces for remaining usages
  * @author Team 4
  */
 public class ApiHandler {

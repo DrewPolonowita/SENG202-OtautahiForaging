@@ -11,6 +11,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+/**
+ * Implementation for accessing HTTPS Api interface
+ * @author Team 4
+ */
 public class ApiClient implements ApiClientInterface {
 
     /**
@@ -49,6 +53,11 @@ public class ApiClient implements ApiClientInterface {
                 String.valueOf(stringBuilder), responseType);
     }
 
+    /**
+     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     *
+     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     */
     @Override
     public <T> Request<T> get(String url, TypeReference<T> responseType) {
         try {

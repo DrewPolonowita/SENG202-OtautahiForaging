@@ -8,6 +8,11 @@ import seng202.team4.models.api.Request;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Implementation for TreeClientInterface, used to link specifically to the Christchurch
+ * City Council's arcgis tree api
+ * @author Team 4
+ */
 public class TreeApiClient implements TreeClientInterface {
 
     static final String API_LINK = "https://gis.ccc.govt.nz/server/rest/services/OpenData/Tree/FeatureServer/0/";
@@ -15,6 +20,10 @@ public class TreeApiClient implements TreeClientInterface {
 
     private final ApiClientInterface apiClient;
 
+    /**
+     * Constructor
+     * @param apiClient Generic api client for use to connect to the api
+     */
     public TreeApiClient(ApiClientInterface apiClient){
         this.apiClient = apiClient;
     }
@@ -77,6 +86,11 @@ public class TreeApiClient implements TreeClientInterface {
 
     }
 
+    /**
+     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     *
+     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     */
     @Override
     public Request<ApiResponse> getTrees(String params, String outFields, int maxTuples) {
         String url = API_LINK

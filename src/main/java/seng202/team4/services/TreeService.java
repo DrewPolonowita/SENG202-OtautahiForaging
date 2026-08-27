@@ -10,6 +10,8 @@ import seng202.team4.models.api.Tree;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClient;
+import seng202.team4.services.api.ApiClientInterface;
+import seng202.team4.services.api.ApiHandler;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
 
@@ -33,7 +35,8 @@ public class TreeService {
      * Constructor
      */
     public TreeService(TreeRepository treeRepository) {
-        this.treeApiClient = new TreeApiClient(new ApiClient());
+        ApiClientInterface apiClient = new ApiClient();
+        this.treeApiClient = new TreeApiClient(apiClient);
         this.treeDAO = treeRepository;
         this.foodService = new FoodService(); // Null Temp
     }
