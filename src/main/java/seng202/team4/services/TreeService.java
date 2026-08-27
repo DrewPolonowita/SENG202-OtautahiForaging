@@ -11,7 +11,6 @@ import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClient;
 import seng202.team4.services.api.ApiClientInterface;
-import seng202.team4.services.api.ApiHandler;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
 

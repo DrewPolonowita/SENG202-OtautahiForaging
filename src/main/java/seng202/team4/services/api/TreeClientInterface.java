@@ -23,7 +23,7 @@ public interface TreeClientInterface {
      * TODO Update function name and usage
      * @return {@link ApiResponse} if the request is valid, otherwise returns a null
      */
-    public Request<ApiResponse> getTrees(
+    Request<ApiResponse> getTrees(
             String params, String outFields, int maxTuples,  double north, double east, double south, double west
     );
 }

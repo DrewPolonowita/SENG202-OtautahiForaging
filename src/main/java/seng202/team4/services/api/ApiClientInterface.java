@@ -14,5 +14,5 @@ public interface ApiClientInterface {
      * @param responseType A type reference object, needs to correspond to a record object specific to the api being requested.
      * @return returns a {@link Request} json object
      */
-    public <T> Request<T> get(String url, TypeReference<T> responseType);
+    <T> Request<T> get(String url, TypeReference<T> responseType);
 }
