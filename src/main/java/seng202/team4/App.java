@@ -2,6 +2,7 @@ package seng202.team4;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.FXAppEntry;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.services.treeData.TreeService;
@@ -21,8 +22,8 @@ public class App {
      * @param args program arguments from command line
      */
     void main(String[] args) {
-//        FXAppEntry.launch(FXAppEntry.class, args);
-//        new DatabaseManager(null).resetDB();
+        FXAppEntry.launch(FXAppEntry.class, args);
+/*        new DatabaseManager(null).resetDB();
 
         System.out.println("START");
 
@@ -34,6 +35,6 @@ public class App {
             System.out.printf(
                     "(%f, %f)%n", tree.getXCoord(), tree.getYCoord()
             );
-        }
+        }*/
     }
 }

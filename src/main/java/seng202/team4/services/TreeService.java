@@ -35,7 +35,7 @@ public class TreeService {
     public TreeService(TreeRepository treeRepository) {
         this.treeApiClient = new TreeApiClient(new ApiClient());
         this.treeDAO = treeRepository;
-        this.foodService = new FoodService(null); // Null Temp
+        this.foodService = new FoodService(); // Null Temp
     }
 
     /**
@@ -45,7 +45,7 @@ public class TreeService {
     public TreeService(TreeClientInterface apiHandler, TreeDAO treeDAO) {
         this.treeApiClient = apiHandler;
         this.treeDAO = treeDAO;
-        this.foodService = new FoodService(null);
+        this.foodService = new FoodService();
     }
 
     /**
