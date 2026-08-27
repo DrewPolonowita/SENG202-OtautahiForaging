@@ -1,4 +1,4 @@
-package seng202.team4.services;
+package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,7 +85,7 @@ public class ApiHandler {
      * @param outFields and ARC-GIS outField clause e.g. TreeID,Ownership,Genus
      * @return a {@link String} to be appended to the end of an API link
      */
-    public String urlEncodeParams(
+    private String urlEncodeParams(
             String params, String outFields, int maxTuples, double north, double east, double south, double west
     ) {
         String url = urlEncodeParams(params, outFields, maxTuples)

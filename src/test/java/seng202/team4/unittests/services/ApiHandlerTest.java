@@ -3,7 +3,7 @@ package seng202.team4.unittests.services;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import seng202.team4.services.ApiHandler;
+import seng202.team4.services.api.ApiHandler;
 
 /**
  * A test class for {@link ApiHandler}
