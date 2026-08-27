@@ -9,6 +9,9 @@ import seng202.team4.models.api.Request;
 import seng202.team4.models.api.Tree;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
+import seng202.team4.services.api.ApiClient;
+import seng202.team4.services.api.TreeApiClient;
+import seng202.team4.services.api.TreeClientInterface;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.Map;
  */
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
-    private final ApiHandler apiHandler;
+    private final TreeClientInterface treeApiClient;
     private final TreeRepository treeDAO;
     private final FoodService foodService;
 
@@ -30,19 +33,19 @@ public class TreeService {
      * Constructor
      */
     public TreeService(TreeRepository treeRepository) {
-        this.apiHandler = new ApiHandler();
+        this.treeApiClient = new TreeApiClient(new ApiClient());
         this.treeDAO = treeRepository;
-        this.foodService = new FoodService();
+        this.foodService = new FoodService(null); // Null Temp
     }
 
     /**
      * Constructor for testing
      * @param apiHandler mock apiHandler
      */
-    public TreeService(ApiHandler apiHandler, TreeDAO treeDAO) {
-        this.apiHandler = apiHandler;
+    public TreeService(TreeClientInterface apiHandler, TreeDAO treeDAO) {
+        this.treeApiClient = apiHandler;
         this.treeDAO = treeDAO;
-        this.foodService = new FoodService();
+        this.foodService = new FoodService(null);
     }
 
     /**
@@ -192,7 +195,7 @@ public class TreeService {
      */
     private List<TreeModel> getTreesFromApiByFood(String food) {
         String queryString = createApiTypeQuery(food);
-        Request request = apiHandler.getTrees(queryString,
+        Request request = treeApiClient.getTrees(queryString,
                 "TreeID,Ownership,Genus,CommonName",
                 100);
 

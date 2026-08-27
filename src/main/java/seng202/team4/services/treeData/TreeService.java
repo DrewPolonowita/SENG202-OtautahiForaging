@@ -4,7 +4,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
-import seng202.team4.services.ApiHandler;
+import seng202.team4.services.api.ApiHandler;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import java.util.List;
  */
 public class TreeService implements TreeDataManager {
 
-    private final TreeApiHandler treeService;
+    private final TreeApiHandler treeApiHandler;
     private final TreeRepository treeRepository;
 
     /**
      * Creates a new instance and initializes private variables
      */
     public TreeService() {
-        treeService = new TreeApiHandler(new ApiHandler());
+        treeApiHandler = new TreeApiHandler(new ApiHandler());
         treeRepository = new TreeDAO(new DatabaseManager(null));
     }
 
@@ -53,14 +53,15 @@ public class TreeService implements TreeDataManager {
      * @param west the min x value for the region
      */
     public List<TreeModel> updateTreesByRegion(String type, double north, double east, double south, double west) {
-        return treeService.getTreesByRegion(type, north, east, south, west);
+        return treeApiHandler.getTreesByRegion(type, north, east, south, west);
+
     }
 
     /**
      * Returns a list of trees all trees from the api
      */
     public List<TreeModel> getAllTrees() {
-        return treeService.getAllTreesFromApi();
+        return treeApiHandler.getAllTreesFromApi();
     }
 
     /**

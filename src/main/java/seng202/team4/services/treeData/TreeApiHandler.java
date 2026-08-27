@@ -6,7 +6,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.ApiResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.models.api.Tree;
-import seng202.team4.services.ApiHandler;
+import seng202.team4.services.api.ApiHandler;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
