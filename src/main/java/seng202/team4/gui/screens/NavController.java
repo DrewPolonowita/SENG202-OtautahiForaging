@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.utilities.JavaFXUtils;
 import seng202.team4.services.StateManager;
 
 /**
@@ -69,11 +70,10 @@ public class NavController extends ScreenController {
     public void closeClicked() {
         sideBar.setVisible(false);
         sideBar.setManaged(false);
-
         menuOpenButton.setVisible(true);
         menuOpenButton.setManaged(true);
-
-        setWidth(50);
+        JavaFXUtils.animateWidth(sideBarPane, navBar, 300, 50, 300, () -> {
+        });
     }
 
     /**
@@ -82,13 +82,13 @@ public class NavController extends ScreenController {
      */
     @FXML
     public void openMenuClicked() {
-        sideBar.setVisible(true);
-        sideBar.setManaged(true);
 
-        menuOpenButton.setVisible(false);
-        menuOpenButton.setManaged(false);
-
-        setWidth(300);
+        JavaFXUtils.animateWidth(sideBarPane, navBar, 50, 300, 300, () -> {
+            menuOpenButton.setVisible(false);
+            menuOpenButton.setManaged(false);
+            sideBar.setVisible(true);
+            sideBar.setManaged(true);
+        });
     }
 
     /**

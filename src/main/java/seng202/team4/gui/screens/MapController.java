@@ -16,6 +16,7 @@ import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 import seng202.team4.services.TreeService;
 import seng202.team4.models.TreeModel;
+
 /**
  * Controller for the map_screen.fxml window which controls the map
  * @author Team 4
@@ -49,13 +50,13 @@ public class MapController extends ScreenController {
     private Button apricotButton;
 
     private final ThemeService themeService;
+
     /**
      * Initialise the window
      *
      * @param stateManager Reference for window manager
      */
     public MapController(StateManager stateManager, ThemeService themeService) {
-
         super(stateManager);
         treeService = stateManager.getTreeService();
         this.themeService = themeService;
@@ -137,6 +138,7 @@ public class MapController extends ScreenController {
                     tree.getYCoord(), tree.getXCoord());
         }
     }
+
     public void filterButtonClicked(Button buttons) {
         if (buttons.getStyleClass().contains("sideBar-button-selected")) {
             buttons.getStyleClass().remove("sideBar-button-selected");

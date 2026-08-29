@@ -3,10 +3,19 @@ package seng202.team4.repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Class responsible for interaction with SQLite database
@@ -113,7 +122,7 @@ public class DatabaseManager {
 
             String[] individualStatements = sb.toString().split("--SPLIT");
             try (Connection conn = this.connect();
-                 Statement statement = conn.createStatement()) {
+                Statement statement = conn.createStatement()) {
                 for (String singleStatement : individualStatements) {
                     statement.executeUpdate(singleStatement);
                 }

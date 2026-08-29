@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import seng202.team4.gui.utilities.CssUtilities;
+
 /**
  * The class which stores information related to the theme
  * @author Team 4
@@ -17,6 +18,7 @@ public class ThemeService {
     private WebEngine webEngine;
     private Color primaryColor = Color.web("#86CA82");
     private boolean darkMode;
+
     /**
      * Creates a ThemeService bound to the app's main Scene and its root GridPane.
      *
@@ -28,6 +30,9 @@ public class ThemeService {
         this.sceneRoot = sceneRoot;
     }
 
+    /**
+     * sets the webEngine for use of filter theming
+     */
     public void setWebEngine(WebEngine webEngine) {
         this.webEngine = webEngine;
         setPrimaryColor(primaryColor);

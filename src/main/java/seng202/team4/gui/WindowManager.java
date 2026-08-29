@@ -11,7 +11,12 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.*;
+import seng202.team4.gui.screens.JournalController;
+import seng202.team4.gui.screens.MapController;
+import seng202.team4.gui.screens.NavController;
+import seng202.team4.gui.screens.RecipesController;
+import seng202.team4.gui.screens.SettingsController;
+import seng202.team4.gui.screens.TableViewController;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 
@@ -22,7 +27,6 @@ import java.io.IOException;
  * @author Team 4
  */
 public class WindowManager {
-
     private static final Logger LOG = LogManager.getLogger(WindowManager.class);
 
     private final Stage stage;
@@ -101,6 +105,7 @@ public class WindowManager {
         ScreenController controller = new MapController(stateManager, themeService);
         launchScreen(controller, rootPane);
     }
+
     /**
      * Launches the journals screen
      *
