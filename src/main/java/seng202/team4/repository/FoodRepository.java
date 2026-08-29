@@ -8,7 +8,7 @@ import java.util.List;
  * Interface for the food specific data access object
  * @author Team 4
  */
-public interface FoodRepository extends DAOInterface<Food> {
+public interface FoodRepository extends DAOInterface<Food, String> {
 
     /**
      * Retrieves all food of a specified food type
