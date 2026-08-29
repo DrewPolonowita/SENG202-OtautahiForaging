@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * DAO Interface implementation for food, handles food related actions to the database
  */
-public class FoodDAO implements DAOInterface<Food> {
+public class FoodDAO implements FoodRepository {
     private static final Logger LOG = LogManager.getLogger(FoodDAO.class);
 
     private final DatabaseManager databaseManager;
@@ -28,7 +28,7 @@ public class FoodDAO implements DAOInterface<Food> {
 
     /**
      * Method to return all food stored in the database
-     * @return returns a list of TreeModels, empty list if failed
+     * @return returns a list of Foods, empty list if failed
      */
     public List<Food> getAll() {
         List<Food> food = new ArrayList<>();
@@ -98,7 +98,7 @@ public class FoodDAO implements DAOInterface<Food> {
      * @param type type of the object to get
      * @return food models of the specific type, empty list if failed
      */
-    public List<Food> getByType(String type) {
+    public List<Food> getFoodByType(String type) {
         List<Food> foods = new ArrayList<>();
         String sql = "SELECT * FROM food WHERE food_type=?";
         try (Connection conn = databaseManager.connect();
@@ -120,6 +120,34 @@ public class FoodDAO implements DAOInterface<Food> {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * Gets a food model matching the food grown on a particular tree
+     * @param treeId the id of the specified tree
+     * @return the food model corresponding to the food grown on the tree, or null if fails
+     */
+    public Food getFoodbyTreeId(int treeId) {
+        Food food = null;
+        String sql = "SELECT * FROM food where common_name =(SELECT type FROM trees where id=?)";
+        try (Connection conn = databaseManager.connect();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    food = new Food (
+                            rs.getString("common_name"),
+                            rs.getString("food_type"),
+                            rs.getString("nutritional_information")
+                    );
+                }
+            }
+            return food;
+        } catch (SQLException sqlException) {
+            LOG.error(sqlException);
+            return null;
+        }
+    }
+
 
     /**
      * Not implemented

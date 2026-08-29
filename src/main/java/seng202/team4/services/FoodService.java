@@ -3,7 +3,7 @@ package seng202.team4.services;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.Food;
-import seng202.team4.repository.FoodDAO;
+import seng202.team4.repository.FoodRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,14 +17,14 @@ import java.util.Map;
 public class FoodService {
     private static final Logger log = LogManager.getLogger(FoodService.class);
     private Map<String, List<String>> foodMap = new HashMap<>();
-    private Map<String, List<String>> typeMap = new HashMap<>();
-    private final FoodDAO foodDAO;
+    private Map<String, List<String>> typeMap = new HashMap<>();;
+    private final FoodRepository foodDAO;
 
     /**
      * Constructor
      */
-    public FoodService(FoodDAO foodDAO) {
-        this.foodDAO = foodDAO;
+    public FoodService(FoodRepository foodRepository) {
+        this.foodDAO = foodRepository;
         createFoodMap();
         createTypeMap();
     }
@@ -190,13 +190,13 @@ public class FoodService {
      * @return food models of the given type
      */
     public List<Food> getFoodByType(String type) {
-        List<Food> databaseFood = foodDAO.getByType(type);
+        List<Food> databaseFood = foodDAO.getFoodByType(type);
         if (!databaseFood.isEmpty()) {
             log.info("Loaded {} {} type foods from database", databaseFood.size(), type);
             return databaseFood;
         }
         populateFoodDatabase();
-        databaseFood = foodDAO.getByType(type);
+        databaseFood = foodDAO.getFoodByType(type);
         return databaseFood;
     }
 
