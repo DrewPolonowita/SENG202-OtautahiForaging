@@ -12,10 +12,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param fat Total fat in grams
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Nutrition(
-        @JsonProperty float calories,
-        @JsonProperty float carbohydrate,
-        @JsonProperty float protein,
-        @JsonProperty float fat
+public record RecipeNutrition(
+        @JsonProperty("calories") double calories,
+        @JsonProperty("carbohydrate") double carbohydrate,
+        @JsonProperty("protein") double protein,
+        @JsonProperty("fat") double fat
 ) {
 }
