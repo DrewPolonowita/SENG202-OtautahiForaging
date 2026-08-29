@@ -13,7 +13,7 @@ import java.util.List;
  * @param recipeName
  * @param recipeDescription
  * @param nutritionalInformation
- * @param ingredient
+ * @param ingredients
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeSearchRecord(
