@@ -6,6 +6,8 @@ import org.junit.jupiter.api.io.TempDir;
 import seng202.team4.helpers.TestTreeData;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.*;
+import seng202.team4.models.api.TreeApi.TreeRecord;
+import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.services.ApiHandler;
@@ -14,7 +16,6 @@ import seng202.team4.services.TreeService;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -87,10 +88,10 @@ public class TreeServiceTest {
 
     @Test
     public void testGetTreesByFoodWithoutPopulatedDatabase() {
-        Tree[] fakeTrees = TestTreeData.createFakeAppleRecords();
+        TreeRecord[] fakeTrees = TestTreeData.createFakeAppleRecords();
 
-        ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
-        Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
+        TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
+        Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 200);
 
         when(apiHandler.getTrees(anyString(), eq(returning_string), eq(tuple_max)))
                 .thenReturn(fakeRequest);
@@ -113,11 +114,11 @@ public class TreeServiceTest {
 
         int[] coordinates = {5252,3423};
 
-        Tree testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Chinese Crab Apple");
+        TreeRecord testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Chinese Crab Apple");
 
-        Tree[] fakeTrees = {testRecord};
-        ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
-        Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 200);
+        TreeRecord[] fakeTrees = {testRecord};
+        TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
+        Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 200);
 
         when(apiHandler.getTrees(anyString(), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
 
@@ -146,19 +147,19 @@ public class TreeServiceTest {
 
 
         when(apiHandler.getTrees(contains("Chinese Crab Apple"), eq(returning_string), eq(tuple_max)))
-                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
+                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
 
         when(apiHandler.getTrees(eq("CommonName='Pear'"), eq(returning_string), eq(tuple_max)))
-                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
+                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
 
         when(apiHandler.getTrees(eq("CommonName='Bird Cherry'"), eq(returning_string), eq(tuple_max)))
-                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeCherryRecords(), false), 200));
+                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeCherryRecords(), false), 200));
 
         when(apiHandler.getTrees(eq("CommonName='Peach'"), eq(returning_string), eq(tuple_max)))
-                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
+                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
 
         when(apiHandler.getTrees(contains("Apricot"), eq(returning_string), eq(tuple_max)))
-                .thenReturn(new Request<>(new ApiResponse("Feature", TestTreeData.createFakeApricotRecords(), false), 200));
+                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeApricotRecords(), false), 200));
 
         List<TreeModel> allTrees = testTreeService.getAllTrees();
         assertEquals(5, allTrees.size());
@@ -171,13 +172,13 @@ public class TreeServiceTest {
     @Test
     public void testWrongResponseCode() {
 
-        Tree testRecord = TestTreeData
+        TreeRecord testRecord = TestTreeData
                 .createFakeRecord(5252,3423, 2452, "Council", "Malus", "Chinese Crab Apple");
 
 
-        Tree[] fakeTrees = {testRecord};
-        ApiResponse fakeResponse = new ApiResponse("Feature", fakeTrees, false);
-        Request<ApiResponse> fakeRequest = new Request<ApiResponse>(fakeResponse, 404);
+        TreeRecord[] fakeTrees = {testRecord};
+        TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
+        Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 404);
 
         when(apiHandler.getTrees(contains("Apple"), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
         List<TreeModel> result = testTreeService.getTreesByFood("Apple");

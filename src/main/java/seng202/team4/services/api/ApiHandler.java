@@ -2,7 +2,7 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import seng202.team4.models.api.ApiResponse;
+import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -36,13 +36,13 @@ public class ApiHandler {
     }
 
     /**
-         * Takes an {@link HttpsURLConnection} from an API request and returns an {@link ApiResponse} with the JSON data
+         * Takes an {@link HttpsURLConnection} from an API request and returns an {@link TreeApiResponse} with the JSON data
      *
      * @param connection an object with request information and JSON data
      * @return null if the connection is not HTTP ok and an object with the JSON data if the connection is HTTP ok
      * @throws IOException if the connection is invalid
      */
-    private ApiResponse getJsonData(HttpsURLConnection connection) throws IOException {
+    private TreeApiResponse getJsonData(HttpsURLConnection connection) throws IOException {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             return null;
         }
@@ -55,7 +55,7 @@ public class ApiHandler {
 
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(
-                String.valueOf(stringBuilder), new TypeReference<ApiResponse>() {
+                String.valueOf(stringBuilder), new TypeReference<TreeApiResponse>() {
 
                 });
     }
@@ -100,16 +100,16 @@ public class ApiHandler {
     }
 
     /**
-     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
      *
-     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
-    public Request<ApiResponse> getTrees(String params, String outFields, int maxTuples) {
+    public Request<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
         try {
             HttpsURLConnection connection = createConnection(API_LINK
                     + urlEncodeParams(params, outFields, maxTuples));
             try {
-                ApiResponse apiResponse = getJsonData(connection);
+                TreeApiResponse apiResponse = getJsonData(connection);
                 return new Request<>(apiResponse, connection.getResponseCode());
             } catch (IOException e) {
                 return new Request<>(null, connection.getResponseCode());
@@ -120,18 +120,18 @@ public class ApiHandler {
     }
 
     /**
-     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
      *
-     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
-    public Request<ApiResponse> getTrees(
+    public Request<TreeApiResponse> getTrees(
             String params, String outFields, int maxTuples,  double north, double east, double south, double west
     ) {
         try {
             HttpsURLConnection connection = createConnection(API_LINK
                     + urlEncodeParams(params, outFields, maxTuples, north, east, south, west));
             try {
-                ApiResponse apiResponse = getJsonData(connection);
+                TreeApiResponse apiResponse = getJsonData(connection);
                 return new Request<>(apiResponse, connection.getResponseCode());
             } catch (IOException e) {
                 return new Request<>(null, connection.getResponseCode());

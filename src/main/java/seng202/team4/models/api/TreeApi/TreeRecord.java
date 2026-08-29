@@ -1,4 +1,4 @@
-package seng202.team4.models.api;
+package seng202.team4.models.api.TreeApi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param properties the properties of the tree
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Tree(
+public record TreeRecord(
         @JsonProperty String type,
         @JsonProperty int id,
         @JsonProperty Geometry geometry,
