@@ -7,7 +7,7 @@ import java.util.List;
  * Interface for the tree specific data access object
  * @author Team 4
  */
-public interface TreeRepository extends DAOInterface<TreeModel> {
+public interface TreeRepository extends DAOInterface<TreeModel, Integer> {
 
     /**
      * retrieve all trees of a specified common name
