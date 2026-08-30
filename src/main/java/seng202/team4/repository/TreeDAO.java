@@ -318,8 +318,7 @@ public class TreeDAO implements TreeRepository {
         LocalDateTime lastUpdated;
         if (timestamp != null) {
             lastUpdated = timestamp.toLocalDateTime();
-        }
-        else {
+        } else {
             lastUpdated = null;
         }
         return lastUpdated;
