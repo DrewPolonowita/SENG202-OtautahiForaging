@@ -1,0 +1,138 @@
+package seng202.team4.repository;
+
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team4.models.Note;
+
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+public class NoteDAO implements NoteRepository {
+
+    private static final Logger LOG = LogManager.getLogger(NoteDAO.class);
+    private final DatabaseManager databaseManager;
+
+    private static final DateTimeFormatter SQLITE_FORMAT =
+            DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
+    /**
+     * Constructor
+     * @param databaseManager connects to the database
+     */
+    public NoteDAO(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
+    }
+
+    private Note mapRow(ResultSet rs) throws SQLException {
+        LocalDateTime timeCreated = LocalDateTime.parse(rs.getString("time_created"), SQLITE_FORMAT);
+        return new Note(
+                rs.getInt("id"),
+                rs.getString("name"),
+                timeCreated,
+                rs.getInt("tree_id")
+        );
+    }
+
+    /**
+     * Adds a note object to the database
+     * @param toAdd object of type T to add
+     * @return id of the key if successful or -1 if fault
+     */
+    public int add(Note toAdd) {
+        String sql = """
+                INSERT INTO note (time_created, name, tree_id)
+                VALUES (CURRENT_TIMESTAMP, ?, ?);
+                """;
+        try (Connection conn = databaseManager.connect();
+                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, toAdd.getName());
+            ps.setInt(2, toAdd.getTreeId());
+
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getInt(1);
+                }
+            }
+            return -1;
+        } catch (SQLException error) {
+            LOG.error(error);
+            return -1;
+        }
+    }
+
+    @Override
+    public List<Note> getAll() {
+        List<Note> notes = new ArrayList<>();
+        String sql = "SELECT * FROM note";
+        try (Connection conn = databaseManager.connect();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                notes.add(mapRow(rs));
+            }
+            return notes;
+        } catch (SQLException error) {
+            LOG.error(error);
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public Note getOne(int id) {
+        Note note = null;
+        String sql = "SELECT * FROM note WHERE id=?";
+        try (Connection conn = databaseManager.connect();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    note = mapRow(rs);
+                }
+            }
+        } catch (SQLException error) {
+            LOG.error(error);
+            return null;
+        }
+        return note;
+    }
+
+    @Override
+    public void delete(int id) {
+        String sql = "DELETE FROM note WHERE id=?";
+        try (Connection conn = databaseManager.connect();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException error) {
+            LOG.error(error);
+        }
+    }
+
+    @Override
+    public void update(Note toUpdate) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Note> getNotesByTreeId(int treeId) {
+        List<Note> notes = new ArrayList<>();
+        String sql = "SELECT * FROM note WHERE tree_id=?";
+        try (Connection conn = databaseManager.connect();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, treeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    notes.add(mapRow(rs));
+                }
+            }
+            return notes;
+        } catch (SQLException error) {
+            LOG.error(error);
+            return new ArrayList<>();
+        }
+    }
+}
