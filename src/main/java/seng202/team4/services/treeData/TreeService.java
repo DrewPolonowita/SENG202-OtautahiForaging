@@ -33,14 +33,8 @@ public class TreeService implements TreeDataManager {
      * @param south the min y value for the region
      * @param west the min x value for the region
      */
-    public void getTreesByRegion(String type, double north, double east, double south, double west) {
-        List<TreeModel> trees = treeRepository.getTreesByRegion(type, north, east, south, west);
-
-        System.out.println(trees.size());
-
-        for (TreeModel tree: trees) {
-            System.out.printf("(%.2f, %.2f)\n", tree.getXCoord(), tree.getYCoord());
-        }
+    public List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west) {
+        return treeApiHandler.getTreesByRegion(type, north, east, south, west);
     }
 
     /**

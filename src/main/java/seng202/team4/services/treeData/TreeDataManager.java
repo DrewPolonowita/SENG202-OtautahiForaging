@@ -17,7 +17,7 @@ public interface TreeDataManager {
      * @param south the min y value for the region
      * @param west the min x value for the region
      */
-    void getTreesByRegion(String type, double north, double east, double south, double west);
+    List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west);
 
     /**
      * Returns a list of trees from the api within a given region and updates the database
