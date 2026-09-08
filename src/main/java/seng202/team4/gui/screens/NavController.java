@@ -92,21 +92,6 @@ public class NavController extends ScreenController {
     }
 
     /**
-     * Sets the width of the navBar
-     *
-     * @param width the width of the navBar
-     */
-    private void setWidth(int width) {
-        sideBarPane.setMinWidth(width);
-        sideBarPane.setPrefWidth(width);
-        sideBarPane.setMaxWidth(width);
-
-        navBar.setMinWidth(width);
-        navBar.setPrefWidth(width);
-        navBar.setMaxWidth(width);
-    }
-
-    /**
      * Method to call when our counter button is clicked
      *
      */
@@ -138,7 +123,6 @@ public class NavController extends ScreenController {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchRecipesScreen(stateManager);
         setSelectedButton(recipesButton);
-
     }
 
     /**

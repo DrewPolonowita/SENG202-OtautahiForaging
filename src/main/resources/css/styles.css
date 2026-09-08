@@ -2,7 +2,7 @@
     -primary-color: #86CA82;
     -primary-color-highlight: #7cbf82;
     -primary-bg-color: #ffffff;
-    -secondary-bg-color: #dcdcdc;
+    -secondary-bg-color: #f4f4f4;
     -text-color: #1a1a1a;
     -fx-background-color: -secondary-bg-color;
     -fx-text-fill: -text-color;
@@ -124,4 +124,32 @@
 .filters-selected {
     -fx-background-color: -primary-color;
     -fx-text-fill: -primary-bg-color;
+}
+
+.recipeCardBaseArea {
+    -fx-background-color: -secondary-bg-color;
+    -fx-border-color: -primary-bg-color;
+    -fx-text-fill: -text-color;
+    -fx-border-width: 0;
+}
+
+.recipeCardBase {
+    -fx-background-color: -primary-bg-color;
+    -fx-cursor: hand;
+}
+
+.recipeCardBase:hover {
+    -fx-background-color: derive(-primary-bg-color, -5%);
+}
+.recipeCardTitle {
+    -fx-fill: -primary-color;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-translate-x: 10px;
+}
+.recipeScrollPane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }

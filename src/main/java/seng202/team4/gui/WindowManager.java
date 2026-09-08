@@ -11,12 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.JournalController;
-import seng202.team4.gui.screens.MapController;
-import seng202.team4.gui.screens.NavController;
-import seng202.team4.gui.screens.RecipesController;
-import seng202.team4.gui.screens.SettingsController;
-import seng202.team4.gui.screens.TableViewController;
+import seng202.team4.gui.screens.*;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 
@@ -125,6 +120,17 @@ public class WindowManager {
         ScreenController controller = new RecipesController(stateManager);
         launchScreen(controller, rootPane);
     }
+
+    /**
+     * Launches the recipes screen
+     *
+     * @param stateManager the state manager for the application
+     */
+    public void launchRecipesScreenHighlight(StateManager stateManager, String recipeName) {
+        ScreenController controller = new RecipeHighlightController(stateManager, recipeName);
+        launchScreen(controller, rootPane);
+    }
+
 
     /**
      * Launches the table screen
