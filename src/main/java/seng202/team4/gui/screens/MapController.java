@@ -10,8 +10,10 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
+import seng202.team4.models.Note;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 import seng202.team4.services.TreeService;
@@ -47,6 +49,7 @@ public class MapController extends ScreenController {
     private Button peachButton;
     @FXML
     private Button apricotButton;
+    private StateManager stateManager;
 
     //private final ThemeService themeService;
     /**
@@ -58,6 +61,7 @@ public class MapController extends ScreenController {
 
         super(stateManager);
         treeService = stateManager.getTreeService();
+        this.stateManager = stateManager;
         //this.themeService = themeService; , ThemeService themeService
     }
 
@@ -67,9 +71,22 @@ public class MapController extends ScreenController {
     @FXML
     private void initialize() {
         LOG.info("MapController initialize() called");
-        javaScriptBridge = new JavaScriptBridge(tree -> { }, id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
+        javaScriptBridge = new JavaScriptBridge(
+                id -> {
+                    TreeModel tree = stateManager.getTreeRepository().getOne(id);
+                    Note note = new Note(0, tree.getCommonName() + " #" + tree.getId(), null, tree.getId());
+                    try {
+                        int result  = stateManager.getNoteService().add(note);
+                        if (result == -1) {
+                            LOG.warn("Failed to add note for tree {}", id);
+                        }
+                    } catch (DuplicateEntryException e) {
+                        LOG.warn("Failed to add note for tree {}: duplicate entry", id, e);
+                    }
+                },
+                tree -> { },
+                id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
         initMap();
-
     }
 
     /**
@@ -121,8 +138,6 @@ public class MapController extends ScreenController {
     /**
      * Formatting the string popup for tree data points on Leaflet
      * Each tree added as a marker will have a popup description
-     * Potential space for development: addition of "add to Journal" button
-     * on the popup.
      */
     private void showTreeDescription() {
         for (TreeModel tree : treeService.getAllTrees()) {
@@ -130,13 +145,15 @@ public class MapController extends ScreenController {
                     "<b>Common Name: </b>%s<br>"
                             + "<b>Ownership: </b>%s<br>"
                             + "<b>Genus: </b>%s<br>"
-                            + "<b>Tree ID:</b> %d", tree.getCommonName(),
-                    tree.getOwnership(), tree.getGenus(), tree.getId()
+                            + "<b>Tree ID:</b> %d<br>"
+                            + "<button onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>",
+                    tree.getCommonName(), tree.getOwnership(), tree.getGenus(), tree.getId(), tree.getId()
             );
             javaScriptConnector.call("addMarker", tree.getId(), popup,
                     tree.getYCoord(), tree.getXCoord());
         }
     }
+
     public void filterButtonClicked(Button buttons) {
         if (buttons.getStyleClass().contains("sideBar-button-selected")) {
             buttons.getStyleClass().remove("sideBar-button-selected");

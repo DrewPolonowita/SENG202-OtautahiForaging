@@ -32,11 +32,12 @@ public class StateManager {
         this.treeService = new TreeService(treeRepository);
 
         this.noteRepository = new NoteDAO(databaseManager);
-        this.noteService = new NoteService(treeRepository);
+        this.noteService = new NoteService(noteRepository);
 
 
         this.windowManager.launchMapScreen(this);
         this.windowManager.launchNavScreen(this);
+
 
     }
 
@@ -50,5 +51,13 @@ public class StateManager {
 
     public TreeService getTreeService() {
         return treeService;
+    }
+
+    public NoteService getNoteService() {
+        return noteService;
+    }
+
+    public TreeRepository getTreeRepository() {
+        return treeRepository;
     }
 }
