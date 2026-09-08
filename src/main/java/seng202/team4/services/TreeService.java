@@ -23,6 +23,7 @@ import java.util.Map;
 /**
  * Service class to handle business logic for managing trees
  * @author Team 4
+ * @deprecated this class is being phased out with treeData/TreeService
  */
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
