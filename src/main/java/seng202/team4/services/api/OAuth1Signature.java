@@ -1,6 +1,5 @@
 package seng202.team4.services.api;
 
-import io.github.cdimascio.dotenv.Dotenv;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

@@ -13,6 +13,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+/**
+ * This class handles the connection to api and calling the HTTP methods to do so
+ */
 public class ApiClient implements ApiClientInterface {
 
     private static final Logger log = LogManager.getLogger(ApiClient.class);
@@ -30,6 +33,12 @@ public class ApiClient implements ApiClientInterface {
         return connection;
     }
 
+    /**
+     * Creates a connection to FatSecret API
+     * @param url url used to call function needed
+     * @param oauthHeader authentication header
+     * @return HttpsURLConnection object including response code and data
+     */
     private HttpsURLConnection createOAuthConnection(String url, String oauthHeader) throws IOException {
         URL urlObject = new URL(url);
         HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
