@@ -2,6 +2,8 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 
@@ -12,6 +14,8 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class ApiClient implements ApiClientInterface {
+
+    private static final Logger log = LogManager.getLogger(ApiClient.class);
 
     /**
      * Creates a connection to the server
@@ -26,6 +30,14 @@ public class ApiClient implements ApiClientInterface {
         return connection;
     }
 
+    private HttpsURLConnection createOAuthConnection(String url, String oauthHeader) throws IOException {
+        URL urlObject = new URL(url);
+        HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
+        connection.setRequestProperty("Authorization", oauthHeader);
+        connection.setRequestMethod("GET");
+        return connection;
+    }
+
     /**
      * Takes an {@link HttpsURLConnection} from an API request and returns an {@link TreeApiResponse} with the JSON data
      *
@@ -35,6 +47,11 @@ public class ApiClient implements ApiClientInterface {
      */
     private <T> T getJsonData(HttpsURLConnection connection, TypeReference<T> responseType) throws IOException {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            Scanner scanner = new Scanner(connection.getErrorStream());
+
+            while (scanner.hasNextLine()) {
+                log.error(scanner.nextLine());
+            }
             return null;
         }
 
@@ -53,6 +70,23 @@ public class ApiClient implements ApiClientInterface {
     public <T> Request<T> get(String url, TypeReference<T> responseType) {
         try {
             HttpsURLConnection connection = createConnection(url);
+            try {
+                T apiResponse = getJsonData(connection, responseType);
+                return new Request<>(apiResponse, connection.getResponseCode());
+            } catch (IOException e) {
+                return new Request<>(null, connection.getResponseCode());
+            }
+        } catch (IOException e) {
+            return new Request<>(null, -1);
+        }
+
+    }
+
+
+    @Override
+    public <T> Request<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
+        try {
+            HttpsURLConnection connection = createOAuthConnection(url, oauthHeader);
             try {
                 T apiResponse = getJsonData(connection, responseType);
                 return new Request<>(apiResponse, connection.getResponseCode());

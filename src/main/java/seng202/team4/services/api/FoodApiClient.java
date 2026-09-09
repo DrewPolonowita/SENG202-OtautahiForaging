@@ -2,17 +2,25 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 import seng202.team4.models.api.Request;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Class to interact with the api for the purpose of getting food information from the FatSecret API
  */
 public class FoodApiClient implements FoodClientInterface {
+
+    private static final Logger log = LogManager.getLogger(FoodApiClient.class);
 
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
     static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
@@ -21,6 +29,7 @@ public class FoodApiClient implements FoodClientInterface {
     static final String FOOD_BY_SEARCH = BASE_URL + "/foods/search/v1";
 
     private final ApiClientInterface apiClient;
+    private final OAuth1Signature oauth1Signature;
 
     /**
      * Constructor
@@ -28,6 +37,10 @@ public class FoodApiClient implements FoodClientInterface {
      */
     public FoodApiClient(ApiClientInterface apiClient) {
         this.apiClient = apiClient;
+        Dotenv dotenv = Dotenv.configure().load();
+        String consumerKey = dotenv.get("CONSUMER_KEY");
+        String secretKey = dotenv.get("CONSUMER_SECRET");
+        this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
     }
 
     /**
@@ -75,9 +88,14 @@ public class FoodApiClient implements FoodClientInterface {
      */
     @Override
     public Request<FoodByIdResponse> getFoodById(int foodId) {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("food_id", String.valueOf(foodId));
+        params.put("format", "json");
+        String authenticatedString = oauth1Signature.createSignature("GET", FOOD_BY_ID, params);
         String url = FOOD_BY_ID + encodeGetFoodByIdParams(foodId);
-        return apiClient.get(url, new TypeReference<FoodByIdResponse>() {
-        });
+        return apiClient.getOauth(url, new TypeReference<FoodByIdResponse>() {
+        }, authenticatedString);
     }
 
 
