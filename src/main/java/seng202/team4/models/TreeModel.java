@@ -3,6 +3,7 @@ package seng202.team4.models;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -14,11 +15,13 @@ public class TreeModel {
     private static final Logger log = LogManager.getLogger(TreeModel.class);
 
     private final int id;
-    private final int[] coordinates;
+    private final float[] coordinates;
     private final String ownership;
     private final String genus;
-    private final String fruit;
+    private final String food;
     private final String commonName;
+    private LocalDateTime lastUpdated;
+    private String serviceStatus;
 
     /**
      * Constructor
@@ -26,15 +29,18 @@ public class TreeModel {
      * @param coordinates Tree location
      * @param ownership Who owns the tree
      * @param genus Genus of tree
-     * @param fruit Fruit type of a tree
+     * @param food Food type of a tree
      */
-    public TreeModel(int id, int[] coordinates, String ownership, String genus, String fruit, String commonName) {
+    public TreeModel(int id, float[] coordinates, String ownership, String genus, String food, String commonName, LocalDateTime lastUpdated, String serviceStatus) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
         this.genus = genus;
-        this.fruit = fruit;
+        this.food = food;
         this.commonName = commonName;
+        this.lastUpdated = lastUpdated;
+        this.serviceStatus = serviceStatus;
+
     }
 
     /**
@@ -50,15 +56,15 @@ public class TreeModel {
      * Getter for coordinates
      * @return returns integer array coordinates
      */
-    public int[] getCoordinates() {
+    public float[] getCoordinates() {
         return coordinates;
     }
 
-    public int getXCoord() {
+    public float getXCoord() {
         return coordinates[0];
     }
 
-    public int getYCoord() {
+    public float getYCoord() {
         return coordinates[1];
     }
 
@@ -70,6 +76,7 @@ public class TreeModel {
         return ownership;
     }
 
+
     /**
      * Getter for genus
      * @return returns String genus
@@ -79,11 +86,11 @@ public class TreeModel {
     }
 
     /**
-     * Getter method for fruit type
-     * @return returns String fruit
+     * Getter method for food type
+     * @return returns String food
      */
-    public String getFruit() {
-        return fruit;
+    public String getFood() {
+        return food;
     }
 
     /**
@@ -112,7 +119,7 @@ public class TreeModel {
                 && Arrays.equals(coordinates, treeModel.coordinates)
                 && Objects.equals(ownership, treeModel.ownership)
                 && Objects.equals(genus, treeModel.genus)
-                && Objects.equals(fruit, treeModel.fruit)
+                && Objects.equals(food, treeModel.food)
                 && Objects.equals(commonName, treeModel.commonName);
     }
 
@@ -122,7 +129,14 @@ public class TreeModel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, fruit, commonName);
+        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, food, commonName);
     }
 
+    public String getServiceStatus() {
+        return serviceStatus;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
 }

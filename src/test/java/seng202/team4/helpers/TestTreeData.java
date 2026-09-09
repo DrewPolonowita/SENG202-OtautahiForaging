@@ -12,7 +12,7 @@ import java.util.List;
 public class TestTreeData {
 
     public static Tree createFakeRecord(int x, int y, int id, String owner, String genus, String commonName) {
-        int[] coordinates = {x, y};
+        float[] coordinates = {x, y};
         Geometry geometry = new Geometry("location", coordinates);
         Properties properties = new Properties(id, owner, genus, commonName);
 
@@ -25,11 +25,11 @@ public class TestTreeData {
     }
     public static List<TreeModel> createTreeModels() {
         List<TreeModel> testTrees = new ArrayList<>();
-        testTrees.add(new TreeModel(2452, new int[]{5252, 3423}, "Council", "Malus", "Apple", "Apple"));
-        testTrees.add(new TreeModel(2454, new int[]{2252, 5423}, "Council", "Malus", "Apple", "Apple"));
-        testTrees.add(new TreeModel(2453, new int[]{5253, 8424}, "Council", "Pyrus", "Pear", "Pear"));
-        testTrees.add(new TreeModel(724, new int[]{4313, 8591}, "Council", "Prunus", "Cherry", "Cherry"));
-        testTrees.add(new TreeModel(2042, new int[]{4539, 7854}, "Council", "Prunus", "Apricot", "Apricot"));
+        testTrees.add(new TreeModel(2452, new float[]{5252, 3423}, "Council", "Malus", "Apple", "Apple", null, "serviced"));
+        testTrees.add(new TreeModel(2454, new float[]{2252, 5423}, "Council", "Malus", "Apple", "Apple", null, "serviced"));
+        testTrees.add(new TreeModel(2453, new float[]{5253, 8424}, "Council", "Pyrus", "Pear", "Pear", null, "serviced"));
+        testTrees.add(new TreeModel(724, new float[]{4313, 8591}, "Council", "Prunus", "Cherry", "Cherry", null, "serviced"));
+        testTrees.add(new TreeModel(2042, new float[]{4539, 7854}, "Council", "Prunus", "Apricot", "Apricot", null, "serviced"));
         return testTrees;
     }
 

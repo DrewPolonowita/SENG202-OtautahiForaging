@@ -9,36 +9,46 @@ import seng202.team4.models.api.Request;
 import seng202.team4.models.api.Tree;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
+import seng202.team4.services.api.ApiClient;
+import seng202.team4.services.api.ApiClientInterface;
+import seng202.team4.services.api.TreeApiClient;
+import seng202.team4.services.api.TreeClientInterface;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service class to handle business logic for managing trees
  * @author Team 4
+ * @deprecated this class is being phased out with treeData/TreeService
  */
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
-    private final ApiHandler apiHandler;
+    private final TreeClientInterface treeApiClient;
     private final TreeRepository treeDAO;
+    private final FoodService foodService;
 
     /**
      * Constructor
      */
     public TreeService(TreeRepository treeRepository) {
-        this.apiHandler = new ApiHandler();
+        ApiClientInterface apiClient = new ApiClient();
+        this.treeApiClient = new TreeApiClient(apiClient);
         this.treeDAO = treeRepository;
+        this.foodService = new FoodService(); // Null Temp
     }
 
     /**
      * Constructor for testing
      * @param apiHandler mock apiHandler
      */
-    public TreeService(ApiHandler apiHandler, TreeDAO treeDAO) {
-        this.apiHandler = apiHandler;
+    public TreeService(TreeClientInterface apiHandler, TreeDAO treeDAO) {
+        this.treeApiClient = apiHandler;
         this.treeDAO = treeDAO;
+        this.foodService = new FoodService();
     }
 
     /**
@@ -49,32 +59,38 @@ public class TreeService {
     private TreeModel createTreeObject(Tree treeRecord) {
         String genus = treeRecord.properties().genus();
         String commonName = treeRecord.properties().commonName();
-        String fruitType = getFruitType(commonName);
+        String foodType = getFoodType(commonName);
 
         return new TreeModel(
                 treeRecord.properties().treeId(),
                 treeRecord.geometry().coordinates(),
                 treeRecord.properties().ownership(),
                 genus,
-                fruitType,
-                commonName);
+                foodType,
+                commonName,
+                null,
+                null);
     }
 
     /**
-     * Mapping the genus to a fruit type in a new column
+     * Mapping the common name to a food type in a new column
      * @param commonName common name
-     * @return the fruit type based on genus
+     * @return the food type based on commonName
      */
-    private String getFruitType(String commonName) {
-        return switch (commonName) {
-            case "Apple" -> "Apple";
-            case "Pear" -> "Pear";
-            case "Cherry" -> "Cherry";
-            case "Peach" -> "Peach";
-            case "Apricot" -> "Apricot";
-            case "Juglans" -> "Walnut";
-            default -> "N/A";
-        };
+    private String getFoodType(String commonName) {
+
+        Map<String, List<String>> foodMap = foodService.getFoodMap();
+
+        for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
+            List<String> commonNames = entry.getValue();
+            for (String name : commonNames) {
+                if (name.equals(commonName)) {
+                    return entry.getKey();
+                }
+            }
+        }
+        log.warn("No fruit mapping available for {}", commonName);
+        return "N/A";
     }
 
     /**
@@ -84,11 +100,11 @@ public class TreeService {
     public List<TreeModel> getAllTreesFromApi() {
 
         List<TreeModel> allTrees = new ArrayList<>();
-        allTrees.addAll(getTreesFromApiByType("Apple"));
-        allTrees.addAll(getTreesFromApiByType("Pear"));
-        allTrees.addAll(getTreesFromApiByType("Cherry"));
-        allTrees.addAll(getTreesFromApiByType("Peach"));
-        allTrees.addAll(getTreesFromApiByType("Apricot"));
+        allTrees.addAll(getTreesFromApiByFood("Apple"));
+        allTrees.addAll(getTreesFromApiByFood("Pear"));
+        allTrees.addAll(getTreesFromApiByFood("Cherry"));
+        allTrees.addAll(getTreesFromApiByFood("Peach"));
+        allTrees.addAll(getTreesFromApiByFood("Apricot"));
 
         return allTrees;
 
@@ -114,7 +130,7 @@ public class TreeService {
             try {
                 treeDAO.add(tree);
             } catch (DuplicateEntryException e) {
-                log.warn("Skip duplicate id: {}", tree.getId());
+                log.warn("(All Trees) Skip duplicate id: {}", tree.getId());
             }
         }
         databaseTrees = treeDAO.getAll();
@@ -124,38 +140,65 @@ public class TreeService {
 
 
     /**
-     * Return all trees of a particular type in the database (using common name)
+     * Return all trees of a particular type in the database (using food, derived from common name)
      * If the database has none of the type, use the api to populate database
-     * @param type Tree type by common name
+     * @param food Tree type by food
      * @return List of trees of specified type
      */
-    public List<TreeModel> getTreesByType(String type) {
-        List<TreeModel> databaseTrees = treeDAO.getTreesByCommonName(type);
+    public List<TreeModel> getTreesByFood(String food) {
+        List<TreeModel> databaseTrees = treeDAO.getTreesByFoodName(food);
 
         if (!databaseTrees.isEmpty()) {
-            log.info("Loaded {} {} trees from database", databaseTrees.size(), type);
+            log.info("Loaded {} {} trees from database", databaseTrees.size(), food);
             return databaseTrees;
         }
 
-        List<TreeModel> apiTreesByType = getTreesFromApiByType(type);
+        List<TreeModel> apiTreesByType = getTreesFromApiByFood(food);
         for (TreeModel tree : apiTreesByType) {
             try {
                 treeDAO.add(tree);
             } catch (DuplicateEntryException e) {
-                log.warn("Skip duplicate id: {}", tree.getId());
+                log.warn("(Tree by food: {}) Skip duplicate id: {}", tree.getFood(), tree.getId());
             }
         }
-        databaseTrees = treeDAO.getTreesByCommonName(type);
+        databaseTrees = treeDAO.getTreesByFoodName(food);
         return databaseTrees;
     }
 
     /**
-     * Logic for requesting trees of a type from API
-     * @param type tree type requested by common name
-     * @return List of tree models of requested type from API
+     * Creates an API Query to find all the foods using the different common
+     * names that a food can be under
+     * @param food the food to find
+     * @return the api query string for use by API Handler
      */
-    private List<TreeModel> getTreesFromApiByType(String type) {
-        Request request = apiHandler.getTrees("CommonName='" + type + "'",
+    private String createApiTypeQuery(String food) {
+        Map<String, List<String>> foodMap = foodService.getFoodMap();
+
+        List<String> commonNames = foodMap.get(food);
+
+        StringBuilder queryString = new StringBuilder();
+        for (int i = 0; i < commonNames.size(); i++) {
+            String commonName = commonNames.get(i);
+            if (i > 0) {
+                queryString.append(" OR ");
+            }
+            queryString.append("CommonName='");
+            queryString.append(commonName);
+            queryString.append("'");
+        }
+
+        return queryString.toString();
+
+    }
+
+    /**
+     * Logic for requesting trees with a certain food from API
+     * @param food tree type requested by the food on the tree
+     * @return List of tree models with requested food from API
+     */
+    private List<TreeModel> getTreesFromApiByFood(String food) {
+        String queryString = createApiTypeQuery(food);
+        Request request = treeApiClient.getTrees(queryString,
                 "TreeID,Ownership,Genus,CommonName",
                 100);
 
