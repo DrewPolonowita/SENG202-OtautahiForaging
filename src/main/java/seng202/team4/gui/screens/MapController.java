@@ -74,15 +74,7 @@ public class MapController extends ScreenController {
         javaScriptBridge = new JavaScriptBridge(
                 id -> {
                     TreeModel tree = stateManager.getTreeRepository().getOne(id);
-                    Note note = new Note(0, tree.getCommonName() + " #" + tree.getId(), null, tree.getId());
-                    try {
-                        int result  = stateManager.getNoteService().add(note);
-                        if (result == -1) {
-                            LOG.warn("Failed to add note for tree {}", id);
-                        }
-                    } catch (DuplicateEntryException e) {
-                        LOG.warn("Failed to add note for tree {}: duplicate entry", id, e);
-                    }
+                    stateManager.getWindowManager().openAddNoteMenu(tree, stateManager);
                 },
                 tree -> { },
                 id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
@@ -146,7 +138,7 @@ public class MapController extends ScreenController {
                             + "<b>Ownership: </b>%s<br>"
                             + "<b>Genus: </b>%s<br>"
                             + "<b>Tree ID:</b> %d<br>"
-                            + "<button onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>",
+                            + "<button onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add Note</button>",
                     tree.getCommonName(), tree.getOwnership(), tree.getGenus(), tree.getId(), tree.getId()
             );
             javaScriptConnector.call("addMarker", tree.getId(), popup,

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="note-dialog" spacing="16" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.AddNoteController">
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Add New Note" styleClass="dialog-title" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="✕" styleClass="close-button" onAction="#handleClose"/>
+    </HBox>
+
+    <VBox spacing="6">
+        <Label text="COMMON NAME" styleClass="field-label" />
+        <TextField fx:id="commonNameField" editable="false" />
+    </VBox>
+
+    <VBox spacing="6">
+        <Label text="FIELD NOTES" styleClass="field-label" />
+        <TextArea fx:id="fieldNotesArea" promptText="Describe the tree you saw..." />
+    </VBox>
+
+    <VBox spacing="6">
+        <Label text="PHOTOGRAPH" styleClass="field-label" />
+        <VBox fx:id="uploadZone" alignment="CENTER" spacing="8" styleClass="upload-zone">
+            <Label text="Upload a photo" styleClass="upload-hint" />
+        </VBox>
+    </VBox>
+
+    <Button text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity" />
+</VBox>

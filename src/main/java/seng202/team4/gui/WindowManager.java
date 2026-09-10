@@ -8,10 +8,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.screens.*;
+import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 
@@ -139,22 +142,49 @@ public class WindowManager {
     }
 
     /**
-     * Launches a screen using a given screen controller. This is done by replacing the
-     * root border pane with the screen defined by {@link ScreenController}
-     *
+     * Loads the FXML file for given screen controller.
+     * @param controller the pre-built controller to inject FXML file
+     * @return root node of loaded FXML
+     * @throws IOException if FXML file cant be loaded.
+     */
+    private Parent loadScreen(ScreenController controller) throws IOException {
+        FXMLLoader setupLoader = new FXMLLoader(getClass().getResource(controller.getFxmlFile()));
+        setupLoader.setControllerFactory(param -> controller);
+        return setupLoader.load();
+    }
+
+    /**
+     * Launches screen using given screen controller.
      * @param controller the screen being launched
-     * @param pane the {@link BorderPane} being displayed onto
+     * @param pane the {@link BorderPane} being displayed into
      */
     private void launchScreen(ScreenController controller, BorderPane pane) {
         try {
-            FXMLLoader setupLoader = new FXMLLoader(getClass().getResource(controller.getFxmlFile()));
-            setupLoader.setControllerFactory(param -> controller);
-            Parent setupParent = setupLoader.load();
-
+            Parent setupParent = loadScreen(controller);
             pane.setCenter(setupParent);
             stage.setTitle(controller.getTitle());
         } catch (IOException e) {
             LOG.error(e);
         }
+    }
+
+    /**
+     * Launches the add note menu. Blocking input from other applications while open.
+     * @param tree the select tree to be converted to note
+     * @param stateManager the provided state manager for the application
+     */
+    public void openAddNoteMenu(TreeModel tree, StateManager stateManager) {
+        ScreenController controller = new AddNoteController(stateManager, tree);
+        try {
+            Parent menuRoot = loadScreen(controller);
+            Stage menuStage = new Stage();
+            menuStage.initModality(Modality.APPLICATION_MODAL); // blocks input to background screen
+            menuStage.initStyle(StageStyle.TRANSPARENT);
+            menuStage.setScene(new Scene(menuRoot));
+            menuStage.showAndWait();
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+
     }
 }
