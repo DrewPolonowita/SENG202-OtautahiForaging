@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import seng202.team4.models.api.Recipe.RecipeNutrition;
 
-import java.util.List;
 
 /**
  * Represents an element of the returned list of recipes

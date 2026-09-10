@@ -14,7 +14,7 @@ import java.util.Map;
 public class FoodService {
     private static final Logger log = LogManager.getLogger(FoodService.class);
     private Map<String, List<String>> foodMap = new HashMap<>();
-    private Map<String, List<String>> typeMap = new HashMap<>();;
+    private Map<String, List<String>> typeMap = new HashMap<>();
 
     /**
      * Constructor

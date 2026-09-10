@@ -1,9 +1,7 @@
 package seng202.team4.services.treeData;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import seng202.team4.models.TreeModel;
-import seng202.team4.services.treeData.TreeService;
 
 import java.util.List;
 

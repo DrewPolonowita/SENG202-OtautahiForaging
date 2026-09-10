@@ -24,7 +24,7 @@ public class TreeApiClient implements TreeClientInterface {
      * Constructor
      * @param apiClient Generic api client for use to connect to the api
      */
-    public TreeApiClient(ApiClientInterface apiClient){
+    public TreeApiClient(ApiClientInterface apiClient) {
         this.apiClient = apiClient;
     }
 
