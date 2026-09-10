@@ -51,7 +51,7 @@ public class TreeServiceTest {
         databaseManager = new DatabaseManager(testUrl);
         treeDAO = new TreeDAO(databaseManager);
         testTreeService = new TreeService(treeApiClient, treeDAO);
-        foodService = new FoodService(null);
+        foodService = new FoodService();
         returning_string = "TreeID,Ownership,Genus,CommonName";
         tuple_max = 100;
     }
