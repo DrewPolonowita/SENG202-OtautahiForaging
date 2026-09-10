@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
+import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
+import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.FoodApiClient;
@@ -157,18 +159,32 @@ public class FatSecretJsonResponseTest {
         assertEquals(50953, actualRequest.getApiResponse().food().foodId());
         assertEquals("Whole Grain Cheerios", actualRequest.getApiResponse().food().foodName());
     }
-
+    @Test
     public void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
-        FoodByIdResponse foodByIdResponse = objectMapper.readValue(
-                cheeseburgerJson,
-                FoodByIdResponse.class
+        StringBuilder stringBuilder = new StringBuilder();
+        Scanner scanner = new Scanner(cheeseburgerJson);
+
+        while (scanner.hasNext()) {
+            stringBuilder.append(scanner.nextLine());
+        }
+        FoodSearchResponse foodSearchResponse = objectMapper.readValue(
+                stringBuilder.toString(),
+                new TypeReference<FoodSearchResponse>() {
+                }
         );
-        Request<FoodByIdResponse> fakeRequest = new Request<>(foodByIdResponse, 200);
+        Request<FoodSearchResponse> fakeRequest = new Request<>(foodSearchResponse, 200);
         when(apiClient.getOauth(
-                eq("https://platform.fatsecret.com/rest/foods/search/v1?search_expression=Cheeseburger"),
+                eq("https://platform.fatsecret.com/rest/foods/search/v1?search_expression=Cheeseburger&max_results=1&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
         )).thenReturn(fakeRequest);
+
+        Request<FoodSearchResponse> actualResponse = foodApiClient.searchFood("Cheeseburger", 1);
+
+        assertEquals(200, actualResponse.getResponseCode());
+        assertEquals(41963, actualResponse.getApiResponse().foods().food().get(0).foodId());
+        assertEquals(220, actualResponse.getApiResponse().foods().totalResults());
+        assertEquals("Cheeseburger", actualResponse.getApiResponse().foods().food().get(0).foodName());
     }
 
     public void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
@@ -185,18 +201,33 @@ public class FatSecretJsonResponseTest {
     }
 
 
-
+    @Test
     public void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
-        FoodByIdResponse foodByIdResponse = objectMapper.readValue(
-                searchBakedLemonSnapperJson,
-                FoodByIdResponse.class
+        StringBuilder stringBuilder = new StringBuilder();
+        Scanner scanner = new Scanner(searchBakedLemonSnapperJson);
+
+        while (scanner.hasNext()) {
+            stringBuilder.append(scanner.nextLine());
+        }
+        RecipeSearchResponse recipeSearchResponse = objectMapper.readValue(
+                stringBuilder.toString(),
+                new TypeReference<RecipeSearchResponse>() {
+                }
         );
-        Request<FoodByIdResponse> fakeRequest = new Request<>(foodByIdResponse, 200);
+        Request<RecipeSearchResponse> fakeRequest = new Request<>(recipeSearchResponse, 200);
         when(apiClient.getOauth(
-                eq("https://platform.fatsecret.com/rest/food/v5?food_id=50953&format=json"),
+                eq("https://platform.fatsecret.com/rest/recipes/search/v3?search_expression=Baked%20Lemon%20Snapper&must_have_images=false&max_results=1&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
         )).thenReturn(fakeRequest);
+
+        Request<RecipeSearchResponse> actualResponse = recipeApiClient.searchRecipe("Baked Lemon Snapper", false, 1);
+
+        assertEquals(200, actualResponse.getResponseCode());
+        assertEquals(91, actualResponse.getApiResponse().recipes().recipe().get(0).id());
+        assertEquals("Baked Lemon Snapper", actualResponse.getApiResponse().recipes().recipe().get(0).recipeName());
+        assertEquals(177, actualResponse.getApiResponse().recipes().recipe().get(0).nutritionalInformation().calories());
+
     }
 
 
