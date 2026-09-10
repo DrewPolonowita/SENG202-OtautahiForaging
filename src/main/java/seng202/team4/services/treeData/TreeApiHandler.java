@@ -6,7 +6,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.models.api.TreeApi.TreeRecord;
-import seng202.team4.services.api.ApiHandler;
+import seng202.team4.services.api.TreeApiClient;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -19,13 +19,13 @@ import java.util.List;
  */
 public class TreeApiHandler {
     private static final Logger LOG = LogManager.getLogger(TreeApiHandler.class);
-    private final ApiHandler apiHandler;
+    private final TreeApiClient treeApiHandler;
 
     /**
      * Constructor for the TreeApiHandeler
      */
-    public TreeApiHandler(ApiHandler apiHandler) {
-        this.apiHandler = apiHandler;
+    public TreeApiHandler(TreeApiClient treeApiClient) {
+        this.treeApiHandler = treeApiClient;
     }
 
     /**
@@ -77,26 +77,25 @@ public class TreeApiHandler {
     public List<TreeModel> getAllTreesFromApi() {
 
         List<TreeModel> allTrees = new ArrayList<>();
-        allTrees.addAll(getTreesFromApiByType("Apple"));
-        allTrees.addAll(getTreesFromApiByType("Pear"));
-        allTrees.addAll(getTreesFromApiByType("Cherry"));
-        allTrees.addAll(getTreesFromApiByType("Peach"));
-        allTrees.addAll(getTreesFromApiByType("Apricot"));
+        allTrees.addAll(getTreesFromApiByFood("Apple"));
+        allTrees.addAll(getTreesFromApiByFood("Pear"));
+        allTrees.addAll(getTreesFromApiByFood("Cherry"));
+        allTrees.addAll(getTreesFromApiByFood("Peach"));
+        allTrees.addAll(getTreesFromApiByFood("Apricot"));
 
         return allTrees;
 
     }
 
     /**
-     * Logic for requesting trees of a type from API
-     * @param type tree type requested by common name
-     * @return List of tree models of requested type from API
+     * Logic for requesting trees of a food from API
+     * @param food tree food requested by common name
+     * @return List of tree models of requested food from API
      */
-    private List<TreeModel> getTreesFromApiByType(String type) {
-        Request request = apiHandler.getTrees("CommonName='" + type + "'",
+    public List<TreeModel> getTreesFromApiByFood(String food) {
+        Request request = treeApiHandler.getTrees("CommonName='" + food + "'",
                 "TreeID,Ownership,Genus,CommonName",
                 100);
-
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
             LOG.warn("API connection failed with a {}", request.getResponseCode());
             return List.of();
@@ -124,7 +123,7 @@ public class TreeApiHandler {
      * @param west the min x value for the region
      */
     public List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west) {
-        Request request = apiHandler.getTrees(String.format(
+        Request request = treeApiHandler.getTrees(String.format(
                 "CommonName='%s'", type
                 ),
                 "TreeID,Ownership,Genus,CommonName",

@@ -1,7 +1,6 @@
 package seng202.team4.models;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * A region of an area in Christchurch to be Queried together with the api.
