@@ -19,10 +19,8 @@ import java.util.Map;
  * Class to interact with the api for the purpose of getting food information from the FatSecret API
  */
 public class FoodApiClient implements FoodClientInterface {
-
-    private static final Logger log = LogManager.getLogger(FoodApiClient.class);
-
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
+    private static final Logger log = LogManager.getLogger(FoodApiClient.class);
     static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
     static final String RECIPE_BY_SEARCH = BASE_URL + "/recipes/search/v3";
     static final String FOOD_BY_ID = BASE_URL + "/food/v5";
@@ -41,6 +39,16 @@ public class FoodApiClient implements FoodClientInterface {
         String consumerKey = dotenv.get("CONSUMER_KEY");
         String secretKey = dotenv.get("CONSUMER_SECRET");
         this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
+    }
+
+    /**
+     * Strictly for testing
+     * @param apiClient api client mock
+     * @param oAuth1Signature fake oauth signature
+     */
+    public FoodApiClient(ApiClientInterface apiClient, OAuth1Signature oAuth1Signature) {
+        this.apiClient = apiClient;
+        this.oauth1Signature = oAuth1Signature;
     }
 
     /**

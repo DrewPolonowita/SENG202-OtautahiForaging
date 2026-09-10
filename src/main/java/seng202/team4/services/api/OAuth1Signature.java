@@ -34,6 +34,9 @@ public class OAuth1Signature {
 
     /**
      * Returns the authenticated signature string
+     * format is:
+     * OAuth oauth_consumer_key="key", oauth_signature_method="HMAC-SHA1", oauth_timestamp="178934891",
+     * oauth_nonce="jkl32i4h9", oauth_version="1.0", oauth_signature="fakeSignature"
      * @param http GET or PUT (we only use get, case-sensitive)
      * @param baseUrl URL for the method we are trying to use e.g get food by id or food search
      * @param requestParams params for the particular method

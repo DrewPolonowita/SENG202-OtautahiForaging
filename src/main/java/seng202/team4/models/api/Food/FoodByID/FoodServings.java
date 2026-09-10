@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record FoodServings(
-        @JsonProperty("serving") List<Serving> serving
-        ) {
+public record FoodServings (
+        @JsonProperty("serving") List<Serving> serving)
+{
 }
