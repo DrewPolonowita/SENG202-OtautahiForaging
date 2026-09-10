@@ -13,6 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Interface implementation to call the FatSecret api for the purpose of getting recipe information
+ */
 public class RecipeApiClient implements RecipeClientInterface {
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
     private static final Logger log = LogManager.getLogger(FoodApiClient.class);
@@ -23,6 +26,10 @@ public class RecipeApiClient implements RecipeClientInterface {
     private final ApiClientInterface apiClient;
     private final OAuth1Signature oauth1Signature;
 
+    /**
+     * Constructor
+     * @param apiClient apiClient for handling the connection
+     */
     public RecipeApiClient(ApiClientInterface apiClient) {
         this.apiClient = apiClient;
         Dotenv dotenv = Dotenv.configure().load();
@@ -32,16 +39,22 @@ public class RecipeApiClient implements RecipeClientInterface {
     }
 
     /**
-     * testing
-     * @param apiClient
-     * @param oAuth1Signature
+     * Strictly for testing
+     * @param apiClient mock apiClient for faking the connection
+     * @param oAuth1Signature fake authentication
      */
     public RecipeApiClient(ApiClientInterface apiClient, OAuth1Signature oAuth1Signature) {
         this.apiClient = apiClient;
         this.oauth1Signature = oAuth1Signature;
     }
 
-
+    /**
+     * Url building for recipe search
+     * @param searchExpression search expression to get recipes from FatSecret
+     * @param mustHaveImages should the response be guaranteed to provide images
+     * @param maxResults max search results
+     * @return url search parameter string
+     */
     private String encodeRecipeSearchParams(String searchExpression, boolean mustHaveImages, int maxResults) {
         return "?search_expression=" + URLEncoder
                 .encode(searchExpression == null ? "" : searchExpression, StandardCharsets.UTF_8)
@@ -51,10 +64,20 @@ public class RecipeApiClient implements RecipeClientInterface {
                 + "&format=json";
     }
 
+    /**
+     * Url building for getting recipe by id
+     * @param recipeId recipe id for fatsecret to return
+     * @return url search parameter string
+     */
     private String encodeRecipeByIdParams(int recipeId) {
         return "?recipe_id=" + recipeId + "&format=json";
     }
 
+    /**
+     * Method for use in the application to find specific recipe
+     * @param recipeId recipe being searched for
+     * @return request object including the Json and error codes
+     */
     @Override
     public Request<RecipeByIdResponse> getRecipeById(int recipeId) {
         Map<String, String> params = new HashMap<>();
@@ -66,6 +89,13 @@ public class RecipeApiClient implements RecipeClientInterface {
         }, authenticatedString);
     }
 
+    /**
+     * Method for use in the application to search for recipes
+     * @param searchExpression expression for fatsecret to use to match for recipes
+     * @param mustHaveImages should the results be guaranteed to include images
+     * @param maxResults maximum number of results
+     * @return request object including the Json and error codes
+     */
     @Override
     public Request<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults) {
         Map<String, String> params = new HashMap<>();
