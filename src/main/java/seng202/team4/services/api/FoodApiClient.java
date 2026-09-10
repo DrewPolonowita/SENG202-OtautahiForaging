@@ -14,15 +14,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Class to interact with the api for the purpose of getting food information from the FatSecret API
  */
 public class FoodApiClient implements FoodClientInterface {
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
     private static final Logger log = LogManager.getLogger(FoodApiClient.class);
-    static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
-    static final String RECIPE_BY_SEARCH = BASE_URL + "/recipes/search/v3";
+
     static final String FOOD_BY_ID = BASE_URL + "/food/v5";
     static final String FOOD_BY_SEARCH = BASE_URL + "/foods/search/v1";
 
@@ -83,10 +81,13 @@ public class FoodApiClient implements FoodClientInterface {
      */
     @Override
     public Request<FoodSearchResponse> searchFood(String searchExpression, int maxResults) {
-
+        Map<String, String> params = new HashMap<>();
+        params.put("search_expression", searchExpression);
+        params.put("max_results", String.valueOf(maxResults));
+        String authenticatedString = oauth1Signature.createSignature("GET", FOOD_BY_SEARCH, params);
         String url = FOOD_BY_SEARCH + encodeFoodSearchParams(searchExpression, maxResults);
-        return apiClient.get(url, new TypeReference<FoodSearchResponse>() {
-        });
+        return apiClient.getOauth(url, new TypeReference<FoodSearchResponse>() {
+        }, authenticatedString);
     }
 
     /**

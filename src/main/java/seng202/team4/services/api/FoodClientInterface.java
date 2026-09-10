@@ -6,7 +6,7 @@ import seng202.team4.models.api.Request;
 
 public interface FoodClientInterface {
 
-    public Request<FoodSearchResponse> searchFood(String searchExpression, int maxResults);
+    Request<FoodSearchResponse> searchFood(String searchExpression, int maxResults);
 
-    public Request<FoodByIdResponse> getFoodById(int foodId);
+    Request<FoodByIdResponse> getFoodById(int foodId);
 }
