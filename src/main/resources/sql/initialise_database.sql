@@ -11,9 +11,16 @@ CREATE TABLE IF NOT EXISTS trees (
     last_modified DATETIME,
     service_status TEXT
 );
-
-
-
+--SPLIT
+CREATE TABLE regions (
+    north REAL NOT NULL,
+    east REAL NOT NULL,
+    south REAL NOT NULL,
+    west REAL NOT NULL,
+    last_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    type TEXT NOT NULL,
+    PRIMARY KEY (type, north, east, south, west)
+);
 --SPLIT
 -- Trees subclass table 1
 DROP TABLE IF EXISTS from_api;
@@ -62,15 +69,6 @@ CREATE TABLE IF NOT EXISTS food (
     common_name TEXT PRIMARY KEY,
     food_type TEXT NOT NULL,
     nutritional_information NOT NULL,
-);
---SPLIT
-DROP TABLE IF EXISTS region;
---SPLIT
-CREATE TABLE IF NOT EXISTS region (
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
-    retrieval_time DATETIME NOT NULL,
-    PRIMARY KEY (y, x)
 );
 --SPLIT
 DROP TABLE IF EXISTS recipe_uses_food;

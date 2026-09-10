@@ -153,8 +153,6 @@ public class TreeDAO implements TreeRepository {
             return toAdd.getId();
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
-
-            System.out.println("here");
             return -1;
         }
     }
@@ -163,7 +161,6 @@ public class TreeDAO implements TreeRepository {
      * delete a specific tree from database
      * @param id id of object to delete
      */
-    @Override
     public void delete (int id) {
         String sql = "DELETE FROM trees WHERE id=?";
         try (Connection conn = databaseManager.connect();

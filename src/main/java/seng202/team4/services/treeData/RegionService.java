@@ -2,17 +2,19 @@ package seng202.team4.services.treeData;
 
 import java.util.ArrayList;
 
+import seng202.team4.models.Region;
+
 /**
  * A class to manage regions in which data is requested together to help keep data up to date
  */
 public class RegionService {
 
-    private static double NORTH_BOUND = -43.40;
-    private static double EAST_BOUND = 172.85;
-    private static double SOUTH_BOUND = -43.70;
-    private static double WEST_BOUND = 172.35;
+    private final static double NORTH_BOUND = -43.40;
+    private final static double EAST_BOUND = 172.85;
+    private final static double SOUTH_BOUND = -43.70;
+    private final static double WEST_BOUND = 172.35;
 
-    private static double REGION_SIZE = 0.03;
+    private final static double REGION_SIZE = 0.03;
 
     /**
      * Returns all the regions that overlap with the given bounds and in Christchurch
@@ -23,7 +25,7 @@ public class RegionService {
      * @return an {@link ArrayList} of all the overlapping {@link Region}s with the bounds
      */
     public ArrayList<Region> getOverlappingRegions(
-            double northBound, double eastBound, double southBound, double westBound
+            String type, double northBound, double eastBound, double southBound, double westBound
     ) {
         ArrayList<Region> regionsList = new ArrayList<>();
 
@@ -37,7 +39,7 @@ public class RegionService {
                     double west = j * REGION_SIZE + WEST_BOUND;
 
                     if (eastBound >= west && westBound <= east) {
-                        regionsList.add(new Region(north, east, south, west));
+                        regionsList.add(new Region(type, north, east, south, west));
                     }
                 }
             }
