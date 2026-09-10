@@ -1,9 +1,7 @@
 package seng202.team4.services;
 
 import seng202.team4.gui.WindowManager;
-import seng202.team4.repository.DatabaseManager;
-import seng202.team4.repository.TreeDAO;
-import seng202.team4.repository.TreeRepository;
+import seng202.team4.repository.*;
 
 /**
  * The class which stores information related to the state of the entire app in a given instance
@@ -16,6 +14,7 @@ public class StateManager {
     private final DatabaseManager databaseManager;
     private final TreeRepository treeRepository;
     private final TreeService treeService;
+    private final FoodService foodService;
 
 
     /**
@@ -30,6 +29,8 @@ public class StateManager {
 
         this.treeRepository = new TreeDAO(databaseManager);
         this.treeService = new TreeService(treeRepository);
+
+        this.foodService = new FoodService();
 
 
         this.windowManager.launchMapScreen(this);
@@ -47,5 +48,9 @@ public class StateManager {
 
     public TreeService getTreeService() {
         return treeService;
+    }
+
+    public FoodService getFoodService() {
+        return foodService;
     }
 }

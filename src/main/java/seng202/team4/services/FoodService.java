@@ -13,19 +13,52 @@ import java.util.Map;
  */
 public class FoodService {
     private static final Logger log = LogManager.getLogger(FoodService.class);
-
     private Map<String, List<String>> foodMap = new HashMap<>();
+    private Map<String, List<String>> typeMap = new HashMap<>();;
 
     /**
      * Constructor
      */
     public FoodService() {
         createFoodMap();
+        createTypeMap();
     }
 
     /**
-     * Creates the map of each common name that a tree growing a particular fruit can be known by,
-     * mapped to the particular fruit. Created when FoodService class is created
+     * Creates the map of each type of food that can be found in the database
+     * mapped to the common name of foods within that type.
+     * Created when FoodService class is created
+     */
+    private void createTypeMap() {
+        typeMap.put("Fruit", List.of(
+                "Apple",
+                "Strawberry",
+                "Peach",
+                "Olive",
+                "Honey Locust",
+                "Pear",
+                "Apricot",
+                "Mulberry",
+                "Loquat",
+                "Quince",
+                "Cherry",
+                "Elderberry",
+                "Juniper"));
+        typeMap.put("Nut", List.of(
+                "Walnut",
+                "Sweet Chestnut",
+                "Hazel",
+                "Almond",
+                "Beech"
+        ));
+        typeMap.put("Leaves", List.of(
+                "Sweet bay"
+        ));
+    }
+
+    /**
+     * Creates the map of each common name that a tree growing a particular food can be known by,
+     * mapped to the particular food. Created when FoodService class is created
      */
     private void createFoodMap() {
         foodMap.put("Apple", List.of(
@@ -103,11 +136,22 @@ public class FoodService {
         ));
     }
 
+
+
+
     /**
      * Getter for food map
      * @return the food map
      */
     public Map<String, List<String>> getFoodMap() {
         return foodMap;
+    }
+
+    /**
+     * Getter for the type map
+     * @return the type map
+     */
+    public Map<String, List<String>> getTypeMap() {
+        return typeMap;
     }
 }

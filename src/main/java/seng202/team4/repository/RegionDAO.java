@@ -1,10 +1,11 @@
 package seng202.team4.repository;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
-import seng202.team4.models.TreeModel;
+
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -12,6 +13,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Placeholder
+ */
 public class RegionDAO implements RegionRepository {
     private static final Logger LOG = LogManager.getLogger(RegionDAO.class);
     private final DatabaseManager databaseManager;
@@ -22,6 +26,11 @@ public class RegionDAO implements RegionRepository {
      */
     public RegionDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
+    }
+
+    @Override
+    public Region getOne(Region region) {
+        throw new NotImplementedException();
     }
 
     @Override
@@ -58,10 +67,7 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
-    @Override
-    public Region getOne(int id) {
-        return null;
-    }
+
 
     /**
      * Creates a new region in the database
@@ -97,6 +103,11 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
+    /**
+     * Placeholder
+     * @param region primary key of object to delete
+     */
+    @Override
     public void delete(Region region) {
         String sql = """
                     DELETE FROM REGIONS

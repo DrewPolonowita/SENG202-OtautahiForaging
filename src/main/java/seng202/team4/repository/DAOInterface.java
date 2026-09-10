@@ -6,9 +6,11 @@ import java.util.List;
 /**
  * Interface for Database Access Objects (DAOs) that provides common functionality for database access
  * @author Morgan English
- * @param <T> Generic type
+ * @author Team 4
+ * @param <T> Generic type used for database models
+ * @param <I> Generic Type, primary key
  */
-public interface DAOInterface<T> {
+public interface DAOInterface<T, I> {
     /**
      * Gets all of T from the database
      * @return List of all objects type T from the database
@@ -16,26 +18,26 @@ public interface DAOInterface<T> {
     List<T> getAll();
 
     /**
-     * Gets a single object of type T from the database by id
-     * @param id id of object to get
-     * @return Object of type T that has id given
+     * Gets a single object of type T from the database by its primary key
+     * @param primaryKey the primary key of object to get
+     * @return Object of type T that has the primary key given
      */
-    T getOne(int id);
+    T getOne(I primaryKey);
 
     /**
      * Adds a single object of type T to database
      * @param toAdd object of type T to add
-     * @return object insert id if inserted correctly
+     * @return object primary key if inserted correctly
      * @throws DuplicateEntryException if the object already exists
      *
      */
     int add(T toAdd) throws DuplicateEntryException;
 
     /**
-     * Deletes and object from database that matches id given
-     * @param id id of object to delete
+     * Deletes an object from database that matches primary key given
+     * @param primaryKey primary key of object to delete
      */
-    //void delete(int id);
+    void delete(I primaryKey);
 
     /**
      * Updates an object in the database

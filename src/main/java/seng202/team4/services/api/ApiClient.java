@@ -2,7 +2,9 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import seng202.team4.models.api.ApiResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -16,6 +18,8 @@ import java.util.Scanner;
  * @author Team 4
  */
 public class ApiClient implements ApiClientInterface {
+
+    private static final Logger log = LogManager.getLogger(ApiClient.class);
 
     /**
      * Creates a connection to the server
@@ -31,7 +35,21 @@ public class ApiClient implements ApiClientInterface {
     }
 
     /**
-     * Takes an {@link HttpsURLConnection} from an API request and returns an {@link ApiResponse} with the JSON data
+     * Creates a connection to FatSecret API
+     * @param url url used to call function needed
+     * @param oauthHeader authentication header
+     * @return HttpsURLConnection object including response code and data
+     */
+    private HttpsURLConnection createOAuthConnection(String url, String oauthHeader) throws IOException {
+        URL urlObject = new URL(url);
+        HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
+        connection.setRequestProperty("Authorization", oauthHeader);
+        connection.setRequestMethod("GET");
+        return connection;
+    }
+
+    /**
+     * Takes an {@link HttpsURLConnection} from an API request and returns an {@link TreeApiResponse} with the JSON data
      *
      * @param connection an object with request information and JSON data
      * @return null if the connection is not HTTP ok and an object with the JSON data if the connection is HTTP ok
@@ -39,6 +57,11 @@ public class ApiClient implements ApiClientInterface {
      */
     private <T> T getJsonData(HttpsURLConnection connection, TypeReference<T> responseType) throws IOException {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            Scanner scanner = new Scanner(connection.getErrorStream());
+
+            while (scanner.hasNextLine()) {
+                log.error(scanner.nextLine());
+            }
             return null;
         }
 
@@ -54,14 +77,31 @@ public class ApiClient implements ApiClientInterface {
     }
 
     /**
-     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     * Makes a request to the API and returns an {@link Request} with the JSON data
      *
-     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     * @return {@link Request} if the request is valid, otherwise returns a null
      */
     @Override
     public <T> Request<T> get(String url, TypeReference<T> responseType) {
         try {
             HttpsURLConnection connection = createConnection(url);
+            try {
+                T apiResponse = getJsonData(connection, responseType);
+                return new Request<>(apiResponse, connection.getResponseCode());
+            } catch (IOException e) {
+                return new Request<>(null, connection.getResponseCode());
+            }
+        } catch (IOException e) {
+            return new Request<>(null, -1);
+        }
+
+    }
+
+
+    @Override
+    public <T> Request<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
+        try {
+            HttpsURLConnection connection = createOAuthConnection(url, oauthHeader);
             try {
                 T apiResponse = getJsonData(connection, responseType);
                 return new Request<>(apiResponse, connection.getResponseCode());

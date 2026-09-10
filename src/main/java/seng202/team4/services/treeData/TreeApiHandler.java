@@ -3,9 +3,9 @@ package seng202.team4.services.treeData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
-import seng202.team4.models.api.ApiResponse;
+import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
-import seng202.team4.models.api.Tree;
+import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.services.api.ApiHandler;
 
 import java.net.HttpURLConnection;
@@ -34,7 +34,7 @@ public class TreeApiHandler {
      * @param treeRecord tree record
      * @return TreeModel tree model object
      */
-    private TreeModel createTreeObject(Tree treeRecord) {
+    private TreeModel createTreeObject(TreeRecord treeRecord) {
         String genus = treeRecord.properties().genus();
         String commonName = treeRecord.properties().commonName();
         String fruitType = getFruitType(commonName);
@@ -102,11 +102,11 @@ public class TreeApiHandler {
             return List.of();
         }
 
-        ApiResponse response = (ApiResponse) request.getApiResponse();
+        TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
 
         LOG.info(response);
 
-        List<Tree> treeRecords = Arrays.asList(
+        List<TreeRecord> treeRecords = Arrays.asList(
                 response.featureTrees()
         );
 
@@ -139,11 +139,11 @@ public class TreeApiHandler {
             return List.of();
         }
 
-        ApiResponse response = (ApiResponse) request.getApiResponse();
+        TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
 
         LOG.info(response);
 
-        List<Tree> treeRecords = Arrays.asList(
+        List<TreeRecord> treeRecords = Arrays.asList(
                 response.featureTrees()
         );
 
