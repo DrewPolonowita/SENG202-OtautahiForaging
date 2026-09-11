@@ -148,11 +148,7 @@ public class RecipeService {
      */
     public void populateIngredientInRecipeTable(List<RecipeIngredient> ingredients, Recipe recipe) {
         for (RecipeIngredient ingredient : ingredients) {
-            try {
-                recipeDAO.addIngredientsByRecipe(ingredient, recipe);
-            } catch (DuplicateEntryException e) {
-                log.warn("(Ingredients by recipe) Skip duplicate ids: recipe {} , ingredient {}, serving {}", recipe.getId(), ingredient.ingredientId(), ingredient.servingId());
-            }
+            recipeDAO.addIngredientsByRecipe(ingredient, recipe);
         }
     }
 

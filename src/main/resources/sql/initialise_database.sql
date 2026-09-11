@@ -22,7 +22,6 @@ CREATE TABLE regions (
     PRIMARY KEY (type, north, east, south, west)
 );
 --SPLIT
--- Trees subclass table 1
 DROP TABLE IF EXISTS from_api;
 --SPLIT
 CREATE TABLE IF NOT EXISTS from_api (
@@ -31,7 +30,6 @@ CREATE TABLE IF NOT EXISTS from_api (
     FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
 --SPLIT
--- Trees subclass table 2
 DROP TABLE IF EXISTS from_user;
 --SPLIT
 CREATE TABLE IF NOT EXISTS from_user (
@@ -90,16 +88,15 @@ CREATE TABLE IF NOT EXISTS note (
     name TEXT NOT NULL,
     tree_id INTEGER,
     recipe_id INTEGER,
-    FOREIGN KEY (tree_id) REFERENCES tree(id),
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id)
+    FOREIGN KEY (tree_id) REFERENCES trees(id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
 --SPLIT
 DROP TABLE IF EXISTS food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS food (
     common_name TEXT PRIMARY KEY,
-    food_type TEXT NOT NULL,
-    nutritional_information NOT NULL,
+    food_type TEXT NOT NULL
 );
 --SPLIT
 DROP TABLE IF EXISTS recipe_uses_food;
@@ -107,9 +104,9 @@ DROP TABLE IF EXISTS recipe_uses_food;
 CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT,
     recipe_id INTEGER,
-    PRIMARY KEY (common_name, recipe.id),
+    PRIMARY KEY (common_name, recipe_id),
     FOREIGN KEY (common_name) REFERENCES food(common_name),
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id);
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 --SPLIT
 DROP TABLE IF EXISTS region_contains_tree;
@@ -121,7 +118,7 @@ CREATE TABLE IF NOT EXISTS region_contains_tree (
     PRIMARY KEY (x, y, tree_id),
     FOREIGN KEY (x) REFERENCES region(x),
     FOREIGN KEY (y) REFERENCES region(y),
-    FOREIGN KEY (tree_id) REFERENCES tree(id);
+    FOREIGN KEY (tree_id) REFERENCES trees(id),
     food TEXT NOT NULL,
     common_name TEXT NOT NULL
 );
