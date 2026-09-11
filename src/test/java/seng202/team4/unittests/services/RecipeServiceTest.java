@@ -49,7 +49,9 @@ public class RecipeServiceTest {
         List<Recipe> testRecipes = TestRecipeData.createRecipeModels();
         List<RecipeIngredient> testIngredients = TestRecipeData.createFakeRecipeIngredient();
             testRecipeService.populateIngredientTable(testIngredients);
+
         for (Recipe recipe : testRecipes) {
+            recipeDAO.add(recipe);
             testRecipeService.populateIngredientInRecipeTable(testIngredients, recipe);
         }
         return testRecipes;

@@ -51,9 +51,9 @@ public class TestRecipeData {
         List<String> testIngredients1 = List.of("ingredient 1", "ingredient 2", "ingredient 3");
         List<String> testIngredients2 = List.of("ingredient 1", "ingredient 2", "ingredient 3");
         List<String> testIngredients3 = List.of("ingredient 1", "ingredient 2", "ingredient 3");
-        testRecipes.add(new Recipe(1234, "Test1", "Methods 1: tester", testIngredients1, 123, 456, 187, 168, "Description", null,  "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 10, 10));
-        testRecipes.add(new Recipe(2345, "Test1", "Methods 2: tester", testIngredients2, 123, 456, 187, 168, "Description", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 20, 20));
-        testRecipes.add(new Recipe(1234, "Test1", "Methods 3: tester", testIngredients3, 123, 456, 187, 168, "Description", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 30, 30));
+        testRecipes.add(new Recipe(1234, "Test1", "Methods 1: tester", testIngredients1, 123, 456, 187, 168, "Description 1", null,  "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 10, 10));
+        testRecipes.add(new Recipe(2345, "Test2", "Methods 2: tester", testIngredients2, 126, 123, 3, 22, "Description 2", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 20, 20));
+        testRecipes.add(new Recipe(1235, "Test3", "Methods 3: tester", testIngredients3, 125, 421, 432, 431, "Description 3", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 30, 30));
         return testRecipes;
     }
 }

@@ -2,6 +2,7 @@ package seng202.team4.models;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Model representation of a recipe
@@ -156,5 +157,34 @@ public class Recipe {
      */
     public int getPreparationTime() {
         return preparationTime;
+    }
+
+    /**
+     * Equals operator rewrite so 2 recipes with the same attributes can be evaluated as the same
+     * @param o object to compare
+     * @return returns boolean, true if this equals o
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Recipe recipe = (Recipe) o;
+        return id == recipe.id
+                && Double.compare(recipe.carbohydrates, carbohydrates) == 0
+                && Objects.equals(name, recipe.name)
+                && Objects.equals(method, recipe.method);
+    }
+
+    /**
+     * Overwrite hashCode
+     * @return integer hashcode
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, carbohydrates, name, method);
     }
 }

@@ -1,8 +1,5 @@
 package seng202.team4.repository;
 
-
-
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +36,23 @@ public class RecipeDAO implements RecipeRepository {
     @Override
     public List<Recipe> getAll() {
         List<Recipe> recipes = new ArrayList<>();
-        String sql = "EXECUTE get_recipe_info";
+        String sql = "SELECT "
+                + "recipes.recipe_id,"
+                + "recipes.recipe_name,"
+                + "recipes.recipe_method, "
+                + "GROUP_CONCAT(ingredients_in_recipe.ingredient_description) AS recipe_ingredients,"
+                + "recipes.carbohydrates,"
+                + "recipes.calories,"
+                + "recipes.protein,"
+                + "recipes.fat,"
+                + "recipes.recipe_description,"
+                + "recipes.retrieval_time,"
+                + "recipes.recipe_image,"
+                + "recipes.cooking_time_min,"
+                + "recipes.preparation_time_min "
+                + "FROM recipes JOIN ingredients_in_recipe "
+                + "ON recipes.recipe_id = ingredients_in_recipe.recipe_id "
+                + "GROUP BY recipes.recipe_id";
         try (Connection conn = databaseManager.connect();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)
@@ -62,7 +75,7 @@ public class RecipeDAO implements RecipeRepository {
                         rs.getDouble("calories"),
                         rs.getDouble("protein"),
                         rs.getDouble("fat"),
-                        rs.getString("description"),
+                        rs.getString("recipe_description"),
                         retrievalTime,
                         rs.getString("recipe_image"),
                         rs.getInt("cooking_time_min"),
@@ -85,7 +98,24 @@ public class RecipeDAO implements RecipeRepository {
     @Override
     public Recipe getOne(Integer id) {
         Recipe recipe = null;
-        String sql = "EXECUTE get_recipe_info @id=?";
+        String sql = "SELECT "
+                + "recipes.recipe_id,"
+                + "recipes.recipe_name,"
+                + "recipes.recipe_method, "
+                + "GROUP_CONCAT(ingredients_in_recipe.ingredient_description) AS recipe_ingredients,"
+                + "recipes.carbohydrates,"
+                + "recipes.calories,"
+                + "recipes.protein,"
+                + "recipes.fat,"
+                + "recipes.recipe_description,"
+                + "recipes.retrieval_time,"
+                + "recipes.recipe_image,"
+                + "recipes.cooking_time_min,"
+                + "recipes.preparation_time_min "
+                + "FROM recipes JOIN ingredients_in_recipe "
+                + "ON recipes.recipe_id = ingredients_in_recipe.recipe_id "
+                + "WHERE recipes.recipe_id = ? "
+                + "GROUP BY recipes.recipe_id";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
@@ -94,7 +124,7 @@ public class RecipeDAO implements RecipeRepository {
                 if (rs.next()) {
                     String recipeIngredients = rs.getString("recipe_ingredients");
                     List<String> ingredients = Arrays.asList(recipeIngredients.split(","));
-                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    Timestamp timestamp = rs.getTimestamp("retrieval_time");
                     LocalDateTime retrievalTime = retrieveTimestamp(timestamp);
 
 
@@ -107,7 +137,7 @@ public class RecipeDAO implements RecipeRepository {
                             rs.getDouble("calories"),
                             rs.getDouble("protein"),
                             rs.getDouble("fat"),
-                            rs.getString("description"),
+                            rs.getString("recipe_description"),
                             retrievalTime,
                             rs.getString("recipe_image"),
                             rs.getInt("cooking_time_min"),
@@ -158,9 +188,9 @@ public class RecipeDAO implements RecipeRepository {
             ps.setDouble(6, toAdd.getProtein());
             ps.setDouble(7, toAdd.getFat());
             ps.setString(8, toAdd.getDescription());
-            ps.setString(10, toAdd.getImage());
-            ps.setInt(11, toAdd.getCookingTime());
-            ps.setInt(12, toAdd.getPreparationTime());
+            ps.setString(9, toAdd.getImage());
+            ps.setInt(10, toAdd.getCookingTime());
+            ps.setInt(11, toAdd.getPreparationTime());
 
 
             ps.executeUpdate();
@@ -178,7 +208,7 @@ public class RecipeDAO implements RecipeRepository {
      */
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM recipe WHERE id=?";
+        String sql = "DELETE FROM recipes WHERE recipe_id=?";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);

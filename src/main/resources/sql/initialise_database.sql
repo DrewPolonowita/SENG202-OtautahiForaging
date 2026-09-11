@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS ingredient (
     ingredient_name TEXT NOT NULL,
     ingredient_unit_number int NOT NULL,
     ingredient_measurement_description TEXT NOT NULL,
-    ingredient_description NOT NULL,
+    ingredient_description TEXT NOT NULL,
     PRIMARY KEY (serving_id, ingredient_id)
 );
 --SPLIT
@@ -76,8 +76,7 @@ CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
     ingredient_description TEXT NOT NULL,
     PRIMARY KEY (recipe_id, ingredient_id, serving_id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
-    FOREIGN KEY (ingredient_id) REFERENCES ingredient(ingredient_id),
-    FOREIGN KEY (serving_id) REFERENCES ingredient(serving_id)
+    FOREIGN KEY (serving_id, ingredient_id) REFERENCES ingredient(serving_id, ingredient_id)
 );
 --SPLIT
 DROP TABLE IF EXISTS note;
@@ -89,7 +88,7 @@ CREATE TABLE IF NOT EXISTS note (
     tree_id INTEGER,
     recipe_id INTEGER,
     FOREIGN KEY (tree_id) REFERENCES trees(id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id)
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 --SPLIT
 DROP TABLE IF EXISTS food;
@@ -122,23 +121,4 @@ CREATE TABLE IF NOT EXISTS region_contains_tree (
     food TEXT NOT NULL,
     common_name TEXT NOT NULL
 );
---SPLIT
-DROP PROCEDURE IF EXISTS get_recipe_info;
---SPLIT
-CREATE PROCEDURE get_recipe_info
-    @id INTEGER = NULL
-IF id = NULL THEN
-BEGIN
-SELECT recipe.recipe_id, recipe.recipe_name, GROUP_CONCAT(ingredients_in_recipe.ingredient_description) AS recipe_ingredients, recipe.recipe_method, recipe.carbohydrates ,recipe.calories, recipe.carbohydrates, recipe.protein, recipe.fat, recipe.recipe_description, recipe.retrieval_time
-FROM recipes
-         JOIN ingredients_in_recipe
-              ON recipe.recipe_id = ingredients_in_recipe.recipe_id
-END;
-ELSE
-BEGIN
-SELECT recipe.recipe_id, recipe.recipe_name, GROUP_CONCAT(ingredients_in_recipe.ingredient_description) AS recipe_ingredients, recipe.recipe_method, recipe.calories, recipe.carbohydrates, recipe.protein, recipe.fat, recipe.recipe_description, recipe.retrieval_time
-FROM recipes
-         JOIN ingredients_in_recipe
-              ON recipe.recipe_id = ingredients_in_recipe.recipe_id
-WHERE recipe.recipe_id = @id;
-END;
+
