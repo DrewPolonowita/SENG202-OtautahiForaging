@@ -1,5 +1,6 @@
 package seng202.team4.repository;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.exceptions.DuplicateEntryException;
@@ -12,6 +13,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Placeholder
+ */
 public class RegionDAO implements RegionRepository {
     private static final Logger LOG = LogManager.getLogger(RegionDAO.class);
     private final DatabaseManager databaseManager;
@@ -23,6 +27,11 @@ public class RegionDAO implements RegionRepository {
      */
     public RegionDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
+    }
+
+    @Override
+    public Region getOne(Region region) {
+        throw new NotImplementedException();
     }
 
     @Override
@@ -59,6 +68,8 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
+
+
     /**
      * Creates a new region in the database
      *
@@ -79,9 +90,9 @@ public class RegionDAO implements RegionRepository {
                 PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setDouble(1, region.getNorthBound());
-            ps.setDouble(2, region.getEastBound());
-            ps.setDouble(3, region.getSouthBound());
-            ps.setDouble(4, region.getWestBound());
+            ps.setDouble(2, region.getNorthBound());
+            ps.setDouble(3, region.getNorthBound());
+            ps.setDouble(4, region.getNorthBound());
             ps.setString(5, region.getType());
 
             ps.executeUpdate();
@@ -94,10 +105,10 @@ public class RegionDAO implements RegionRepository {
     }
 
     /**
-     * Removes a given region from the regions database table
-     *
-     * @param region the region to remove
+     * Placeholder
+     * @param region primary key of object to delete
      */
+    @Override
     public void delete(Region region) {
         String sql = """
                     DELETE FROM REGIONS
@@ -120,12 +131,6 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
-    /**
-     * Updates a given region based on the primary key of (type, north, east, south, west)
-     *
-     * @param region Object that needs to be updated
-     * (this object must be able to identify itself and its previous self)
-     */
     @Override
     public void update(Region region) {
         String sql = """
@@ -149,27 +154,6 @@ public class RegionDAO implements RegionRepository {
 
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
-        }
-    }
-
-    public Region getRegion(Region region) {
-        String sql = """
-                SELECT * FROM REGIONS
-                WHERE NORTH = ? AND EAST = ? AND SOUTH = ? AND WEST = ? AND TYPE = ?
-                """;
-
-        try (Connection connection = databaseManager.connect();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)
-        ) {
-            LocalDateTime dateTime = rs.getObject("last_updated", LocalDateTime.class);
-            region.setLastUpdated(dateTime);
-
-            return region;
-        } catch (SQLException sqlException) {
-
-            LOG.error(sqlException);
-            return null;
         }
     }
 }

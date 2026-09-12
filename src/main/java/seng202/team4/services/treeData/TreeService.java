@@ -2,10 +2,17 @@ package seng202.team4.services.treeData;
 
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.Tree;
 import seng202.team4.repository.*;
 import seng202.team4.services.api.ApiHandler;
+
+import seng202.team4.repository.TreeRepository;
+import seng202.team4.services.api.ApiClientInterface;
+import seng202.team4.services.api.TreeApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +21,7 @@ import java.util.List;
  * Handles retrieving cached trees and minimizing api usage for trees
  */
 public class TreeService implements TreeDataManager {
-
+    private static final Logger log = LogManager.getLogger(TreeDataManager.class);
     private final TreeApiHandler treeApiHandler;
     private final TreeRepository treeRepository;
     private final RegionService regionService;
@@ -22,6 +29,10 @@ public class TreeService implements TreeDataManager {
     /**
      * Creates a new instance and initializes private variables
      */
+    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient) {
+        TreeApiClient treeApiClient = new TreeApiClient(apiClient);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient);
+        this.treeRepository = treeRepository;
     public TreeService() {
         DatabaseManager databaseManager = new DatabaseManager(null);
         RegionRepository regionRepository = new RegionDAO(databaseManager);
@@ -102,5 +113,29 @@ public class TreeService implements TreeDataManager {
      */
     public boolean isRegionRecent(String type, double north, double east, double south, double west) {
         return true;
+    }
+
+    /**
+     * For use in table view, get trees by food without regard for region
+     * @param food
+     * @return
+     */
+    public List<TreeModel> getTreesByFood(String food) {
+        List<TreeModel> databaseTrees = treeRepository.getTreesByFoodName(food);
+
+        if (!databaseTrees.isEmpty()) {
+            log.info("Loaded {} {} trees from database", databaseTrees.size(), food);
+            return databaseTrees;
+        }
+
+        List<TreeModel> apiTreesByType = treeApiHandler.getTreesFromApiByFood(food);
+        for (TreeModel tree : apiTreesByType) {
+            try {
+                treeRepository.add(tree);
+            } catch (DuplicateEntryException e) {
+                log.warn("(Tree by food: {}) Skip duplicate id: {}", tree.getFood(), tree.getId());
+            }
+        }
+        return treeRepository.getTreesByFoodName(food);
     }
 }

@@ -75,6 +75,7 @@ public class TreeDAO implements TreeRepository {
      * @param id id of object to get
      * @return TreeModel object of specific id, null if failed
      */
+    @Override
     public TreeModel getOne(int id) {
         TreeModel tree = null;
         String sql = "SELECT * FROM trees WHERE id=?";
@@ -117,7 +118,7 @@ public class TreeDAO implements TreeRepository {
 
     /**
      * Add a tree object to the database
-     * @param toAdd object of type T to add
+     * @param toAdd tree object to add
      * @return id of tree if success, -1 if failed
      */
     @Override
@@ -160,7 +161,8 @@ public class TreeDAO implements TreeRepository {
      * delete a specific tree from database
      * @param id id of object to delete
      */
-    public void delete (int id) {
+    @Override
+    public void delete (Integer id) {
         String sql = "DELETE FROM trees WHERE id=?";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -316,8 +318,7 @@ public class TreeDAO implements TreeRepository {
         LocalDateTime lastUpdated;
         if (timestamp != null) {
             lastUpdated = timestamp.toLocalDateTime();
-        }
-        else {
+        } else {
             lastUpdated = null;
         }
         return lastUpdated;

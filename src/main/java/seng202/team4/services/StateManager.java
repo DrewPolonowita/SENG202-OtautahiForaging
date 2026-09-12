@@ -4,6 +4,10 @@ import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
+import seng202.team4.services.api.ApiClient;
+import seng202.team4.services.api.ApiClientInterface;
+import seng202.team4.services.treeData.TreeService;
+
 
 /**
  * The class which stores information related to the state of the entire app in a given instance
@@ -12,10 +16,12 @@ import seng202.team4.repository.TreeRepository;
  */
 public class StateManager {
 
+    private final ApiClientInterface apiClient;
     private final WindowManager windowManager;
     private final DatabaseManager databaseManager;
     private final TreeRepository treeRepository;
     private final TreeService treeService;
+    private final FoodService foodService;
 
 
     /**
@@ -27,9 +33,11 @@ public class StateManager {
     public StateManager(WindowManager windowManager) {
         this.windowManager = windowManager;
         this.databaseManager = new DatabaseManager(null);
-
+        this.apiClient = new ApiClient();
         this.treeRepository = new TreeDAO(databaseManager);
-        this.treeService = new TreeService(treeRepository);
+        this.treeService = new TreeService(treeRepository, apiClient);
+
+        this.foodService = new FoodService();
 
 
         this.windowManager.launchMapScreen(this);
@@ -47,5 +55,9 @@ public class StateManager {
 
     public TreeService getTreeService() {
         return treeService;
+    }
+
+    public FoodService getFoodService() {
+        return foodService;
     }
 }

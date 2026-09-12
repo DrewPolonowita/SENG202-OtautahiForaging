@@ -13,8 +13,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.services.StateManager;
-import seng202.team4.services.ThemeService;
-import seng202.team4.services.TreeService;
+import seng202.team4.services.treeData.TreeService;
 import seng202.team4.models.TreeModel;
 /**
  * Controller for the map_screen.fxml window which controls the map
