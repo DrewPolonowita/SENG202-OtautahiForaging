@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.services.api.FatSecret.FoodApiClient;
+import seng202.team4.services.api.FoodApiClient;
 
 import java.awt.Desktop;
 import java.net.URI;

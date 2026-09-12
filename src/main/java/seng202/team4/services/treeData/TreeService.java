@@ -4,11 +4,9 @@ import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.TreeModel;
-import seng202.team4.models.api.Tree;
 import seng202.team4.repository.*;
-import seng202.team4.services.api.ApiHandler;
+import seng202.team4.services.api.ApiClient;
 
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
@@ -29,15 +27,18 @@ public class TreeService implements TreeDataManager {
     /**
      * Creates a new instance and initializes private variables
      */
-    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient) {
+    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService) {
         TreeApiClient treeApiClient = new TreeApiClient(apiClient);
         this.treeApiHandler = new TreeApiHandler(treeApiClient);
         this.treeRepository = treeRepository;
+        this.regionService = regionService;
+    }
+
     public TreeService() {
         DatabaseManager databaseManager = new DatabaseManager(null);
         RegionRepository regionRepository = new RegionDAO(databaseManager);
 
-        treeApiHandler = new TreeApiHandler(new ApiHandler());
+        treeApiHandler = new TreeApiHandler(new TreeApiClient(new ApiClient()));
         treeRepository = new TreeDAO(databaseManager);
         regionService = new RegionService(regionRepository);
     }
@@ -57,7 +58,11 @@ public class TreeService implements TreeDataManager {
         for (Region region: regionService.getOverlappingRegions(type, north, east, south, west)) {
             if (region.getLastUpdated() != null) {
                 List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
-                trees.addAll(databaseTrees);
+                for (TreeModel tree: databaseTrees) {
+                    if (!trees.contains(tree)) {
+                        trees.add(tree);
+                    }
+                }
             } else {
                 List<TreeModel> apiTrees = treeApiHandler.getTreesByRegion(
                         type, region.getNorthBound(),
@@ -74,7 +79,11 @@ public class TreeService implements TreeDataManager {
                     }
                 }
 
-                trees.addAll(apiTrees);
+                for (TreeModel tree: apiTrees) {
+                    if (!trees.contains(tree)) {
+                        trees.add(tree);
+                    }
+                }
             }
         }
 

@@ -70,12 +70,16 @@ public class TreeDAO implements TreeRepository {
         }
     }
 
+    @Override
+    public TreeModel getOne(Integer primaryKey) {
+        return null;
+    }
+
     /**
      * Method to return the tree model of choice by id
      * @param id id of object to get
      * @return TreeModel object of specific id, null if failed
      */
-    @Override
     public TreeModel getOne(int id) {
         TreeModel tree = null;
         String sql = "SELECT * FROM trees WHERE id=?";

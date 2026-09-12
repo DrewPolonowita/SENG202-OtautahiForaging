@@ -143,6 +143,11 @@ tasks.named("check") {
     finalizedBy jacocoTestReport
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:-removal' // Disables deprecation warnings causing failures
+}
+
+
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 

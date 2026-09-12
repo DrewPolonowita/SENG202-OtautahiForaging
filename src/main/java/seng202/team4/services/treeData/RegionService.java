@@ -51,7 +51,9 @@ public class RegionService {
                     if (eastBound >= west && westBound <= east) {
                         Region region = new Region(type, north, east, south, west);
                         try {
-                            regionRepository.add(region);
+                            if (regionRepository.add(region) == -2) {
+                                region = regionRepository.getRegion(region);
+                            }
                         } catch(DuplicateEntryException e) {
                             region = regionRepository.getRegion(region);
                         }
