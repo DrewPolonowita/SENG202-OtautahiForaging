@@ -1,5 +1,6 @@
 package seng202.team4;
 
+import com.sun.source.tree.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.FXAppEntry;
@@ -23,18 +24,5 @@ public class App {
      */
     void main(String[] args) {
         FXAppEntry.launch(FXAppEntry.class, args);
-/*        new DatabaseManager(null).resetDB();
-
-        System.out.println("START");
-
-        TreeDataManager manager = new TreeService();
-
-        List<TreeModel> trees = manager.updateTreesByRegion("Apple", -43.4, 172.8, -43.8, 172.7);
-
-        for (TreeModel tree: trees) {
-            System.out.printf(
-                    "(%f, %f)%n", tree.getXCoord(), tree.getYCoord()
-            );
-        }*/
     }
 }

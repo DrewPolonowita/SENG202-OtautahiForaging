@@ -116,11 +116,6 @@ public class TreeModel {
         }
         TreeModel treeModel = (TreeModel) o;
         return id == treeModel.id;
-//                && Arrays.equals(coordinates, treeModel.coordinates)
-//                && Objects.equals(ownership, treeModel.ownership)
-//                && Objects.equals(genus, treeModel.genus)
-//                && Objects.equals(food, treeModel.food)
-//                && Objects.equals(commonName, treeModel.commonName);
     }
 
     /**

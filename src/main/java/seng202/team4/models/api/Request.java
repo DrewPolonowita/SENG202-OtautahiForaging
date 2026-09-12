@@ -21,6 +21,10 @@ public class Request<T> {
         this.responseCode = responseCode;
     }
 
+    /**
+     * Returns the response code of the HTTP request
+     * @return the response code of the HTTP request
+     */
     public int getResponseCode() {
         return responseCode;
     }
