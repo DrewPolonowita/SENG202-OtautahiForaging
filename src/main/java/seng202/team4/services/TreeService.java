@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Team 4
  * @deprecated this class is being phased out with treeData/TreeService
  */
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = false)
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final TreeClientInterface treeApiClient;

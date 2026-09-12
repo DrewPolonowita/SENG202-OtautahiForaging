@@ -18,6 +18,7 @@ public class RegionDAO implements RegionRepository {
 
     /**
      * Creates a new instance with a {@link DatabaseManager}
+     *
      * @param databaseManager the database manager
      */
     public RegionDAO(DatabaseManager databaseManager) {
@@ -58,11 +59,6 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
-    @Override
-    public Region getOne(int id) {
-        return null;
-    }
-
     /**
      * Creates a new region in the database
      *
@@ -83,9 +79,9 @@ public class RegionDAO implements RegionRepository {
                 PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setDouble(1, region.getNorthBound());
-            ps.setDouble(2, region.getNorthBound());
-            ps.setDouble(3, region.getNorthBound());
-            ps.setDouble(4, region.getNorthBound());
+            ps.setDouble(2, region.getEastBound());
+            ps.setDouble(3, region.getSouthBound());
+            ps.setDouble(4, region.getWestBound());
             ps.setString(5, region.getType());
 
             ps.executeUpdate();
@@ -97,6 +93,11 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
+    /**
+     * Removes a given region from the regions database table
+     *
+     * @param region the region to remove
+     */
     public void delete(Region region) {
         String sql = """
                     DELETE FROM REGIONS
@@ -119,6 +120,12 @@ public class RegionDAO implements RegionRepository {
         }
     }
 
+    /**
+     * Updates a given region based on the primary key of (type, north, east, south, west)
+     *
+     * @param region Object that needs to be updated
+     * (this object must be able to identify itself and its previous self)
+     */
     @Override
     public void update(Region region) {
         String sql = """
@@ -142,6 +149,27 @@ public class RegionDAO implements RegionRepository {
 
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
+        }
+    }
+
+    public Region getRegion(Region region) {
+        String sql = """
+                SELECT * FROM REGIONS
+                WHERE NORTH = ? AND EAST = ? AND SOUTH = ? AND WEST = ? AND TYPE = ?
+                """;
+
+        try (Connection connection = databaseManager.connect();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)
+        ) {
+            LocalDateTime dateTime = rs.getObject("last_updated", LocalDateTime.class);
+            region.setLastUpdated(dateTime);
+
+            return region;
+        } catch (SQLException sqlException) {
+
+            LOG.error(sqlException);
+            return null;
         }
     }
 }

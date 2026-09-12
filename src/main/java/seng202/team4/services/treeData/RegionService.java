@@ -1,8 +1,11 @@
 package seng202.team4.services.treeData;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
+import seng202.team4.repository.RegionRepository;
 
 /**
  * A class to manage regions in which data is requested together to help keep data up to date
@@ -15,6 +18,13 @@ public class RegionService {
     private final static double WEST_BOUND = 172.35;
 
     private final static double REGION_SIZE = 0.03;
+    private final static int BUFFER_IN_WEEKS = 1;
+
+    private final RegionRepository regionRepository;
+
+    public RegionService(RegionRepository regionRepository) {
+        this.regionRepository = regionRepository;
+    }
 
     /**
      * Returns all the regions that overlap with the given bounds and in Christchurch
@@ -39,11 +49,30 @@ public class RegionService {
                     double west = j * REGION_SIZE + WEST_BOUND;
 
                     if (eastBound >= west && westBound <= east) {
-                        regionsList.add(new Region(type, north, east, south, west));
+                        Region region = new Region(type, north, east, south, west);
+                        try {
+                            regionRepository.add(region);
+                        } catch(DuplicateEntryException e) {
+                            region = regionRepository.getRegion(region);
+                        }
+                        regionsList.add(region);
                     }
                 }
             }
         }
         return regionsList;
+    }
+
+    /**
+     *
+     * @param region
+     * @return
+     */
+    public boolean isRegionRecent(Region region) {
+        if (region == null || region.getLastUpdated() == null) {
+            return false;
+        }
+
+        return region.getLastUpdated().isBefore(LocalDateTime.now().minusWeeks(BUFFER_IN_WEEKS));
     }
 }

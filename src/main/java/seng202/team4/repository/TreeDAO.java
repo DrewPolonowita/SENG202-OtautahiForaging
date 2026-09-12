@@ -75,7 +75,6 @@ public class TreeDAO implements TreeRepository {
      * @param id id of object to get
      * @return TreeModel object of specific id, null if failed
      */
-    @Override
     public TreeModel getOne(int id) {
         TreeModel tree = null;
         String sql = "SELECT * FROM trees WHERE id=?";
@@ -236,10 +235,10 @@ public class TreeDAO implements TreeRepository {
                  PreparedStatement ps = conn.prepareStatement(query)
         ) {
             ps.setString(1, type);
-            ps.setString(2, String.valueOf(east));
-            ps.setString(3, String.valueOf(west));
-            ps.setString(4, String.valueOf(north));
-            ps.setString(5, String.valueOf(south));
+            ps.setDouble(2, west);
+            ps.setDouble(3, east);
+            ps.setDouble(4, south);
+            ps.setDouble(5, north);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

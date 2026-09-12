@@ -1,11 +1,13 @@
 package seng202.team4.services.treeData;
 
+import seng202.team4.exceptions.DuplicateEntryException;
+import seng202.team4.models.Region;
 import seng202.team4.models.TreeModel;
-import seng202.team4.repository.DatabaseManager;
-import seng202.team4.repository.TreeDAO;
-import seng202.team4.repository.TreeRepository;
+import seng202.team4.models.api.Tree;
+import seng202.team4.repository.*;
 import seng202.team4.services.api.ApiHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,13 +17,18 @@ public class TreeService implements TreeDataManager {
 
     private final TreeApiHandler treeApiHandler;
     private final TreeRepository treeRepository;
+    private final RegionService regionService;
 
     /**
      * Creates a new instance and initializes private variables
      */
     public TreeService() {
+        DatabaseManager databaseManager = new DatabaseManager(null);
+        RegionRepository regionRepository = new RegionDAO(databaseManager);
+
         treeApiHandler = new TreeApiHandler(new ApiHandler());
-        treeRepository = new TreeDAO(new DatabaseManager(null));
+        treeRepository = new TreeDAO(databaseManager);
+        regionService = new RegionService(regionRepository);
     }
 
     /**
@@ -34,7 +41,33 @@ public class TreeService implements TreeDataManager {
      * @param west the min x value for the region
      */
     public List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west) {
-        return treeApiHandler.getTreesByRegion(type, north, east, south, west);
+        ArrayList<TreeModel> trees = new ArrayList<>();
+
+        for (Region region: regionService.getOverlappingRegions(type, north, east, south, west)) {
+            if (region.getLastUpdated() != null) {
+                List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
+                trees.addAll(databaseTrees);
+            } else {
+                List<TreeModel> apiTrees = treeApiHandler.getTreesByRegion(
+                        type, region.getNorthBound(),
+                        region.getEastBound(),
+                        region.getSouthBound(),
+                        region.getWestBound()
+                );
+
+                for (TreeModel tree: trees) {
+                    try {
+                        treeRepository.add(tree);
+                    } catch (DuplicateEntryException e) {
+                        treeRepository.update(tree);
+                    }
+                }
+
+                trees.addAll(apiTrees);
+            }
+        }
+
+        return trees;
     }
 
     /**

@@ -16,13 +16,6 @@ public interface DAOInterface<T> {
     List<T> getAll();
 
     /**
-     * Gets a single object of type T from the database by id
-     * @param id id of object to get
-     * @return Object of type T that has id given
-     */
-    T getOne(int id);
-
-    /**
      * Adds a single object of type T to database
      * @param toAdd object of type T to add
      * @return object insert id if inserted correctly

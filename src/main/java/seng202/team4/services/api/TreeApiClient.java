@@ -57,9 +57,14 @@ public class TreeApiClient implements TreeClientInterface {
             String params, String outFields, int maxTuples, double north, double east, double south, double west
     ) {
         String url = urlEncodeParams(params, outFields, maxTuples)
-                + "&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&inSR=4326&"
+                + "&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&inSR=4326&outSR=4326&"
                 + "geometry=" + URLEncoder.encode(
-                String.format("%f,%f,%f,%f", west, south, east, north), StandardCharsets.UTF_8
+                String.format("%f,%f,%f,%f",
+                        west,
+                        south,
+                        east,
+                        north
+                ), StandardCharsets.UTF_8
         );
 
         System.out.println(API_LINK + url);
