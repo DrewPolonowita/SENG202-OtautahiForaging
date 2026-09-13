@@ -169,7 +169,7 @@ public class WindowManager {
     }
 
     /**
-     * Launches the add note menu. Blocking input from other applications while open.
+     * Launches the add note menu centered on application. Blocking input from other applications while open.
      * @param tree the select tree to be converted to note
      * @param stateManager the provided state manager for the application
      */
@@ -181,6 +181,13 @@ public class WindowManager {
             menuStage.initModality(Modality.APPLICATION_MODAL); // blocks input to background screen
             menuStage.initStyle(StageStyle.TRANSPARENT);
             menuStage.setScene(new Scene(menuRoot));
+
+            menuStage.setOnShown(event -> {
+                double centerX = stage.getX() + stage.getWidth() / 2;
+                double centerY = stage.getY() + stage.getHeight() / 2;
+                menuStage.setX(centerX - menuStage.getWidth() / 2);
+                menuStage.setY(centerY - menuStage.getHeight() / 2);
+            });
             menuStage.showAndWait();
         } catch (IOException e) {
             LOG.error(e);

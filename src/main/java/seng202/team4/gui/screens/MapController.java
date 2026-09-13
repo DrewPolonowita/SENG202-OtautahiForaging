@@ -66,7 +66,7 @@ public class MapController extends ScreenController {
     }
 
     /**
-     * Initialises the bridge and loads the map once FXML is loaded
+     * Initialises the bridge and loads the map once FXML is loaded with lambda functionality passed in.
      */
     @FXML
     private void initialize() {
@@ -134,12 +134,14 @@ public class MapController extends ScreenController {
     private void showTreeDescription() {
         for (TreeModel tree : treeService.getAllTrees()) {
             String popup = String.format(
-                    "<b>Common Name: </b>%s<br>"
-                            + "<b>Ownership: </b>%s<br>"
-                            + "<b>Genus: </b>%s<br>"
-                            + "<b>Tree ID:</b> %d<br>"
-                            + "<button onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add Note</button>",
-                    tree.getCommonName(), tree.getOwnership(), tree.getGenus(), tree.getId(), tree.getId()
+                    "<div class=\"tree-card\">"
+                            + "<div class=\"tree-card-image\"></div>"
+                        + "<div class=\"tree-card-body\">"
+                        + "<b>%s</b><br>"
+                            + "<br><button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
+                            + "</div></div>",
+                    tree.getCommonName(),
+                    tree.getId()
             );
             javaScriptConnector.call("addMarker", tree.getId(), popup,
                     tree.getYCoord(), tree.getXCoord());
