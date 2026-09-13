@@ -44,7 +44,7 @@ public class NoteDAO implements NoteRepository {
     public int add(Note toAdd) {
         String sql = """
                 INSERT INTO note (time_created, name, tree_id)
-                VALUES (CURRENT_TIMESTAMP, ?, ?);
+                VALUES (datetime('now', 'localtime'), ?, ?);
                 """;
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

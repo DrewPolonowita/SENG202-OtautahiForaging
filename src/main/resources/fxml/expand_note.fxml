@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox styleClass="expand-note-root" prefWidth="360" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="seng202.team4.gui.screens.ExpandNoteController">
+
+    <ImageView fx:id="photoView" fitWidth="360" fitHeight="220" preserveRatio="false" />
+
+    <VBox styleClass="expand-note-body" spacing="10">
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="nameLabel" styleClass="expand-note-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="✕" styleClass="expand-note-close" onAction="#handleClose" />
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="dateLabel" styleClass="expand-note-meta" />
+            <Label text="•" styleClass="expand-note-meta" />
+            <Label fx:id="timeLabel" styleClass="expand-note-meta" />
+        </HBox>
+
+        <Label fx:id="descriptionLabel" styleClass="expand-note-description" wrapText="true" />
+    </VBox>
+
+</VBox>
