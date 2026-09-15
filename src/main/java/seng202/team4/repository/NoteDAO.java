@@ -32,7 +32,9 @@ public class NoteDAO implements NoteRepository {
                 rs.getInt("id"),
                 rs.getString("name"),
                 timeCreated,
-                rs.getInt("tree_id")
+                rs.getInt("tree_id"),
+                rs.getString("description"),
+                rs.getString("image_path")
         );
     }
 
@@ -43,13 +45,15 @@ public class NoteDAO implements NoteRepository {
      */
     public int add(Note toAdd) {
         String sql = """
-                INSERT INTO note (time_created, name, tree_id)
-                VALUES (datetime('now', 'localtime'), ?, ?);
+                INSERT INTO note (time_created, name, tree_id, description, image_path)
+                VALUES (datetime('now', 'localtime'), ?, ?, ?, ?);
                 """;
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, toAdd.getName());
             ps.setInt(2, toAdd.getTreeId());
+            ps.setString(3, toAdd.getDescription());
+            ps.setString(4, toAdd.getImagePath());
 
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {

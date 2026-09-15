@@ -4,10 +4,20 @@
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
     -text-color: #1a1a1a;
+
+    /* Journal / note dialog */
+    -note-bg: #112212;
+    -note-dark: #1a2e21;
+    -note-accent: #3f6b4a;
+    -note-accent-hover: #4a7c59;
+    -note-accent-pressed: #345940;
+    -note-border: #3a5a44;
+
     -fx-background-color: -secondary-bg-color;
     -fx-text-fill: -text-color;
 }
 
+/* ---------- Title bar ---------- */
 .titleBarText {
     -fx-text-fill: -primary-color;
     -fx-font-size: 32px;
@@ -15,7 +25,7 @@
     -fx-alignment: CENTER_LEFT;
 }
 
-
+/* ---------- Sidebar ---------- */
 .sideBar {
     -fx-background-color: -primary-bg-color;
     -fx-border-width: 0 1 0 0;
@@ -41,6 +51,7 @@
     -fx-text-fill: -primary-bg-color;
 }
 
+/* ---------- Toggle switch ---------- */
 .switch {
     -fx-background-color: transparent;
     -fx-padding: 0;
@@ -71,16 +82,18 @@
     -fx-fill: -primary-color;
 }
 
+/* ---------- Settings / generic text ---------- */
 .settings-text {
     -fx-text-fill: -primary-color;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
-
 .generic-text {
     -fx-text-fill: -text-color;
     -fx-font-size: 12px;
 }
+
+/* ---------- Filters / color picker ---------- */
 .filters {
     -fx-background-color: -primary-bg-color;
     -fx-min-width: 32px;
@@ -89,7 +102,21 @@
     -fx-max-height: 32px;
     -fx-background-radius: 8px;
 }
-
+.filters:hover {
+    -fx-background-color: -primary-color-highlight;
+    -fx-text-fill: -primary-bg-color;
+}
+.filters:hover .icon {
+    -fx-background-color: -primary-bg-color;
+}
+.filters-selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -primary-bg-color;
+}
+.filterTab {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 8;
+}
 .color-picker {
     -fx-background-color: -primary-bg-color;
     -fx-border-color: -secondary-bg-color;
@@ -109,25 +136,25 @@
 .color-picker .arrow-button .arrow {
     -fx-background-color: -primary-color;
 }
-.filterTab {
-    -fx-background-color: -primary-bg-color;
-    -fx-background-radius: 8;
+
+/* ---------- Close buttons ---------- */
+.icon-button {
+    -fx-background-radius: 50%;
+    -fx-text-fill: white;
+    -fx-min-width: 26;
+    -fx-min-height: 26;
+    -fx-cursor: hand;
 }
-.filters:hover {
-    -fx-background-color: -primary-color-highlight;
-    -fx-text-fill: -primary-bg-color;
+.close-button {
+    -fx-background-color: -note-accent;
 }
-.filters:hover .icon {
-    -fx-background-color: -primary-bg-color;
+.expand-note-close {
+    -fx-background-color: rgba(255,255,255,0.15);
 }
 
-.filters-selected {
-    -fx-background-color: -primary-color;
-    -fx-text-fill: -primary-bg-color;
-}
-
+/* ---------- Journal note cards ---------- */
 .note-card {
-    -fx-background-color: #1a2e21;
+    -fx-background-color: #112212;
     -fx-background-radius: 12;
     -fx-padding: 0 0 12 0;
 }
@@ -143,8 +170,28 @@
     -fx-padding: 4 14 0 14;
 }
 
+/* ---------- Expand-note dialog ---------- */
 .expand-note-root {
     -fx-background-color: #4a7c59;
+    -fx-background-radius: 20;
+}
+.expand-note-body {
+    -fx-padding: 20 24 24 24;
+}
+.expand-note-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.expand-note-description {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-size: 13px;
+    -fx-line-spacing: 4;
+}
+
+/* ---------- Add-note dialog ---------- */
+.expand-note-root {
+    -fx-background-color: -note-accent-hover;
     -fx-background-radius: 20;
 }
 .expand-note-body {
@@ -164,11 +211,58 @@
     -fx-font-size: 13px;
     -fx-line-spacing: 4;
 }
-.expand-note-close {
-    -fx-background-color: rgba(255,255,255,0.15);
-    -fx-background-radius: 50%;
+
+/* ---------- Add-note dialog ---------- */
+.dialog-title {
+    -fx-text-fill: #c7e0c5;
+    -fx-font-size: 22px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+}
+.field-label {
+    -fx-text-fill: #546255;
+    -fx-font-size: 11px;
+}
+.upload-hint {
+    -fx-text-fill: #415844;
+    -fx-font-size: 12px;
+}
+.upload-zone {
+    -fx-border-color: -note-border;
+    -fx-border-width: 2;
+    -fx-border-style: dashed;
+    -fx-border-radius: 8;
+    -fx-background-color: -note-dark;
+    -fx-background-radius: 8;
+    -fx-min-width: 300;
+    -fx-max-width: 300;
+    -fx-min-height: 120;
+    -fx-max-height: 120;
+    -fx-alignment: center;
+}
+.text-field, .text-area {
+    -fx-background-color: -note-dark;
+    -fx-background-radius: 8;
     -fx-text-fill: white;
-    -fx-min-width: 26;
-    -fx-min-height: 26;
+    -fx-prompt-text-fill: rgba(255,255,255,0.65);
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+.text-area .content {
+    -fx-background-color: -note-dark;
+}
+.record-button {
+    -fx-background-color: -note-accent;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12;
+    -fx-font-size: 0.85em;
+    -fx-font-weight: 500;
     -fx-cursor: hand;
+}
+.record-button:hover {
+    -fx-background-color: -note-accent-hover;
+}
+.record-button:pressed {
+    -fx-background-color: -note-accent-pressed;
 }

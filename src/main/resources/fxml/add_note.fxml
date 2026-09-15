@@ -6,29 +6,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="note-dialog" spacing="16" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.AddNoteController">
+<?import javafx.geometry.Insets?>
+<VBox styleClass="note-card" spacing="16" alignment="CENTER" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.AddNoteController">
     <HBox alignment="CENTER_LEFT">
-        <Label text="Add New Note" styleClass="dialog-title" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Button text="✕" styleClass="close-button" onAction="#handleClose"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="icon-button close-button" onAction="#handleClose"/>
     </HBox>
 
-    <VBox spacing="6">
-        <Label text="COMMON NAME" styleClass="field-label" />
-        <TextField fx:id="commonNameField" editable="false" />
+    <VBox spacing="6" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+        <Label text="COMMON NAME" styleClass="note-card-title"/>
+        <TextField fx:id="commonNameField" styleClass="text-field" editable="false"/>
     </VBox>
 
-    <VBox spacing="6">
-        <Label text="FIELD NOTES" styleClass="field-label" />
-        <TextArea fx:id="fieldNotesArea" promptText="Describe the tree you saw..." />
+    <VBox spacing="6" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+        <Label text="FIELD NOTES" styleClass="note-card-title" />
+        <TextArea fx:id="fieldNotesArea" styleClass="text-area" promptText="Describe the tree you saw..."/>
     </VBox>
 
-    <VBox spacing="6">
-        <Label text="PHOTOGRAPH" styleClass="field-label" />
-        <VBox fx:id="uploadZone" alignment="CENTER" spacing="8" styleClass="upload-zone">
-            <Label text="Upload a photo" styleClass="upload-hint" />
+    <VBox spacing="6" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+        <Label text="PHOTOGRAPH" styleClass="note-card-title"/>
+        <VBox fx:id="uploadZone" styleClass="upload-zone" alignment="CENTER" spacing="8">
+            <Label fx:id="uploadHint" text="Upload a photo" styleClass="text-area"/>
         </VBox>
     </VBox>
 
-    <Button text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity" />
+    <Button text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+    </Button>
 </VBox>

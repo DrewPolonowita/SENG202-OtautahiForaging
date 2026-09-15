@@ -1,14 +1,19 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
+
+import java.io.File;
 
 
 /**
@@ -21,6 +26,12 @@ public class AddNoteController extends ScreenController {
     private TextField commonNameField;
     @FXML
     private TextArea fieldNotesArea;
+    @FXML
+    private VBox uploadZone;
+    @FXML
+    private Label uploadHint;
+
+    private String selectedImagePath;
 
     /**
      * Constructor
@@ -59,11 +70,25 @@ public class AddNoteController extends ScreenController {
     }
 
     /**
+     * Creates a new prompt for user to select image
+     */
+    @FXML
+    private void handleSelectedPhoto() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
+        File selected = fileChooser.showOpenDialog(uploadZone.getScene().getWindow());
+        if (selected != null) {
+            selectedImagePath = selected.getAbsolutePath();
+            uploadHint.setText(selected.getName());
+        }
+    }
+
+    /**
      * Builds a Note with trees information and adds note with note service
      */
     @FXML
     private void handleRecord() {
-        Note note = new Note(0, treeModel.getCommonName() + " #" + treeModel.getId(), null, treeModel.getId());
+        Note note = new Note(0, treeModel.getCommonName() + " #" + treeModel.getId(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
         try {
             getStateManager().getNoteService().add(note);
         } catch (DuplicateEntryException e) {

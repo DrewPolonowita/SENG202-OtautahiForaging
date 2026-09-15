@@ -2,6 +2,7 @@ package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import seng202.team4.gui.ScreenController;
@@ -46,8 +47,8 @@ public class ExpandNoteController extends ScreenController {
         nameLabel.setText(note.getName());
         dateLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
         timeLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("h:mm a")));
-        // descriptionLabel.setText(note.getDescription());
-        // photoView.setImage(new Image(note.getPhotoPath()));
+        descriptionLabel.setText(note.getDescription());
+//        photoView.setImage(new Image(note.getImagePath()));
     }
 
     @FXML

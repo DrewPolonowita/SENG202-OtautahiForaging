@@ -17,7 +17,7 @@
         <HBox alignment="CENTER_LEFT">
             <Label fx:id="nameLabel" styleClass="expand-note-title" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="✕" styleClass="expand-note-close" onAction="#handleClose" />
+            <Button text="✕" styleClass="icon-button expand-note-close" onAction="#handleClose" />
         </HBox>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
