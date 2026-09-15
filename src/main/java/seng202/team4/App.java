@@ -9,6 +9,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RegionDAO;
 import seng202.team4.repository.RegionRepository;
+import seng202.team4.services.DoubleService;
 import seng202.team4.services.treeData.RegionService;
 import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.services.treeData.TreeService;
@@ -21,7 +22,6 @@ import java.util.List;
  */
 public class App {
     private static final Logger LOG = LogManager.getLogger(App.class);
-
     /**
      * Entry point which runs the javaFX application
      * Also shows off some different logging levels

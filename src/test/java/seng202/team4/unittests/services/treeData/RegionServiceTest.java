@@ -8,6 +8,7 @@ import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RegionDAO;
 import seng202.team4.repository.RegionRepository;
 import seng202.team4.services.treeData.RegionService;
+import seng202.team4.unittests.TestSuite;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * A test class for the {@link RegionService}
  */
-public class RegionServiceTest {
+public class RegionServiceTest extends TestSuite {
     RegionService regionService;
     RegionRepository regionRepository;
     DatabaseManager databaseManager;
@@ -23,7 +24,8 @@ public class RegionServiceTest {
 
     @BeforeEach
     public void setUpTest() {
-        databaseManager = new DatabaseManager(null);
+        databaseManager = new DatabaseManager(this.getTestDb());
+        databaseManager.resetDB();
         regionRepository = new RegionDAO(databaseManager);
         regionService = new RegionService(regionRepository);
         region = new Region("Test", 1.0, 2.0, 3.0, 4.0);

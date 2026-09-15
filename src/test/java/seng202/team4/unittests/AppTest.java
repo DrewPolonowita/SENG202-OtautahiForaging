@@ -1,4 +1,4 @@
-package seng202.team4;
+package seng202.team4.unittests;
 
 import org.junit.jupiter.api.Test;
 

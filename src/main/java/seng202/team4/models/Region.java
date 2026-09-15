@@ -3,6 +3,7 @@ package seng202.team4.models;
 import seng202.team4.services.DoubleService;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * A region of an area in Christchurch to be Queried together with the api.
@@ -113,10 +114,16 @@ public class Region {
                     doubleService.equalityTolerance(this.getEastBound(), region.getEastBound()) &&
                     doubleService.equalityTolerance(this.getSouthBound(), region.getSouthBound()) &&
                     doubleService.equalityTolerance(this.getWestBound(), region.getWestBound()) &&
-                    this.getType() == region.getType() &&
-                    this.getLastUpdated() == region.getLastUpdated();
+                    (this.getType() == region.getType() ||
+                            this.getType().equals(region.getType())) &&
+                    (this.getLastUpdated() == region.getLastUpdated() ||
+                            this.getLastUpdated().equals(region.getLastUpdated()));
         }
 
         return false;
+    }
+
+    public double getWews() {
+        return 0;
     }
 }

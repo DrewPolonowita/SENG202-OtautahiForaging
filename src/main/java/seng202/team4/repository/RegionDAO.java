@@ -37,9 +37,7 @@ public class RegionDAO implements RegionRepository {
 
     @Override
     public List<Region> getAll() {
-        String sql = """
-                SELECT * FROM REGIONS
-                """;
+        String sql = "SELECT * FROM REGIONS";
 
         List<Region> regions = new ArrayList<>();
 
@@ -68,8 +66,6 @@ public class RegionDAO implements RegionRepository {
             return new ArrayList<>();
         }
     }
-
-
 
     /**
      * Creates a new region in the database
@@ -104,7 +100,6 @@ public class RegionDAO implements RegionRepository {
             if (sqlException.getErrorCode() == DUPLICATE_ITEM_CODE) {
                 return -2;
             }
-
 
             LOG.error(sqlException);
             return -1;
