@@ -1,0 +1,32 @@
+{
+  "recipes": {
+    "max_results": "1",
+    "page_number": "0",
+    "recipe": [
+      {
+        "recipe_description": "Healthy fish with a tasty sauce.",
+        "recipe_id": "91",
+        "recipe_image": "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg",
+        "recipe_ingredients": {
+          "ingredient": [
+            "Lemon",
+            "Snapper"
+          ]
+        },
+        "recipe_name": "Baked Lemon Snapper",
+        "recipe_nutrition": {
+          "calories": "177",
+          "carbohydrate": "2.23",
+          "fat": "2.32",
+          "protein": "35.1"
+        },
+        "recipe_types": {
+          "recipe_type": [
+            "Main Dish"
+          ]
+        }
+      }
+    ],
+    "total_results": "1"
+  }
+}

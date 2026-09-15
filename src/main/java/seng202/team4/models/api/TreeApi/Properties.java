@@ -1,4 +1,4 @@
-package seng202.team4.models.api;
+package seng202.team4.models.api.TreeApi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

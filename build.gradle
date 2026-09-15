@@ -90,6 +90,9 @@ dependencies {
     // https://central.sonatype.com/artifact/io.github.cdimascio/dotenv-java
     // Used for environment variables
     implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+
+    // Used for converting between Lat/Long to NZTM Easting/Northing coordinates
+    implementation 'org.locationtech.proj4j:proj4j:1.3.0'
 }
 
 application {
@@ -139,6 +142,11 @@ tasks.named("check") {
 
     finalizedBy jacocoTestReport
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:-removal' // Disables deprecation warnings causing failures
+}
+
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

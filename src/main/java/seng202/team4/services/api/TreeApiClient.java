@@ -1,7 +1,7 @@
 package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import seng202.team4.models.api.ApiResponse;
+import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 
 
@@ -24,7 +24,7 @@ public class TreeApiClient implements TreeClientInterface {
      * Constructor
      * @param apiClient Generic api client for use to connect to the api
      */
-    public TreeApiClient(ApiClientInterface apiClient){
+    public TreeApiClient(ApiClientInterface apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -57,9 +57,14 @@ public class TreeApiClient implements TreeClientInterface {
             String params, String outFields, int maxTuples, double north, double east, double south, double west
     ) {
         String url = urlEncodeParams(params, outFields, maxTuples)
-                + "&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&inSR=4326&"
+                + "&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&inSR=4326&outSR=4326&"
                 + "geometry=" + URLEncoder.encode(
-                String.format("%f,%f,%f,%f", west, south, east, north), StandardCharsets.UTF_8
+                String.format("%f,%f,%f,%f",
+                        west,
+                        south,
+                        east,
+                        north
+                ), StandardCharsets.UTF_8
         );
 
         System.out.println(API_LINK + url);
@@ -69,33 +74,33 @@ public class TreeApiClient implements TreeClientInterface {
 
 
     /**
-     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
      *
-     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
     @Override
-    public Request<ApiResponse> getTrees(
+    public Request<TreeApiResponse> getTrees(
             String params, String outFields, int maxTuples,  double north, double east, double south, double west
     ) {
         String url = API_LINK
                 + urlEncodeParams(params, outFields, maxTuples, north, east, south, west);
 
-        return apiClient.get(url, new TypeReference<ApiResponse>() {
+        return apiClient.get(url, new TypeReference<TreeApiResponse>() {
 
         });
 
     }
 
     /**
-     * Makes a request to the API and returns an {@link ApiResponse} with the JSON data
+     * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
      *
-     * @return {@link ApiResponse} if the request is valid, otherwise returns a null
+     * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
     @Override
-    public Request<ApiResponse> getTrees(String params, String outFields, int maxTuples) {
+    public Request<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
         String url = API_LINK
                 + urlEncodeParams(params, outFields, maxTuples);
-        return apiClient.get(url, new TypeReference<ApiResponse>() {
+        return apiClient.get(url, new TypeReference<TreeApiResponse>() {
 
         });
     }

@@ -4,9 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.TreeModel;
-import seng202.team4.models.api.ApiResponse;
+import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
-import seng202.team4.models.api.Tree;
+import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClient;
@@ -25,6 +25,7 @@ import java.util.Map;
  * @author Team 4
  * @deprecated this class is being phased out with treeData/TreeService
  */
+@Deprecated(forRemoval = false)
 public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final TreeClientInterface treeApiClient;
@@ -56,7 +57,7 @@ public class TreeService {
      * @param treeRecord tree record
      * @return TreeModel tree model object
      */
-    private TreeModel createTreeObject(Tree treeRecord) {
+    private TreeModel createTreeObject(TreeRecord treeRecord) {
         String genus = treeRecord.properties().genus();
         String commonName = treeRecord.properties().commonName();
         String foodType = getFoodType(commonName);
@@ -207,11 +208,11 @@ public class TreeService {
             return List.of();
         }
 
-        ApiResponse response = (ApiResponse) request.getApiResponse();
+        TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
 
         log.info(response);
 
-        List<Tree> treeRecords = Arrays.asList(
+        List<TreeRecord> treeRecords = Arrays.asList(
                 response.featureTrees()
         );
 

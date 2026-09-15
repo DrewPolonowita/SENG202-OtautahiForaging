@@ -1,12 +1,15 @@
 package seng202.team4.services.treeData;
 
+
 import seng202.team4.models.TreeModel;
+
 import java.util.List;
 
 /**
  * An interface to encapsulate the logic behind requesting from a database verses an api
  */
 public interface TreeDataManager {
+
 
     /**
      * Returns a list of trees from the database within a given region
@@ -45,4 +48,6 @@ public interface TreeDataManager {
      * @param west the min x value for the region
      */
     boolean isRegionRecent(String type, double north, double east, double south, double west);
+
+    List<TreeModel> getTreesByFood(String food);
 }

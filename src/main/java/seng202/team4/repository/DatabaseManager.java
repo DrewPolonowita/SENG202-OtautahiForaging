@@ -56,7 +56,7 @@ public class DatabaseManager {
     }
 
     /**
-     * Initialises the database if it does not exist using the sql script included in resources
+     * Initializes the database if it does not exist using the sql script included in resources
      */
     public void resetDB() {
         try {
@@ -71,7 +71,7 @@ public class DatabaseManager {
      * Gets path to the database relative to the jar file
      * @return jdbc encoded url location of database
      */
-    private String getDatabasePath() {
+    public String getDatabasePath() {
         String path = DatabaseManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         path = URLDecoder.decode(path, StandardCharsets.UTF_8);
         File jarDir = new File(path);
@@ -110,7 +110,7 @@ public class DatabaseManager {
      * Reads and executes all statements within the sql file provided
      * Note that each statement must be separated by '--SPLIT' this is not a desired limitation but allows for a much
      * wider range of statement types.
-     * @param sqlFile input stream of file containing sql statements for execution (separated by --SPLIT)
+     * @param sqlFile input stream of file containing SQL statements for execution (separated by --SPLIT)
      */
     private void executeSQLScript(InputStream sqlFile) {
         String s;

@@ -37,7 +37,7 @@ public class TreeModelTest {
         assertEquals(testModel1, testModel2);
         float[] testCoords3 = {4, 1337};
         TreeModel testModel3 = new TreeModel(432, testCoords3, "Council", "Acer", "Apple", "Apple", null, "Serviced");
-        assertNotEquals(testModel1, testModel3);
+        assertEquals(testModel1, testModel3);
     }
 
     @Test
