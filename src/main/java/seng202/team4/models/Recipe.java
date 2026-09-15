@@ -2,7 +2,7 @@ package seng202.team4.models;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Objects;
 
 /**
  * Model representation of a recipe
@@ -19,6 +19,9 @@ public class Recipe {
     private final double fat;
     private final String description;
     private final LocalDateTime retrievalTime;
+    private final String image;
+    private final int cookingTime;
+    private final int preparationTime;
 
     /**
      * Constructor for Recipe
@@ -32,8 +35,11 @@ public class Recipe {
      * @param fat the fat in the recipe
      * @param description the description of what meal the recipe is producing
      * @param retrievalTime the time that the data was retrieved from the API
+     * @param image the url of the image for the food
+     * @param cookingTime the cooking time for the recipe in minutes
+     * @param preparationTime the time for preparation steps of the recipe in minutes
      */
-    public Recipe(int id, String name, String method, List<String> ingredients, double carbohydrates, double calories, double protein, double fat, String description, LocalDateTime retrievalTime) {
+    public Recipe(int id, String name, String method, List<String> ingredients, double carbohydrates, double calories, double protein, double fat, String description, LocalDateTime retrievalTime, String image, int cookingTime, int preparationTime) {
         this.id = id;
         this.name = name;
         this.method = method;
@@ -44,6 +50,9 @@ public class Recipe {
         this.fat = fat;
         this.description = description;
         this.retrievalTime = retrievalTime;
+        this.image = image;
+        this.cookingTime = cookingTime;
+        this.preparationTime = preparationTime;
     }
 
     /**
@@ -56,7 +65,7 @@ public class Recipe {
 
     /**
      * Getter for recipe name
-     * @return rrecipe name as String
+     * @return recipe name as String
      */
     public String getName() {
         return name;
@@ -118,7 +127,64 @@ public class Recipe {
         return description;
     }
 
+    /**
+     * Getter for retrieval time
+     * @return the time the recipe data was pulled from the API
+     */
     public LocalDateTime getRetrievalTime() {
         return retrievalTime;
+    }
+
+    /**
+     * Getter for the image url
+     * @return the url for the image of the food made by the recipe
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * Getter for the cooking time of a recipe
+     * @return the cooking time in minutes for a recipe
+     */
+    public int getCookingTime() {
+        return cookingTime;
+    }
+
+    /**
+     * Getter for the preparation time for a recipe
+     * @return the preparation time in minutes for a recipe
+     */
+    public int getPreparationTime() {
+        return preparationTime;
+    }
+
+    /**
+     * Equals operator rewrite so 2 recipes with the same attributes can be evaluated as the same
+     * @param o object to compare
+     * @return returns boolean, true if this equals o
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Recipe recipe = (Recipe) o;
+        return id == recipe.id
+                && Double.compare(recipe.carbohydrates, carbohydrates) == 0
+                && Objects.equals(name, recipe.name)
+                && Objects.equals(method, recipe.method);
+    }
+
+    /**
+     * Overwrite hashCode
+     * @return integer hashcode
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, carbohydrates, name, method);
     }
 }
