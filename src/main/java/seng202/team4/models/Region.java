@@ -1,5 +1,7 @@
 package seng202.team4.models;
 
+import seng202.team4.services.DoubleService;
+
 import java.time.LocalDateTime;
 
 /**
@@ -16,6 +18,7 @@ public class Region {
 
     /**
      * Creates a region with the given bounds in Christchurch
+     *
      * @param northBound the northbound
      * @param eastBound the eastbound
      * @param southBound the southbound
@@ -34,6 +37,7 @@ public class Region {
 
     /**
      * Sets lastUpdated field
+     *
      * @param lastUpdated the new value
      */
     public void setLastUpdated(LocalDateTime lastUpdated) {
@@ -42,6 +46,7 @@ public class Region {
 
     /**
      * returns the northbound
+     *
      * @return the northbound
      */
     public double getNorthBound() {
@@ -50,6 +55,7 @@ public class Region {
 
     /**
      * returns the eastbound
+     *
      * @return the eastbound
      */
     public double getEastBound() {
@@ -58,6 +64,7 @@ public class Region {
 
     /**
      * returns the southbound
+     *
      * @return the southbound
      */
     public double getSouthBound() {
@@ -66,6 +73,7 @@ public class Region {
 
     /**
      * returns the westbound
+     *
      * @return the westbound
      */
     public double getWestBound() {
@@ -74,6 +82,7 @@ public class Region {
 
     /**
      * returns the type
+     *
      * @return the type
      */
     public String getType() {
@@ -82,9 +91,32 @@ public class Region {
 
     /**
      * return the lastUpdated time
+     *
      * @return the lastUpdated time
      */
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
+    }
+
+    /**
+     * Overrides the equality trait for {@link Region}
+     *
+     * @param obj the obj to compare equality with
+     * @return true if the object is both a region of the same attributes
+     */
+    @Override
+    public boolean equals(Object obj) {
+        DoubleService doubleService = new DoubleService();
+
+        if (obj instanceof Region region) {
+            return doubleService.equalityTolerance(this.getNorthBound(), region.getNorthBound()) &&
+                    doubleService.equalityTolerance(this.getEastBound(), region.getEastBound()) &&
+                    doubleService.equalityTolerance(this.getSouthBound(), region.getSouthBound()) &&
+                    doubleService.equalityTolerance(this.getWestBound(), region.getWestBound()) &&
+                    this.getType() == region.getType() &&
+                    this.getLastUpdated() == region.getLastUpdated();
+        }
+
+        return false;
     }
 }
