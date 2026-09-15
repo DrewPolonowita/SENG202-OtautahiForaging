@@ -107,18 +107,4 @@ CREATE TABLE IF NOT EXISTS recipe_uses_food (
     FOREIGN KEY (common_name) REFERENCES food(common_name),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
---SPLIT
-DROP TABLE IF EXISTS region_contains_tree;
---SPLIT
-CREATE TABLE IF NOT EXISTS region_contains_tree (
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
-    tree_id INTEGER NOT NULL,
-    PRIMARY KEY (x, y, tree_id),
-    FOREIGN KEY (x) REFERENCES region(x),
-    FOREIGN KEY (y) REFERENCES region(y),
-    FOREIGN KEY (tree_id) REFERENCES trees(id),
-    food TEXT NOT NULL,
-    common_name TEXT NOT NULL
-);
 

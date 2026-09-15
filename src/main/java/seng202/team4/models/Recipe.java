@@ -173,10 +173,7 @@ public class Recipe {
             return false;
         }
         Recipe recipe = (Recipe) o;
-        return id == recipe.id
-                && Double.compare(recipe.carbohydrates, carbohydrates) == 0
-                && Objects.equals(name, recipe.name)
-                && Objects.equals(method, recipe.method);
+        return id == recipe.id;
     }
 
     /**
@@ -185,6 +182,6 @@ public class Recipe {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, carbohydrates, name, method);
+        return Objects.hash(id);
     }
 }
