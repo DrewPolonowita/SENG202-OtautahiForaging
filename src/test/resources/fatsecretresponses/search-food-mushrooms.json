@@ -1,0 +1,14 @@
+{
+  "foods": {
+    "food": {
+      "food_description": "Per 100g - Calories: 22kcal | Fat: 0.34g | Carbs: 3.28g | Protein: 3.09g",
+      "food_id": "36421",
+      "food_name": "Mushrooms",
+      "food_type": "Generic",
+      "food_url": "https://foods.fatsecret.com/calories-nutrition/usda/mushrooms"
+    },
+    "max_results": "1",
+    "page_number": "0",
+    "total_results": "1129"
+  }
+}

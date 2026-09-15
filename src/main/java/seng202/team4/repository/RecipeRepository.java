@@ -1,0 +1,46 @@
+package seng202.team4.repository;
+
+
+import seng202.team4.models.Recipe;
+import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
+
+
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * Interface for the recipe specific data access object
+ */
+public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
+
+
+    /**
+     * Retrieve all recipe ids with a specified ingredient
+     * @param food the name of the ingredient specified
+     * @return all ids for recipes with the food specified as an ingredient
+     */
+    List<Integer> getRecipeIdsByFoodName(String food);
+
+    /**
+     * Adds recipeIngredient object information to the database
+     *
+     * @param toAdd the ingredient to add
+     */
+    void addIngredients(RecipeIngredient toAdd);
+
+    /**
+     * Adds recipeIngredient information alongside recipe ids in the ingredients in recipe table
+     * @param toAdd the ingredient to add
+     * @param recipe the recipe the ingredient is in
+     * @return a map mapping recipe id to ingredient id and serving id
+     */
+    Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe);
+
+    boolean recipeDetailsUpToDateAndExist(int recipeId);
+
+    void addRecipeUseFood(String food, int recipeId);
+
+    void replaceRecipe(Recipe recipe);
+
+}

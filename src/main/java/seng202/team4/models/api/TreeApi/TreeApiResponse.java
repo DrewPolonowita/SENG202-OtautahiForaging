@@ -1,4 +1,4 @@
-package seng202.team4.models.api;
+package seng202.team4.models.api.TreeApi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param exceededTransferLimit a boolean for if too many trees were requested that some got cut
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record ApiResponse(
+public record TreeApiResponse(
         @JsonProperty String type,
-        @JsonProperty("features") Tree[] featureTrees,
+        @JsonProperty("features") TreeRecord[] featureTrees,
         @JsonProperty boolean exceededTransferLimit
 ) {
 }

@@ -11,11 +11,17 @@ CREATE TABLE IF NOT EXISTS trees (
     last_modified DATETIME,
     service_status TEXT
 );
-
-
-
 --SPLIT
--- Trees subclass table 1
+CREATE TABLE regions (
+    north REAL NOT NULL,
+    east REAL NOT NULL,
+    south REAL NOT NULL,
+    west REAL NOT NULL,
+    last_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    type TEXT NOT NULL,
+    PRIMARY KEY (type, north, east, south, west)
+);
+--SPLIT
 DROP TABLE IF EXISTS from_api;
 --SPLIT
 CREATE TABLE IF NOT EXISTS from_api (
@@ -24,7 +30,6 @@ CREATE TABLE IF NOT EXISTS from_api (
     FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
 --SPLIT
--- Trees subclass table 2
 DROP TABLE IF EXISTS from_user;
 --SPLIT
 CREATE TABLE IF NOT EXISTS from_user (
@@ -33,15 +38,45 @@ CREATE TABLE IF NOT EXISTS from_user (
     FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
 --SPLIT
-DROP TABLE IF EXISTS recipe;
+DROP TABLE IF EXISTS ingredient;
 --SPLIT
-CREATE TABLE IF NOT EXISTS recipe (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    ingredients TEXT NOT NULL,
-    recipe_method TEXT NOT NULL,
-    nutritional_information TEXT NOT NULL,
-    description TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS ingredient (
+    ingredient_id int NOT NULL,
+    serving_id int NOT NULL,
+    ingredient_name TEXT NOT NULL,
+    ingredient_unit_number int NOT NULL,
+    ingredient_measurement_description TEXT NOT NULL,
+    ingredient_description TEXT NOT NULL,
+    PRIMARY KEY (serving_id, ingredient_id)
+);
+--SPLIT
+DROP TABLE IF EXISTS recipes;
+--SPLIT
+CREATE TABLE IF NOT EXISTS recipes (
+     recipe_id INTEGER PRIMARY KEY,
+     recipe_name TEXT NOT NULL,
+     recipe_method TEXT NOT NULL,
+     carbohydrates DOUBLE,
+     calories DOUBLE,
+     protein DOUBLE,
+     fat DOUBLE,
+     recipe_description TEXT NOT NULL,
+     retrieval_time DATETIME NOT NULL,
+     recipe_image TEXT NOT NULL,
+     cooking_time_min int NOT NULL,
+     preparation_time_min int NOT NULL
+);
+--SPLIT
+DROP TABLE IF EXISTS ingredients_in_recipe;
+--SPLIT
+CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
+    recipe_id INTEGER NOT NULL,
+    ingredient_id INTEGER NOT NULL,
+    serving_id INTEGER NOT NULL,
+    ingredient_description TEXT NOT NULL,
+    PRIMARY KEY (recipe_id, ingredient_id, serving_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
+    FOREIGN KEY (serving_id, ingredient_id) REFERENCES ingredient(serving_id, ingredient_id)
 );
 --SPLIT
 DROP TABLE IF EXISTS note;
@@ -52,48 +87,24 @@ CREATE TABLE IF NOT EXISTS note (
     name TEXT NOT NULL,
     tree_id INTEGER,
     recipe_id INTEGER,
-    FOREIGN KEY (tree_id) REFERENCES tree(id),
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id)
+    FOREIGN KEY (tree_id) REFERENCES trees(id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 --SPLIT
 DROP TABLE IF EXISTS food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS food (
     common_name TEXT PRIMARY KEY,
-    food_type TEXT NOT NULL,
-    nutritional_information NOT NULL,
-);
---SPLIT
-DROP TABLE IF EXISTS region;
---SPLIT
-CREATE TABLE IF NOT EXISTS region (
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
-    retrieval_time DATETIME NOT NULL,
-    PRIMARY KEY (y, x)
+    food_type TEXT NOT NULL
 );
 --SPLIT
 DROP TABLE IF EXISTS recipe_uses_food;
 --SPLIT
-CREATE TABLE IF NOT EXISTS uses (
+CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT,
     recipe_id INTEGER,
-    PRIMARY KEY (common_name, recipe.id),
+    PRIMARY KEY (common_name, recipe_id),
     FOREIGN KEY (common_name) REFERENCES food(common_name),
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id);
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
---SPLIT
-DROP TABLE IF EXISTS region_contains_tree;
---SPLIT
-CREATE TABLE IF NOT EXISTS region_contains_tree (
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
-    tree_id INTEGER NOT NULL,
-    PRIMARY KEY (x, y, tree_id),
-    FOREIGN KEY (x) REFERENCES region(x),
-    FOREIGN KEY (y) REFERENCES region(y),
-    FOREIGN KEY (tree_id) REFERENCES tree(id);
-    food TEXT NOT NULL,
-    common_name TEXT NOT NULL
-)
-*/
+
