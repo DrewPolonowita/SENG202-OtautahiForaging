@@ -129,11 +129,12 @@ public class RecipeService {
      * @return a string containing the recipe's method
      */
     private String buildMethodString(List<RecipeDirection> directions) {
-        directions.sort(Comparator.comparing(RecipeDirection::directionNumber));
+        List<RecipeDirection> sortedDirections = directions.stream().sorted(Comparator.comparing(RecipeDirection::directionNumber)).toList();
+
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < directions.size(); i++) {
-            stringBuilder.append(directions.get(i).directionNumber());
-            stringBuilder.append(": ").append(directions.get(i).directionDescription()).append("\n");
+        for (int i = 0; i < sortedDirections.size(); i++) {
+            stringBuilder.append(sortedDirections.get(i).directionNumber());
+            stringBuilder.append(": ").append(sortedDirections.get(i).directionDescription()).append("\n");
         }
         return stringBuilder.toString();
     }
