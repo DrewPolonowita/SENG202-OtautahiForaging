@@ -20,7 +20,7 @@ public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
      * @param food the name of the ingredient specified
      * @return all ids for recipes with the food specified as an ingredient
      */
-    List<Integer> getRecipeIdByFoodName(String food);
+    List<Integer> getRecipeIdsByFoodName(String food);
 
     /**
      * Adds recipeIngredient object information to the database
@@ -36,4 +36,11 @@ public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
      * @return a map mapping recipe id to ingredient id and serving id
      */
     Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe);
+
+    boolean recipeDetailsUpToDateAndExist(int recipeId);
+
+    void addRecipeUseFood(String food, int recipeId);
+
+    void replaceRecipe(Recipe recipe);
+
 }

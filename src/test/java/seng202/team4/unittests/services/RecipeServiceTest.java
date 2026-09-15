@@ -41,7 +41,7 @@ public class RecipeServiceTest {
         String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
         databaseManager = new DatabaseManager(testUrl);
         recipeDAO = new RecipeDAO(databaseManager);
-        testRecipeService = new RecipeService(recipeDAO);
+        testRecipeService = new RecipeService(recipeDAO, null);
     }
 
 

@@ -9,11 +9,10 @@ import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.RecipeRepository;
-import seng202.team4.services.api.ApiClient;
-import seng202.team4.services.api.FoodApiClient;
-import seng202.team4.services.api.FoodClientInterface;
+import seng202.team4.services.api.RecipeClientInterface;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,25 +24,60 @@ import java.util.List;
  */
 public class RecipeService {
     private static final Logger log = LogManager.getLogger(RecipeService.class);
-    private final FoodClientInterface foodApiClient;
     private final RecipeRepository recipeDAO;
+    private final RecipeApiHandler recipeApiHandler;
 
 
     /**
      * Constructor
      */
-    public RecipeService(RecipeRepository recipeRepository) {
-        this.foodApiClient = new FoodApiClient(new ApiClient());
+    public RecipeService(RecipeRepository recipeRepository, RecipeClientInterface recipeClientInterface) {
         this.recipeDAO = recipeRepository;
+        recipeApiHandler = new RecipeApiHandler(recipeClientInterface);
     }
 
+    /**
+     * Method to get recipes for a particular food.
+     * First we check for if we are storing id's that are mapped to that food, if not
+     * Call the api using the recipe search function.
+     * Then check if the details for those ids are up to date
+     * if not call the api using get recipe by id function
+     * @param food A food specifically from the food groups we map
+     * @return list of recipes
+     */
+    public List<Recipe> getRecipesForFood(String food) {
+        List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
+        List<Recipe> recipes = new ArrayList<>();
+
+        boolean noIdsExist = recipeIds.isEmpty();
+        if (noIdsExist) {
+            recipeIds = recipeApiHandler.getRecipeIdsByFoodFromApi(food);
+        }
+        for (int id : recipeIds) {
+            Recipe recipe;
+            if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
+                recipe = recipeDAO.getOne(id);
+
+            } else {
+                recipe = recipeApiHandler.getRecipeById(id);
+                recipeDAO.replaceRecipe(recipe);
+            }
+
+            if (noIdsExist) {
+                recipeDAO.addRecipeUseFood(food, id);
+            }
+            recipes.add(recipe);
+
+        }
+        return recipes;
+    }
 
     /**
      * Creates a recipe using a RecipeByIdRecord
      * @param recipeRecord a RecipeByIdRecord
      * @return a Recipe model
      */
-    private Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
+    public Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
         int recipeId = recipeRecord.recipeId();
         String recipeName = recipeRecord.recipeName();
         String method = buildMethodString(recipeRecord.directions());
@@ -72,7 +106,7 @@ public class RecipeService {
                 protein,
                 fat,
                 description,
-                null,
+                LocalDateTime.now(),
                 imageUrl,
                 cookingTime,
                 preparationTime
@@ -158,7 +192,7 @@ public class RecipeService {
      * @return a list of recipes that have the specified food as an ingredient, or null if none in database
      */
     public List<Recipe> getRecipeByFood(String food) {
-        List<Integer> databaseRecipesId = recipeDAO.getRecipeIdByFoodName(food);
+        List<Integer> databaseRecipesId = recipeDAO.getRecipeIdsByFoodName(food);
         List<Recipe> databaseRecipes = new ArrayList<>();
         for (int id : databaseRecipesId) {
             databaseRecipes.add(recipeDAO.getOne(id));

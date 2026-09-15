@@ -235,7 +235,7 @@ public class RecipeDAO implements RecipeRepository {
      * @param food the name of the ingredient specified
      * @return all recipes with the food specified as an ingredient
      */
-    public List<Integer> getRecipeIdByFoodName(String food) {
+    public List<Integer> getRecipeIdsByFoodName(String food) {
         List<Integer> recipeIds = new ArrayList<>();
         String sql = "SELECT recipe_id FROM recipe_uses_food WHERE common_name=?";
         try (Connection conn = databaseManager.connect();
@@ -344,6 +344,103 @@ public class RecipeDAO implements RecipeRepository {
             return null;
         }
     }
+
+    /**
+     *
+     * @param recipeId
+     * @return
+     */
+    @Override
+    public boolean recipeDetailsUpToDateAndExist(int recipeId) {
+        String sql = """
+                SELECT 1
+                FROM recipes
+                WHERE recipe_id = ?
+                AND retrieval_time >= DATETIME('now', '-24 hours')
+                """;
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, recipeId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            LOG.error(e);
+            return false;
+        }
+    }
+
+
+
+    @Override
+    public void addRecipeUseFood(String food, int recipeId) {
+        String sql = """
+                INSERT INTO recipe_uses_food (
+                   common_name,
+                   recipe_id
+                   ) VALUES (?,?);
+        
+                """;
+
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, food);
+            ps.setInt(2, recipeId);
+
+
+            ps.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            LOG.error(sqlException);
+        }
+    }
+
+    @Override
+    public void replaceRecipe(Recipe recipe) {
+        String sql = """
+                UPDATE recipes
+                SET recipe_name = ?,
+                    recipe_method = ?,
+                    carbohydrates = ?,
+                    calories = ?,
+                    protein = ?,
+                    fat = ?,
+                    recipe_description = ?,
+                    retrieval_time = CURRENT_TIMESTAMP,
+                    recipe_image = ?,
+                    cooking_time_min = ?,
+                    preparation_time_min = ?
+                WHERE recipe_id = ?;
+                """;
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, recipe.getName());
+            ps.setString(2, recipe.getMethod());
+            ps.setDouble(3, recipe.getCarbohydrates());
+            ps.setDouble(4, recipe.getCalories());
+            ps.setDouble(5, recipe.getProtein());
+            ps.setDouble(6, recipe.getFat());
+            ps.setString(7, recipe.getDescription());
+            ps.setString(8, recipe.getImage());
+            ps.setInt(9, recipe.getCookingTime());
+            ps.setInt(10, recipe.getPreparationTime());
+            ps.setInt(11, recipe.getId());
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                add(recipe);
+            }
+        } catch (SQLException e) {
+            LOG.error(e);
+        }
+    }
+
+
+
 }
 
 
