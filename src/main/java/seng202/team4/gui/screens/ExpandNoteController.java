@@ -9,6 +9,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.models.Note;
 import seng202.team4.services.StateManager;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
 
 public class ExpandNoteController extends ScreenController {
@@ -48,7 +49,9 @@ public class ExpandNoteController extends ScreenController {
         dateLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
         timeLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("h:mm a")));
         descriptionLabel.setText(note.getDescription());
-//        photoView.setImage(new Image(note.getImagePath()));
+        if (note.getImagePath() != null) {
+            photoView.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
+        }
     }
 
     @FXML

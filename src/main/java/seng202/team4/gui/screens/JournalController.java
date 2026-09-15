@@ -3,6 +3,7 @@ package seng202.team4.gui.screens;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -12,6 +13,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.models.Note;
 import seng202.team4.services.StateManager;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -65,6 +67,9 @@ public class JournalController extends ScreenController {
         thumbnail.setFitWidth(260);
         thumbnail.setFitHeight(140);
         thumbnail.setPreserveRatio(false);
+        if (note.getImagePath() != null) {
+            thumbnail.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
+        }
 
         Label name = new Label(note.getName());
         name.getStyleClass().add("note-card-title");

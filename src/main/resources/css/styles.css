@@ -240,6 +240,10 @@
     -fx-max-height: 120;
     -fx-alignment: center;
 }
+.upload-zone:hover {
+    -fx-border-color: -note-accent-hover;
+    -fx-background-color: -note-accent;
+}
 .text-field, .text-area {
     -fx-background-color: -note-dark;
     -fx-background-radius: 8;

@@ -58,15 +58,24 @@ public class DatabaseManager {
         }
     }
 
+
     /**
-     * Gets path to the database relative to the jar file
-     * @return jdbc encoded url location of database
+     * Returns the directory the application's jar is running from
+     * so things like images can be located with it.
+     * @return the directory containing the running application
      */
-    private String getDatabasePath() {
+    public File getDatabaseDirectory() {
         String path = DatabaseManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         path = URLDecoder.decode(path, StandardCharsets.UTF_8);
-        File jarDir = new File(path);
-        return "jdbc:sqlite:" + jarDir.getParentFile() + "/database.db";
+        return new File(path).getParentFile();
+    }
+
+    /**
+     * Builds the JDBC URL for the SQlite database file
+     * @return the JDBC connection URL for database.db
+     */
+    private String getDatabasePath() {
+        return "jdbc:sqlite:" + getDatabaseDirectory() + "/database.db";
     }
 
     /**

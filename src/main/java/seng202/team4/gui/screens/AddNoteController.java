@@ -14,6 +14,11 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 
 /**
@@ -78,8 +83,18 @@ public class AddNoteController extends ScreenController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
         File selected = fileChooser.showOpenDialog(uploadZone.getScene().getWindow());
         if (selected != null) {
-            selectedImagePath = selected.getAbsolutePath();
-            uploadHint.setText(selected.getName());
+            try {
+                Path imageDir = getStateManager().getDatabaseManager().getDatabaseDirectory().toPath().resolve("images");
+                Files.createDirectories(imageDir);
+                String extension = selected.getName().substring(selected.getName().lastIndexOf('.'));
+                String newFileName = UUID.randomUUID() + extension;
+                Path destination = imageDir.resolve(newFileName);
+                Files.copy(selected.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+                selectedImagePath = destination.toString();
+                uploadHint.setText(selected.getName());
+            } catch (IOException e) {
+                LOG.error("Failed to copy over selected photo", e);
+            }
         }
     }
 
@@ -88,7 +103,7 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void handleRecord() {
-        Note note = new Note(0, treeModel.getCommonName() + " #" + treeModel.getId(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
+        Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
         try {
             getStateManager().getNoteService().add(note);
         } catch (DuplicateEntryException e) {
