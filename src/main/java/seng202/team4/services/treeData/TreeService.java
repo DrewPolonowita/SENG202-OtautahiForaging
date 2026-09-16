@@ -164,7 +164,25 @@ public class TreeService implements TreeDataManager {
      * TODO: Make this choose between using API and database instead of always using database
      */
     public List<TreeModel> getAllTrees() {
-        return treeApiHandler.getAllTreesFromApi();
+        List<TreeModel> databaseTrees = treeRepository.getAll();
+
+        if (!databaseTrees.isEmpty()) {
+            log.info("Loaded {} trees from database", databaseTrees.size());
+            return databaseTrees;
+        }
+
+        List<TreeModel> apiTrees = treeApiHandler.getAllTreesFromApi();
+        log.info("Loaded {} trees from api", apiTrees.size());
+        for (TreeModel tree: apiTrees) {
+            try {
+                treeRepository.add(tree);
+            } catch (DuplicateEntryException e) {
+                log.warn("(All Trees) Skip duplicate id: {}", tree.getId());
+            }
+        }
+        databaseTrees = treeRepository.getAll();
+
+        return databaseTrees;
     }
 
     /**

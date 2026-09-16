@@ -144,13 +144,13 @@ public class TreeServiceTest {
         when(treeApiClient.getTrees(contains("Chinese Crab Apple"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
 
-        when(treeApiClient.getTrees(eq("CommonName='Pear'"), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(contains("Pear"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
 
-        when(treeApiClient.getTrees(eq("CommonName='Bird Cherry'"), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(contains("Bird Cherry"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeCherryRecords(), false), 200));
 
-        when(treeApiClient.getTrees(eq("CommonName='Peach'"), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(contains("Peach"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
 
         when(treeApiClient.getTrees(contains("Apricot"), eq(returning_string), eq(tuple_max)))
