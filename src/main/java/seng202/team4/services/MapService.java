@@ -6,6 +6,9 @@ import seng202.team4.services.treeData.TreeDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A service class for the Map to handle getting trees and filtering the map
@@ -14,6 +17,7 @@ public class MapService {
 
     private final TreeDataManager treeDataManager;
     private final ArrayList<Fruit> selectedFruits;
+    private final ExecutorService executor = Executors.newFixedThreadPool(8);
 
     /**
      * Creates a new instance of a MapService
@@ -25,26 +29,36 @@ public class MapService {
     }
 
     /**
-     * Returns all the trees in a given region which are selected using the filter
+     * Returns all the trees in a given region which are selected using the filter gets all the trees
+     * from the api/database on different threads then gives all of them using a Future
      *
      * @param north the north-bound
      * @param east the east-bound
      * @param south the south-bound
      * @param west the west-bound
-     * @return all the trees in a given region which are selected using the filter
+     * @return a future of all the trees in a given region which are selected using the filter
      */
-    public List<TreeModel> getAllTreesInRegion(
+    public CompletableFuture<List<TreeModel>> getAllTreesInRegion(
             double north, double east, double south, double west
     ) {
-        ArrayList<TreeModel> trees = new ArrayList<>();
+        List<CompletableFuture<List<TreeModel>>> futures = selectedFruits.stream()
+                .map(fruit -> CompletableFuture.supplyAsync(() ->
+                                treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west),
+                        executor
+                ))
+                .toList();
 
-        for (Fruit fruit: selectedFruits) {
-            trees.addAll(
-                    treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west)
-            );
-        }
+        CompletableFuture<Void> allTasks = CompletableFuture.allOf(
+                futures.toArray(new CompletableFuture[0])
+        );
 
-        return trees;
+        return allTasks.thenApply(v -> {
+            List<TreeModel> combinedTrees = new ArrayList<>();
+            for (CompletableFuture<List<TreeModel>> future : futures) {
+                combinedTrees.addAll(future.join());
+            }
+            return combinedTrees;
+        });
     }
 
     /**

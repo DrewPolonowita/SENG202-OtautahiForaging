@@ -158,19 +158,29 @@ public class MapController extends ScreenController {
 
         setCurrentBounds(north, east, south, west);
 
-        List<TreeModel> trees =
-                mapService.getAllTreesInRegion(
+        mapService.getAllTreesInRegion(
                         north + height / 2,
                         east + width / 2,
                         south - height / 2,
                         west - width / 2
-                );
+                )
 
-        removeTreeMarkers();
-        for (TreeModel tree : trees) {
-            addTreeMarker(tree);
-        }
+                .thenAccept(trees -> {
+                    javafx.application.Platform.runLater(() -> {
+                        removeTreeMarkers();
+                        for (TreeModel tree : trees) {
+                            addTreeMarker(tree);
+                        }
+                    });
+                })
+                .exceptionally(ex -> {
+                    javafx.application.Platform.runLater(() -> {
+                        System.err.println("Error fetching trees for map view: " + ex.getMessage());
+                    });
+                    return null;
+                });
     }
+
 
     /**
      * Creates a marker for a given tree and then adds it the list of javascript markers to add to the map
