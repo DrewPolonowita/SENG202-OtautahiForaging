@@ -49,6 +49,7 @@ public class FoodService implements FoodDataManager {
      * and then uses those ids to search by specific id
      * @return List of food objects that exist in the project
      */
+    @Override
     public List<Food> getFoods() {
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMapper.getFoodMap().keySet()) {
@@ -77,7 +78,6 @@ public class FoodService implements FoodDataManager {
      * @param foodRecord a foodByIdRecord
      * @return a food model
      */
-    @Override
     public Food createFoodObjectById(FoodByIdRecord foodRecord) {
         int foodId = foodRecord.foodId();
         String name = foodRecord.foodName();
