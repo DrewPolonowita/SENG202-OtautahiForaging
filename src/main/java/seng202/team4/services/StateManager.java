@@ -23,7 +23,7 @@ public class StateManager {
     private final DatabaseManager databaseManager;
     private final TreeRepository treeRepository;
     private final TreeService treeService;
-    private final FoodService foodService;
+//    private final FoodService foodService;
 
 
     /**
@@ -39,7 +39,7 @@ public class StateManager {
         this.treeRepository = new TreeDAO(databaseManager);
         this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)));
 
-        this.foodService = new FoodService();
+//        this.foodService = new FoodService();
 
 
         this.windowManager.launchMapScreen(this);
@@ -59,7 +59,7 @@ public class StateManager {
         return treeService;
     }
 
-    public FoodService getFoodService() {
-        return foodService;
-    }
+//    public FoodService getFoodService() {
+//        return foodService;
+//    }
 }

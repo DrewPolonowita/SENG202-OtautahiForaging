@@ -94,8 +94,15 @@ CREATE TABLE IF NOT EXISTS note (
 DROP TABLE IF EXISTS food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS food (
-    common_name TEXT PRIMARY KEY,
-    food_type TEXT NOT NULL
+    food_id INTEGER PRIMARY KEY,
+    common_name TEXT NOT NULL,
+    food_type TEXT NOT NULL,
+    calories DOUBLE,
+    carbohyrdrates DOUBLE,
+    protein DOUBLE,
+    fat DOUBLE,
+    serving_description TEXT,
+    serving_id INTEGER,
 );
 --SPLIT
 DROP TABLE IF EXISTS recipe_uses_food;
@@ -103,7 +110,7 @@ DROP TABLE IF EXISTS recipe_uses_food;
 CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT,
     recipe_id INTEGER,
-    PRIMARY KEY (common_name, recipe_id),
+    PRIMARY KEY (food_id, recipe_id),
     FOREIGN KEY (common_name) REFERENCES food(common_name),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );

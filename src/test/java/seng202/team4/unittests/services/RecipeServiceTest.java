@@ -37,7 +37,7 @@ public class RecipeServiceTest {
 
 
     @BeforeEach
-    public void setUpTest(){
+    public void setUpTest() {
         //todo: ADD API HANDLER FOR RECIPE
         String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
         databaseManager = new DatabaseManager(testUrl);
@@ -82,12 +82,5 @@ public class RecipeServiceTest {
         List<String> testIngredients = List.of("1 Apple");
         Recipe expectedRecord  = new Recipe(123, "Recipe Name", "1: Direction step 1\n2: Direction step 2", testIngredients, 345, 123,567, 789, "Description", null, "Image URL", 10, 10);
         assertEquals(expectedRecord, testRecipeRecord);
-    }
-
-    @Test
-    public void testGetRecipeByFood() {
-        String food = "Apple";
-        List<Recipe> recipeByFood = testRecipeService.getRecipeByFood("Apple");
-
     }
 }

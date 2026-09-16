@@ -1,8 +1,15 @@
 package seng202.team4.services;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
+import seng202.team4.models.Food;
+import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
+import seng202.team4.models.api.Food.FoodByID.Serving;
+import seng202.team4.repository.FoodRepository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +22,13 @@ public class FoodService {
     private static final Logger log = LogManager.getLogger(FoodService.class);
     private Map<String, List<String>> foodMap = new HashMap<>();
     private Map<String, List<String>> typeMap = new HashMap<>();
+    private final FoodRepository foodDAO;
 
     /**
      * Constructor
      */
-    public FoodService() {
+    public FoodService(FoodRepository foodRepository) {
+        this.foodDAO = foodRepository;
         createFoodMap();
         createTypeMap();
     }
@@ -136,22 +145,105 @@ public class FoodService {
         ));
     }
 
+    /**
+     * Create a food model using a FoodByIdRecord
+     * @param foodRecord a foodByIdRecord
+     * @return a food model
+     */
+    public Food createFoodObjectById(FoodByIdRecord foodRecord) {
+        int foodId = foodRecord.foodId();
+        String name = foodRecord.foodName();
+        String type = null;
+        for (Map.Entry<String, List<String>> typeEntry : getTypeMap().entrySet()) {
+            List<String> commonNames = typeEntry.getValue();
+            for (String commonName : commonNames) {
+                if (name.equals(commonName)) {
+                    type = typeEntry.getKey();
+                    break;
+                }
+            }
+        }
+        double calories = foodRecord.servings().serving().getFirst().calories();
+        double fat = foodRecord.servings().serving().getFirst().carbohydrate();
+        double protein = foodRecord.servings().serving().getFirst().protein();
+        double carbohydrate = foodRecord.servings().serving().getFirst().carbohydrate();
+        String servingDescription = foodRecord.servings().serving().getFirst().servingDescription();
+        int servingId = foodRecord.servings().serving().getFirst().servingId();
 
-
+        return new Food(
+                foodId,
+                name,
+                type,
+                calories,
+                carbohydrate,
+                protein,
+                fat,
+                servingDescription,
+                servingId
+        );
+    }
 
     /**
-     * Getter for food map
-     * @return the food map
+     * Method to return all food from API
+     * @return List of all food from API
      */
-    public Map<String, List<String>> getFoodMap() {
+    public List<Food> getAllFoodFromApi() {
+        return null;
+    }
+
+    /**
+     * Method to get all the food in the database if the database is populated
+     * otherwise populate it
+     * @return all foods
+     */
+    public List<Food> getAllFood() {
+        List<Food> databaseFood = foodDAO.getAll();
+        if (!databaseFood.isEmpty()) {
+            log.info("Loaded {} food from database", databaseFood.size());
+            return databaseFood;
+        }
+        List<Food> apiFood = getAllFoodFromApi();
+        log.info("Loaded {} foods from api", apiFood.size());
+        for (Food food : apiFood) {
+            try {
+                foodDAO.add(food);
+            } catch (DuplicateEntryException e) {
+                log.warn("(All Food) Skip duplicate id: {}", food.getId());
+            }
+        }
+        databaseFood = foodDAO.getAll();
+        return databaseFood;
+    }
+
+//    /**
+//     * Method to return all food models of one shared type from database
+//     * @param type the type of food model being returned (e.g. fruit or nut)
+//     * @return food models of the given type
+//     */
+//    public List<Food> getFoodByType(String type) {
+//        List<Food> databaseFood = foodDAO.getFoodByType(type);
+//        if (!databaseFood.isEmpty()) {
+//            log.info("Loaded {} {} type foods from database", databaseFood.size(), type);
+//            return databaseFood;
+//        }
+//        populateFoodDatabase();
+//        databaseFood = foodDAO.getFoodByType(type);
+//        return databaseFood;
+//    }
+
+    /**
+    * Getter for food map
+    * @return the food map
+    */
+    public Map<String, List<String>> getFoodMap () {
         return foodMap;
     }
 
     /**
-     * Getter for the type map
-     * @return the type map
-     */
-    public Map<String, List<String>> getTypeMap() {
+    * Getter for the type map
+    * @return the type map
+    */
+    public Map<String, List<String>> getTypeMap () {
         return typeMap;
     }
 }
