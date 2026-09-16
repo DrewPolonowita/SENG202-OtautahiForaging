@@ -1,9 +1,12 @@
 package seng202.team4.gui.screens;
 import javafx.fxml.FXML;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 
@@ -13,6 +16,8 @@ public class RecipeHighlightController extends ScreenController {
     private final Recipe recipe;
     @FXML
     private Text recipeNameText;
+    @FXML
+    private StackPane attributionPane;
 
     public RecipeHighlightController(StateManager stateManager, Recipe recipe) {
         super(stateManager);
@@ -30,6 +35,8 @@ public class RecipeHighlightController extends ScreenController {
     @FXML
     public void initialize() {
         recipeNameText.setText(displayText(recipe));
+        ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage();
+        attributionPane.getChildren().add(attribution);
     }
 
     private String displayText(Recipe recipe) {

@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
@@ -32,6 +33,8 @@ public class RecipesController extends ScreenController {
     @FXML
     private TilePane recipeTilePane;
     private RecipeDataManager recipeService;
+    @FXML
+    private StackPane attributionPane;
 
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
@@ -59,6 +62,8 @@ public class RecipesController extends ScreenController {
     @FXML
     public void initialize() {
         recipeService = getStateManager().getRecipeService();
+        ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage();
+        attributionPane.getChildren().add(attribution);
     }
 
     /**
