@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.services.StateManager;
-import seng202.team4.services.treeData.TreeService;
+import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.models.TreeModel;
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -23,7 +23,7 @@ public class MapController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(MapController.class);
 
-    private final TreeService treeService; // TODO: used once tree-click lookup is implemented
+    private final TreeDataManager treeService; // TODO: used once tree-click lookup is implemented
 
     @FXML
     private WebView webView;

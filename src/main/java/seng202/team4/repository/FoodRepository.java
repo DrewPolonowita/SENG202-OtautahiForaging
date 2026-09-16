@@ -11,7 +11,7 @@ import java.util.List;
  * Interface for the food specific data access object
  * @author Team 4
  */
-public interface FoodRepository extends DAOInterface<Food, String> {
+public interface FoodRepository extends DAOInterface<Food, Integer> {
 
 
     /**
@@ -28,6 +28,12 @@ public interface FoodRepository extends DAOInterface<Food, String> {
      * @return the food model corresponding to the food grown on the tree
      */
     Food getFoodbyTreeId(int treeId);
+
+    Integer getFoodIdByFoodName(String foodName);
+
+    boolean foodDetailsUpToDateAndExist(int foodId);
+
+    void replaceFood(Food food);
 
 }
 

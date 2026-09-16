@@ -12,6 +12,7 @@ import seng202.team4.services.api.ApiClient;
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.TreeApiClient;
+import seng202.team4.services.api.TreeClientInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,21 @@ public class TreeService implements TreeDataManager {
      * Creates a new instance and initializes private variables
      */
     public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService, FoodService foodService) {
-        TreeApiClient treeApiClient = new TreeApiClient(apiClient);
+        TreeClientInterface treeApiClient = new TreeApiClient(apiClient);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
+        this.treeRepository = treeRepository;
+        this.regionService = regionService;
+    }
+
+    /**
+     * test constructor
+     */
+    public TreeService(
+            TreeRepository treeRepository,
+            TreeClientInterface treeApiClient,
+            RegionService regionService,
+            FoodService foodService
+    ) {
         this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
         this.treeRepository = treeRepository;
         this.regionService = regionService;
@@ -107,6 +122,7 @@ public class TreeService implements TreeDataManager {
 
     /**
      * Returns a list of trees all trees from the api
+     * TODO: Make this choose between using API and database instead of always using database
      */
     public List<TreeModel> getAllTrees() {
         return treeApiHandler.getAllTreesFromApi();

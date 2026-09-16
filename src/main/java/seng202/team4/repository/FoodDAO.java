@@ -38,7 +38,7 @@ public class FoodDAO implements FoodRepository {
     @Override
     public List<Food> getAll() {
         List<Food> food = new ArrayList<>();
-        String sql = "SELECT * FROM food WHERE common_name=?";
+        String sql = "SELECT * FROM food";
         try (Connection conn = databaseManager.connect();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)
@@ -81,8 +81,9 @@ public class FoodDAO implements FoodRepository {
                    protein,
                    fat,
                    serving_description,
-                   serving_id
-                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                   serving_id,
+                   retrieval_time
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
                    """;
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -108,14 +109,14 @@ public class FoodDAO implements FoodRepository {
 
     /**
      * Deletes a specific food group from database
-     * @param commonName of food group to delete
+     * @param foodId of food group to delete
      */
     @Override
-    public void delete (String commonName) {
-        String sql = "DELETE FROM food WHERE common_name=?";
+    public void delete (Integer foodId) {
+        String sql = "DELETE FROM food WHERE food_id=?";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, commonName);
+            ps.setInt(1, foodId);
             ps.executeUpdate();
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
@@ -135,9 +136,9 @@ public class FoodDAO implements FoodRepository {
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setString(2, type);
+            ps.setString(1, type);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     foods.add(new Food (
                             rs.getInt("food_id"),
                             rs.getString("common_name"),
@@ -167,11 +168,11 @@ public class FoodDAO implements FoodRepository {
     @Override
     public Food getFoodbyTreeId(int treeId) {
         Food food = null;
-        String sql = "SELECT * FROM food where common_name =(SELECT common_name FROM trees where id=?)";
+        String sql = "SELECT * FROM food where common_name =(SELECT food FROM trees where id=?)";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-
+            ps.setInt(1, treeId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     food = new Food (
@@ -199,17 +200,17 @@ public class FoodDAO implements FoodRepository {
 
     /**
      * Gets a single food model from the database by its common name
-     * @param commonName the commonName of the food model being retrieved
+     * @param foodId the commonName of the food model being retrieved
      * @return food model with common Name given, or null if fails
      */
     @Override
-    public Food getOne (String commonName) {
+    public Food getOne(Integer foodId) {
         Food food = null;
-        String sql = "SELECT * FROM food WHERE common_name=?";
+        String sql = "SELECT * FROM food WHERE food_id=?";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setString(1, commonName);
+            ps.setInt(1, foodId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     food = new Food (
@@ -243,5 +244,90 @@ public class FoodDAO implements FoodRepository {
     @Override
     public void update(Food toUpdate) {
         throw new NotImplementedException();
+    }
+
+
+
+    @Override
+    public Integer getFoodIdByFoodName(String foodName) {
+        String sql = """
+                SELECT food_id FROM food WHERE common_name=?
+                """;
+
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, foodName);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("food_id");
+                }
+            }
+        } catch (SQLException sqlException) {
+            LOG.error(sqlException);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean foodDetailsUpToDateAndExist(int foodId) {
+        String sql = """
+                SELECT 1
+                FROM food
+                WHERE food_id = ?
+                AND retrieval_time >= DATETIME('now', '-24 hours')
+                """;
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, foodId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            LOG.error(e);
+            return false;
+        }
+    }
+
+    @Override
+    public void replaceFood(Food food) {
+        String sql = """
+                UPDATE food
+                SET food_id = ?,
+                    common_name = ?,
+                    food_type = ?,
+                    calories = ?,
+                    carbohydrates = ?,
+                    protein = ?,
+                    fat = ?,
+                    serving_description = ?,
+                    serving_id = ?,
+                    retrieval_time = CURRENT_TIMESTAMP
+                WHERE food_id = ?;
+                """;
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, food.getId());
+            ps.setString(2, food.getName());
+            ps.setString(3, food.getType());
+            ps.setDouble(4, food.getCalories());
+            ps.setDouble(5, food.getCarbohydrates());
+            ps.setDouble(6, food.getProtein());
+            ps.setDouble(7, food.getFat());
+            ps.setString(8, food.getServingDescription());
+            ps.setInt(9, food.getServingId());
+            ps.setInt(10, food.getId());
+
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                add(food);
+            }
+        } catch (SQLException e) {
+            LOG.error(e);
+        }
     }
 }

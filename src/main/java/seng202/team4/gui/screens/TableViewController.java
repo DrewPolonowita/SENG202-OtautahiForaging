@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
+import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.services.treeData.TreeService;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class TableViewController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(TableViewController.class);
 
-    private final TreeService treeService;
+    private final TreeDataManager treeService;
 
     private boolean appleFiltered;
 

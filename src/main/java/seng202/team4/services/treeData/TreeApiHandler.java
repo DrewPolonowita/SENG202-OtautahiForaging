@@ -8,6 +8,7 @@ import seng202.team4.models.api.Request;
 import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.services.FoodService;
 import seng202.team4.services.api.TreeApiClient;
+import seng202.team4.services.api.TreeClientInterface;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -21,13 +22,13 @@ import java.util.Map;
  */
 public class TreeApiHandler {
     private static final Logger LOG = LogManager.getLogger(TreeApiHandler.class);
-    private final TreeApiClient treeApiHandler;
+    private final TreeClientInterface treeApiHandler;
     private final FoodService foodService;
 
     /**
      * Constructor for the TreeApiHandeler
      */
-    public TreeApiHandler(TreeApiClient treeApiClient, FoodService foodService) {
+    public TreeApiHandler(TreeClientInterface treeApiClient, FoodService foodService) {
         this.treeApiHandler = treeApiClient;
         this.foodService = foodService;
     }
@@ -114,7 +115,7 @@ public class TreeApiHandler {
                 queryString.append(" OR ");
             }
             queryString.append("CommonName='");
-            queryString.append(commonName.replace("'", "''"));
+            queryString.append(commonName);
             queryString.append("'");
         }
 

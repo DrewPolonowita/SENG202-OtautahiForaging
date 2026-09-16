@@ -1,12 +1,11 @@
 package seng202.team4.services;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Food;
+import seng202.team4.services.api.FoodClientInterface;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
-import seng202.team4.models.api.Food.FoodByID.Serving;
 import seng202.team4.repository.FoodRepository;
 
 import java.util.ArrayList;
@@ -22,17 +21,61 @@ public class FoodService {
     private static final Logger log = LogManager.getLogger(FoodService.class);
     private Map<String, List<String>> foodMap = new HashMap<>();
     private Map<String, List<String>> typeMap = new HashMap<>();
-    private final FoodRepository foodDAO;
+
+    private final FoodRepository foodDao;
+    private final FoodApiHandler foodApiHandler;
 
     /**
      * Constructor
      */
-    public FoodService(FoodRepository foodRepository) {
-        this.foodDAO = foodRepository;
+    public FoodService(FoodRepository foodDao, FoodClientInterface foodApiClient) {
+        this.foodDao = foodDao;
+        this.foodApiHandler = new FoodApiHandler(foodApiClient);
         createFoodMap();
         createTypeMap();
     }
 
+    /**
+     * Test constructor
+     */
+    public FoodService(FoodRepository foodDao) {
+        this.foodDao = foodDao;
+        this.foodApiHandler = null;
+        createFoodMap();
+        createTypeMap();
+    }
+
+    public List<Food> getFoods() {
+        List<Food> foods = new ArrayList<>();
+        for (String foodName : foodMap.keySet()) {
+            Integer foodId = foodDao.getFoodIdByFoodName(foodName);
+
+            boolean noIdExists = foodId == null;
+            if (noIdExists) {
+                foodId = foodApiHandler.getFoodBySearchFromApi(foodName);
+            }
+            Food food;
+            if (foodDao.foodDetailsUpToDateAndExist(foodId)) {
+                food = foodDao.getOne(foodId);
+            } else {
+                food = foodApiHandler.getFoodById(foodId, foodName, getFoodType(foodName));
+                foodDao.replaceFood(food);
+            }
+            foods.add(food);
+
+        }
+
+        return foods;
+    }
+
+    private String getFoodType(String foodName) {
+        for (Map.Entry<String, List<String>> entry : typeMap.entrySet()) {
+            if (entry.getValue().contains(foodName)) {
+                return entry.getKey();
+            }
+        }
+        return "N/A";
+    }
     /**
      * Creates the map of each type of food that can be found in the database
      * mapped to the common name of foods within that type.
@@ -197,7 +240,7 @@ public class FoodService {
      * @return all foods
      */
     public List<Food> getAllFood() {
-        List<Food> databaseFood = foodDAO.getAll();
+        List<Food> databaseFood = foodDao.getAll();
         if (!databaseFood.isEmpty()) {
             log.info("Loaded {} food from database", databaseFood.size());
             return databaseFood;
@@ -206,12 +249,12 @@ public class FoodService {
         log.info("Loaded {} foods from api", apiFood.size());
         for (Food food : apiFood) {
             try {
-                foodDAO.add(food);
+                foodDao.add(food);
             } catch (DuplicateEntryException e) {
                 log.warn("(All Food) Skip duplicate id: {}", food.getId());
             }
         }
-        databaseFood = foodDAO.getAll();
+        databaseFood = foodDao.getAll();
         return databaseFood;
     }
 
