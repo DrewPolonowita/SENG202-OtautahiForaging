@@ -4,15 +4,14 @@ package seng202.team4.unittests.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.helpers.TestRecipeData;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RecipeDAO;
-import seng202.team4.services.FoodService;
-import seng202.team4.services.RecipeService;
+import seng202.team4.services.dataCentre.foodData.FoodService;
+import seng202.team4.services.dataCentre.recipeData.RecipeService;
 
 
 import java.nio.file.Path;

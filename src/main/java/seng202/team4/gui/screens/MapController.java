@@ -10,20 +10,16 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.models.Fruit;
 import seng202.team4.services.MapService;
-import seng202.team4.models.Note;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
-import seng202.team4.services.treeData.TreeService;
-import seng202.team4.services.treeData.TreeDataManager;
+import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 import seng202.team4.models.TreeModel;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

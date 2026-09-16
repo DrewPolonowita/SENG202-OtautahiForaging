@@ -1,20 +1,8 @@
 package seng202.team4;
 
-import com.sun.source.tree.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.FXAppEntry;
-import seng202.team4.models.Region;
-import seng202.team4.models.TreeModel;
-import seng202.team4.repository.DatabaseManager;
-import seng202.team4.repository.RegionDAO;
-import seng202.team4.repository.RegionRepository;
-import seng202.team4.services.DoubleService;
-import seng202.team4.services.treeData.RegionService;
-import seng202.team4.services.treeData.TreeDataManager;
-import seng202.team4.services.treeData.TreeService;
-
-import java.util.List;
 
 /**
  * Default entry point class

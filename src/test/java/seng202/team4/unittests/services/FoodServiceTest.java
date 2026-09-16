@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.FoodDAO;
-import seng202.team4.services.FoodService;
+import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import java.nio.file.Path;
 

@@ -1,4 +1,4 @@
-package seng202.team4.services.treeData;
+package seng202.team4.services.dataCentre.treeData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,7 +6,8 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.models.api.TreeApi.TreeRecord;
-import seng202.team4.services.FoodService;
+import seng202.team4.services.FoodMapper;
+import seng202.team4.services.dataCentre.foodData.FoodService;
 import seng202.team4.services.api.TreeClientInterface;
 
 import java.net.HttpURLConnection;
@@ -22,14 +23,14 @@ import java.util.Map;
 public class TreeApiHandler {
     private static final Logger LOG = LogManager.getLogger(TreeApiHandler.class);
     private final TreeClientInterface treeApiHandler;
-    private final FoodService foodService;
+    private final FoodMapper foodMapper;
 
     /**
      * Constructor for the TreeApiHandler
      */
-    public TreeApiHandler(TreeClientInterface treeApiClient, FoodService foodService) {
+    public TreeApiHandler(TreeClientInterface treeApiClient, FoodMapper foodMapper) {
         this.treeApiHandler = treeApiClient;
-        this.foodService = foodService;
+        this.foodMapper = foodMapper;
     }
 
     /**
@@ -60,7 +61,7 @@ public class TreeApiHandler {
      */
     private String getFoodType(String commonName) {
 
-        Map<String, List<String>> foodMap = foodService.getFoodMap();
+        Map<String, List<String>> foodMap = foodMapper.getFoodMap();
 
 
         for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
@@ -100,7 +101,7 @@ public class TreeApiHandler {
      * @return the api query string for use by API Handler
      */
     private String createApiTypeQuery(String food) {
-        Map<String, List<String>> foodMap = foodService.getFoodMap();
+        Map<String, List<String>> foodMap = foodMapper.getFoodMap();
         List<String> commonNames;
         if (foodMap.get(food) == null) {
             commonNames = List.of();

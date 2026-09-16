@@ -2,7 +2,7 @@ package seng202.team4.services;
 
 import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
-import seng202.team4.services.treeData.TreeDataManager;
+import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
 import java.util.ArrayList;
 import java.util.List;

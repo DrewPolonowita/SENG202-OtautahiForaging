@@ -1,4 +1,4 @@
-package seng202.team4.services;
+package seng202.team4.services.dataCentre.recipeData;
 
 
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ import java.util.List;
  * Service class to handle business logic managing recipes
  * @author Team 4
  */
-public class RecipeService {
+public class RecipeService implements RecipeDataManager {
     private static final Logger log = LogManager.getLogger(RecipeService.class);
     private final RecipeRepository recipeDAO;
     private final RecipeApiHandler recipeApiHandler;
@@ -45,6 +45,7 @@ public class RecipeService {
      * @param food A food specifically from the food groups we map
      * @return list of recipes
      */
+    @Override
     public List<Recipe> getRecipesForFood(String food) {
         List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
         List<Recipe> recipes = new ArrayList<>();
@@ -131,7 +132,7 @@ public class RecipeService {
     }
 
 
-    private List<String> getIngredientString(List<RecipeIngredient> ingredients) {
+    public List<String> getIngredientString(List<RecipeIngredient> ingredients) {
         List<String> ingredientStrings = new ArrayList<>();
         for (RecipeIngredient ingredient : ingredients) {
             ingredientStrings.add(ingredient.ingredientDescription());

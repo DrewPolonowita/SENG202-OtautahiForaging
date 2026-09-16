@@ -1,11 +1,12 @@
-package seng202.team4.services.treeData;
+package seng202.team4.services.dataCentre.treeData;
 
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
-import seng202.team4.services.FoodService;
+import seng202.team4.services.FoodMapper;
+import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
@@ -28,9 +29,9 @@ public class TreeService implements TreeDataManager {
     /**
      * Creates a new instance and initializes private variables
      */
-    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService, FoodService foodService) {
+    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService, FoodMapper foodMapper) {
         TreeClientInterface treeApiClient = new TreeApiClient(apiClient);
-        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodMapper);
         this.treeRepository = treeRepository;
         this.regionService = regionService;
     }
@@ -42,9 +43,9 @@ public class TreeService implements TreeDataManager {
             TreeRepository treeRepository,
             TreeClientInterface treeApiClient,
             RegionService regionService,
-            FoodService foodService
+            FoodMapper foodMapper
     ) {
-        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodMapper);
         this.treeRepository = treeRepository;
         this.regionService = regionService;
     }

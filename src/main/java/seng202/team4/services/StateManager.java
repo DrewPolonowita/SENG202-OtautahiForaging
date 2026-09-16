@@ -6,9 +6,12 @@ import seng202.team4.services.api.ApiClient;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.FoodApiClient;
 import seng202.team4.services.api.RecipeApiClient;
-import seng202.team4.services.treeData.RegionService;
-import seng202.team4.services.treeData.TreeDataManager;
-import seng202.team4.services.treeData.TreeService;
+import seng202.team4.services.dataCentre.foodData.FoodService;
+import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
+import seng202.team4.services.dataCentre.recipeData.RecipeService;
+import seng202.team4.services.dataCentre.treeData.RegionService;
+import seng202.team4.services.dataCentre.treeData.TreeDataManager;
+import seng202.team4.services.dataCentre.treeData.TreeService;
 
 
 /**
@@ -26,7 +29,8 @@ public class StateManager {
     private final NoteRepository noteRepository;
     private final NoteService noteService;
     private final FoodService foodService;
-    private final RecipeService recipeService;
+    private final RecipeDataManager recipeService;
+    private final FoodMapper foodMapper;
 
 
     /**
@@ -39,10 +43,10 @@ public class StateManager {
         this.windowManager = windowManager;
         this.databaseManager = new DatabaseManager(null);
         this.apiClient = new ApiClient();
-
-        this.foodService = new FoodService(new FoodDAO(databaseManager), new FoodApiClient(apiClient));
-        this.treeRepository = new TreeDAO(databaseManager, foodService);
-        this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)), foodService);
+        this.foodMapper = new FoodMapper();
+        this.foodService = new FoodService(new FoodDAO(databaseManager), new FoodApiClient(apiClient), foodMapper);
+        this.treeRepository = new TreeDAO(databaseManager);
+        this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)), foodMapper);
         this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeApiClient(apiClient));
 
         this.noteRepository = new NoteDAO(databaseManager);
@@ -68,7 +72,7 @@ public class StateManager {
         return foodService;
     }
 
-    public RecipeService getRecipeService() { return recipeService; }
+    public RecipeDataManager getRecipeService() { return recipeService; }
 
     public NoteService getNoteService() {
         return noteService;
