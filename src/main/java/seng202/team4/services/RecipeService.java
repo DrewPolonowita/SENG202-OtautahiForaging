@@ -54,14 +54,7 @@ public class RecipeService {
             recipeIds = recipeApiHandler.getRecipeIdsByFoodFromApi(food);
         }
         for (int id : recipeIds) {
-            Recipe recipe;
-            if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
-                recipe = recipeDAO.getOne(id);
-
-            } else {
-                recipe = recipeApiHandler.getRecipeById(id);
-                recipeDAO.replaceRecipe(recipe);
-            }
+            Recipe recipe = getRecipeById(id);
 
             if (noIdsExist) {
                 recipeDAO.addRecipeUseFood(food, id);
@@ -71,6 +64,30 @@ public class RecipeService {
         }
         return recipes;
     }
+
+    /**
+     * Get a specific recipe by id, either from the database if we have up to date cached data within 24hrs
+     * or from the api if not.
+     * @param id id of the recipe we are looking for
+     * @return Recipe we get from the database or api
+     */
+    private Recipe getRecipeById(int id) {
+        if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
+            return recipeDAO.getOne(id);
+
+        } else {
+            RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
+            if (recipeRecord == null) {
+                return null;
+            }
+            Recipe recipe = createRecipeObjectById(recipeRecord);
+            recipeDAO.replaceRecipe(recipe);
+            populateIngredientTable(recipeRecord.ingredients());
+            populateIngredientInRecipeTable(recipeRecord.ingredients(), recipe);
+            return recipe;
+        }
+    }
+
 
     /**
      * Creates a recipe using a RecipeByIdRecord
