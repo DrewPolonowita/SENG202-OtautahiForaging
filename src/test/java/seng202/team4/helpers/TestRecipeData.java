@@ -37,7 +37,6 @@ public class TestRecipeData {
         );
     }
 
-
     public static List<RecipeIngredient> createFakeRecipeIngredient() {
         List<RecipeIngredient> testIngredients = new ArrayList<>();
         testIngredients.add(new RecipeIngredient(123,"TestIngredient", 1234, 100, "g", "Description"));
