@@ -12,9 +12,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
+import seng202.team4.models.Fruit;
+import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
-import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.services.treeData.TreeService;
 import seng202.team4.models.TreeModel;
 
@@ -27,8 +28,12 @@ import java.util.List;
 public class MapController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(MapController.class);
+    private final MapService mapService;
 
-    private final TreeDataManager treeService; // TODO: used once tree-click lookup is implemented
+    private double northBound;
+    private double eastBound;
+    private double southBound;
+    private double westBound;
 
     @FXML
     private WebView webView;
@@ -61,12 +66,12 @@ public class MapController extends ScreenController {
      */
     public MapController(StateManager stateManager, ThemeService themeService) {
         super(stateManager);
-        treeService = new TreeService();
+        this.mapService = new MapService(new TreeService());
         this.themeService = themeService;
     }
 
     /**
-     * Initialises the bridge and loads the map once FXML is loaded
+     * Initializes the bridge and loads the map once FXML is loaded
      */
     @FXML
     private void initialize() {
@@ -75,6 +80,8 @@ public class MapController extends ScreenController {
                 tree -> { }, id -> false, this::mapMoved
         ); // TODO: replace with real handleTreeClicked + add-tree flow
         initMap();
+        toggleAllFilterButtons();
+
     }
 
     /**
@@ -94,9 +101,7 @@ public class MapController extends ScreenController {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
-
                         javaScriptConnector.call("initMap");
-                        showTreeDescription();
                     }
                 });
     }
@@ -124,90 +129,143 @@ public class MapController extends ScreenController {
         }
     }
 
-    /**
-     * Formatting the string popup for tree data points on Leaflet
-     * Each tree added as a marker will have a popup description
-     * Potential space for development: addition of "add to Journal" button
-     * on the popup.
-     */
-    private void showTreeDescription() {
-//        for (TreeModel tree : treeService.getAllTrees()) {
-//            String popup = String.format(
-//                    "<b>Common Name: </b>%s<br>"
-//                            + "<b>Ownership: </b>%s<br>"
-//                            + "<b>Genus: </b>%s<br>"
-//                            + "<b>Tree ID:</b> %d", tree.getCommonName(),
-//                    tree.getOwnership(), tree.getGenus(), tree.getId()
-//            );
-//            javaScriptConnector.call("addMarker", tree.getId(), popup,
-//                    tree.getYCoord(), tree.getXCoord());
-//        }
+    private void setCurrentBounds(double north, double east, double south, double west) {
+        this.northBound = north;
+        this.eastBound = east;
+        this.southBound = south;
+        this.westBound = west;
     }
 
+    /**
+     * Triggered when the map is moved by the user and queries a region of trees in an area of 2x the screen
+     * width and height centered on the screen. Also removes previous tree markers and adds the new ones.
+     *
+     * @param north the north-bound
+     * @param east the east-bound
+     * @param south the south-bound
+     * @param west the west-bound
+     */
     private void mapMoved(double north, double east, double south, double west) {
         double height = Math.abs(north - south);
         double width = Math.abs(east - west);
 
+        setCurrentBounds(north, east, south, west);
+
         List<TreeModel> trees =
-                treeService.getTreesByRegion(
-                        "Apple", north + height / 2,
+                mapService.getAllTreesInRegion(
+                        north + height / 2,
                         east + width / 2,
                         south - height / 2,
                         west - width / 2
                 );
 
-        javaScriptConnector.call("removeMarkers");
-
+        removeTreeMarkers();
         for (TreeModel tree : trees) {
-            String popup = String.format(
-                    "<b>Common Name: </b>%s<br>"
-                            + "<b>Ownership: </b>%s<br>"
-                            + "<b>Genus: </b>%s<br>"
-                            + "<b>Tree ID:</b> %d",
-                    tree.getCommonName(),
-                    tree.getOwnership(),
-                    tree.getGenus(),
-                    tree.getId()
-            );
-
-            javaScriptConnector.call(
-                    "addMarker",
-                    tree.getId(),
-                    popup,
-                    tree.getYCoord(),
-                    tree.getXCoord()
-            );
+            addTreeMarker(tree);
         }
     }
 
-    public void filterButtonClicked(Button buttons) {
+    /**
+     * Creates a marker for a given tree and then adds it the list of javascript markers to add to the map
+     *
+     * @param tree the tree to be added to the map
+     */
+    private void addTreeMarker(TreeModel tree) {
+        String popup = String.format(
+                "<b>Common Name: </b>%s<br>"
+                        + "<b>Ownership: </b>%s<br>"
+                        + "<b>Genus: </b>%s<br>"
+                        + "<b>Tree ID:</b> %d",
+                tree.getCommonName(),
+                tree.getOwnership(),
+                tree.getGenus(),
+                tree.getId()
+        );
+
+        javaScriptConnector.call(
+                "addMarker",
+                tree.getId(),
+                popup,
+                tree.getYCoord(),
+                tree.getXCoord()
+        );
+    }
+
+    /**
+     * Removes all the tree markers on the screen
+     */
+    private void removeTreeMarkers() {
+        javaScriptConnector.call("removeMarkers");
+    }
+
+    public void filterButtonClicked(Button buttons, Fruit fruit) {
         if (buttons.getStyleClass().contains("sideBar-button-selected")) {
             buttons.getStyleClass().remove("sideBar-button-selected");
             buttons.getGraphic().getStyleClass().remove("icon-selected");
+
+            mapService.removeSelectedFruit(fruit);
         } else {
             buttons.getStyleClass().add("sideBar-button-selected");
             buttons.getGraphic().getStyleClass().add("icon-selected");
+
+            mapService.addSelectedFruit(fruit);
         }
     }
+
+    /**
+     * Toggles the apple filter button
+     */
     @FXML
     public void appleButtonClicked() {
-        filterButtonClicked(appleButton);
+        filterButtonClicked(appleButton, Fruit.APPLE);
+        mapMoved(northBound, eastBound, southBound, westBound);
     }
+
+    /**
+     * Toggles the pear filter button
+     */
     @FXML
     public void pearButtonClicked() {
-        filterButtonClicked(pearButton);
+        filterButtonClicked(pearButton, Fruit.PEAR);
+        mapMoved(northBound, eastBound, southBound, westBound);
     }
+
+    /**
+     * Toggles the cherry filter button
+     */
     @FXML
     public void cherryButtonClicked() {
-        filterButtonClicked(cherryButton);
+        filterButtonClicked(cherryButton, Fruit.CHERRY);
+        mapMoved(northBound, eastBound, southBound, westBound);
     }
+
+    /**
+     * Toggles the peach filter button
+     */
     @FXML
     public void peachButtonClicked() {
-        filterButtonClicked(peachButton);
+        filterButtonClicked(peachButton, Fruit.PEACH);
+        mapMoved(northBound, eastBound, southBound, westBound);
     }
+
+    /**
+     * Toggles the apricot filter button
+     */
     @FXML
     public void apricotButtonClicked() {
-        filterButtonClicked(apricotButton);
+        filterButtonClicked(apricotButton, Fruit.APRICOT);
+        mapMoved(northBound, eastBound, southBound, westBound);
+    }
+
+    /**
+     * Toggles all the fruits to be included in the map by default
+     */
+    public void toggleAllFilterButtons() {
+        filterButtonClicked(appleButton, Fruit.APPLE);
+        filterButtonClicked(pearButton, Fruit.PEAR);
+        filterButtonClicked(cherryButton, Fruit.CHERRY);
+        filterButtonClicked(peachButton, Fruit.PEACH);
+        filterButtonClicked(apricotButton, Fruit.APRICOT);
     }
 
 }

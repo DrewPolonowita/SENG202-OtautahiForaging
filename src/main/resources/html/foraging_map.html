@@ -43,16 +43,22 @@
          * for query purposes
          */
         map.on('moveend', function () {
-            const bounds = map.getBounds();
-
-            const north = bounds.getNorth();
-            const east = bounds.getEast();
-            const south = bounds.getSouth();
-            const west = bounds.getWest();
-
-            javaScriptBridge.mapMoved(north, east, south, west);
+            createMapMarkers();
         });
 
+        createMapMarkers();
+
+    }
+
+    const createMapMarkers = () => {
+        const bounds = map.getBounds();
+
+        const north = bounds.getNorth();
+        const east = bounds.getEast();
+        const south = bounds.getSouth();
+        const west = bounds.getWest();
+
+        javaScriptBridge.mapMoved(north, east, south, west);
     }
 
 
