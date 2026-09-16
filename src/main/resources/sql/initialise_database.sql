@@ -82,9 +82,11 @@ CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
 DROP TABLE IF EXISTS note;
 --SPLIT
 CREATE TABLE IF NOT EXISTS note (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_created DATETIME NOT NULL,
     name TEXT NOT NULL,
+    description TEXT,
+    image_path TEXT,
     tree_id INTEGER,
     recipe_id INTEGER,
     FOREIGN KEY (tree_id) REFERENCES trees(id),

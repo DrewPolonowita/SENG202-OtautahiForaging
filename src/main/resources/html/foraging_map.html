@@ -6,6 +6,63 @@
     <link rel="stylesheet" href="../css/map.css" />
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <style>
+        .tree-popup .leaflet-popup-content-wrapper {
+            padding: 0;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .tree-popup .leaflet-popup-content {
+            margin: 0;
+            width: 150px !important;
+        }
+        .tree-popup .leaflet-popup-close-button {
+            color: white !important;
+        }
+        .tree-popup .leaflet-popup-close-button:hover {
+            color: #cccccc !important;
+        }
+        .tree-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            color: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .tree-card-image {
+            height: 90px;
+            background: linear-gradient(135deg, #4a7c59, #2d5a3d);
+            background-size: cover;
+            background-position: center;
+        }
+        .tree-card-body {
+            background: #1a2e21;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .journal-btn {
+            background: #3f6b4a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .journal-btn:hover {
+            background: #4a7c59;
+        }
+        .journal-btn:active {
+            background: #345940;
+        }
+    </style>
 </head>
 <body>
 <div id="map"></div>
@@ -36,8 +93,7 @@
         map = new L.map('map', mapOptions);
         new L.TileLayer('https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png', { // UCs tilemap server
             attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
-        }).addTo(map);
-
+        }).addTo(map)
         /**
          * Signals the JavaScriptBridge when the map is finished moving and updates the coordinates
          * for query purposes
@@ -69,22 +125,9 @@
      * @param lng longitude to place marker at
      */
     function addMarker(id, title, lat, lng) {
+        let m = new L.Marker([lat, lng]);
+        m.bindPopup(title, { className: 'tree-popup', closeButton: true });
 
-        let icon = new L.Icon({
-            iconUrl: "../images/treePinBrown.png",
-            iconSize: [40, 40],
-            iconAnchor: [20, 40],
-            popupAnchor: [1, -34],
-            tooltipAnchor: [16, -28],
-            shadowSize: [0, 0]
-        });
-
-        let m = new L.Marker([lat, lng], {icon: icon});
-
-        //let m = new L.Marker([lat, lng]);
-        m.bindPopup(title).openPopup();
-        // Add marker to map, and specify our own on click function which passes the id of the sale back to java,
-        // so we can reference it
         m.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
         markers.push(m);
     }

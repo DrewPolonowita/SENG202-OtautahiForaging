@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox styleClass="note-card" spacing="16" alignment="CENTER" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.AddNoteController">
+    <HBox alignment="CENTER_LEFT">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="icon-button close-button" onAction="#handleClose"/>
+    </HBox>
+
+    <VBox spacing="6" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+        <Label text="COMMON NAME" styleClass="note-card-title"/>
+        <TextField fx:id="commonNameField" styleClass="text-field" editable="false"/>
+    </VBox>
+
+    <VBox spacing="6" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+        <Label text="FIELD NOTES" styleClass="note-card-title" />
+        <TextArea fx:id="fieldNotesArea" styleClass="text-area" promptText="Describe the tree you saw..."/>
+    </VBox>
+
+    <VBox spacing="6" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+        <Label text="PHOTOGRAPH" styleClass="note-card-title"/>
+        <VBox fx:id="uploadZone" styleClass="upload-zone" alignment="CENTER" spacing="8" onMouseClicked="#handleSelectedPhoto">
+            <Label fx:id="uploadHint" text="Upload a photo" styleClass="text-area"/>
+        </VBox>
+    </VBox>
+
+    <Button text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity">
+        <padding>
+            <Insets top="0" right="10" bottom="0" left="10"/>
+        </padding>
+    </Button>
+</VBox>
