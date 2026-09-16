@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class MapService {
 
-    private TreeDataManager treeDataManager;
-    private ArrayList<Fruit> selectedFruits;
+    private final TreeDataManager treeDataManager;
+    private final ArrayList<Fruit> selectedFruits;
 
     /**
      * Creates a new instance of a MapService
@@ -62,8 +62,6 @@ public class MapService {
         }
 
         selectedFruits.add(fruit);
-
-        System.out.println(selectedFruits);
     }
 
     /**
@@ -81,7 +79,5 @@ public class MapService {
         }
 
         selectedFruits.remove(fruit);
-
-        System.out.println(selectedFruits);
     }
 }

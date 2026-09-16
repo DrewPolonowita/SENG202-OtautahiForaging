@@ -30,6 +30,8 @@ public class MapController extends ScreenController {
     private static final Logger LOG = LogManager.getLogger(MapController.class);
     private final MapService mapService;
 
+    private static final double MAX_HEIGHT_FOR_DISPLAYING = 0.05;
+
     private double northBound;
     private double eastBound;
     private double southBound;
@@ -148,6 +150,11 @@ public class MapController extends ScreenController {
     private void mapMoved(double north, double east, double south, double west) {
         double height = Math.abs(north - south);
         double width = Math.abs(east - west);
+
+        if (height > MAX_HEIGHT_FOR_DISPLAYING) {
+            removeTreeMarkers();
+            return;
+        }
 
         setCurrentBounds(north, east, south, west);
 

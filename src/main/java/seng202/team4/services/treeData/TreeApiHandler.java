@@ -127,7 +127,7 @@ public class TreeApiHandler {
                 "CommonName='%s'", type
                 ),
                 "TreeID,Ownership,Genus,CommonName",
-                100,
+                1000,
                 north,
                 east,
                 south,

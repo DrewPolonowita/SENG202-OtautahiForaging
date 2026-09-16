@@ -12,6 +12,7 @@ import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.TreeApiClient;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,36 +55,76 @@ public class TreeService implements TreeDataManager {
      */
     public List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west) {
         ArrayList<TreeModel> trees = new ArrayList<>();
+        List<Region> regions = regionService.getOverlappingRegions(type, north, east, south, west);
 
-        for (Region region: regionService.getOverlappingRegions(type, north, east, south, west)) {
-            if (region.getLastUpdated() != null) {
-                List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
-                for (TreeModel tree: databaseTrees) {
-                    if (!trees.contains(tree)) {
-                        trees.add(tree);
-                    }
-                }
-            } else {
-                List<TreeModel> apiTrees = treeApiHandler.getTreesByRegion(
-                        type, region.getNorthBound(),
-                        region.getEastBound(),
-                        region.getSouthBound(),
-                        region.getWestBound()
-                );
+//        for (Region region: regions) {
+//            if (region.getLastUpdated() != null) {
+//                List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
+//                for (TreeModel tree: databaseTrees) {
+//                    if (!trees.contains(tree)) {
+//                        trees.add(tree);
+//                    }
+//                }
+//            } else {
+//                List<TreeModel> apiTrees = treeApiHandler.getTreesByRegion(
+//                        type, region.getNorthBound(),
+//                        region.getEastBound(),
+//                        region.getSouthBound(),
+//                        region.getWestBound()
+//                );
+//
+//                for (TreeModel tree: trees) {
+//                    try {
+//                        treeRepository.add(tree);
+//                    } catch (DuplicateEntryException e) {
+//                        treeRepository.update(tree);
+//                    }
+//                }
+//
+//                for (TreeModel tree: apiTrees) {
+//                    if (!trees.contains(tree)) {
+//                        trees.add(tree);
+//                    }
+//                }
+//            }
+//        }
 
-                for (TreeModel tree: trees) {
-                    try {
-                        treeRepository.add(tree);
-                    } catch (DuplicateEntryException e) {
-                        treeRepository.update(tree);
-                    }
-                }
+        Region notRecentRegion = regionService.getQueryRegion(regions);
+        if (notRecentRegion != null) {
+            List<Region> insideRegions = regionService.getRegionsInside(notRecentRegion, regions);
 
-                for (TreeModel tree: apiTrees) {
-                    if (!trees.contains(tree)) {
-                        trees.add(tree);
-                    }
+            for (Region region: insideRegions) {
+                region.setLastUpdated(LocalDateTime.now());
+            }
+
+            List<TreeModel> apiTrees = treeApiHandler.getTreesByRegion(
+                    type,
+                    notRecentRegion.getNorthBound(),
+                    notRecentRegion.getEastBound(),
+                    notRecentRegion.getSouthBound(),
+                    notRecentRegion.getWestBound()
+            );
+
+            for (TreeModel tree: apiTrees) {
+                if (!trees.contains(tree)) {
+                    trees.add(tree);
                 }
+            }
+
+            for (TreeModel tree: trees) {
+                try {
+                    treeRepository.add(tree);
+                } catch (DuplicateEntryException e) {
+                    treeRepository.update(tree);
+                }
+            }
+        }
+
+        List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
+
+        for (TreeModel tree: databaseTrees) {
+            if (!trees.contains(tree)) {
+                trees.add(tree);
             }
         }
 

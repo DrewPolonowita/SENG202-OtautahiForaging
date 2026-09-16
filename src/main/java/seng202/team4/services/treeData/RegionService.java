@@ -75,6 +75,66 @@ public class RegionService {
         return regionsList;
     }
 
+    public Region getQueryRegion(List<Region> regions) {
+        ArrayList<Region> notUpToDateRegions = new ArrayList<>();
+
+        for (Region region: regions) {
+            if (!isRegionRecent(region)) {
+                notUpToDateRegions.add(region);
+            }
+        }
+
+        if (notUpToDateRegions.isEmpty()) {
+            return null;
+        }
+
+        double maxLat = notUpToDateRegions.getFirst().getNorthBound();
+        double maxLon = notUpToDateRegions.getFirst().getEastBound();
+        double minLat = notUpToDateRegions.getFirst().getSouthBound();
+        double minLon = notUpToDateRegions.getFirst().getWestBound();
+
+        for (Region region: notUpToDateRegions) {
+            if (region.getNorthBound() > maxLat) {
+                maxLat = region.getNorthBound();
+            }
+
+            if (region.getEastBound() > maxLon) {
+                maxLon = region.getEastBound();
+            }
+
+            if (region.getSouthBound() < minLat) {
+                minLat = region.getSouthBound();
+            }
+
+            if (region.getWestBound() < minLon) {
+                minLon = region.getWestBound();
+            }
+        }
+
+        return new Region(null, maxLat, maxLon, minLat, minLon);
+    }
+
+    public List<Region> getRegionsInside(Region masterRegion, List<Region> regions) {
+        ArrayList<Region> outsideRegions = new ArrayList<>();
+        ArrayList<Region> insideRegions = new ArrayList<>();
+
+        for (Region region: regions) {
+            if (region.getNorthBound() <= masterRegion.getSouthBound() - REGION_SIZE/2) {
+                outsideRegions.add(region);
+            } else if (region.getEastBound() <= masterRegion.getWestBound() - REGION_SIZE/2) {
+                outsideRegions.add(region);
+            } else if (region.getSouthBound() >= masterRegion.getNorthBound() + REGION_SIZE/2) {
+                outsideRegions.add(region);
+            } else if (region.getWestBound() >= masterRegion.getEastBound() + REGION_SIZE/2) {
+                outsideRegions.add(region);
+            } else {
+                insideRegions.add(region);
+            }
+        }
+
+        return insideRegions;
+    }
+
     /**
      * Returns true if the region was updated within the last x weeks. Where x is defined by the
      * BUFFER_IN_WEEKS static constant class attribute. Returns false if the region is null or if the
