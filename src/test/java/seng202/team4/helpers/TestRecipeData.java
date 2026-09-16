@@ -2,10 +2,7 @@ package seng202.team4.helpers;
 
 
 import seng202.team4.models.Recipe;
-import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
-import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
-import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
-import seng202.team4.models.api.Recipe.RecipeByID.RecipeServingSizes;
+import seng202.team4.models.api.Recipe.RecipeByID.*;
 import seng202.team4.models.api.Recipe.RecipeNutrition;
 
 
@@ -19,10 +16,14 @@ public class TestRecipeData {
     public static RecipeByIdRecord createFakeRecipeByIdRecord() {
         RecipeNutrition nutrition = new RecipeNutrition(123, 345,567,789);
         RecipeServingSizes servingSizes = new RecipeServingSizes(nutrition);
-        List<RecipeDirection> directions = List.of(
+        RecipeDirections directions = new RecipeDirections(List.of(
                 new RecipeDirection(1, "Direction step 1"),
-                new RecipeDirection(2, "Direction step 2"));
-        List<RecipeIngredient> ingredients = List.of(new RecipeIngredient(123, "Apple", 1234, 1, "", "1 Apple"));
+                new RecipeDirection(2, "Direction step 2")));
+        RecipeIngredients ingredients = new RecipeIngredients(
+                List.of(new RecipeIngredient(123, "Apple", 1234, 1, "", "1 Apple")));
+        RecipeImages images = new RecipeImages(
+                List.of("Image URL")
+        );
         return new RecipeByIdRecord(
                 123,
                 "Recipe Name",
@@ -32,10 +33,8 @@ public class TestRecipeData {
                 ingredients,
                 10,
                 10,
-                "Image URL"
+                images
         );
-
-
     }
 
 
