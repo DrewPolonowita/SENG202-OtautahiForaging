@@ -14,8 +14,11 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
+import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.services.treeData.TreeService;
 import seng202.team4.models.TreeModel;
+
+import java.util.List;
 
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -25,7 +28,7 @@ public class MapController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(MapController.class);
 
-    private final TreeService treeService; // TODO: used once tree-click lookup is implemented
+    private final TreeDataManager treeService; // TODO: used once tree-click lookup is implemented
 
     @FXML
     private WebView webView;
@@ -58,7 +61,7 @@ public class MapController extends ScreenController {
      */
     public MapController(StateManager stateManager, ThemeService themeService) {
         super(stateManager);
-        treeService = stateManager.getTreeService();
+        treeService = new TreeService();
         this.themeService = themeService;
     }
 
@@ -68,7 +71,9 @@ public class MapController extends ScreenController {
     @FXML
     private void initialize() {
         LOG.info("MapController initialize() called");
-        javaScriptBridge = new JavaScriptBridge(tree -> { }, id -> false); // TODO: replace with real handleTreeClicked + add-tree flow
+        javaScriptBridge = new JavaScriptBridge(
+                tree -> { }, id -> false, this::mapMoved
+        ); // TODO: replace with real handleTreeClicked + add-tree flow
         initMap();
     }
 
@@ -126,16 +131,52 @@ public class MapController extends ScreenController {
      * on the popup.
      */
     private void showTreeDescription() {
-        for (TreeModel tree : treeService.getAllTrees()) {
+//        for (TreeModel tree : treeService.getAllTrees()) {
+//            String popup = String.format(
+//                    "<b>Common Name: </b>%s<br>"
+//                            + "<b>Ownership: </b>%s<br>"
+//                            + "<b>Genus: </b>%s<br>"
+//                            + "<b>Tree ID:</b> %d", tree.getCommonName(),
+//                    tree.getOwnership(), tree.getGenus(), tree.getId()
+//            );
+//            javaScriptConnector.call("addMarker", tree.getId(), popup,
+//                    tree.getYCoord(), tree.getXCoord());
+//        }
+    }
+
+    private void mapMoved(double north, double east, double south, double west) {
+        double height = Math.abs(north - south);
+        double width = Math.abs(east - west);
+
+        List<TreeModel> trees =
+                treeService.getTreesByRegion(
+                        "Apple", north + height / 2,
+                        east + width / 2,
+                        south - height / 2,
+                        west - width / 2
+                );
+
+        javaScriptConnector.call("removeMarkers");
+
+        for (TreeModel tree : trees) {
             String popup = String.format(
                     "<b>Common Name: </b>%s<br>"
                             + "<b>Ownership: </b>%s<br>"
                             + "<b>Genus: </b>%s<br>"
-                            + "<b>Tree ID:</b> %d", tree.getCommonName(),
-                    tree.getOwnership(), tree.getGenus(), tree.getId()
+                            + "<b>Tree ID:</b> %d",
+                    tree.getCommonName(),
+                    tree.getOwnership(),
+                    tree.getGenus(),
+                    tree.getId()
             );
-            javaScriptConnector.call("addMarker", tree.getId(), popup,
-                    tree.getYCoord(), tree.getXCoord());
+
+            javaScriptConnector.call(
+                    "addMarker",
+                    tree.getId(),
+                    popup,
+                    tree.getYCoord(),
+                    tree.getXCoord()
+            );
         }
     }
 

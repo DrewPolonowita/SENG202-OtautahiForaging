@@ -20,7 +20,7 @@ public class JavaScriptBridgeTest {
             return true;
         };
         AddTreeInterface addCallback = tree -> {};
-        JavaScriptBridge testBridge = new JavaScriptBridge(addCallback,clickedCallback);
+        JavaScriptBridge testBridge = new JavaScriptBridge(addCallback, clickedCallback, null);
         testBridge.getTreeFromClick(testid);
         assertEquals(testid, receivedID.get());
     }

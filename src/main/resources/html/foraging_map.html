@@ -38,6 +38,21 @@
             attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
         }).addTo(map);
 
+        /**
+         * Signals the JavaScriptBridge when the map is finished moving and updates the coordinates
+         * for query purposes
+         */
+        map.on('moveend', function () {
+            const bounds = map.getBounds();
+
+            const north = bounds.getNorth();
+            const east = bounds.getEast();
+            const south = bounds.getSouth();
+            const west = bounds.getWest();
+
+            javaScriptBridge.mapMoved(north, east, south, west);
+        });
+
     }
 
 
