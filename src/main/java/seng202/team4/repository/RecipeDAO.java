@@ -296,7 +296,7 @@ public class RecipeDAO implements RecipeRepository {
             ps.setInt(1, toAdd.ingredientId());
             ps.setInt(2, toAdd.servingId());
             ps.setString(3, toAdd.ingredientName());
-            ps.setInt(4, toAdd.ingredientUnitNumber());
+            ps.setDouble(4, toAdd.ingredientUnitNumber());
             ps.setString(5, toAdd.ingredientMeasurementDescription());
             ps.setString(6, toAdd.ingredientDescription());
 

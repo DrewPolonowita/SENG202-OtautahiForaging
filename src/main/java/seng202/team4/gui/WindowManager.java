@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.screens.*;
 import seng202.team4.models.Note;
+import seng202.team4.models.Recipe;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
@@ -130,8 +131,8 @@ public class WindowManager {
      *
      * @param stateManager the state manager for the application
      */
-    public void launchRecipesScreenHighlight(StateManager stateManager, String recipeName) {
-        ScreenController controller = new RecipeHighlightController(stateManager, recipeName);
+    public void launchRecipesScreenHighlight(StateManager stateManager, Recipe recipe) {
+        ScreenController controller = new RecipeHighlightController(stateManager, recipe);
         launchScreen(controller, rootPane);
     }
 

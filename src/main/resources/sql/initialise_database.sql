@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS ingredient (
     ingredient_id int NOT NULL,
     serving_id int NOT NULL,
     ingredient_name TEXT NOT NULL,
-    ingredient_unit_number int NOT NULL,
+    ingredient_unit_number DOUBLE NOT NULL,
     ingredient_measurement_description TEXT NOT NULL,
     ingredient_description TEXT NOT NULL,
     PRIMARY KEY (serving_id, ingredient_id)

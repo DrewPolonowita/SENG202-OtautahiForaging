@@ -17,7 +17,11 @@ public class MapService {
 
     private final TreeDataManager treeDataManager;
     private final ArrayList<Fruit> selectedFruits;
-    private final ExecutorService executor = Executors.newFixedThreadPool(8);
+    private final ExecutorService executor = Executors.newFixedThreadPool(8, runnable -> {
+        Thread thread = new Thread(runnable, "map-service-worker");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     /**
      * Creates a new instance of a MapService

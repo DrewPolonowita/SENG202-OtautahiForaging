@@ -83,8 +83,8 @@ public class RecipeService implements RecipeDataManager {
             }
             Recipe recipe = createRecipeObjectById(recipeRecord);
             recipeDAO.replaceRecipe(recipe);
-            populateIngredientTable(recipeRecord.ingredients());
-            populateIngredientInRecipeTable(recipeRecord.ingredients(), recipe);
+            populateIngredientTable(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient());
+            populateIngredientInRecipeTable(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient(), recipe);
             return recipe;
         }
     }
@@ -98,8 +98,8 @@ public class RecipeService implements RecipeDataManager {
     public Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
         int recipeId = recipeRecord.recipeId();
         String recipeName = recipeRecord.recipeName();
-        String method = buildMethodString(recipeRecord.directions());
-        List<String> ingredients = getIngredientString(recipeRecord.ingredients());
+        String method = buildMethodString(recipeRecord.directions() == null ? List.of() : recipeRecord.directions().direction());
+        List<String> ingredients = getIngredientString(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient());
 
 
 
@@ -109,7 +109,10 @@ public class RecipeService implements RecipeDataManager {
         double protein = recipeRecord.servingSizes().serving().protein();
         double fat = recipeRecord.servingSizes().serving().fat();
         String description = recipeRecord.recipeDescription();
-        String imageUrl = recipeRecord.imageUrl();
+        String imageUrl = null;
+        if (recipeRecord.images() != null && recipeRecord.images().imageUrl() != null && !recipeRecord.images().imageUrl().isEmpty()) {
+            imageUrl = recipeRecord.images().imageUrl().getFirst();
+        }
         int cookingTime = recipeRecord.cookingTime();
         int preparationTime = recipeRecord.preparationTime();
 
@@ -181,7 +184,7 @@ public class RecipeService implements RecipeDataManager {
      * @return List of recipe models containing specified ingredient
      */
     private List<Recipe> getRecipesFromApiByFood(String food) {
-        return null; //todo: Implement
+        return getRecipesForFood(food);
     }
 
     /**

@@ -284,7 +284,7 @@
     -fx-background-color: derive(-primary-bg-color, -5%);
 }
 .recipeCardTitle {
-    -fx-fill: -primary-color;
+    -fx-text-fill: -primary-color;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-translate-x: 10px;
