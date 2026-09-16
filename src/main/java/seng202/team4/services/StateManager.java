@@ -42,7 +42,7 @@ public class StateManager {
         this.windowManager = windowManager;
         this.databaseManager = new DatabaseManager(null);
         this.apiClient = new ApiClient();
-        this.treeRepository = new TreeDAO(databaseManager);
+        this.treeRepository = new TreeDAO(databaseManager, getFoodService());
         this.foodService = new FoodService(new FoodDAO(databaseManager), new FoodApiClient(apiClient));
         this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)), foodService);
         this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeApiClient(apiClient));

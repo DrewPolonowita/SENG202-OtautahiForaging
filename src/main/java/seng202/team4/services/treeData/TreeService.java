@@ -135,6 +135,7 @@ public class TreeService implements TreeDataManager {
         }
 
         List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
+        log.info("Loaded {} trees from database", databaseTrees.size());
 
         for (TreeModel tree: databaseTrees) {
             if (!trees.contains(tree)) {

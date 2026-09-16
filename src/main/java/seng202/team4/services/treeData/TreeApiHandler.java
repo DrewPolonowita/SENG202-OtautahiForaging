@@ -25,7 +25,7 @@ public class TreeApiHandler {
     private final FoodService foodService;
 
     /**
-     * Constructor for the TreeApiHandeler
+     * Constructor for the TreeApiHandler
      */
     public TreeApiHandler(TreeClientInterface treeApiClient, FoodService foodService) {
         this.treeApiHandler = treeApiClient;

@@ -54,7 +54,7 @@ public class TreeServiceTest {
         foodApiClient = mock(FoodApiClient.class);
         String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
         databaseManager = new DatabaseManager(testUrl);
-        treeDAO = new TreeDAO(databaseManager);
+        treeDAO = new TreeDAO(databaseManager, foodService);
         foodService = new FoodService(new FoodDAO(databaseManager), foodApiClient);
         testTreeService = new TreeService(treeDAO, treeApiClient, null, foodService);
         returning_string = "TreeID,Ownership,Genus,CommonName";
