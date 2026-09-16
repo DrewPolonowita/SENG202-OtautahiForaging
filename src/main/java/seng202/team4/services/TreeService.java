@@ -39,8 +39,9 @@ public class TreeService {
         ApiClientInterface apiClient = new ApiClient();
         this.treeApiClient = new TreeApiClient(apiClient);
         this.treeDAO = treeRepository;
-        this.foodService = new FoodService(); // Null Temp
+        this.foodService = new FoodService(null, null); // Null Temp
     }
+
 
     /**
      * Constructor for testing
@@ -49,7 +50,7 @@ public class TreeService {
     public TreeService(TreeClientInterface apiHandler, TreeDAO treeDAO) {
         this.treeApiClient = apiHandler;
         this.treeDAO = treeDAO;
-        this.foodService = new FoodService();
+        this.foodService = new FoodService(null, null);
     }
 
     /**

@@ -280,7 +280,7 @@ public class RecipeDAO implements RecipeRepository {
      */
     public void addIngredients(RecipeIngredient toAdd) {
         String sql = """
-                   INSERT INTO ingredient (
+                   INSERT OR IGNORE INTO ingredient (
                    ingredient_id,
                    serving_id,
                    ingredient_name,
@@ -315,7 +315,7 @@ public class RecipeDAO implements RecipeRepository {
      */
     public Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe) {
         String sql = """
-                   INSERT INTO ingredients_in_recipe (
+                   INSERT OR IGNORE INTO ingredients_in_recipe (
                    recipe_id,
                    ingredient_id,
                    serving_id,
@@ -346,9 +346,9 @@ public class RecipeDAO implements RecipeRepository {
     }
 
     /**
-     *
-     * @param recipeId
-     * @return
+     * Function that checks if the data in the recipes tables has been updated in the last 24hrs, or exists
+     * @param recipeId Recipe to check
+     * @return True if the data is up to date and exists, false otherwise and something should be done
      */
     @Override
     public boolean recipeDetailsUpToDateAndExist(int recipeId) {

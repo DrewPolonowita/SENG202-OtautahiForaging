@@ -9,9 +9,12 @@ import seng202.team4.models.api.*;
 import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.repository.DatabaseManager;
+import seng202.team4.repository.FoodDAO;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.services.FoodService;
-import seng202.team4.services.TreeService;
+import seng202.team4.services.api.FoodApiClient;
+import seng202.team4.services.api.FoodClientInterface;
+import seng202.team4.services.treeData.TreeService;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
 
@@ -37,6 +40,7 @@ public class TreeServiceTest {
     private DatabaseManager databaseManager;
     private TreeDAO treeDAO;
     private FoodService foodService;
+    private FoodClientInterface foodApiClient;
 
     int tuple_max;
     String returning_string;
@@ -47,11 +51,12 @@ public class TreeServiceTest {
     @BeforeEach
     public void setUpTest(){
         treeApiClient = mock(TreeApiClient.class);
+        foodApiClient = mock(FoodApiClient.class);
         String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
         databaseManager = new DatabaseManager(testUrl);
         treeDAO = new TreeDAO(databaseManager);
-        testTreeService = new TreeService(treeApiClient, treeDAO);
-        foodService = new FoodService();
+        foodService = new FoodService(new FoodDAO(databaseManager), foodApiClient);
+        testTreeService = new TreeService(treeDAO, treeApiClient, null, foodService);
         returning_string = "TreeID,Ownership,Genus,CommonName";
         tuple_max = 100;
     }

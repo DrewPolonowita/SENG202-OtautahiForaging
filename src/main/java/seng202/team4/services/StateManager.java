@@ -2,12 +2,17 @@ package seng202.team4.services;
 
 import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
+import seng202.team4.repository.FoodDAO;
+import seng202.team4.repository.RecipeDAO;
 import seng202.team4.repository.RegionDAO;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClient;
 import seng202.team4.services.api.ApiClientInterface;
+import seng202.team4.services.api.FoodApiClient;
+import seng202.team4.services.api.RecipeApiClient;
 import seng202.team4.services.treeData.RegionService;
+import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.services.treeData.TreeService;
 
 
@@ -22,8 +27,9 @@ public class StateManager {
     private final WindowManager windowManager;
     private final DatabaseManager databaseManager;
     private final TreeRepository treeRepository;
-    private final TreeService treeService;
+    private final TreeDataManager treeService;
     private final FoodService foodService;
+    private final RecipeService recipeService;
 
 
     /**
@@ -37,11 +43,9 @@ public class StateManager {
         this.databaseManager = new DatabaseManager(null);
         this.apiClient = new ApiClient();
         this.treeRepository = new TreeDAO(databaseManager);
-        this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)));
-
-        this.foodService = new FoodService();
-
-
+        this.foodService = new FoodService(new FoodDAO(databaseManager), new FoodApiClient(apiClient));
+        this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)), foodService);
+        this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeApiClient(apiClient));
         this.windowManager.launchMapScreen(this);
         this.windowManager.launchNavScreen(this);
 
@@ -55,11 +59,13 @@ public class StateManager {
         return databaseManager;
     }
 
-    public TreeService getTreeService() {
+    public TreeDataManager getTreeService() {
         return treeService;
     }
 
     public FoodService getFoodService() {
         return foodService;
     }
+
+    public RecipeService getRecipeService() { return recipeService; }
 }

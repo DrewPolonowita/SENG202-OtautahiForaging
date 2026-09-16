@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
- * @param foodId
- * @param foodName
+ * @param foodId the unique id for a food item from the API
+ * @param foodName the name of the food item from the API
  * @param servings
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

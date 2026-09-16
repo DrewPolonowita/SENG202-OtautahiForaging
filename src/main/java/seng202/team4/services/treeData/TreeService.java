@@ -5,12 +5,12 @@ import seng202.team4.models.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
-import seng202.team4.repository.*;
-import seng202.team4.services.api.ApiClient;
+import seng202.team4.services.FoodService;
 
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.TreeApiClient;
+import seng202.team4.services.api.TreeClientInterface;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,13 +28,27 @@ public class TreeService implements TreeDataManager {
     /**
      * Creates a new instance and initializes private variables
      */
-    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService) {
-        TreeApiClient treeApiClient = new TreeApiClient(apiClient);
-        this.treeApiHandler = new TreeApiHandler(treeApiClient);
+    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService, FoodService foodService) {
+        TreeClientInterface treeApiClient = new TreeApiClient(apiClient);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
         this.treeRepository = treeRepository;
         this.regionService = regionService;
     }
 
+    /**
+     * test constructor
+     */
+    public TreeService(
+            TreeRepository treeRepository,
+            TreeClientInterface treeApiClient,
+            RegionService regionService,
+            FoodService foodService
+    ) {
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
+        this.treeRepository = treeRepository;
+        this.regionService = regionService;
+    }
+    /*
     public TreeService() {
         DatabaseManager databaseManager = new DatabaseManager(null);
         RegionRepository regionRepository = new RegionDAO(databaseManager);
@@ -42,7 +56,7 @@ public class TreeService implements TreeDataManager {
         treeApiHandler = new TreeApiHandler(new TreeApiClient(new ApiClient()));
         treeRepository = new TreeDAO(databaseManager);
         regionService = new RegionService(regionRepository);
-    }
+    }*/
 
     /**
      * Returns a list of trees from the database within a given region
@@ -147,6 +161,7 @@ public class TreeService implements TreeDataManager {
 
     /**
      * Returns a list of trees all trees from the api
+     * TODO: Make this choose between using API and database instead of always using database
      */
     public List<TreeModel> getAllTrees() {
         return treeApiHandler.getAllTreesFromApi();
