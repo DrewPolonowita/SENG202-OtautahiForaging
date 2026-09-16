@@ -62,6 +62,7 @@ public class TreeApiHandler {
 
         Map<String, List<String>> foodMap = foodService.getFoodMap();
 
+
         for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
             List<String> commonNames = entry.getValue();
             for (String name : commonNames) {
@@ -100,7 +101,7 @@ public class TreeApiHandler {
      */
     private String createApiTypeQuery(String food) {
         Map<String, List<String>> foodMap = foodService.getFoodMap();
-        List<String> commonNames = new ArrayList<>();
+        List<String> commonNames;
         if (foodMap.get(food) == null) {
             commonNames = List.of();
         } else {
@@ -169,16 +170,14 @@ public class TreeApiHandler {
     /**
      * Constructs an API request that returns all trees of commonName = type and within the bounding box
      *
-     * @param type the commonName of the tree being requested
+     * @param commonName the commonName of the tree being requested
      * @param north the max y value for the region
      * @param east the max x value for the region
      * @param south the min y value for the region
      * @param west the min x value for the region
      */
-    public List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west) {
-        Request request = treeApiHandler.getTrees(String.format(
-                "CommonName='%s'", type
-                ),
+    public List<TreeModel> getTreesByRegion(String commonName, double north, double east, double south, double west) {
+        Request request = treeApiHandler.getTrees(createApiTypeQuery(commonName),
                 "TreeID,Ownership,Genus,CommonName",
                 1000,
                 north,

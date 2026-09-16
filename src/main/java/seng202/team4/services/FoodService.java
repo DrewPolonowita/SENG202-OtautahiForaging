@@ -184,6 +184,7 @@ public class FoodService {
                 "Almond"
         ));
         foodMap.put("Cherry", List.of(
+                "Cherry",
                 "Bird Cherry"
         ));
         foodMap.put("Elderberry", List.of(
