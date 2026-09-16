@@ -45,6 +45,12 @@ public class FoodService {
         createTypeMap();
     }
 
+    /**
+     * Method to get all the foods we have mapped for the trees with api data
+     * First searches the FatSecret API for food ids using each food map key (foodName)
+     * and then uses those ids to search by specific id
+     * @return List of food objects that exist in the project
+     */
     public List<Food> getFoods() {
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMap.keySet()) {
