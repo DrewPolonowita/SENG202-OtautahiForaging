@@ -346,9 +346,9 @@ public class RecipeDAO implements RecipeRepository {
     }
 
     /**
-     *
-     * @param recipeId
-     * @return
+     * Function that checks if the data in the recipes tables has been updated in the last 24hrs, or exists
+     * @param recipeId Recipe to check
+     * @return True if the data is up to date and exists, false otherwise and something should be done
      */
     @Override
     public boolean recipeDetailsUpToDateAndExist(int recipeId) {

@@ -2,18 +2,15 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
-import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
-import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
+
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchRecord;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.services.api.RecipeClientInterface;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
