@@ -19,6 +19,7 @@ import seng202.team4.models.Note;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 import seng202.team4.services.treeData.TreeService;
+import seng202.team4.services.treeData.TreeDataManager;
 import seng202.team4.models.TreeModel;
 
 import java.util.HashMap;
@@ -33,8 +34,8 @@ public class MapController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(MapController.class);
     private final MapService mapService;
-    private final TreeService treeService;
 
+    private final TreeDataManager treeService;
     private static final double MAX_HEIGHT_FOR_DISPLAYING = 0.05;
 
     private double northBound;
@@ -76,9 +77,9 @@ public class MapController extends ScreenController {
      */
     public MapController(StateManager stateManager, ThemeService themeService) {
         super(stateManager);
-        this.mapService = new MapService(new TreeService());
-        this.themeService = themeService;
         treeService = stateManager.getTreeService();
+        this.mapService = new MapService(treeService);
+        this.themeService = themeService;
         this.stateManager = stateManager;
         //this.themeService = themeService; , ThemeService themeService
     }
