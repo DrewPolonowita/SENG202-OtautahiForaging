@@ -2,6 +2,7 @@ package seng202.team4.gui.screens;
 
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.StackPane;
@@ -27,6 +28,7 @@ public class SettingsController extends ScreenController {
     private Circle switchCircle;
     @FXML
     private ColorPicker colorPicker;
+    @FXML private Button tableButton;
 
     /**
      * Initialise the window
@@ -75,4 +77,15 @@ public class SettingsController extends ScreenController {
     public void changeThemeColour() {
         getStateManager().getWindowManager().getThemeService().setPrimaryColor(colorPicker.getValue());
     }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onTableButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchTableScreen(stateManager);
+    }
+
 }
