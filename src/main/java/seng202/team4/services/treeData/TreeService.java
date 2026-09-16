@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
 import seng202.team4.repository.*;
+import seng202.team4.services.FoodService;
 import seng202.team4.services.api.ApiClient;
 
 import seng202.team4.repository.TreeRepository;
@@ -27,13 +28,13 @@ public class TreeService implements TreeDataManager {
     /**
      * Creates a new instance and initializes private variables
      */
-    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService) {
+    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService, FoodService foodService) {
         TreeApiClient treeApiClient = new TreeApiClient(apiClient);
-        this.treeApiHandler = new TreeApiHandler(treeApiClient);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodService);
         this.treeRepository = treeRepository;
         this.regionService = regionService;
     }
-
+    /*
     public TreeService() {
         DatabaseManager databaseManager = new DatabaseManager(null);
         RegionRepository regionRepository = new RegionDAO(databaseManager);
@@ -41,7 +42,7 @@ public class TreeService implements TreeDataManager {
         treeApiHandler = new TreeApiHandler(new TreeApiClient(new ApiClient()));
         treeRepository = new TreeDAO(databaseManager);
         regionService = new RegionService(regionRepository);
-    }
+    }*/
 
     /**
      * Returns a list of trees from the database within a given region
@@ -71,7 +72,7 @@ public class TreeService implements TreeDataManager {
                         region.getWestBound()
                 );
 
-                for (TreeModel tree: trees) {
+                for (TreeModel tree: apiTrees) {
                     try {
                         treeRepository.add(tree);
                     } catch (DuplicateEntryException e) {
