@@ -5,9 +5,7 @@ import seng202.team4.models.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
-import seng202.team4.repository.*;
 import seng202.team4.services.FoodService;
-import seng202.team4.services.api.ApiClient;
 
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;

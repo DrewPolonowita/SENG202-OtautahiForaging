@@ -7,7 +7,6 @@ import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.services.FoodService;
-import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
 
 import java.net.HttpURLConnection;

@@ -1,18 +1,13 @@
 package seng202.team4.unittests.services;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import seng202.team4.models.Food;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.FoodDAO;
 import seng202.team4.services.FoodService;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 
 public class FoodServiceTest {
     private FoodService testFoodService;
