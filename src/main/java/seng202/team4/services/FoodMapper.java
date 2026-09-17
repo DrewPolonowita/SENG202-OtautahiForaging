@@ -31,7 +31,7 @@ public class FoodMapper {
                 "Pillar Crab Apple",
                 "Siberian Crab",
                 "Southern crabapple",
-                "Hall''s Crab Apple",
+                "Hall's Crab Apple",
                 "Zumi Crab Apple",
                 "Common Apple"
         ));

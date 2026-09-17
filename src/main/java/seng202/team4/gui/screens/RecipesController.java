@@ -2,7 +2,6 @@ package seng202.team4.gui.screens;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXML;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;

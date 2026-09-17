@@ -18,6 +18,7 @@ import seng202.team4.services.api.FoodClientInterface;
 import seng202.team4.services.dataCentre.treeData.TreeService;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
+import seng202.team4.unittests.TestSuite;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -34,31 +35,26 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TreeServiceTest {
+public class TreeServiceTest extends TestSuite {
 
     private TreeService testTreeService;
     private TreeClientInterface treeApiClient;
     private DatabaseManager databaseManager;
     private TreeDAO treeDAO;
-    private FoodService foodService;
     private FoodClientInterface foodApiClient;
     private FoodMapper foodMapper;
 
     int tuple_max;
     String returning_string;
 
-    @TempDir
-    Path tempDirectory;
 
     @BeforeEach
     public void setUpTest(){
         foodMapper = new FoodMapper();
         treeApiClient = mock(TreeApiClient.class);
         foodApiClient = mock(FoodApiClient.class);
-        String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
-        databaseManager = new DatabaseManager(testUrl);
+        databaseManager = new DatabaseManager(getTestDb());
         treeDAO = new TreeDAO(databaseManager);
-        foodService = new FoodService(new FoodDAO(databaseManager), foodApiClient, foodMapper);
         testTreeService = new TreeService(treeDAO, treeApiClient, null, foodMapper);
         returning_string = "TreeID,Ownership,Genus,CommonName";
         tuple_max = 100;
