@@ -77,6 +77,8 @@ public class TreeApiHandler {
     /**
      * Creates an API Query to find all the foods using the different common
      * names that a food can be under
+     * Builds query that looks like:
+     * Ownership <> 'Private' AND (CommonName='Chinese Crab Apple' OR CommonName='Hall''s Crab Apple' ...)
      * @param food the food to find
      * @return the api query string for use by API Handler
      */
@@ -89,7 +91,12 @@ public class TreeApiHandler {
             commonNames = foodMap.get(food);
         }
 
+        if (commonNames.isEmpty()) {
+            return "Ownership <> 'Private'";
+        }
+
         StringBuilder queryString = new StringBuilder();
+        queryString.append("Ownership <> 'Private' AND (");
         for (int i = 0; i < commonNames.size(); i++) {
             String commonName = commonNames.get(i).replace("'", "''");
             if (i > 0) {
@@ -99,6 +106,7 @@ public class TreeApiHandler {
             queryString.append(commonName);
             queryString.append("'");
         }
+        queryString.append(")");
 
         return queryString.toString();
 
