@@ -1,5 +1,6 @@
 package seng202.team4.gui.screens;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
@@ -75,17 +76,37 @@ public class RecipesController extends ScreenController {
         recipeSearch("Apple");
     }
 
+    /**
+     * https://stackoverflow.com/questions/9165251/execute-task-in-background-in-javafx
+     * @param food
+     */
     private void recipeSearch(String food) {
-        for (Recipe recipe : recipeService.getRecipesForFood(food)) {
-            if (recipe == null) {
-                continue;
+
+        Task<List<Recipe>> task = new Task<>() {
+            @Override
+            protected List<Recipe> call() {
+                return recipeService.getRecipesForFood(food);
             }
-            System.out.println(recipe.getName());
-            createRecipeCard(recipe);
-        }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                List<Recipe> recipes = getValue();
+                for (Recipe recipe : recipes) {
+                    createRecipeCard(recipe);
+                }
+            }
+
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void createRecipeCard(Recipe recipe) {
+
+        LOG.info("Start");
         final int CARD_WIDTH = 300;
         final int CARD_HEIGHT = 260;
         final int TEXT_HEIGHT = 60;
@@ -105,7 +126,7 @@ public class RecipesController extends ScreenController {
         if (imagePath != null) {
             Image image;
             if (imagePath.startsWith("https://")) {
-                image = new Image(imagePath, false);
+                image = new Image(imagePath, true);
             } else {
                 var resource = getClass().getResource(imagePath);
                 if (resource != null) {
@@ -139,5 +160,7 @@ public class RecipesController extends ScreenController {
             stateManager.getWindowManager().launchRecipesScreenHighlight(stateManager, recipe);
         });
         recipeTilePane.getChildren().add(card);
+
+        LOG.info("end");
     }
 }

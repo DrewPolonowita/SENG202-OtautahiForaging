@@ -23,7 +23,7 @@ public final class FatSecretAttributionUtilities {
 
     public static ImageView createStandardAttributionImage() {
         ImageView imageView = new ImageView();
-        imageView.setFitWidth (200);
+        imageView.setFitWidth(200);
         imageView.setImage(new Image(FATSECRET_ATTRIBUTION_STANDARD_IMAGE_URL));
 
 

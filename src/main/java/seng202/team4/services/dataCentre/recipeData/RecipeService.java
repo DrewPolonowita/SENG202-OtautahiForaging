@@ -53,6 +53,7 @@ public class RecipeService implements RecipeDataManager {
         boolean noIdsExist = recipeIds.isEmpty();
         if (noIdsExist) {
             recipeIds = recipeApiHandler.getRecipeIdsByFoodFromApi(food);
+            log.info("Loaded {} recipes from api", recipeIds.size());
         }
         for (int id : recipeIds) {
             Recipe recipe = getRecipeById(id);
@@ -74,10 +75,12 @@ public class RecipeService implements RecipeDataManager {
      */
     private Recipe getRecipeById(int id) {
         if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
+            log.info("loaded from database");
             return recipeDAO.getOne(id);
 
         } else {
             RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
+            log.info("Loaded from api ");
             if (recipeRecord == null) {
                 return null;
             }
