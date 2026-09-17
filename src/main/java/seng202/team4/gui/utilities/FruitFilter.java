@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import seng202.team4.models.Fruit;
+import seng202.team4.gui.screens.TableViewController;
+import seng202.team4.gui.screens.RecipesController;
 
 import seng202.team4.gui.screens.MapController;
 public class FruitFilter {
