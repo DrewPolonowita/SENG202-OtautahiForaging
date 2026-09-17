@@ -207,7 +207,6 @@ public class MapController extends ScreenController {
         currentTrees.put(tree.getId(), tree);
         String popup = String.format(
                 "<div class=\"tree-card\">"
-                        + "<div class=\"tree-card-image\"></div>"
                         + "<div class=\"tree-card-body\">"
                         + "<b>%s</b><br>"
                             + "<br><button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"

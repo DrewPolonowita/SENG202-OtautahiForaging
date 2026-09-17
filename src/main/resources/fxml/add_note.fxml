@@ -10,7 +10,7 @@
 <VBox styleClass="note-card" spacing="16" alignment="CENTER" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.AddNoteController">
     <HBox alignment="CENTER_LEFT">
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="✕" styleClass="icon-button close-button" onAction="#handleClose"/>
+        <Button text="✕" styleClass="close-button" onAction="#handleClose"/>
     </HBox>
 
     <VBox spacing="6" alignment="CENTER">

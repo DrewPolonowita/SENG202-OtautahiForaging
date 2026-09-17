@@ -7,17 +7,24 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
 
-<VBox styleClass="expand-note-root" prefWidth="360" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<VBox styleClass="expand-note-root" prefWidth="800" xmlns="http://javafx.com/javafx/25.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="seng202.team4.gui.screens.ExpandNoteController">
 
-    <ImageView fx:id="photoView" fitWidth="360" fitHeight="220" preserveRatio="false" />
+    <StackPane>
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <ImageView fx:id="photoView" fitWidth="780" fitHeight="370" preserveRatio="false"/>
+    </StackPane>
 
     <VBox styleClass="expand-note-body" spacing="10">
         <HBox alignment="CENTER_LEFT">
             <Label fx:id="nameLabel" styleClass="expand-note-title" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="✕" styleClass="icon-button expand-note-close" onAction="#handleClose" />
+            <Button text="✕" styleClass="close-button" onAction="#handleClose" />
         </HBox>
 
         <HBox spacing="10" alignment="CENTER_LEFT">

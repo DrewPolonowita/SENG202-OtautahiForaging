@@ -64,8 +64,8 @@ public class JournalController extends ScreenController {
         card.setCursor(Cursor.HAND);
 
         ImageView thumbnail = new ImageView();
-        thumbnail.setFitWidth(260);
-        thumbnail.setFitHeight(140);
+        thumbnail.setFitWidth(365);
+        thumbnail.setFitHeight(195);
         thumbnail.setPreserveRatio(false);
         if (note.getImagePath() != null) {
             thumbnail.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
