@@ -1,7 +1,14 @@
 package seng202.team4.services;
 
 import seng202.team4.gui.WindowManager;
-import seng202.team4.repository.*;
+import seng202.team4.repository.DatabaseManager;
+import seng202.team4.repository.FoodDAO;
+import seng202.team4.repository.NoteDAO;
+import seng202.team4.repository.NoteRepository;
+import seng202.team4.repository.RecipeDAO;
+import seng202.team4.repository.RegionDAO;
+import seng202.team4.repository.TreeDAO;
+import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClient;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.FoodApiClient;

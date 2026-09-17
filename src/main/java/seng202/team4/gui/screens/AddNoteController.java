@@ -112,6 +112,9 @@ public class AddNoteController extends ScreenController {
         ((Stage) commonNameField.getScene().getWindow()).close();
     }
 
+    /**
+     * closes window
+     */
     public void handleClose() {
         ((Stage) commonNameField.getScene().getWindow()).close();
     }
