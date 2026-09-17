@@ -15,7 +15,6 @@
    </center>
    <left>
       <VBox prefHeight="400.0" prefWidth="62.0" styleClass="sideBar">
-         <Button fx:id="backButton" onMouseClicked="#onBackClicked" styleClass="sideBar-button-selected" text="Back" />
          <Button mnemonicParsing="false" onAction="#onFilterClicked" text="Filter" />
          <GridPane fx:id="filterList" prefHeight="219.0" prefWidth="122.0" styleClass="generic-text">
             <columnConstraints>

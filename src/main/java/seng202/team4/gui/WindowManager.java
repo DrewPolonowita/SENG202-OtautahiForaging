@@ -128,17 +128,6 @@ public class WindowManager {
     }
 
     /**
-     * Launches the recipes screen
-     *
-     * @param stateManager the state manager for the application
-     */
-    public void launchRecipesScreenHighlight(StateManager stateManager, Recipe recipe) {
-        ScreenController controller = new RecipeHighlightController(stateManager, recipe);
-        launchScreen(controller, rootPane);
-    }
-
-
-    /**
      * Launches the table screen
      */
     public void launchTableScreen(StateManager stateManager) {
