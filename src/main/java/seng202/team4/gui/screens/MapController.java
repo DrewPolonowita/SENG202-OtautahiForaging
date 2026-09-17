@@ -17,7 +17,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.Region;
 import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
-
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
@@ -238,18 +237,12 @@ public class MapController extends ScreenController {
             filterButton.setAlignment(Pos.TOP_LEFT);
             filterButton.setMaxWidth(Double.MAX_VALUE);
             filterButton.setPrefHeight(35);
-
             Region icon = new Region();
             icon.getStyleClass().add("icon");
             icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
-
             filterButton.setGraphic(icon);
             filterButton.getStyleClass().add("sideBar-button");
-
-            filterButton.setOnAction(event ->
-                    filterButtonClicked(filterButton, fruit)
-            );
-
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
             filterBox.getChildren().add(filterButton);
         }
     }

@@ -144,6 +144,7 @@ public class TableViewController extends ScreenController {
      *For each fruit name in the enum FRUIT, a filter button is creaated
      */
     private void createFruitButtons() {
+
         filterList.getChildren().clear();
 
         for (Fruit fruit : Fruit.values()) {
@@ -151,18 +152,12 @@ public class TableViewController extends ScreenController {
             filterButton.setAlignment(Pos.TOP_LEFT);
             filterButton.setMaxWidth(Double.MAX_VALUE);
             filterButton.setPrefHeight(35);
-
             Region icon = new Region();
             icon.getStyleClass().add("icon");
             icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
-
             filterButton.setGraphic(icon);
             filterButton.getStyleClass().add("sideBar-button");
-
-            filterButton.setOnAction(event ->
-                    filterButtonClicked(filterButton, fruit)
-            );
-
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
             filterList.getChildren().add(filterButton);
         }
     }

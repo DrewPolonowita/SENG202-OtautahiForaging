@@ -175,9 +175,7 @@ public class RecipesController extends ScreenController {
             icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
             filterButton.setGraphic(icon);
             filterButton.getStyleClass().add("sideBar-button");
-            filterButton.setOnAction(event ->
-                    filterButtonClicked(filterButton, fruit)
-            );
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
             filterList.getChildren().add(filterButton);
         }
     }
