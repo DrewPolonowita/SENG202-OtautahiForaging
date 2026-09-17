@@ -30,9 +30,8 @@ public final class FatSecretAttributionUtilities {
     public static ImageView createStandardAttributionImage() {
         ImageView imageView = new ImageView();
         imageView.setFitWidth(200);
-        imageView.setImage(new Image(FATSECRET_ATTRIBUTION_STANDARD_IMAGE_URL));
-
-
+        Image image = new Image(FATSECRET_ATTRIBUTION_STANDARD_IMAGE_URL, true);
+        imageView.setImage(image);
         imageView.setOnMouseClicked(event -> {
             try {
                 Desktop.getDesktop().browse(new URI(FATSECRET_ATTRIBUTION_LINK_URL));
