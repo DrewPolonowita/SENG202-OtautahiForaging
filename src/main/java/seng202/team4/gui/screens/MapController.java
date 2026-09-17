@@ -19,8 +19,6 @@ import seng202.team4.services.ThemeService;
 import seng202.team4.services.treeData.TreeService;
 import seng202.team4.models.TreeModel;
 
-import java.util.List;
-
 /**
  * Controller for the map_screen.fxml window which controls the map
  * @author Team 4

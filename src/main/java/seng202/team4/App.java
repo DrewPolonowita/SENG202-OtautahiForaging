@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class App {
     private static final Logger LOG = LogManager.getLogger(App.class);
+
     /**
      * Entry point which runs the javaFX application
      * Also shows off some different logging levels

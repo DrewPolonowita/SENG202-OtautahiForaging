@@ -90,7 +90,7 @@ public class RegionDAO implements RegionRepository {
             ps.setDouble(2, region.getEastBound());
             ps.setDouble(3, region.getSouthBound());
             ps.setDouble(4, region.getWestBound());
-            ps.setObject(5, LocalDateTime.now());
+            ps.setObject(5, region.getLastUpdated() == null ? LocalDateTime.now() : region.getLastUpdated());
             ps.setString(6, region.getType());
 
             ps.executeUpdate();
