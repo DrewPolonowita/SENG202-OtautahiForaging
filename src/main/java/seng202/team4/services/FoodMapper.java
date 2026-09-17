@@ -2,59 +2,23 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Service for handling food related business logic
- * @author Team 4
- */
-public class FoodService {
-    private static final Logger log = LogManager.getLogger(FoodService.class);
+public class FoodMapper {
+
+    private static final Logger log = LogManager.getLogger(FoodMapper.class);
     private Map<String, List<String>> foodMap = new HashMap<>();
     private Map<String, List<String>> typeMap = new HashMap<>();
 
-    /**
-     * Constructor
-     */
-    public FoodService() {
+    public FoodMapper() {
         createFoodMap();
         createTypeMap();
     }
 
-    /**
-     * Creates the map of each type of food that can be found in the database
-     * mapped to the common name of foods within that type.
-     * Created when FoodService class is created
-     */
-    private void createTypeMap() {
-        typeMap.put("Fruit", List.of(
-                "Apple",
-                "Strawberry",
-                "Peach",
-                "Olive",
-                "Honey Locust",
-                "Pear",
-                "Apricot",
-                "Mulberry",
-                "Loquat",
-                "Quince",
-                "Cherry",
-                "Elderberry",
-                "Juniper"));
-        typeMap.put("Nut", List.of(
-                "Walnut",
-                "Sweet Chestnut",
-                "Hazel",
-                "Almond",
-                "Beech"
-        ));
-        typeMap.put("Leaves", List.of(
-                "Sweet bay"
-        ));
-    }
 
     /**
      * Creates the map of each common name that a tree growing a particular food can be known by,
@@ -136,14 +100,51 @@ public class FoodService {
         ));
     }
 
+    /**
+     * Creates the map of each type of food that can be found in the database
+     * mapped to the common name of foods within that type.
+     * Created when FoodService class is created
+     */
+    private void createTypeMap() {
+        typeMap.put("Fruit", List.of(
+                "Apple",
+                "Strawberry",
+                "Peach",
+                "Olive",
+                "Honey Locust",
+                "Pear",
+                "Apricot",
+                "Mulberry",
+                "Loquat",
+                "Quince",
+                "Cherry",
+                "Elderberry",
+                "Juniper"));
+        typeMap.put("Nut", List.of(
+                "Walnut",
+                "Sweet Chestnut",
+                "Hazel",
+                "Almond",
+                "Beech"
+        ));
+        typeMap.put("Leaves", List.of(
+                "Sweet bay"
+        ));
+    }
 
-
-
+    public String getFoodType(String foodName) {
+        for (Map.Entry<String, List<String>> entry : typeMap.entrySet()) {
+            if (entry.getValue().contains(foodName)) {
+                return entry.getKey();
+            }
+        }
+        return "N/A";
+    }
     /**
      * Getter for food map
      * @return the food map
      */
-    public Map<String, List<String>> getFoodMap() {
+    public Map<String, List<String>> getFoodMap () {
         return foodMap;
     }
 
@@ -151,7 +152,7 @@ public class FoodService {
      * Getter for the type map
      * @return the type map
      */
-    public Map<String, List<String>> getTypeMap() {
+    public Map<String, List<String>> getTypeMap () {
         return typeMap;
     }
 }

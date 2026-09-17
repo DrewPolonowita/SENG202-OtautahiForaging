@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
-
-<BorderPane styleClass="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.MapController">
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.geometry.Insets?>
+<BorderPane styleClass="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
    <center>
-      <Label text="JOURNAL SCREEN" BorderPane.alignment="CENTER" styleClass="generic-text"/>
+      <ScrollPane fitToWidth="true" fitToHeight="true" BorderPane.alignment="CENTER">
+         <FlowPane fx:id="notesFlowPane" hgap="16" vgap="16" prefWrapLength="800" prefWidth="Infinity" prefHeight="Infinity">
+            <padding>
+               <Insets top="20" right="20" bottom="20" left="20" />
+            </padding>
+         </FlowPane>
+      </ScrollPane>
    </center>
 </BorderPane>

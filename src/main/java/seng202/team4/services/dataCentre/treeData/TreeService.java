@@ -1,16 +1,17 @@
-package seng202.team4.services.treeData;
+package seng202.team4.services.dataCentre.treeData;
 
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
-import seng202.team4.repository.*;
-import seng202.team4.services.api.ApiClient;
+import seng202.team4.services.FoodMapper;
+import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.TreeApiClient;
+import seng202.team4.services.api.TreeClientInterface;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,13 +29,27 @@ public class TreeService implements TreeDataManager {
     /**
      * Creates a new instance and initializes private variables
      */
-    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService) {
-        TreeApiClient treeApiClient = new TreeApiClient(apiClient);
-        this.treeApiHandler = new TreeApiHandler(treeApiClient);
+    public TreeService(TreeRepository treeRepository, ApiClientInterface apiClient, RegionService regionService, FoodMapper foodMapper) {
+        TreeClientInterface treeApiClient = new TreeApiClient(apiClient);
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodMapper);
         this.treeRepository = treeRepository;
         this.regionService = regionService;
     }
 
+    /**
+     * test constructor
+     */
+    public TreeService(
+            TreeRepository treeRepository,
+            TreeClientInterface treeApiClient,
+            RegionService regionService,
+            FoodMapper foodMapper
+    ) {
+        this.treeApiHandler = new TreeApiHandler(treeApiClient, foodMapper);
+        this.treeRepository = treeRepository;
+        this.regionService = regionService;
+    }
+    /*
     public TreeService() {
         DatabaseManager databaseManager = new DatabaseManager(null);
         RegionRepository regionRepository = new RegionDAO(databaseManager);
@@ -42,7 +57,7 @@ public class TreeService implements TreeDataManager {
         treeApiHandler = new TreeApiHandler(new TreeApiClient(new ApiClient()));
         treeRepository = new TreeDAO(databaseManager);
         regionService = new RegionService(regionRepository);
-    }
+    }*/
 
     /**
      * Returns a list of trees from the database within a given region
@@ -121,6 +136,7 @@ public class TreeService implements TreeDataManager {
         }
 
         List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
+        log.info("Loaded {} trees from database", databaseTrees.size());
 
         for (TreeModel tree: databaseTrees) {
             if (!trees.contains(tree)) {
@@ -147,9 +163,28 @@ public class TreeService implements TreeDataManager {
 
     /**
      * Returns a list of trees all trees from the api
+     * TODO: Make this choose between using API and database instead of always using database
      */
     public List<TreeModel> getAllTrees() {
-        return treeApiHandler.getAllTreesFromApi();
+        List<TreeModel> databaseTrees = treeRepository.getAll();
+
+        if (!databaseTrees.isEmpty()) {
+            log.info("Loaded {} trees from database", databaseTrees.size());
+            return databaseTrees;
+        }
+
+        List<TreeModel> apiTrees = treeApiHandler.getAllTreesFromApi();
+        log.info("Loaded {} trees from api", apiTrees.size());
+        for (TreeModel tree: apiTrees) {
+            try {
+                treeRepository.add(tree);
+            } catch (DuplicateEntryException e) {
+                log.warn("(All Trees) Skip duplicate id: {}", tree.getId());
+            }
+        }
+        databaseTrees = treeRepository.getAll();
+
+        return databaseTrees;
     }
 
     /**

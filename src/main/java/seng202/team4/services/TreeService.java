@@ -13,6 +13,7 @@ import seng202.team4.services.api.ApiClient;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
+import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class TreeService {
     private static final Logger log = LogManager.getLogger(TreeService.class);
     private final TreeClientInterface treeApiClient;
     private final TreeRepository treeDAO;
-    private final FoodService foodService;
+    private final FoodMapper foodMapper;
 
     /**
      * Constructor
@@ -39,8 +40,9 @@ public class TreeService {
         ApiClientInterface apiClient = new ApiClient();
         this.treeApiClient = new TreeApiClient(apiClient);
         this.treeDAO = treeRepository;
-        this.foodService = new FoodService(); // Null Temp
+        this.foodMapper = new FoodMapper(); // Null Temp
     }
+
 
     /**
      * Constructor for testing
@@ -49,7 +51,7 @@ public class TreeService {
     public TreeService(TreeClientInterface apiHandler, TreeDAO treeDAO) {
         this.treeApiClient = apiHandler;
         this.treeDAO = treeDAO;
-        this.foodService = new FoodService();
+        this.foodMapper = new FoodMapper();
     }
 
     /**
@@ -80,7 +82,7 @@ public class TreeService {
      */
     private String getFoodType(String commonName) {
 
-        Map<String, List<String>> foodMap = foodService.getFoodMap();
+        Map<String, List<String>> foodMap = foodMapper.getFoodMap();
 
         for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
             List<String> commonNames = entry.getValue();
@@ -173,7 +175,7 @@ public class TreeService {
      * @return the api query string for use by API Handler
      */
     private String createApiTypeQuery(String food) {
-        Map<String, List<String>> foodMap = foodService.getFoodMap();
+        Map<String, List<String>> foodMap = foodMapper.getFoodMap();
 
         List<String> commonNames = foodMap.get(food);
 

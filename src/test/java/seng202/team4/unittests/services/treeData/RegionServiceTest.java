@@ -7,7 +7,7 @@ import seng202.team4.models.Region;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RegionDAO;
 import seng202.team4.repository.RegionRepository;
-import seng202.team4.services.treeData.RegionService;
+import seng202.team4.services.dataCentre.treeData.RegionService;
 import seng202.team4.unittests.TestSuite;
 
 import java.time.LocalDateTime;

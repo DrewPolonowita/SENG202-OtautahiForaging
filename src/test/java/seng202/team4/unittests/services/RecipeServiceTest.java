@@ -4,15 +4,14 @@ package seng202.team4.unittests.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.helpers.TestRecipeData;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RecipeDAO;
-import seng202.team4.services.FoodService;
-import seng202.team4.services.RecipeService;
+import seng202.team4.services.dataCentre.foodData.FoodService;
+import seng202.team4.services.dataCentre.recipeData.RecipeService;
 
 
 import java.nio.file.Path;
@@ -37,7 +36,7 @@ public class RecipeServiceTest {
 
 
     @BeforeEach
-    public void setUpTest(){
+    public void setUpTest() {
         //todo: ADD API HANDLER FOR RECIPE
         String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
         databaseManager = new DatabaseManager(testUrl);
@@ -82,12 +81,5 @@ public class RecipeServiceTest {
         List<String> testIngredients = List.of("1 Apple");
         Recipe expectedRecord  = new Recipe(123, "Recipe Name", "1: Direction step 1\n2: Direction step 2", testIngredients, 345, 123,567, 789, "Description", null, "Image URL", 10, 10);
         assertEquals(expectedRecord, testRecipeRecord);
-    }
-
-    @Test
-    public void testGetRecipeByFood() {
-        String food = "Apple";
-        List<Recipe> recipeByFood = testRecipeService.getRecipeByFood("Apple");
-
     }
 }

@@ -18,7 +18,7 @@ public record RecipeIngredient(
         @JsonProperty("food_id") int ingredientId,
         @JsonProperty("food_name") String ingredientName,
         @JsonProperty("serving_id") int servingId,
-        @JsonProperty("number_of_units") int ingredientUnitNumber,
+        @JsonProperty("number_of_units") double ingredientUnitNumber,
         @JsonProperty("measurement_description") String ingredientMeasurementDescription,
         @JsonProperty("ingredient_description") String ingredientDescription
 ) {

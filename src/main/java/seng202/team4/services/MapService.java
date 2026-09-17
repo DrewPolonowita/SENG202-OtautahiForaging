@@ -2,7 +2,7 @@ package seng202.team4.services;
 
 import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
-import seng202.team4.services.treeData.TreeDataManager;
+import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,11 @@ public class MapService {
 
     private final TreeDataManager treeDataManager;
     private final ArrayList<Fruit> selectedFruits;
-    private final ExecutorService executor = Executors.newFixedThreadPool(8);
+    private final ExecutorService executor = Executors.newFixedThreadPool(8, runnable -> {
+        Thread thread = new Thread(runnable, "map-service-worker");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     /**
      * Creates a new instance of a MapService

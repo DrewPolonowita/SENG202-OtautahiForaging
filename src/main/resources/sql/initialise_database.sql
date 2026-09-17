@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS ingredient (
     ingredient_id int NOT NULL,
     serving_id int NOT NULL,
     ingredient_name TEXT NOT NULL,
-    ingredient_unit_number int NOT NULL,
+    ingredient_unit_number DOUBLE NOT NULL,
     ingredient_measurement_description TEXT NOT NULL,
     ingredient_description TEXT NOT NULL,
     PRIMARY KEY (serving_id, ingredient_id)
@@ -82,9 +82,11 @@ CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
 DROP TABLE IF EXISTS note;
 --SPLIT
 CREATE TABLE IF NOT EXISTS note (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_created DATETIME NOT NULL,
     name TEXT NOT NULL,
+    description TEXT,
+    image_path TEXT,
     tree_id INTEGER,
     recipe_id INTEGER,
     FOREIGN KEY (tree_id) REFERENCES trees(id),
@@ -94,8 +96,16 @@ CREATE TABLE IF NOT EXISTS note (
 DROP TABLE IF EXISTS food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS food (
-    common_name TEXT PRIMARY KEY,
-    food_type TEXT NOT NULL
+    food_id INTEGER PRIMARY KEY,
+    common_name TEXT NOT NULL,
+    food_type TEXT NOT NULL,
+    calories DOUBLE,
+    carbohydrates   DOUBLE,
+    protein DOUBLE,
+    fat DOUBLE,
+    serving_description TEXT,
+    serving_id INTEGER,
+    retrieval_time DATETIME
 );
 --SPLIT
 DROP TABLE IF EXISTS recipe_uses_food;
@@ -104,7 +114,6 @@ CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT,
     recipe_id INTEGER,
     PRIMARY KEY (common_name, recipe_id),
-    FOREIGN KEY (common_name) REFERENCES food(common_name),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 

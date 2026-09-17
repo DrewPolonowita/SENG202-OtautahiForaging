@@ -4,8 +4,6 @@ package seng202.team4.models.api.Recipe.RecipeByID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 /**
  * Stores information about recipes from an API request
  *
@@ -17,7 +15,7 @@ import java.util.List;
  * @param ingredients the ingredients in the recipe as a list of recipeIngredient objects
  * @param cookingTime the cooking time for the recipe in minutes
  * @param preparationTime the preparation time for the recipe in minutes
- * @param imageUrl the string url for a recipe
+ * @param images the string url for a recipe
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeByIdRecord(
@@ -25,10 +23,10 @@ public record RecipeByIdRecord(
         @JsonProperty("recipe_name") String recipeName,
         @JsonProperty("recipe_description") String recipeDescription,
         @JsonProperty("serving_sizes") RecipeServingSizes servingSizes,
-        @JsonProperty("direction") List<RecipeDirection> directions,
-        @JsonProperty("ingredient") List<RecipeIngredient> ingredients,
-        @JsonProperty("preparation_time") int preparationTime,
-        @JsonProperty("cooking_time") int cookingTime,
-        @JsonProperty("recipe_image") String imageUrl
+        @JsonProperty("directions") RecipeDirections directions,
+        @JsonProperty("ingredients") RecipeIngredients ingredients,
+        @JsonProperty("preparation_time_min") int preparationTime,
+        @JsonProperty("cooking_time_min") int cookingTime,
+        @JsonProperty("recipe_images") RecipeImages images
 ) {
 }

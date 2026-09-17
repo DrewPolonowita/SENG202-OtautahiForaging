@@ -1,6 +1,7 @@
 package seng202.team4.gui;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -8,13 +9,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.screens.*;
+import seng202.team4.models.Note;
+import seng202.team4.models.Recipe;
+import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
-
 import java.io.IOException;
 
 /**
@@ -64,8 +69,8 @@ public class WindowManager {
         contentColumn.setHgrow(Priority.ALWAYS);
         gridPane.getColumnConstraints().addAll(navigationColumn, contentColumn);
 
-
         stage.setMaximized(true);
+
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         gridPane.getScene().getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         gridPane.getScene().getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
@@ -126,8 +131,8 @@ public class WindowManager {
      *
      * @param stateManager the state manager for the application
      */
-    public void launchRecipesScreenHighlight(StateManager stateManager, String recipeName) {
-        ScreenController controller = new RecipeHighlightController(stateManager, recipeName);
+    public void launchRecipesScreenHighlight(StateManager stateManager, Recipe recipe) {
+        ScreenController controller = new RecipeHighlightController(stateManager, recipe);
         launchScreen(controller, rootPane);
     }
 
@@ -149,20 +154,84 @@ public class WindowManager {
     }
 
     /**
-     * Launches a screen using a given screen controller. This is done by replacing the
-     * root border pane with the screen defined by {@link ScreenController}
-     *
+     * Loads the FXML file for given screen controller.
+     * @param controller the pre-built controller to inject FXML file
+     * @return root node of loaded FXML
+     * @throws IOException if FXML file cant be loaded.
+     */
+    private Parent loadScreen(ScreenController controller) throws IOException {
+        FXMLLoader setupLoader = new FXMLLoader(getClass().getResource(controller.getFxmlFile()));
+        setupLoader.setControllerFactory(param -> controller);
+        return setupLoader.load();
+    }
+
+    /**
+     * Launches screen using given screen controller.
      * @param controller the screen being launched
-     * @param pane the {@link BorderPane} being displayed onto
+     * @param pane the {@link BorderPane} being displayed into
      */
     private void launchScreen(ScreenController controller, BorderPane pane) {
         try {
-            FXMLLoader setupLoader = new FXMLLoader(getClass().getResource(controller.getFxmlFile()));
-            setupLoader.setControllerFactory(param -> controller);
-            Parent setupParent = setupLoader.load();
-
+            Parent setupParent = loadScreen(controller);
             pane.setCenter(setupParent);
             stage.setTitle(controller.getTitle());
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Helper function for applying style to any new scene
+     * @param root the root node of the scene to be styled
+     * @return the newly created, styled scene
+     */
+    private Scene buildStyledScene(Parent root) {
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
+        return scene;
+    }
+
+    /**
+     * Creates a new centered stage for different menus to reuse.
+     * @param root the root node of the dialog's content.
+     */
+    private void showCenteredDialog(Parent root) {
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(stage);
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.initStyle(StageStyle.TRANSPARENT);
+        dialogStage.setScene(buildStyledScene(root));
+        dialogStage.setOnShown(event -> {
+            double centerX = stage.getX() + stage.getWidth() / 2;
+            double centerY = stage.getY() + stage.getHeight() / 2;
+            dialogStage.setX(centerX - dialogStage.getWidth() / 2);
+            dialogStage.setY(centerY - dialogStage.getHeight() / 2);
+        });
+        dialogStage.showAndWait();
+    }
+
+    /**
+     * Launches the add note menu centered on application. Blocking input from other applications while open.
+     * @param tree the select tree to be converted to note
+     * @param stateManager the provided state manager for the application
+     */
+    public void openAddNoteMenu(TreeModel tree, StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new AddNoteController(stateManager, tree)));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Launches the expanded version of the note user selects.
+     * @param note the note of the tree user clicks
+     * @param stateManager the provided state manager for the application
+     */
+    public void openExpandNote(Note note, StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new ExpandNoteController(stateManager, note)));
         } catch (IOException e) {
             LOG.error(e);
         }

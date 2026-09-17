@@ -9,9 +9,13 @@ import seng202.team4.models.api.*;
 import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.repository.DatabaseManager;
+import seng202.team4.repository.FoodDAO;
 import seng202.team4.repository.TreeDAO;
-import seng202.team4.services.FoodService;
-import seng202.team4.services.TreeService;
+import seng202.team4.services.FoodMapper;
+import seng202.team4.services.dataCentre.foodData.FoodService;
+import seng202.team4.services.api.FoodApiClient;
+import seng202.team4.services.api.FoodClientInterface;
+import seng202.team4.services.dataCentre.treeData.TreeService;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
 
@@ -37,6 +41,8 @@ public class TreeServiceTest {
     private DatabaseManager databaseManager;
     private TreeDAO treeDAO;
     private FoodService foodService;
+    private FoodClientInterface foodApiClient;
+    private FoodMapper foodMapper;
 
     int tuple_max;
     String returning_string;
@@ -46,12 +52,14 @@ public class TreeServiceTest {
 
     @BeforeEach
     public void setUpTest(){
+        foodMapper = new FoodMapper();
         treeApiClient = mock(TreeApiClient.class);
+        foodApiClient = mock(FoodApiClient.class);
         String testUrl = "jdbc:sqlite:" + tempDirectory.resolve("test_database.db").toAbsolutePath();
         databaseManager = new DatabaseManager(testUrl);
         treeDAO = new TreeDAO(databaseManager);
-        testTreeService = new TreeService(treeApiClient, treeDAO);
-        foodService = new FoodService();
+        foodService = new FoodService(new FoodDAO(databaseManager), foodApiClient, foodMapper);
+        testTreeService = new TreeService(treeDAO, treeApiClient, null, foodMapper);
         returning_string = "TreeID,Ownership,Genus,CommonName";
         tuple_max = 100;
     }
@@ -139,13 +147,13 @@ public class TreeServiceTest {
         when(treeApiClient.getTrees(contains("Chinese Crab Apple"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
 
-        when(treeApiClient.getTrees(eq("CommonName='Pear'"), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(contains("Pear"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
 
-        when(treeApiClient.getTrees(eq("CommonName='Bird Cherry'"), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(contains("Bird Cherry"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeCherryRecords(), false), 200));
 
-        when(treeApiClient.getTrees(eq("CommonName='Peach'"), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(contains("Peach"), eq(returning_string), eq(tuple_max)))
                 .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
 
         when(treeApiClient.getTrees(contains("Apricot"), eq(returning_string), eq(tuple_max)))

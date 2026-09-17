@@ -1,4 +1,4 @@
-package seng202.team4.services;
+package seng202.team4.services.dataCentre.recipeData;
 
 
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ import java.util.List;
  * Service class to handle business logic managing recipes
  * @author Team 4
  */
-public class RecipeService {
+public class RecipeService implements RecipeDataManager {
     private static final Logger log = LogManager.getLogger(RecipeService.class);
     private final RecipeRepository recipeDAO;
     private final RecipeApiHandler recipeApiHandler;
@@ -45,6 +45,7 @@ public class RecipeService {
      * @param food A food specifically from the food groups we map
      * @return list of recipes
      */
+    @Override
     public List<Recipe> getRecipesForFood(String food) {
         List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
         List<Recipe> recipes = new ArrayList<>();
@@ -54,14 +55,7 @@ public class RecipeService {
             recipeIds = recipeApiHandler.getRecipeIdsByFoodFromApi(food);
         }
         for (int id : recipeIds) {
-            Recipe recipe;
-            if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
-                recipe = recipeDAO.getOne(id);
-
-            } else {
-                recipe = recipeApiHandler.getRecipeById(id);
-                recipeDAO.replaceRecipe(recipe);
-            }
+            Recipe recipe = getRecipeById(id);
 
             if (noIdsExist) {
                 recipeDAO.addRecipeUseFood(food, id);
@@ -73,6 +67,30 @@ public class RecipeService {
     }
 
     /**
+     * Get a specific recipe by id, either from the database if we have up to date cached data within 24hrs
+     * or from the api if not.
+     * @param id id of the recipe we are looking for
+     * @return Recipe we get from the database or api
+     */
+    private Recipe getRecipeById(int id) {
+        if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
+            return recipeDAO.getOne(id);
+
+        } else {
+            RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
+            if (recipeRecord == null) {
+                return null;
+            }
+            Recipe recipe = createRecipeObjectById(recipeRecord);
+            recipeDAO.replaceRecipe(recipe);
+            populateIngredientTable(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient());
+            populateIngredientInRecipeTable(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient(), recipe);
+            return recipe;
+        }
+    }
+
+
+    /**
      * Creates a recipe using a RecipeByIdRecord
      * @param recipeRecord a RecipeByIdRecord
      * @return a Recipe model
@@ -80,8 +98,8 @@ public class RecipeService {
     public Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
         int recipeId = recipeRecord.recipeId();
         String recipeName = recipeRecord.recipeName();
-        String method = buildMethodString(recipeRecord.directions());
-        List<String> ingredients = getIngredientString(recipeRecord.ingredients());
+        String method = buildMethodString(recipeRecord.directions() == null ? List.of() : recipeRecord.directions().direction());
+        List<String> ingredients = getIngredientString(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient());
 
 
 
@@ -91,7 +109,10 @@ public class RecipeService {
         double protein = recipeRecord.servingSizes().serving().protein();
         double fat = recipeRecord.servingSizes().serving().fat();
         String description = recipeRecord.recipeDescription();
-        String imageUrl = recipeRecord.imageUrl();
+        String imageUrl = null;
+        if (recipeRecord.images() != null && recipeRecord.images().imageUrl() != null && !recipeRecord.images().imageUrl().isEmpty()) {
+            imageUrl = recipeRecord.images().imageUrl().getFirst();
+        }
         int cookingTime = recipeRecord.cookingTime();
         int preparationTime = recipeRecord.preparationTime();
 
@@ -114,7 +135,7 @@ public class RecipeService {
     }
 
 
-    private List<String> getIngredientString(List<RecipeIngredient> ingredients) {
+    public List<String> getIngredientString(List<RecipeIngredient> ingredients) {
         List<String> ingredientStrings = new ArrayList<>();
         for (RecipeIngredient ingredient : ingredients) {
             ingredientStrings.add(ingredient.ingredientDescription());
@@ -163,7 +184,7 @@ public class RecipeService {
      * @return List of recipe models containing specified ingredient
      */
     private List<Recipe> getRecipesFromApiByFood(String food) {
-        return null; //todo: Implement
+        return getRecipesForFood(food);
     }
 
     /**

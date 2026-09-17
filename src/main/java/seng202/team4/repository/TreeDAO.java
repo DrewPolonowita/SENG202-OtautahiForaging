@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.services.FoodMapper;
 
 /**
  * DAOInterface implementation for trees, handles tree related actions to database
@@ -27,7 +28,8 @@ public class TreeDAO implements TreeRepository {
      * Constructor
      * @param databaseManager means of connecting to the database
      */
-    public TreeDAO(DatabaseManager databaseManager) {
+    public TreeDAO(DatabaseManager databaseManager)
+    {
         this.databaseManager = databaseManager;
     }
 

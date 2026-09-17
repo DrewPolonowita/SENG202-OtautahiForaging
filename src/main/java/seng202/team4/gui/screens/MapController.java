@@ -16,8 +16,11 @@ import seng202.team4.models.Fruit;
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
-import seng202.team4.services.treeData.TreeService;
+import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 import seng202.team4.models.TreeModel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -28,6 +31,7 @@ public class MapController extends ScreenController {
     private static final Logger LOG = LogManager.getLogger(MapController.class);
     private final MapService mapService;
 
+    private final TreeDataManager treeService;
     private static final double MAX_HEIGHT_FOR_DISPLAYING = 0.05;
 
     private double northBound;
@@ -56,8 +60,11 @@ public class MapController extends ScreenController {
     private Button peachButton;
     @FXML
     private Button apricotButton;
+    private StateManager stateManager;
 
     private final ThemeService themeService;
+
+    private final Map<Integer, TreeModel> currentTrees = new HashMap<>();
 
     /**
      * Initialise the window
@@ -66,22 +73,34 @@ public class MapController extends ScreenController {
      */
     public MapController(StateManager stateManager, ThemeService themeService) {
         super(stateManager);
-        this.mapService = new MapService(new TreeService());
+        treeService = stateManager.getTreeService();
+        this.mapService = new MapService(treeService);
         this.themeService = themeService;
+        this.stateManager = stateManager;
+        //this.themeService = themeService; , ThemeService themeService
     }
 
     /**
-     * Initializes the bridge and loads the map once FXML is loaded
+     * Initialises the bridge and loads the map once FXML is loaded with lambda functionality passed in.
      */
     @FXML
     private void initialize() {
         LOG.info("MapController initialize() called");
         javaScriptBridge = new JavaScriptBridge(
-                tree -> { }, id -> false, this::mapMoved
-        ); // TODO: replace with real handleTreeClicked + add-tree flow
+                id -> {
+                    TreeModel tree = currentTrees.get(id);
+                    if (tree != null) {
+                        stateManager.getWindowManager().openAddNoteMenu(tree, stateManager);
+                    } else {
+                        LOG.warn("Add to Journal clicked for unknown tree id {}", id);
+                    }
+                },
+                tree -> { },
+                id -> false, // TODO: replace with real handleTreeClicked + add-tree flow
+                this::mapMoved
+        );
         initMap();
         toggleAllFilterButtons();
-
     }
 
     /**
@@ -181,24 +200,23 @@ public class MapController extends ScreenController {
 
 
     /**
-     * Creates a marker for a given tree and then adds it the list of javascript markers to add to the map
-     *
-     * @param tree the tree to be added to the map
+     * Formatting the string popup for tree data points on Leaflet
+     * Each tree added as a marker will have a popup description
      */
     private void addTreeMarker(TreeModel tree) {
+        currentTrees.put(tree.getId(), tree);
         String popup = String.format(
-                "<b>Common Name: </b>%s<br>"
-                        + "<b>Ownership: </b>%s<br>"
-                        + "<b>Genus: </b>%s<br>"
-                        + "<b>Tree ID:</b> %d",
+                "<div class=\"tree-card\">"
+                        + "<div class=\"tree-card-image\"></div>"
+                        + "<div class=\"tree-card-body\">"
+                        + "<b>%s</b><br>"
+                            + "<br><button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
+                            + "</div></div>",
                 tree.getCommonName(),
-                tree.getOwnership(),
-                tree.getGenus(),
                 tree.getId()
         );
 
-        javaScriptConnector.call(
-                "addMarker",
+        javaScriptConnector.call("addMarker",
                 tree.getId(),
                 popup,
                 tree.getYCoord(),
@@ -210,6 +228,7 @@ public class MapController extends ScreenController {
      * Removes all the tree markers on the screen
      */
     private void removeTreeMarkers() {
+        currentTrees.clear();
         javaScriptConnector.call("removeMarkers");
     }
 
