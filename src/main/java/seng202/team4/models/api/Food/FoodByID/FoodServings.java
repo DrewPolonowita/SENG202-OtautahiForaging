@@ -8,6 +8,5 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record FoodServings (
-        @JsonProperty("serving") List<Serving> serving)
-{
+        @JsonProperty("serving") List<Serving> serving) {
 }

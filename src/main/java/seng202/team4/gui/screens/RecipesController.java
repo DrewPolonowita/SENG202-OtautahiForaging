@@ -7,7 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
@@ -25,14 +29,13 @@ import java.util.List;
  * @author Team 4
  */
 public class RecipesController extends ScreenController {
-
     @FXML
     private TilePane recipeTilePane;
     private RecipeDataManager recipeService;
     @FXML
     private StackPane attributionPane;
     @FXML
-    ProgressIndicator progressIndicator;
+    private ProgressIndicator progressIndicator;
     @FXML
     private BorderPane recipeListPane;
 
@@ -83,7 +86,7 @@ public class RecipesController extends ScreenController {
 
     /**
      * https://stackoverflow.com/questions/9165251/execute-task-in-background-in-javafx
-     * @param food
+     * @param food type of search food
      */
     private void recipeSearch(String food) {
 
@@ -126,8 +129,11 @@ public class RecipesController extends ScreenController {
         thread.start();
     }
 
+    /**
+     * Creates the display cards based off the recipes pulled from the API
+     * @param recipe type of recipe to create
+     */
     private void createRecipeCard(Recipe recipe) {
-
         LOG.info("Start");
         final int CARD_WIDTH = 300;
         final int CARD_HEIGHT = 260;
@@ -186,6 +192,11 @@ public class RecipesController extends ScreenController {
         recipeTilePane.getChildren().add(card);
         LOG.info("end");
     }
+
+    /**
+     * Full screens the recipe the user clicked
+     * @param recipe recipe to show full view
+     */
     private void showRecipe(Recipe recipe) {
         recipeDetailsText.setText(displayText(recipe));
         recipeListPane.setVisible(false);
@@ -193,6 +204,10 @@ public class RecipesController extends ScreenController {
         recipeHighlightPane.setVisible(true);
         recipeHighlightPane.setManaged(true);
     }
+
+    /**
+     * Closes fullscreen recipe back to recipes screen
+     */
     @FXML
     private void closeRecipe() {
         recipeHighlightPane.setVisible(false);
@@ -200,6 +215,11 @@ public class RecipesController extends ScreenController {
         recipeListPane.setVisible(true);
         recipeListPane.setManaged(true);
     }
+
+    /**
+     * Displays the text for the recipes
+     * @param recipe recipe that is being displayed
+     */
     private String displayText(Recipe recipe) {
         StringBuilder text = new StringBuilder();
         text.append(recipe.getName()).append("\n\n");

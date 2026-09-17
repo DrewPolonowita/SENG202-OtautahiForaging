@@ -7,9 +7,18 @@ import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -289,7 +298,6 @@ public class RecipeDAO implements RecipeRepository {
                    ingredient_unit_number,
                    ingredient_measurement_description,
                    ingredient_description
-                   
                    ) VALUES (?,?,?,?,?,?);
                    """;
         try (Connection conn = databaseManager.connect();

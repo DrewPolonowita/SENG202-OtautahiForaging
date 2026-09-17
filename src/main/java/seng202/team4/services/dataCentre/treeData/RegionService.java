@@ -119,13 +119,13 @@ public class RegionService {
         ArrayList<Region> insideRegions = new ArrayList<>();
 
         for (Region region: regions) {
-            if (region.getNorthBound() <= masterRegion.getSouthBound() - REGION_SIZE/2) {
+            if (region.getNorthBound() <= masterRegion.getSouthBound() - REGION_SIZE / 2) {
                 outsideRegions.add(region);
-            } else if (region.getEastBound() <= masterRegion.getWestBound() - REGION_SIZE/2) {
+            } else if (region.getEastBound() <= masterRegion.getWestBound() - REGION_SIZE / 2) {
                 outsideRegions.add(region);
-            } else if (region.getSouthBound() >= masterRegion.getNorthBound() + REGION_SIZE/2) {
+            } else if (region.getSouthBound() >= masterRegion.getNorthBound() + REGION_SIZE / 2) {
                 outsideRegions.add(region);
-            } else if (region.getWestBound() >= masterRegion.getEastBound() + REGION_SIZE/2) {
+            } else if (region.getWestBound() >= masterRegion.getEastBound() + REGION_SIZE / 2) {
                 outsideRegions.add(region);
             } else {
                 insideRegions.add(region);

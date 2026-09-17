@@ -4,8 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
 
-import java.util.function.Function;
-
 /**
  * The class that bridges from javascript to java
  * The functions within can be called from javascript in the map view when we set an object of this class
