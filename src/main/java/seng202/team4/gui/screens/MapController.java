@@ -7,17 +7,21 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.scene.Node;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
+import seng202.team4.gui.utilities.FruitFilter;
+
 import seng202.team4.models.Fruit;
+import seng202.team4.models.TreeModel;
+
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
-import seng202.team4.models.TreeModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,16 +54,7 @@ public class MapController extends ScreenController {
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
 
-    @FXML
-    private Button appleButton;
-    @FXML
-    private Button pearButton;
-    @FXML
-    private Button cherryButton;
-    @FXML
-    private Button peachButton;
-    @FXML
-    private Button apricotButton;
+
     private StateManager stateManager;
 
     private final ThemeService themeService;
@@ -77,11 +72,12 @@ public class MapController extends ScreenController {
         this.mapService = new MapService(treeService);
         this.themeService = themeService;
         this.stateManager = stateManager;
-        //this.themeService = themeService; , ThemeService themeService
+//        this.themeService = themeService;
     }
 
     /**
      * Initialises the bridge and loads the map once FXML is loaded with lambda functionality passed in.
+     * Also creates filter buttons from enum FRUITS with the helper class FruitFilter
      */
     @FXML
     private void initialize() {
@@ -100,6 +96,7 @@ public class MapController extends ScreenController {
                 this::mapMoved
         );
         initMap();
+        FruitFilter.createFruitButtons(filterBox, this::filterButtonClicked);
         toggleAllFilterButtons();
     }
 
@@ -244,62 +241,21 @@ public class MapController extends ScreenController {
 
             mapService.addSelectedFruit(fruit);
         }
-    }
-
-    /**
-     * Toggles the apple filter button
-     */
-    @FXML
-    public void appleButtonClicked() {
-        filterButtonClicked(appleButton, Fruit.APPLE);
         mapMoved(northBound, eastBound, southBound, westBound);
     }
 
     /**
-     * Toggles the pear filter button
-     */
-    @FXML
-    public void pearButtonClicked() {
-        filterButtonClicked(pearButton, Fruit.PEAR);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles the cherry filter button
-     */
-    @FXML
-    public void cherryButtonClicked() {
-        filterButtonClicked(cherryButton, Fruit.CHERRY);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles the peach filter button
-     */
-    @FXML
-    public void peachButtonClicked() {
-        filterButtonClicked(peachButton, Fruit.PEACH);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles the apricot filter button
-     */
-    @FXML
-    public void apricotButtonClicked() {
-        filterButtonClicked(apricotButton, Fruit.APRICOT);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles all the fruits to be included in the map by default
+     * Toggles on and off all the fruits to be included in the map by default
+     *
      */
     public void toggleAllFilterButtons() {
-        filterButtonClicked(appleButton, Fruit.APPLE);
-        filterButtonClicked(pearButton, Fruit.PEAR);
-        filterButtonClicked(cherryButton, Fruit.CHERRY);
-        filterButtonClicked(peachButton, Fruit.PEACH);
-        filterButtonClicked(apricotButton, Fruit.APRICOT);
+        for (Node node : filterBox.getChildren()) {
+            Button button = (Button) node;
+            FruitFilter.toggleButtonStyle(button);
+        }
+        for (Fruit fruit : Fruit.values()) {
+            mapService.addSelectedFruit(fruit);
+        }
     }
 
 }
