@@ -7,17 +7,20 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.scene.Node;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
+import javafx.geometry.Pos;
+import javafx.scene.layout.Region;
 import seng202.team4.models.Fruit;
+import seng202.team4.models.TreeModel;
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
-import seng202.team4.models.TreeModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,20 +49,11 @@ public class MapController extends ScreenController {
     private boolean filterOpened;
     @FXML
     private Button filterButton;
+
     private WebEngine webEngine;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
 
-    @FXML
-    private Button appleButton;
-    @FXML
-    private Button pearButton;
-    @FXML
-    private Button cherryButton;
-    @FXML
-    private Button peachButton;
-    @FXML
-    private Button apricotButton;
     private StateManager stateManager;
 
     private final ThemeService themeService;
@@ -77,11 +71,11 @@ public class MapController extends ScreenController {
         this.mapService = new MapService(treeService);
         this.themeService = themeService;
         this.stateManager = stateManager;
-        //this.themeService = themeService; , ThemeService themeService
     }
 
     /**
      * Initialises the bridge and loads the map once FXML is loaded with lambda functionality passed in.
+     * Also creates filter buttons from enum FRUIT values
      */
     @FXML
     private void initialize() {
@@ -100,6 +94,7 @@ public class MapController extends ScreenController {
                 this::mapMoved
         );
         initMap();
+        createFruitButtons();
         toggleAllFilterButtons();
     }
 
@@ -231,6 +226,55 @@ public class MapController extends ScreenController {
         javaScriptConnector.call("removeMarkers");
     }
 
+    /**
+     *For each fruit name in the enum FRUIT, a filter button is creaated
+     */
+    private void createFruitButtons() {
+        filterBox.getChildren().clear();
+        for (Fruit fruit : Fruit.values()) {
+            Button filterButton = new Button("  " + formatFruitName(fruit));
+            filterButton.setAlignment(Pos.TOP_LEFT);
+            filterButton.setMaxWidth(Double.MAX_VALUE);
+            filterButton.setPrefHeight(35);
+            Region icon = new Region();
+            icon.getStyleClass().add("icon");
+            icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
+            filterButton.setGraphic(icon);
+            filterButton.getStyleClass().add("sideBar-button");
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
+            filterBox.getChildren().add(filterButton);
+        }
+    }
+
+    /**
+     * Toggles styling of the fruit filter buttons on the Map screen
+     */
+    public static void toggleButtonStyle(Button button) {
+        if (button.getStyleClass().contains("sideBar-button-selected")) {
+            button.getStyleClass().remove("sideBar-button-selected");
+            button.getGraphic().getStyleClass().remove("icon-selected");
+        } else {
+            button.getStyleClass().add("sideBar-button-selected");
+            button.getGraphic().getStyleClass().add("icon-selected");
+        }
+    }
+
+    /**
+     * Formats the enum FRUIT values to a string format
+     * which will be shown to the user when filter button is clicked
+     *
+     */
+    private static String formatFruitName(Fruit fruit) {
+        String name = fruit.name().toLowerCase();
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    }
+
+    /**
+     * Toggles the fruit button being clicked, and updates the
+     * map to show only the relevant fruit trees
+     * @param buttons
+     * @param fruit
+     */
     public void filterButtonClicked(Button buttons, Fruit fruit) {
         if (buttons.getStyleClass().contains("sideBar-button-selected")) {
             buttons.getStyleClass().remove("sideBar-button-selected");
@@ -243,62 +287,21 @@ public class MapController extends ScreenController {
 
             mapService.addSelectedFruit(fruit);
         }
-    }
-
-    /**
-     * Toggles the apple filter button
-     */
-    @FXML
-    public void appleButtonClicked() {
-        filterButtonClicked(appleButton, Fruit.APPLE);
         mapMoved(northBound, eastBound, southBound, westBound);
     }
 
     /**
-     * Toggles the pear filter button
-     */
-    @FXML
-    public void pearButtonClicked() {
-        filterButtonClicked(pearButton, Fruit.PEAR);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles the cherry filter button
-     */
-    @FXML
-    public void cherryButtonClicked() {
-        filterButtonClicked(cherryButton, Fruit.CHERRY);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles the peach filter button
-     */
-    @FXML
-    public void peachButtonClicked() {
-        filterButtonClicked(peachButton, Fruit.PEACH);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles the apricot filter button
-     */
-    @FXML
-    public void apricotButtonClicked() {
-        filterButtonClicked(apricotButton, Fruit.APRICOT);
-        mapMoved(northBound, eastBound, southBound, westBound);
-    }
-
-    /**
-     * Toggles all the fruits to be included in the map by default
+     * Toggles on all the fruits which are displayed on the map by default
+     * when the application is first run
      */
     public void toggleAllFilterButtons() {
-        filterButtonClicked(appleButton, Fruit.APPLE);
-        filterButtonClicked(pearButton, Fruit.PEAR);
-        filterButtonClicked(cherryButton, Fruit.CHERRY);
-        filterButtonClicked(peachButton, Fruit.PEACH);
-        filterButtonClicked(apricotButton, Fruit.APRICOT);
+        for (Node node : filterBox.getChildren()) {
+            Button button = (Button) node;
+            toggleButtonStyle(button);
+        }
+        for (Fruit fruit : Fruit.values()) {
+            mapService.addSelectedFruit(fruit);
+        }
     }
 
 }
