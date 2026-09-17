@@ -237,7 +237,7 @@ public class TreeDAO implements TreeRepository {
         String query = """
                 SELECT *
                 FROM trees
-                WHERE common_name = ? AND (x BETWEEN ? AND ?) AND (y BETWEEN ? AND ?);
+                WHERE food = ? AND (x BETWEEN ? AND ?) AND (y BETWEEN ? AND ?);
                 """;
         try (Connection conn = databaseManager.connect();
                  PreparedStatement ps = conn.prepareStatement(query)
@@ -292,8 +292,8 @@ public class TreeDAO implements TreeRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     float[] coords = new float[] {
-                            rs.getInt("x"),
-                            rs.getInt("y")
+                            rs.getFloat("x"),
+                            rs.getFloat("y")
                     };
 
                     Timestamp timestamp = rs.getTimestamp("last_modified");

@@ -57,13 +57,14 @@ public class FoodService implements FoodDataManager {
 
             boolean noIdExists = foodId == null;
             if (noIdExists) {
-                foodId = foodApiHandler.getFoodBySearchFromApi(foodName);
+                foodId = foodApiHandler != null ? foodApiHandler.getFoodBySearchFromApi(foodName) : 0;
             }
             Food food;
             if (foodDao.foodDetailsUpToDateAndExist(foodId)) {
                 food = foodDao.getOne(foodId);
             } else {
-                food = foodApiHandler.getFoodById(foodId, foodName, foodMapper.getFoodType(foodName));
+                food = foodApiHandler != null
+                        ? foodApiHandler.getFoodById(foodId, foodName, foodMapper.getFoodType(foodName)) : null;
                 foodDao.replaceFood(food);
             }
             foods.add(food);

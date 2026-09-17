@@ -41,7 +41,7 @@ public class TreeApiHandler {
     private TreeModel createTreeObject(TreeRecord treeRecord) {
         String genus = treeRecord.properties().genus();
         String commonName = treeRecord.properties().commonName();
-        String foodType = getFoodType(commonName);
+        String foodType = foodMapper.getFoodName(commonName);
 
         return new TreeModel(
                 treeRecord.properties().treeId(),
@@ -54,27 +54,7 @@ public class TreeApiHandler {
                 null);
     }
 
-    /**
-     * Mapping the common name to a food type in a new column
-     * @param commonName common name
-     * @return the food type based on commonName
-     */
-    private String getFoodType(String commonName) {
 
-        Map<String, List<String>> foodMap = foodMapper.getFoodMap();
-
-
-        for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
-            List<String> commonNames = entry.getValue();
-            for (String name : commonNames) {
-                if (name.equals(commonName)) {
-                    return entry.getKey();
-                }
-            }
-        }
-        LOG.warn("No food mapping available for {}", commonName);
-        return "N/A";
-    }
 
     /**
      * Mapping the genus to a fruit type in a new column
@@ -111,7 +91,7 @@ public class TreeApiHandler {
 
         StringBuilder queryString = new StringBuilder();
         for (int i = 0; i < commonNames.size(); i++) {
-            String commonName = commonNames.get(i);
+            String commonName = commonNames.get(i).replace("'", "''");
             if (i > 0) {
                 queryString.append(" OR ");
             }
@@ -158,6 +138,10 @@ public class TreeApiHandler {
 
         TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
 
+        if (response == null || response.featureTrees() == null) {
+            LOG.warn("Tree api has no trees for {}", food);
+            return List.of();
+        }
         LOG.info(response);
 
         List<TreeRecord> treeRecords = Arrays.asList(
@@ -178,7 +162,8 @@ public class TreeApiHandler {
      * @param west the min x value for the region
      */
     public List<TreeModel> getTreesByRegion(String commonName, double north, double east, double south, double west) {
-        Request request = treeApiHandler.getTrees(createApiTypeQuery(commonName),
+        String query = createApiTypeQuery(commonName);
+        Request request = treeApiHandler.getTrees(query,
                 "TreeID,Ownership,Genus,CommonName",
                 1000,
                 north,
@@ -193,13 +178,18 @@ public class TreeApiHandler {
 
         TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
 
+        if (response == null || response.featureTrees() == null) {
+            LOG.warn("Tree api has no trees for {} in region",
+                    commonName);
+            return List.of();
+        }
+
         LOG.info(response);
 
-        List<TreeRecord> treeRecords = Arrays.asList(
-                response.featureTrees()
-        );
+        List<TreeRecord> treeRecords = Arrays.asList(response.featureTrees());
 
-        return treeRecords.stream().map(this::createTreeObject)
+        return treeRecords.stream()
+                .map(this::createTreeObject)
                 .toList();
     }
 

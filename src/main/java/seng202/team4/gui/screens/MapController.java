@@ -211,7 +211,7 @@ public class MapController extends ScreenController {
                         + "<b>%s</b><br>"
                             + "<br><button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
                             + "</div></div>",
-                tree.getCommonName(),
+                tree.getFood(),
                 tree.getId()
         );
 

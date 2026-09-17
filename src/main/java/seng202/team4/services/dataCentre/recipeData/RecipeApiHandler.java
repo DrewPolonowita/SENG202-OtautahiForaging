@@ -38,7 +38,7 @@ public class RecipeApiHandler {
         Request<RecipeSearchResponse> response = recipeApiClient.searchRecipe(searchExpression, true, 20);
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
-            LOG.error("Error: getRecipesByIngredientFromApi doesn't return response, code: " + responseCode);
+            LOG.error("Error: getRecipesByIngredientFromApi doesn't return response, code: {}", responseCode);
             return List.of();
         }
         List<Integer> recipeIds = new ArrayList<>();
@@ -60,7 +60,7 @@ public class RecipeApiHandler {
         Request<RecipeByIdResponse> response = recipeApiClient.getRecipeById(id);
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
-            LOG.error("Error: getRecipeById doesn't return response, code: " + responseCode);
+            LOG.error("Error: getRecipeById doesn't return response, code: {}", responseCode);
             return null;
         }
 
