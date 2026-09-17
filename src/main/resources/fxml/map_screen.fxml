@@ -25,56 +25,6 @@
             </StackPane.margin>
          </Button>
          <VBox fx:id="filterBox" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="100.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
-
-<!--            <children>-->
-<!--               <Button fx:id="appleButton" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#appleButtonClicked" styleClass="sideBar-button" text="  Apple">-->
-<!--                  <graphic>-->
-<!--                     <Region>-->
-<!--                        <styleClass>-->
-<!--                           <String fx:value="icon" />-->
-<!--                           <String fx:value="icon-apple" />-->
-<!--                        </styleClass>-->
-<!--                     </Region>-->
-<!--                  </graphic></Button>-->
-<!--               <Button fx:id="pearButton" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#pearButtonClicked" styleClass="sideBar-button" text="  Pear">-->
-<!--                  <graphic>-->
-<!--                     <Region>-->
-<!--                        <styleClass>-->
-<!--                           <String fx:value="icon" />-->
-<!--                           <String fx:value="icon-pear" />-->
-<!--                        </styleClass>-->
-<!--                     </Region>-->
-<!--                  </graphic></Button>-->
-<!--               <Button fx:id="cherryButton" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cherryButtonClicked" styleClass="sideBar-button" text="  Cherry">-->
-<!--                  <graphic>-->
-<!--                     <Region>-->
-<!--                        <styleClass>-->
-<!--                           <String fx:value="icon" />-->
-<!--                           <String fx:value="icon-cherry" />-->
-<!--                        </styleClass>-->
-<!--                     </Region>-->
-<!--                  </graphic>-->
-<!--               </Button>-->
-<!--               <Button fx:id="peachButton" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#peachButtonClicked" styleClass="sideBar-button" text="  Peach">-->
-<!--                  <graphic>-->
-<!--                     <Region>-->
-<!--                        <styleClass>-->
-<!--                           <String fx:value="icon" />-->
-<!--                           <String fx:value="icon-peach" />-->
-<!--                        </styleClass>-->
-<!--                     </Region>-->
-<!--                  </graphic></Button>-->
-<!--               <Button fx:id="apricotButton" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#apricotButtonClicked" styleClass="sideBar-button" text="  Apricot">-->
-<!--                  <graphic>-->
-<!--                     <Region>-->
-<!--                        <styleClass>-->
-<!--                           <String fx:value="icon" />-->
-<!--                           <String fx:value="icon-apricot" />-->
-<!--                        </styleClass>-->
-<!--                     </Region>-->
-<!--                  </graphic>-->
-<!--               </Button>-->
-<!--            </children>-->
             <StackPane.margin>
                <Insets left="10.0" top="65.0" />
             </StackPane.margin>

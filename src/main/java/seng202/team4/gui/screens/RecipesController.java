@@ -1,15 +1,16 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
@@ -17,12 +18,11 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
+import seng202.team4.models.Fruit;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
-import seng202.team4.services.dataCentre.recipeData.RecipeService;
 
-import java.util.List;
 
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -35,6 +35,8 @@ public class RecipesController extends ScreenController {
     private RecipeDataManager recipeService;
     @FXML
     private StackPane attributionPane;
+    @FXML
+    private VBox filterList;
 
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
@@ -64,6 +66,17 @@ public class RecipesController extends ScreenController {
         recipeService = getStateManager().getRecipeService();
         ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage();
         attributionPane.getChildren().add(attribution);
+        createFruitButtons();
+        toggleAllFilterButtons();
+
+    }
+
+    /**
+     * Toggles the visibility of the fruit filters.
+     */
+    @FXML
+    private void onFilterClicked() {
+        filterList.setVisible(!filterList.isVisible());
     }
 
     /**
@@ -85,6 +98,12 @@ public class RecipesController extends ScreenController {
         }
     }
 
+    /**
+     * Sets up a recipe card to display the recipes from the FatSecret API
+     * Searches for recipes with ingredients that are toggled on and returns
+     * relevent information on the cards.
+     * @param recipe
+     */
     private void createRecipeCard(Recipe recipe) {
         final int CARD_WIDTH = 300;
         final int CARD_HEIGHT = 260;
@@ -139,5 +158,68 @@ public class RecipesController extends ScreenController {
             stateManager.getWindowManager().launchRecipesScreenHighlight(stateManager, recipe);
         });
         recipeTilePane.getChildren().add(card);
+    }
+
+    /**
+     *For each fruit name in the enum FRUIT, a filter button is creaated
+     */
+    private void createFruitButtons() {
+        filterList.getChildren().clear();
+        for (Fruit fruit : Fruit.values()) {
+            Button filterButton = new Button("  " + formatFruitName(fruit));
+            filterButton.setAlignment(Pos.TOP_LEFT);
+            filterButton.setMaxWidth(Double.MAX_VALUE);
+            filterButton.setPrefHeight(35);
+            Region icon = new Region();
+            icon.getStyleClass().add("icon");
+            icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
+            filterButton.setGraphic(icon);
+            filterButton.getStyleClass().add("sideBar-button");
+            filterButton.setOnAction(event ->
+                    filterButtonClicked(filterButton, fruit)
+            );
+            filterList.getChildren().add(filterButton);
+        }
+    }
+
+    /**
+     * Toggles styling of the filter buttons
+     */
+    public static void toggleButtonStyle(Button button) {
+        if (button.getStyleClass().contains("sideBar-button-selected")) {
+            button.getStyleClass().remove("sideBar-button-selected");
+            button.getGraphic().getStyleClass().remove("icon-selected");
+        } else {
+            button.getStyleClass().add("sideBar-button-selected");
+            button.getGraphic().getStyleClass().add("icon-selected");
+        }
+    }
+
+    /**
+     * Toggles the fruit button being clicked, and updates the
+     * map to show only the relevant fruit trees
+     * @param buttons
+     * @param fruit
+     */
+    public void filterButtonClicked(Button buttons, Fruit fruit) {
+        toggleButtonStyle(buttons);
+    }
+
+    /**
+     * Mapping enum FRUIT values to string format
+     */
+    private static String formatFruitName(Fruit fruit) {
+        String name = fruit.name().toLowerCase();
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    }
+
+    /**
+     * Toggles on and off all the fruits to be included in the map by default
+     **/
+    public void toggleAllFilterButtons() {
+        for (Node node : filterList.getChildren()) {
+            Button button = (Button) node;
+            toggleButtonStyle(button);
+        }
     }
 }

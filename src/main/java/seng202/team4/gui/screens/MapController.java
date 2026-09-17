@@ -50,10 +50,10 @@ public class MapController extends ScreenController {
     private boolean filterOpened;
     @FXML
     private Button filterButton;
+
     private WebEngine webEngine;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
-
 
     private StateManager stateManager;
 
@@ -72,12 +72,11 @@ public class MapController extends ScreenController {
         this.mapService = new MapService(treeService);
         this.themeService = themeService;
         this.stateManager = stateManager;
-//        this.themeService = themeService;
     }
 
     /**
      * Initialises the bridge and loads the map once FXML is loaded with lambda functionality passed in.
-     * Also creates filter buttons from enum FRUITS with the helper class FruitFilter
+     * Also creates filter buttons from enum FRUIT values
      */
     @FXML
     private void initialize() {
@@ -229,38 +228,11 @@ public class MapController extends ScreenController {
         javaScriptConnector.call("removeMarkers");
     }
 
-//    /**
-//     * Creates a Fruit filter button for each fruit in enum FRUIT values.
-//     * @param filterBox
-//     * @param mapController
-//     */
-//    public static void createFruitButtons(VBox filterBox, MapController mapController) {
-//        filterBox.getChildren().clear();
-//        for (Fruit fruit : Fruit.values()) {
-//            Button filterButton = new Button("  " + formatFruitName(fruit));
-//            filterButton.setAlignment(Pos.TOP_LEFT);
-//            filterButton.setMaxWidth(Double.MAX_VALUE);
-//            filterButton.setPrefHeight(35);       // values based off old dimensions
-//
-//            Region icon = new Region();
-//            icon.getStyleClass().add("icon");
-//            icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
-//
-//            filterButton.setGraphic(icon);
-//            filterButton.getStyleClass().add("sideBar-button");
-//            filterButton.setOnAction(event ->
-//                    mapController.filterButtonClicked(filterButton, fruit)
-//            );
-//            filterBox.getChildren().add(filterButton);
-//        }
-//    }
-
     /**
-     * Creates a filter button for each fruit in the Fruit enum.
+     *For each fruit name in the enum FRUIT, a filter button is creaated
      */
     private void createFruitButtons() {
         filterBox.getChildren().clear();
-
         for (Fruit fruit : Fruit.values()) {
             Button filterButton = new Button("  " + formatFruitName(fruit));
             filterButton.setAlignment(Pos.TOP_LEFT);
@@ -281,8 +253,9 @@ public class MapController extends ScreenController {
             filterBox.getChildren().add(filterButton);
         }
     }
+
     /**
-     * Toggles styling of the filter buttons
+     * Toggles styling of the fruit filter buttons on the Map screen
      */
     public static void toggleButtonStyle(Button button) {
         if (button.getStyleClass().contains("sideBar-button-selected")) {
@@ -295,7 +268,9 @@ public class MapController extends ScreenController {
     }
 
     /**
-     * Mapping enum FRUIT values to string format
+     * Formats the enum FRUIT values to a string format
+     * which will be shown to the user when filter button is clicked
+     *
      */
     private static String formatFruitName(Fruit fruit) {
         String name = fruit.name().toLowerCase();
@@ -324,7 +299,8 @@ public class MapController extends ScreenController {
     }
 
     /**
-     * Toggles on and off all the fruits to be included in the map by default
+     * Toggles on all the fruits which are displayed on the map by default
+     * when the application is first run
      */
     public void toggleAllFilterButtons() {
         for (Node node : filterBox.getChildren()) {
