@@ -7,12 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class handles the mapping of Food common names to
+ * more general food names
+ * @author Team 4
+ */
 public class FoodMapper {
 
     private static final Logger log = LogManager.getLogger(FoodMapper.class);
     private final Map<String, List<String>> foodMap = new HashMap<>();
     private final Map<String, List<String>> typeMap = new HashMap<>();
 
+    /**
+     * constructor
+     */
     public FoodMapper() {
         createFoodMap();
         createTypeMap();
@@ -131,6 +139,12 @@ public class FoodMapper {
         ));
     }
 
+
+    /**
+     * Given a food name get its type
+     * @param foodName a name that is the key of foodMap
+     * @return Fruit, nut of leaf
+     */
     public String getFoodType(String foodName) {
         for (Map.Entry<String, List<String>> entry : typeMap.entrySet()) {
             if (entry.getValue().contains(foodName)) {

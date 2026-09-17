@@ -122,15 +122,19 @@ test {
 
 tasks.register("cucumber", Test)  {
     group = "verification"
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
 
-    useJUnitPlatform()
+    useJUnitPlatform {
+        includeEngines 'junit-platform-suite', 'cucumber'
+    }
 
     filter {
         includeTestsMatching "seng202.team4.cucumber.*"
     }
 
     testLogging {
-        events "failed"
+        events = ['passed', 'skipped', 'failed']
         exceptionFormat "full"
     }
 
