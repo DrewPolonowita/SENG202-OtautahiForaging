@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -12,16 +13,13 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
-import seng202.team4.services.dataCentre.recipeData.RecipeService;
 
 import java.util.List;
 
@@ -36,6 +34,8 @@ public class RecipesController extends ScreenController {
     private RecipeDataManager recipeService;
     @FXML
     private StackPane attributionPane;
+    @FXML
+    ProgressIndicator progressIndicator;
 
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
@@ -91,13 +91,30 @@ public class RecipesController extends ScreenController {
             @Override
             protected void succeeded() {
                 super.succeeded();
+                progressIndicator.visibleProperty().unbind();
+                progressIndicator.setVisible(false);
+
                 List<Recipe> recipes = getValue();
                 for (Recipe recipe : recipes) {
+                    if (recipe == null) {
+                        continue;
+                    }
                     createRecipeCard(recipe);
                 }
             }
 
+            @Override
+            protected void failed() {
+                super.failed();
+                progressIndicator.visibleProperty().unbind();
+                progressIndicator.setVisible(false);
+                LOG.error("Failed to load recipes for {}", food);
+            }
+
         };
+
+        progressIndicator.visibleProperty().bind(task.runningProperty());
+
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);
