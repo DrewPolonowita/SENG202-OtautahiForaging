@@ -162,7 +162,6 @@ public class OAuth1Signature {
      * @return time in seconds
      */
     private long getTimeInSecondsSince1970() {
-        long seconds = System.currentTimeMillis() / 1000;
-        return seconds;
+        return System.currentTimeMillis() / 1000;
     }
 }

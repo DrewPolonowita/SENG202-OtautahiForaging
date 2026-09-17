@@ -21,7 +21,8 @@ public class Food {
      * @param name the name of the food
      * @param type the type of food (e.g. fruit or nut)
      */
-    public Food(int id, String name, String type, double calories, double carbohydrates, double protein, double fat, String servingDescription, int servingId) {
+    public Food(int id, String name, String type, double calories, double carbohydrates, double protein, double fat,
+                String servingDescription, int servingId) {
         this.id = id;
         this.name = name;
         this.type = type;

@@ -26,7 +26,9 @@ public class RecipeDAO implements RecipeRepository {
      * Constructor
      * @param databaseManager means of connecting to the database
      */
-    public RecipeDAO(DatabaseManager databaseManager) { this.databaseManager = databaseManager; }
+    public RecipeDAO(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
+    }
 
 
     /**
@@ -381,9 +383,7 @@ public class RecipeDAO implements RecipeRepository {
                    common_name,
                    recipe_id
                    ) VALUES (?,?);
-        
                 """;
-
         try (Connection conn = databaseManager.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 

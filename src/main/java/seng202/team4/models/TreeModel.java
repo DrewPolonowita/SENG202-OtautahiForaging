@@ -20,8 +20,8 @@ public class TreeModel {
     private final String genus;
     private final String food;
     private final String commonName;
-    private LocalDateTime lastUpdated;
-    private String serviceStatus;
+    private final LocalDateTime lastUpdated;
+    private final String serviceStatus;
 
     /**
      * Constructor
@@ -31,7 +31,8 @@ public class TreeModel {
      * @param genus Genus of tree
      * @param food Food type of a tree
      */
-    public TreeModel(int id, float[] coordinates, String ownership, String genus, String food, String commonName, LocalDateTime lastUpdated, String serviceStatus) {
+    public TreeModel(int id, float[] coordinates, String ownership, String genus,
+                     String food, String commonName, LocalDateTime lastUpdated, String serviceStatus) {
         this.id = id;
         this.coordinates = coordinates;
         this.ownership = ownership;
@@ -131,7 +132,4 @@ public class TreeModel {
         return serviceStatus;
     }
 
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
-    }
 }

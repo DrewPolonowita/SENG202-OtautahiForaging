@@ -37,10 +37,25 @@ public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
      */
     Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe);
 
+    /**
+     * Method to check if the recipe details are up-to-date in the last 24hrs and exist
+     * in order to fit the FatSecret rule of not storing data for longer than 24hrs
+     * @param recipeId id of item to check
+     * @return True if the data is good to use, false otherwise
+     */
     boolean recipeDetailsUpToDateAndExist(int recipeId);
 
+    /**
+     * Add data to the recipe_uses_food table
+     * @param food food to add
+     * @param recipeId recipe id with the food in it
+     */
     void addRecipeUseFood(String food, int recipeId);
 
+    /**
+     * Method to replace a recipe in the database if it's out of date
+     * @param recipe recipe needing tot be replaced
+     */
     void replaceRecipe(Recipe recipe);
 
 }

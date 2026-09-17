@@ -11,16 +11,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for accessing note related data in database
+ */
 public class NoteDAO implements NoteRepository {
-
+    private static final DateTimeFormatter SQLITE_FORMAT =
+            DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
     private static final Logger LOG = LogManager.getLogger(NoteDAO.class);
     private final DatabaseManager databaseManager;
 
-    private static final DateTimeFormatter SQLITE_FORMAT =
-            DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
     /**
      * Constructor
-     * @param databaseManager connects to the database
      */
     public NoteDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
@@ -84,6 +85,12 @@ public class NoteDAO implements NoteRepository {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * Get a note from the database
+     * @param id the primary key of object to get
+     * @return the note with id provided
+     */
     @Override
     public Note getOne(Integer id) {
         Note note = null;

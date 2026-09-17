@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.services.FoodMapper;
 
 /**
  * DAOInterface implementation for trees, handles tree related actions to database
@@ -28,8 +27,7 @@ public class TreeDAO implements TreeRepository {
      * Constructor
      * @param databaseManager means of connecting to the database
      */
-    public TreeDAO(DatabaseManager databaseManager)
-    {
+    public TreeDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
@@ -232,7 +230,17 @@ public class TreeDAO implements TreeRepository {
         }
     }
 
-    public List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west) {
+    /**
+     * Method to get trees that are within a certain region and of a type
+     * @param food Type of tree to look for, should be a mapped food from
+     * {@link seng202.team4.services.FoodMapper} e.g "Apple" or "Walnut"
+     * @param north north
+     * @param east east
+     * @param south south
+     * @param west west
+     * @return list of trees of type in the region
+     */
+    public List<TreeModel> getTreesByRegion(String food, double north, double east, double south, double west) {
         List<TreeModel> trees = new ArrayList<>();
         String query = """
                 SELECT *
@@ -242,7 +250,7 @@ public class TreeDAO implements TreeRepository {
         try (Connection conn = databaseManager.connect();
                  PreparedStatement ps = conn.prepareStatement(query)
         ) {
-            ps.setString(1, type);
+            ps.setString(1, food);
             ps.setDouble(2, west);
             ps.setDouble(3, east);
             ps.setDouble(4, south);

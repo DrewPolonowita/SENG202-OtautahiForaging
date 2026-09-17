@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.FoodMapper;
-import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClientInterface;
@@ -170,8 +169,8 @@ public class TreeService implements TreeDataManager {
 
     /**
      * For use in table view, get trees by food without regard for region
-     * @param food
-     * @return
+     * @param food food to look for
+     * @return list of trees
      */
     public List<TreeModel> getTreesByFood(String food) {
         List<TreeModel> databaseTrees = treeRepository.getTreesByFoodName(food);

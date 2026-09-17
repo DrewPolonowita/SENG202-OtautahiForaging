@@ -8,7 +8,6 @@ import seng202.team4.models.Region;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +15,10 @@ import java.util.List;
  * Placeholder
  */
 public class RegionDAO implements RegionRepository {
+    private static final int DUPLICATE_ITEM_CODE = 19;
     private static final Logger LOG = LogManager.getLogger(RegionDAO.class);
     private final DatabaseManager databaseManager;
 
-    private static final int DUPLICATE_ITEM_CODE = 19;
 
     /**
      * Creates a new instance with a {@link DatabaseManager}

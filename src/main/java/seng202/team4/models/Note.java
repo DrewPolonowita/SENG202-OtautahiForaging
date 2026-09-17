@@ -3,6 +3,9 @@ package seng202.team4.models;
 
 import java.time.LocalDateTime;
 
+/**
+ * Model representing a note or journal entry
+ */
 public class Note {
 
     private int id;
@@ -12,6 +15,9 @@ public class Note {
     private String description;
     private String imagePath;
 
+    /**
+     * Constructor
+     */
     public Note(int id, String name, LocalDateTime timeCreated, int treeId, String description, String imagePath) {
         this.id = id;
         this.name = name;
