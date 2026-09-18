@@ -28,7 +28,7 @@ public class AddNoteController extends ScreenController {
 
     private final TreeModel treeModel;
     @FXML
-    private TextField commonNameField;
+    private Label commonNameDisplay;
     @FXML
     private TextArea fieldNotesArea;
     @FXML
@@ -71,7 +71,7 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void initialize() {
-        commonNameField.setText(treeModel.getCommonName());
+        commonNameDisplay.setText(treeModel.getCommonName());
     }
 
     /**
@@ -109,13 +109,13 @@ public class AddNoteController extends ScreenController {
         } catch (DuplicateEntryException e) {
             LOG.warn("Failed to add note for tree {}: duplicate entry", treeModel.getId(), e);
         }
-        ((Stage) commonNameField.getScene().getWindow()).close();
+        ((Stage) commonNameDisplay.getScene().getWindow()).close();
     }
 
     /**
      * closes window
      */
     public void handleClose() {
-        ((Stage) commonNameField.getScene().getWindow()).close();
+        ((Stage) commonNameDisplay.getScene().getWindow()).close();
     }
 }

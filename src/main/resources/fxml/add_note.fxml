@@ -17,15 +17,14 @@
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>
-        <Label text="COMMON NAME" styleClass="note-card-title"/>
-        <TextField fx:id="commonNameField" styleClass="text-field" editable="false"/>
+        <Label fx:id="commonNameDisplay" styleClass="note-card-title"/>
     </VBox>
 
     <VBox spacing="6" alignment="CENTER">
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>
-        <Label text="FIELD NOTES" styleClass="note-card-title" />
+        <Label text="FIELD NOTES" styleClass="note-card-subtitle" />
         <TextArea fx:id="fieldNotesArea" styleClass="text-area" promptText="Describe the tree you saw..."/>
     </VBox>
 
@@ -33,7 +32,7 @@
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>
-        <Label text="PHOTOGRAPH" styleClass="note-card-title"/>
+        <Label text="PHOTOGRAPH" styleClass="note-card-subtitle"/>
         <VBox fx:id="uploadZone" styleClass="upload-zone" alignment="CENTER" spacing="8" onMouseClicked="#handleSelectedPhoto">
             <Label fx:id="uploadHint" text="Upload a photo" styleClass="text-area"/>
         </VBox>

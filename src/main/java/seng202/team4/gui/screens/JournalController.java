@@ -85,7 +85,7 @@ public class JournalController extends ScreenController {
         }
 
         Label name = new Label(note.getName());
-        name.getStyleClass().add("note-card-title");
+        name.getStyleClass().add("note-card-subtitle");
 
         Label timestamp = new Label(note.getTimeCreated().format(DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a")));
         timestamp.getStyleClass().add("note-card-date");
