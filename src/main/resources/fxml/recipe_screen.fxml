@@ -6,81 +6,67 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.TilePane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
 <StackPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.RecipesController">
-   <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea" fx:id="recipeListPane">
+   <BorderPane fx:id="recipeListPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea">
       <center>
          <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="961.0" prefWidth="1177.0" styleClass="recipeScrollPane">
             <content>
                <TilePane fx:id="recipeTilePane" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefTileHeight="260.0" prefTileWidth="300.0" styleClass="recipeCardBaseArea" vgap="20.0">
                   <padding>
-                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                   </padding>
                </TilePane>
             </content>
             <padding>
-               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
          </ScrollPane>
       </center>
       <padding>
-         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
    </BorderPane>
-   <Button mnemonicParsing="false"
-           onAction="#onFilterClicked"
-           styleClass="filters"
-           StackPane.alignment="TOP_LEFT">
+   <Button mnemonicParsing="false" onAction="#onFilterClicked" styleClass="filters" StackPane.alignment="TOP_LEFT">
       <graphic>
          <Region>
             <styleClass>
-               <String fx:value="icon-filter"/>
-               <String fx:value="icon"/>
+               <String fx:value="icon-filter" />
+               <String fx:value="icon" />
             </styleClass>
          </Region>
       </graphic>
       <StackPane.margin>
-         <Insets left="10.0" top="25.0"/>
+         <Insets left="10.0" top="25.0" />
       </StackPane.margin>
    </Button>
 
-   <VBox fx:id="filterList"
-         maxHeight="-Infinity"
-         maxWidth="160.0"
-         minWidth="160.0"
-         prefWidth="160.0"
-         styleClass="filterTab"
-         stylesheets="@../css/icons.css"
-         visible="false"
-         StackPane.alignment="TOP_LEFT">
+   <VBox fx:id="filterList" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
 
       <StackPane.margin>
-         <Insets left="10.0" top="65.0"/>
+         <Insets left="10.0" top="65.0" />
       </StackPane.margin>
 
       <padding>
-         <Insets bottom="10.0"
-                 left="10.0"
-                 right="10.0"
-                 top="8.0"/>
+         <Insets bottom="10.0" left="10.0" right="10.0" top="8.0" />
       </padding>
    </VBox>
-   <BorderPane fx:id="recipeHighlightPane" visible="false" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea">
+   <BorderPane fx:id="recipeHighlightPane" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea" visible="false">
       <padding>
-         <Insets bottom="10" left="10" right="10" top="10"/>
+         <Insets bottom="10" left="10" right="10" top="10" />
       </padding>
       <top>
          <Button fx:id="closeButton" maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#closeRecipe" prefHeight="26" prefWidth="26" styleClass="sideBar-button" BorderPane.alignment="TOP_RIGHT">
             <graphic>
                <Region>
                   <styleClass>
-                     <String fx:value="icon-close"/>
-                     <String fx:value="icon"/>
+                     <String fx:value="icon-close" />
+                     <String fx:value="icon" />
                   </styleClass>
                </Region>
             </graphic>
@@ -89,15 +75,20 @@
       <center>
          <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="recipeScrollPane">
             <content>
-               <Text fx:id="recipeDetailsText" strokeType="OUTSIDE" strokeWidth="0"/>
+               <VBox styleClass="recipeDetailsContent">
+                  <Text fx:id="recipeDetailsText" strokeType="OUTSIDE" strokeWidth="0" styleClass="genericfill-text" />
+                  <padding>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  </padding>
+               </VBox>
             </content>
          </ScrollPane>
       </center>
    </BorderPane>
-   <ProgressIndicator fx:id="progressIndicator" progress="-1" visible="false" StackPane.alignment="CENTER"/>
+   <ProgressIndicator fx:id="progressIndicator" progress="-1" visible="false" StackPane.alignment="CENTER" />
    <StackPane fx:id="attributionPane" alignment="BOTTOM_RIGHT" mouseTransparent="false" pickOnBounds="false">
       <padding>
-         <Insets bottom="15" right="15"/>
+         <Insets bottom="15" right="15" />
       </padding>
    </StackPane>
 </StackPane>

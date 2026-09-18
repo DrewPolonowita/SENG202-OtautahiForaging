@@ -92,6 +92,11 @@
     -fx-text-fill: -text-color;
     -fx-font-size: 12px;
 }
+.genericfill-text {
+    -fx-fill: -primary-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
 
 /* ---------- Filters / color picker ---------- */
 .filters {
@@ -333,4 +338,7 @@
     -fx-border-color: transparent;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+.generic-background {
+    -fx-background-color: -primary-bg-color;
 }
