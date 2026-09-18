@@ -28,7 +28,9 @@ import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -55,6 +57,7 @@ public class RecipesController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
+    private final Set<Integer> displayedRecipeIds = new HashSet<>();
     /**
      * Initialise the window
      *
@@ -82,7 +85,6 @@ public class RecipesController extends ScreenController {
         ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage();
         attributionPane.getChildren().add(attribution);
         createFruitButtons();
-        toggleAllFilterButtons();
 
     }
 
@@ -92,15 +94,6 @@ public class RecipesController extends ScreenController {
     @FXML
     private void onFilterClicked() {
         filterList.setVisible(!filterList.isVisible());
-    }
-
-    /**
-     * Button to test search for apple
-     *
-     */
-    @FXML
-    public void appleSearch() {
-        recipeSearch("Apple");
     }
 
     /**
@@ -123,9 +116,10 @@ public class RecipesController extends ScreenController {
 
                 List<Recipe> recipes = getValue();
                 for (Recipe recipe : recipes) {
-                    if (recipe == null) {
+                    if (recipe == null || displayedRecipeIds.contains(recipe.getId())) {
                         continue;
                     }
+                    displayedRecipeIds.add(recipe.getId());
                     createRecipeCard(recipe);
                 }
             }
@@ -309,6 +303,24 @@ public class RecipesController extends ScreenController {
      */
     public void filterButtonClicked(Button buttons, Fruit fruit) {
         toggleButtonStyle(buttons);
+
+        refreshRecipesForSelectedFilters();
+    }
+
+    /**
+     *
+     */
+    private void refreshRecipesForSelectedFilters() {
+        recipeTilePane.getChildren().clear();
+        displayedRecipeIds.clear();
+
+        for (Node node : filterList.getChildren()) {
+            Button button = (Button) node;
+
+            if (button.getStyleClass().contains("sideBar-button-selected")) {
+                recipeSearch(button.getText().trim());
+            }
+        }
     }
 
     /**
