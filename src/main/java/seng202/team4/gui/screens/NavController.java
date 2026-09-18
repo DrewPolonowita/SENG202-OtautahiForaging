@@ -148,4 +148,13 @@ public class NavController extends ScreenController {
         newSelection.getGraphic().getStyleClass().add("icon-selected");
         selectedButton = newSelection;
     }
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onTableButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchTableScreen(stateManager);
+    }
 }
