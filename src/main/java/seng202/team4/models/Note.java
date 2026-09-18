@@ -27,26 +27,50 @@ public class Note {
         this.imagePath = imagePath;
     }
 
+    /**
+     * Getter for tree id
+     * @return the id of a tree the note is about
+     */
     public int getTreeId() {
         return treeId;
     }
 
+    /**
+     * Getter for name
+     * @return the common name of the food that is grown on a tree for a given note
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter for time created
+     * @return the time a note was created
+     */
     public LocalDateTime getTimeCreated() {
         return timeCreated;
     }
 
+    /**
+     * Getter for a note id
+     * @return the unique id for a note
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Getter for description
+     * @return the description the user gave for a note
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Getter for image path
+     * @return the image path for an image uploaded as part of a note
+     */
     public String getImagePath() {
         return imagePath;
     }

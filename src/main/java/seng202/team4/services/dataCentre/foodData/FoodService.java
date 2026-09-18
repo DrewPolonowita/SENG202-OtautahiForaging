@@ -144,21 +144,4 @@ public class FoodService implements FoodDataManager {
         return databaseFood;
     }
 
-//    /**
-//     * Method to return all food models of one shared type from database
-//     * @param type the type of food model being returned (e.g. fruit or nut)
-//     * @return food models of the given type
-//     */
-//    public List<Food> getFoodByType(String type) {
-//        List<Food> databaseFood = foodDAO.getFoodByType(type);
-//        if (!databaseFood.isEmpty()) {
-//            log.info("Loaded {} {} type foods from database", databaseFood.size(), type);
-//            return databaseFood;
-//        }
-//        populateFoodDatabase();
-//        databaseFood = foodDAO.getFoodByType(type);
-//        return databaseFood;
-//    }
-
-
 }

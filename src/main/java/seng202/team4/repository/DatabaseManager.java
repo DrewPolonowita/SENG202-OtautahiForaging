@@ -130,7 +130,7 @@ public class DatabaseManager {
 
             String[] individualStatements = sb.toString().split("--SPLIT");
             try (Connection conn = this.connect();
-                Statement statement = conn.createStatement()) {
+                    Statement statement = conn.createStatement()) {
                 for (String singleStatement : individualStatements) {
                     statement.executeUpdate(singleStatement);
                 }

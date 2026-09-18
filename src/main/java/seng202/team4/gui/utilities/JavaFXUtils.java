@@ -9,6 +9,7 @@ import javafx.util.Duration;
 
 /**
  * Methods for helping with JavaFXX functionality
+ * @author Team 4
  */
 public final class JavaFXUtils {
     private JavaFXUtils() {

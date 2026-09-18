@@ -97,7 +97,13 @@ public class ApiClient implements ApiClientInterface {
 
     }
 
-
+    /**
+     * Get from api with oauth authentication
+     * @param url url request
+     * @param responseType type of record object to be create
+     * @param oauthHeader oauth header string
+     * @return Request object of type request
+     */
     @Override
     public <T> Request<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
         try {
