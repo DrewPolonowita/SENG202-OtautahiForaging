@@ -26,15 +26,13 @@ import java.util.List;
  */
 public class JournalController extends ScreenController {
 
-    @FXML
-    private FlowPane notesFlowPane;
-    private StateManager stateManager;
-
     private static final Logger LOG = LogManager.getLogger(JournalController.class);
 
+    @FXML
+    private FlowPane notesFlowPane;
+
     /**
-     * Initialise the window
-     *
+     * Constructs a JournalController with the given state manager.
      * @param stateManager Reference for window manager
      */
     public JournalController(StateManager stateManager) {
@@ -42,6 +40,11 @@ public class JournalController extends ScreenController {
         super(stateManager);
     }
 
+    /**
+     * Initializes the journal screen by retrieving all saved notes.
+     * If no notes exist, an empty state message is displayed.
+     * Otherwise, a card is created and displayed for each note.
+     */
     @FXML
     private void initialize() {
         LOG.info("JournalController initialize() called");
@@ -56,9 +59,10 @@ public class JournalController extends ScreenController {
     }
 
     /**
-     * Builds the card for each node in a grid style
-     * @param note note added by user
-     * @return the built card to be iterated through
+     * Builds a visual card displaying the details of a journal note.
+     * The card includes the note's image, name, and creation timestamp.
+     * @param note the journal note to display
+     * @return a Vbox containing the note card
      */
     private VBox buildNoteCard(Note note) {
         VBox card = new VBox();
@@ -95,6 +99,11 @@ public class JournalController extends ScreenController {
         return card;
     }
 
+    /**
+     * Builds the empty state display shown when the journal contains no notes.
+     * The display contains an icon, title, and explanatory message.
+     * @return a VBox containing the empty state display
+     */
     private VBox buildEmptyState() {
         VBox emptyState = new VBox(8);
         emptyState.getStyleClass().add("empty-state");
@@ -116,15 +125,27 @@ public class JournalController extends ScreenController {
         return emptyState;
     }
 
+    /**
+     * Opens the expanded view for the selected journal note.
+     * @param note the journal note selected by the user
+     */
     private void handleNoteClicked(Note note) {
         getStateManager().getWindowManager().openExpandNote(note, getStateManager());
     }
 
+    /**
+     * Returns the FXML file used to create the journal screen.
+     * @return the journal screen FXML path file
+     */
     @Override
     public String getFxmlFile() {
         return "/fxml/journal_screen.fxml";
     }
 
+    /**
+     * Returns the title displayed for the journal screen.
+     * @return the title of the journal screen
+     */
     @Override
     public String getTitle() {
         return "Field Journal";
