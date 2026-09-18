@@ -32,7 +32,7 @@ public class MapController extends ScreenController {
     private final MapService mapService;
 
     private final TreeDataManager treeService;
-    private static final double MAX_HEIGHT_FOR_DISPLAYING = 0.05;
+    private static final double MAX_HEIGHT_FOR_DISPLAYING = 1;
 
     private double northBound;
     private double eastBound;

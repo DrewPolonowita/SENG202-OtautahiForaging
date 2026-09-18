@@ -45,6 +45,8 @@ public class MapService {
     public CompletableFuture<List<TreeModel>> getAllTreesInRegion(
             double north, double east, double south, double west
     ) {
+
+        System.out.println(selectedFruits);
         List<CompletableFuture<List<TreeModel>>> futures = selectedFruits.stream()
                 .map(fruit -> CompletableFuture.supplyAsync(() ->
                                 treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west),

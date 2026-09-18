@@ -72,38 +72,6 @@ public class TreeService implements TreeDataManager {
         ArrayList<TreeModel> trees = new ArrayList<>();
         List<Region> regions = regionService.getOverlappingRegions(type, north, east, south, west);
 
-//        for (Region region: regions) {
-//            if (region.getLastUpdated() != null) {
-//                List<TreeModel> databaseTrees = treeRepository.getTreesByRegion(type, north, east, south, west);
-//                for (TreeModel tree: databaseTrees) {
-//                    if (!trees.contains(tree)) {
-//                        trees.add(tree);
-//                    }
-//                }
-//            } else {
-//                List<TreeModel> apiTrees = treeApiHandler.getTreesByRegion(
-//                        type, region.getNorthBound(),
-//                        region.getEastBound(),
-//                        region.getSouthBound(),
-//                        region.getWestBound()
-//                );
-//
-//                for (TreeModel tree: trees) {
-//                    try {
-//                        treeRepository.add(tree);
-//                    } catch (DuplicateEntryException e) {
-//                        treeRepository.update(tree);
-//                    }
-//                }
-//
-//                for (TreeModel tree: apiTrees) {
-//                    if (!trees.contains(tree)) {
-//                        trees.add(tree);
-//                    }
-//                }
-//            }
-//        }
-
         Region notRecentRegion = regionService.getQueryRegion(regions);
         if (notRecentRegion != null) {
             List<Region> insideRegions = regionService.getRegionsInside(notRecentRegion, regions);

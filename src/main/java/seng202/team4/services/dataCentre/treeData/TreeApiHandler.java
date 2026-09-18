@@ -178,7 +178,7 @@ public class TreeApiHandler {
      * @param west the min x value for the region
      */
     public List<TreeModel> getTreesByRegion(String commonName, double north, double east, double south, double west) {
-        Request request = treeApiHandler.getTrees(createApiTypeQuery(commonName),
+        Request request = treeApiHandler.getTrees("CommonName='" + commonName + "'",
                 "TreeID,Ownership,Genus,CommonName",
                 1000,
                 north,
