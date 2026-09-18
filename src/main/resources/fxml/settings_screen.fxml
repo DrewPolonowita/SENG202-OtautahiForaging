@@ -32,14 +32,6 @@
          </HBox>
          <Label styleClass="settings-text" text="Accent Colour" />
          <ColorPicker fx:id="colorPicker" onAction="#changeThemeColour" />
-         <Button fx:id="tableButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onTableButtonClicked" styleClass="sideBar-button" text="  View Table" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
-            <font>
-               <Font name="System Bold" size="24.0" />
-            </font>
-            <graphic>
-               <Region styleClass="icon, icon-table" />
-            </graphic>
-         </Button>
       </VBox>
    </center>
    <padding>

@@ -112,6 +112,14 @@
                         <Region styleClass="icon, icon-recipe" />
                      </graphic>
                   </Button>
+                  <Button fx:id="tableButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onTableButtonClicked" styleClass="sideBar-button" text="  View Table" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                     <graphic>
+                        <Region styleClass="icon, icon-table" />
+                     </graphic>
+                  </Button>
                   <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <Button fx:id="settingsButton" alignment="TOP_LEFT" maxWidth="Infinity" onAction="#onSettingsButtonClicked" styleClass="sideBar-button" text="  Settings">
                      <graphic>

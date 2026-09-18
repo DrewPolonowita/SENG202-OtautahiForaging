@@ -78,14 +78,6 @@ public class SettingsController extends ScreenController {
         getStateManager().getWindowManager().getThemeService().setPrimaryColor(colorPicker.getValue());
     }
 
-    /**
-     * Method to call when our counter button is clicked
-     *
-     */
-    @FXML
-    public void onTableButtonClicked() {
-        StateManager stateManager = getStateManager();
-        stateManager.getWindowManager().launchTableScreen(stateManager);
-    }
+
 
 }
