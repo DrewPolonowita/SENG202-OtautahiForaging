@@ -187,8 +187,9 @@
     -fx-padding: 60 30;
 }
 .empty-state-icon {
-    -fx-font-size: 40px;
-    -fx-opacity: 0.7;
+    -fx-fit-width: 64px;
+    -fx-fit-height: 64px;
+    -fx-preserve-ratio: true;
 }
 .empty-state-title {
     -fx-text-fill: white;
