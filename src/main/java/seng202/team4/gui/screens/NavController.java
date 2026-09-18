@@ -32,6 +32,7 @@ public class NavController extends ScreenController {
     @FXML private Button journalsButton;
     @FXML private Button recipesButton;
     @FXML private Button settingsButton;
+    @FXML private Button tableButton;
     @FXML private Button selectedButton;
 
     /**
@@ -137,6 +138,17 @@ public class NavController extends ScreenController {
     }
 
     /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onTableButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchTableScreen(stateManager);
+        setSelectedButton(tableButton);
+    }
+
+    /**
      * Updates sidebar styling to reflect which tab is currently active.
      */
     private void setSelectedButton(Button newSelection) {
@@ -147,14 +159,5 @@ public class NavController extends ScreenController {
         newSelection.getStyleClass().add("sideBar-button-selected");
         newSelection.getGraphic().getStyleClass().add("icon-selected");
         selectedButton = newSelection;
-    }
-    /**
-     * Method to call when our counter button is clicked
-     *
-     */
-    @FXML
-    public void onTableButtonClicked() {
-        StateManager stateManager = getStateManager();
-        stateManager.getWindowManager().launchTableScreen(stateManager);
     }
 }
