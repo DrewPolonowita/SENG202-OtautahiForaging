@@ -40,7 +40,7 @@ public class RecipeService implements RecipeDataManager {
      * Method to get recipes for a particular food.
      * First we check for if we are storing id's that are mapped to that food, if not
      * Call the api using the recipe search function.
-     * Then check if the details for those ids are up to date
+     * Then check if the details for those ids are up-to-date
      * if not call the api using get recipe by id function
      * @param food A food specifically from the food groups we map
      * @return list of recipes
@@ -53,6 +53,7 @@ public class RecipeService implements RecipeDataManager {
         boolean noIdsExist = recipeIds.isEmpty();
         if (noIdsExist) {
             recipeIds = recipeApiHandler.getRecipeIdsByFoodFromApi(food);
+            log.info("Loaded {} recipes from api", recipeIds.size());
         }
         for (int id : recipeIds) {
             Recipe recipe = getRecipeById(id);
@@ -74,17 +75,21 @@ public class RecipeService implements RecipeDataManager {
      */
     private Recipe getRecipeById(int id) {
         if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
+            log.info("loaded from database");
             return recipeDAO.getOne(id);
 
         } else {
             RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
+            log.info("Loaded from api ");
             if (recipeRecord == null) {
                 return null;
             }
             Recipe recipe = createRecipeObjectById(recipeRecord);
             recipeDAO.replaceRecipe(recipe);
-            populateIngredientTable(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient());
-            populateIngredientInRecipeTable(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient(), recipe);
+            populateIngredientTable(recipeRecord.ingredients()
+                    == null ? List.of() : recipeRecord.ingredients().ingredient());
+            populateIngredientInRecipeTable(recipeRecord.ingredients()
+                    == null ? List.of() : recipeRecord.ingredients().ingredient(), recipe);
             return recipe;
         }
     }
@@ -98,8 +103,10 @@ public class RecipeService implements RecipeDataManager {
     public Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
         int recipeId = recipeRecord.recipeId();
         String recipeName = recipeRecord.recipeName();
-        String method = buildMethodString(recipeRecord.directions() == null ? List.of() : recipeRecord.directions().direction());
-        List<String> ingredients = getIngredientString(recipeRecord.ingredients() == null ? List.of() : recipeRecord.ingredients().ingredient());
+        String method = buildMethodString(recipeRecord.directions()
+                == null ? List.of() : recipeRecord.directions().direction());
+        List<String> ingredients = getIngredientString(recipeRecord.ingredients()
+                == null ? List.of() : recipeRecord.ingredients().ingredient());
 
 
 
@@ -110,7 +117,10 @@ public class RecipeService implements RecipeDataManager {
         double fat = recipeRecord.servingSizes().serving().fat();
         String description = recipeRecord.recipeDescription();
         String imageUrl = null;
-        if (recipeRecord.images() != null && recipeRecord.images().imageUrl() != null && !recipeRecord.images().imageUrl().isEmpty()) {
+        if (recipeRecord.images()
+                != null && recipeRecord.images().imageUrl()
+                != null && !recipeRecord.images().imageUrl().isEmpty()
+        ) {
             imageUrl = recipeRecord.images().imageUrl().getFirst();
         }
         int cookingTime = recipeRecord.cookingTime();
@@ -134,7 +144,11 @@ public class RecipeService implements RecipeDataManager {
         );
     }
 
-
+    /**
+     * Take RecipeIngredient objects and get all their ingredient descriptions
+     * @param ingredients list of ingredients
+     * @return a list of all the ingredient descriptions
+     */
     public List<String> getIngredientString(List<RecipeIngredient> ingredients) {
         List<String> ingredientStrings = new ArrayList<>();
         for (RecipeIngredient ingredient : ingredients) {
@@ -150,12 +164,15 @@ public class RecipeService implements RecipeDataManager {
      * @return a string containing the recipe's method
      */
     private String buildMethodString(List<RecipeDirection> directions) {
-        List<RecipeDirection> sortedDirections = directions.stream().sorted(Comparator.comparing(RecipeDirection::directionNumber)).toList();
+        List<RecipeDirection> sortedDirections = directions
+                .stream()
+                .sorted(Comparator.comparing(RecipeDirection::directionNumber))
+                .toList();
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < sortedDirections.size(); i++) {
-            stringBuilder.append(sortedDirections.get(i).directionNumber());
-            stringBuilder.append(": ").append(sortedDirections.get(i).directionDescription()).append("\n");
+        for (RecipeDirection sortedDirection : sortedDirections) {
+            stringBuilder.append(sortedDirection.directionNumber());
+            stringBuilder.append(": ").append(sortedDirection.directionDescription()).append("\n");
         }
         return stringBuilder.toString();
     }
@@ -206,24 +223,6 @@ public class RecipeService implements RecipeDataManager {
         for (RecipeIngredient ingredient : ingredients) {
             recipeDAO.addIngredientsByRecipe(ingredient, recipe);
         }
-    }
-
-    /**
-     * Method for loading recipes from database by food they contain
-     * @param food food that should be in the ingredients list of a recipe
-     * @return a list of recipes that have the specified food as an ingredient, or null if none in database
-     */
-    public List<Recipe> getRecipeByFood(String food) {
-        List<Integer> databaseRecipesId = recipeDAO.getRecipeIdsByFoodName(food);
-        List<Recipe> databaseRecipes = new ArrayList<>();
-        for (int id : databaseRecipesId) {
-            databaseRecipes.add(recipeDAO.getOne(id));
-        }
-        if (!databaseRecipes.isEmpty()) {
-            log.info("Loaded {} {} recipes from database", databaseRecipes.size(), food);
-            return databaseRecipes;
-        }
-        return null;
     }
 
 

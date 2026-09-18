@@ -140,13 +140,19 @@
 /* ---------- Close buttons ---------- */
 .icon-button {
     -fx-background-radius: 50%;
+    -fx-background-insets: 0;
     -fx-text-fill: white;
     -fx-min-width: 26;
     -fx-min-height: 26;
+    -fx-max-width: 26;
+    -fx-max-height: 26;
     -fx-cursor: hand;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 .close-button {
     -fx-background-color: -note-accent;
+    -fx-text-fill: white;
 }
 .expand-note-close {
     -fx-background-color: rgba(255,255,255,0.15);
@@ -169,10 +175,16 @@
     -fx-font-size: 11px;
     -fx-padding: 4 14 0 14;
 }
+.journalCardBaseArea {
+    -fx-background-color: -secondary-bg-color;
+    -fx-border-color: -primary-bg-color;
+    -fx-text-fill: -text-color;
+    -fx-border-width: 0;
+}
 
 /* ---------- Expand-note dialog ---------- */
 .expand-note-root {
-    -fx-background-color: #4a7c59;
+    -fx-background-color: #112212;
     -fx-background-radius: 20;
 }
 .expand-note-body {
@@ -191,7 +203,7 @@
 
 /* ---------- Add-note dialog ---------- */
 .expand-note-root {
-    -fx-background-color: -note-accent-hover;
+    -fx-background-color: -note-bg;
     -fx-background-radius: 20;
 }
 .expand-note-body {

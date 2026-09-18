@@ -35,11 +35,11 @@ public class FoodApiHandler {
         Request<FoodSearchResponse> response = foodApiClient.searchFood(searchExpression, 1);
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
-            LOG.error("Error: getFoodBySearchFromApi doesn't return response, code: " + responseCode);
+            LOG.error("Error: getFoodBySearchFromApi doesn't return response, code: {}", responseCode);
             return 0;
         }
 
-        return response.getApiResponse().foods().food().get(0).foodId();
+        return response.getApiResponse().foods().food().getFirst().foodId();
     }
 
     /**
@@ -55,12 +55,11 @@ public class FoodApiHandler {
         Request<FoodByIdResponse> response = foodApiClient.getFoodById(id);
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
-            LOG.error("Error: getFoodById doesn't return response, code: " + responseCode);
+            LOG.error("Error: getFoodById doesn't return response, code: {}", responseCode);
             return null;
         }
 
-        Food createdFood = createFoodObjectById(response.getApiResponse().food(), foodName, foodType);
-        return createdFood;
+        return createFoodObjectById(response.getApiResponse().food(), foodName, foodType);
     }
 
 
@@ -73,8 +72,6 @@ public class FoodApiHandler {
      */
     public Food createFoodObjectById(FoodByIdRecord foodRecord, String foodName, String foodType) {
         int foodId = foodRecord.foodId();
-        String name = foodName;
-        String type = foodType;
 
         double calories = foodRecord.servings().serving().getFirst().calories();
         double fat = foodRecord.servings().serving().getFirst().fat();
@@ -85,8 +82,8 @@ public class FoodApiHandler {
 
         return new Food(
                 foodId,
-                name,
-                type,
+                foodName,
+                foodType,
                 calories,
                 carbohydrate,
                 protein,

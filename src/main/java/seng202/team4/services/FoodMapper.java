@@ -2,7 +2,6 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.services.dataCentre.foodData.FoodService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +10,8 @@ import java.util.Map;
 public class FoodMapper {
 
     private static final Logger log = LogManager.getLogger(FoodMapper.class);
-    private Map<String, List<String>> foodMap = new HashMap<>();
-    private Map<String, List<String>> typeMap = new HashMap<>();
+    private final Map<String, List<String>> foodMap = new HashMap<>();
+    private final Map<String, List<String>> typeMap = new HashMap<>();
 
     public FoodMapper() {
         createFoodMap();
@@ -31,7 +30,7 @@ public class FoodMapper {
                 "Pillar Crab Apple",
                 "Siberian Crab",
                 "Southern crabapple",
-                "Hall''s Crab Apple",
+                "Hall's Crab Apple",
                 "Zumi Crab Apple",
                 "Common Apple"
         ));
@@ -140,6 +139,28 @@ public class FoodMapper {
         }
         return "N/A";
     }
+
+    /**
+     * Mapping the common name to a food type in a new column
+     * @param commonName common name
+     * @return the food type based on commonName
+     */
+    public String getFoodName(String commonName) {
+        if (commonName == null) {
+            return "N/A";
+        }
+        for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
+            List<String> commonNames = entry.getValue();
+            for (String name : commonNames) {
+                if (name.trim().equalsIgnoreCase(commonName.trim())) {
+                    return entry.getKey();
+                }
+            }
+        }
+        log.warn("No food mapping for {}", commonName);
+        return "N/A";
+    }
+
     /**
      * Getter for food map
      * @return the food map

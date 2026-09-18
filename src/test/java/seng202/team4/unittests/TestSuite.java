@@ -22,4 +22,9 @@ public abstract class TestSuite {
     public String getTestDb() {
         return TEST_DB;
     }
+
+    @AfterEach
+    void deleteDatabase() throws IOException {
+         Files.deleteIfExists(Path.of("build/test-database.db"));
+    }
 }

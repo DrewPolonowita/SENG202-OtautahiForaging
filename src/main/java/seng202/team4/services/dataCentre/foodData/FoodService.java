@@ -49,6 +49,7 @@ public class FoodService implements FoodDataManager {
      * and then uses those ids to search by specific id
      * @return List of food objects that exist in the project
      */
+    @Override
     public List<Food> getFoods() {
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMapper.getFoodMap().keySet()) {
@@ -56,13 +57,14 @@ public class FoodService implements FoodDataManager {
 
             boolean noIdExists = foodId == null;
             if (noIdExists) {
-                foodId = foodApiHandler.getFoodBySearchFromApi(foodName);
+                foodId = foodApiHandler != null ? foodApiHandler.getFoodBySearchFromApi(foodName) : 0;
             }
             Food food;
             if (foodDao.foodDetailsUpToDateAndExist(foodId)) {
                 food = foodDao.getOne(foodId);
             } else {
-                food = foodApiHandler.getFoodById(foodId, foodName, foodMapper.getFoodType(foodName));
+                food = foodApiHandler != null
+                        ? foodApiHandler.getFoodById(foodId, foodName, foodMapper.getFoodType(foodName)) : null;
                 foodDao.replaceFood(food);
             }
             foods.add(food);
@@ -77,7 +79,6 @@ public class FoodService implements FoodDataManager {
      * @param foodRecord a foodByIdRecord
      * @return a food model
      */
-    @Override
     public Food createFoodObjectById(FoodByIdRecord foodRecord) {
         int foodId = foodRecord.foodId();
         String name = foodRecord.foodName();

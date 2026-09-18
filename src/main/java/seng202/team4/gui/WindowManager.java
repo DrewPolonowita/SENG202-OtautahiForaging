@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -187,6 +188,7 @@ public class WindowManager {
      */
     private Scene buildStyledScene(Parent root) {
         Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
         return scene;

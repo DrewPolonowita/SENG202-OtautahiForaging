@@ -6,8 +6,8 @@
 <?import javafx.geometry.Insets?>
 <BorderPane styleClass="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
    <center>
-      <ScrollPane fitToWidth="true" fitToHeight="true" BorderPane.alignment="CENTER">
-         <FlowPane fx:id="notesFlowPane" hgap="16" vgap="16" prefWrapLength="800" prefWidth="Infinity" prefHeight="Infinity">
+      <ScrollPane fitToWidth="true" fitToHeight="true" BorderPane.alignment="CENTER" styleClass="journalCardBaseArea">
+         <FlowPane fx:id="notesFlowPane" hgap="16" vgap="16" prefWrapLength="800" prefWidth="Infinity" prefHeight="Infinity" styleClass="journalCardBaseArea">
             <padding>
                <Insets top="20" right="20" bottom="20" left="20" />
             </padding>
