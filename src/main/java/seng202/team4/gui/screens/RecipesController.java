@@ -298,7 +298,7 @@ public class RecipesController extends ScreenController {
     /**
      * Toggles the fruit button being clicked, and updates the
      * map to show only the relevant fruit trees
-     * @param buttons
+     * @param buttons filter buttons
      * @param fruit
      */
     public void filterButtonClicked(Button buttons, Fruit fruit) {
@@ -308,7 +308,7 @@ public class RecipesController extends ScreenController {
     }
 
     /**
-     *
+     * Refresh recipe pane base on the filters, without having duplicate tiles
      */
     private void refreshRecipesForSelectedFilters() {
         recipeTilePane.getChildren().clear();
