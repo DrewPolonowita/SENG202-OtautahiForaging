@@ -48,15 +48,6 @@ public class TreeService implements TreeDataManager {
         this.treeRepository = treeRepository;
         this.regionService = regionService;
     }
-    /*
-    public TreeService() {
-        DatabaseManager databaseManager = new DatabaseManager(null);
-        RegionRepository regionRepository = new RegionDAO(databaseManager);
-
-        treeApiHandler = new TreeApiHandler(new TreeApiClient(new ApiClient()));
-        treeRepository = new TreeDAO(databaseManager);
-        regionService = new RegionService(regionRepository);
-    }*/
 
     /**
      * Returns a list of trees from the database within a given region

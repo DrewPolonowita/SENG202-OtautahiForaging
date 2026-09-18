@@ -63,28 +63,58 @@ public class StateManager {
         this.windowManager.launchNavScreen(this);
     }
 
+    /**
+     * Getter for window manager
+     * @return window manager
+     */
     public WindowManager getWindowManager() {
         return windowManager;
     }
 
+    /**
+     * Getter for database manager
+     * @return database manager
+     */
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
 
+    /**
+     * Getter for tree service
+     * @return tree service
+     */
     public TreeDataManager getTreeService() {
         return treeService;
     }
 
+    /**
+     * Getter for food service
+     * @return food service
+     */
     public FoodService getFoodService() {
         return foodService;
     }
 
-    public RecipeDataManager getRecipeService() { return recipeService; }
+    /**
+     * Getter for recipe service
+     * @return recipe service
+     */
+    public RecipeDataManager getRecipeService() {
+        return recipeService;
+    }
 
+    /**
+     * Getter for note service
+     * @return note service
+     */
     public NoteService getNoteService() {
         return noteService;
     }
 
+    /**
+     * Getter for tree repository
+     * @return tree repository
+     */
     public TreeRepository getTreeRepository() {
         return treeRepository;
     }

@@ -369,7 +369,7 @@ public class RecipeDAO implements RecipeRepository {
                 AND retrieval_time >= DATETIME('now', '-24 hours')
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, recipeId);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -383,7 +383,11 @@ public class RecipeDAO implements RecipeRepository {
     }
 
 
-
+    /**
+     * Adds data about recipes using a specific food to the database table recipe uses food
+     * @param food food to add
+     * @param recipeId recipe id with the food in it
+     */
     @Override
     public void addRecipeUseFood(String food, int recipeId) {
         String sql = """
@@ -393,7 +397,7 @@ public class RecipeDAO implements RecipeRepository {
                    ) VALUES (?,?);
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, food);
             ps.setInt(2, recipeId);
@@ -406,6 +410,10 @@ public class RecipeDAO implements RecipeRepository {
         }
     }
 
+    /**
+     * Replaces recipes data that exists in the database but have to be updated to comply with FatSecret API data storage time requirements
+     * @param recipe recipe needing to be replaced
+     */
     @Override
     public void replaceRecipe(Recipe recipe) {
         String sql = """
@@ -424,7 +432,7 @@ public class RecipeDAO implements RecipeRepository {
                 WHERE recipe_id = ?;
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, recipe.getName());
             ps.setString(2, recipe.getMethod());

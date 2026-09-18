@@ -73,6 +73,10 @@ public class NoteDAO implements NoteRepository {
         }
     }
 
+    /**
+     * Gets all notes from database as note models and returns them as a list
+     * @return a list of all notes stored in the database
+     */
     @Override
     public List<Note> getAll() {
         List<Note> notes = new ArrayList<>();
@@ -114,6 +118,10 @@ public class NoteDAO implements NoteRepository {
         return note;
     }
 
+    /**
+     * Deletes a note from the database
+     * @param id of the note deleted from the database
+     */
     @Override
     public void delete(Integer id) {
         String sql = "DELETE FROM note WHERE id=?";
@@ -126,11 +134,21 @@ public class NoteDAO implements NoteRepository {
         }
     }
 
+    /**
+     * Not implemented
+     * @param toUpdate Object that needs to be updated
+     * (this object must be able to identify itself and its previous self)
+     */
     @Override
     public void update(Note toUpdate) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Gets notes associated with a specific tree using the trees unique id
+     * @param treeId the tree's unique id
+     * @return a list of all the notes made for a given tree, or an empty list if no notes are made
+     */
     @Override
     public List<Note> getNotesByTreeId(int treeId) {
         List<Note> notes = new ArrayList<>();

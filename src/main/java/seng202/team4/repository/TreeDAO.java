@@ -294,7 +294,7 @@ public class TreeDAO implements TreeRepository {
         List<TreeModel> trees = new ArrayList<>();
         String sql = "SELECT * FROM trees WHERE food=?";
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, food);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -327,7 +327,11 @@ public class TreeDAO implements TreeRepository {
 
     }
 
-
+    /**
+     * Retrieves the given timestamp as a LocalDateTime object
+     * @param timestamp the timestamp for when a trees  data was last updated
+     * @return the given time stamp as a LocalDateTime
+     */
     private LocalDateTime retrieveTimestamp(Timestamp timestamp) {
         LocalDateTime lastUpdated;
         if (timestamp != null) {

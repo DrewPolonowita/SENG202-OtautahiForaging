@@ -23,6 +23,7 @@ import java.util.UUID;
 
 /**
  * Controller for the Add Note popup
+ * @author Team 4
  */
 public class AddNoteController extends ScreenController {
 
