@@ -50,7 +50,15 @@ public class ExpandNoteController extends ScreenController {
         timeLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("h:mm a")));
         descriptionLabel.setText(note.getDescription());
         if (note.getImagePath() != null) {
+            photoView.setFitWidth(780);
+            photoView.setFitHeight(370);
+            photoView.setPreserveRatio(false);
             photoView.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
+        } else {
+            photoView.setFitWidth(360);
+            photoView.setFitHeight(360);
+            photoView.setPreserveRatio(true);
+            photoView.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
         }
     }
 

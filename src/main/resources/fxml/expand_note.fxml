@@ -17,7 +17,9 @@
         <padding>
             <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
-        <ImageView fx:id="photoView" fitWidth="780" fitHeight="370" preserveRatio="false"/>
+        <StackPane fx:id="photoContainer" styleClass="photo-container" prefHeight="370">
+            <ImageView fx:id="photoView" />
+        </StackPane>
     </StackPane>
 
     <VBox styleClass="expand-note-body" spacing="10">

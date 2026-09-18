@@ -1,12 +1,15 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
@@ -44,7 +47,7 @@ public class JournalController extends ScreenController {
         LOG.info("JournalController initialize() called");
         List<Note> notes = getStateManager().getNoteService().getAll();
         if (notes.isEmpty()) {
-            notesFlowPane.getChildren().add(new Label("No notes yet! click a tree on the map to add one."));
+            notesFlowPane.getChildren().add(buildEmptyState());
         } else {
             for (Note note : notes) {
                 notesFlowPane.getChildren().add(buildNoteCard(note));
@@ -64,11 +67,21 @@ public class JournalController extends ScreenController {
         card.setCursor(Cursor.HAND);
 
         ImageView thumbnail = new ImageView();
-        thumbnail.setFitWidth(365);
-        thumbnail.setFitHeight(195);
-        thumbnail.setPreserveRatio(false);
+        StackPane photoContainer = new StackPane(thumbnail);
+        photoContainer.getStyleClass().add("photo-container");
+        photoContainer.setPrefSize(260, 140);
+        photoContainer.setMaxSize(260, 140);
+
         if (note.getImagePath() != null) {
+            thumbnail.setFitWidth(260);
+            thumbnail.setFitHeight(140);
+            thumbnail.setPreserveRatio(false);
             thumbnail.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
+        } else {
+            thumbnail.setFitWidth(90);
+            thumbnail.setFitHeight(90);
+            thumbnail.setPreserveRatio(true);
+            thumbnail.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
         }
 
         Label name = new Label(note.getName());
@@ -77,10 +90,30 @@ public class JournalController extends ScreenController {
         Label timestamp = new Label(note.getTimeCreated().format(DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a")));
         timestamp.getStyleClass().add("note-card-date");
 
-        card.getChildren().addAll(thumbnail, name, timestamp);
-
+        card.getChildren().addAll(photoContainer, name, timestamp);
         card.setOnMouseClicked(event -> handleNoteClicked(note));
         return card;
+    }
+
+    private VBox buildEmptyState() {
+        VBox emptyState = new VBox(8);
+        emptyState.getStyleClass().add("empty-state");
+        emptyState.setPrefWidth(400);
+        emptyState.setAlignment(Pos.CENTER);
+
+        Label icon = new Label("📖");
+        icon.getStyleClass().add("empty-state-icon");
+
+        Label title = new Label("No notes yet");
+        title.getStyleClass().add("empty-state-title");
+
+        Label subtitle = new Label("Click a tree on the map to add your first journal entry");
+        subtitle.getStyleClass().add("empty-state-subtitle");
+        subtitle.setWrapText(true);
+        subtitle.setTextAlignment(TextAlignment.CENTER);
+
+        emptyState.getChildren().addAll(icon, title, subtitle);
+        return emptyState;
     }
 
     private void handleNoteClicked(Note note) {

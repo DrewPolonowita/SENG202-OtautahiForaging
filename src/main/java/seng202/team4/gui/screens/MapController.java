@@ -204,9 +204,11 @@ public class MapController extends ScreenController {
                 "<div class=\"tree-card\">"
                         + "<div class=\"tree-card-body\">"
                         + "<b>%s</b><br>"
-                            + "<br><button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
-                            + "</div></div>",
+                        + "<span style=\"font-size: 0.8em; opacity: 0.7;\">Genus: %s</span>"
+                        + "<button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
+                        + "</div></div>",
                 tree.getFood(),
+                tree.getGenus(),
                 tree.getId()
         );
 
@@ -227,7 +229,7 @@ public class MapController extends ScreenController {
     }
 
     /**
-     *For each fruit name in the enum FRUIT, a filter button is creaated
+     * For each fruit name in the enum FRUIT, a filter button is created
      */
     private void createFruitButtons() {
         filterBox.getChildren().clear();
