@@ -1,5 +1,9 @@
 package seng202.team4.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.screens.MapController;
+import seng202.team4.gui.screens.SettingsController;
 import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
@@ -14,7 +18,7 @@ import java.util.concurrent.Executors;
  * A service class for the Map to handle getting trees and filtering the map
  */
 public class MapService {
-
+    private static final Logger LOG = LogManager.getLogger(MapService.class);
     private final TreeDataManager treeDataManager;
     private final ArrayList<Fruit> selectedFruits;
     private final ExecutorService executor = Executors.newFixedThreadPool(8, runnable -> {
@@ -45,8 +49,7 @@ public class MapService {
     public CompletableFuture<List<TreeModel>> getAllTreesInRegion(
             double north, double east, double south, double west
     ) {
-
-        System.out.println(selectedFruits);
+        LOG.info(selectedFruits);
         List<CompletableFuture<List<TreeModel>>> futures = selectedFruits.stream()
                 .map(fruit -> CompletableFuture.supplyAsync(() ->
                                 treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west),

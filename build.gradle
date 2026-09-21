@@ -161,10 +161,7 @@ jar {
     from {
         configurations.runtimeClasspath.collect {it.isDirectory()?it:zipTree(it)}
     }
-    // Don't delete the important duplicates (SQL drivers 🙏)
-    filesMatching('META-INF/services/*') {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    }
+
 }
 
 // Jacoco test coverage config

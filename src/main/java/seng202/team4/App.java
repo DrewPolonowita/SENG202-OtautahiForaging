@@ -17,6 +17,12 @@ public class App {
      * @param args program arguments from command line
      */
     void main(String[] args) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         FXAppEntry.launch(FXAppEntry.class, args);
     }
 }
