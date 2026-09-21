@@ -2,8 +2,6 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.MapController;
-import seng202.team4.gui.screens.SettingsController;
 import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;

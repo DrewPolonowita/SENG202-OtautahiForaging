@@ -5,8 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
-import seng202.team4.services.MapService;
-
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
