@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * DAO Interface implementation for regions, handles the region related actions to the database
+ * A class to interact with the database for regions
  */
 public class RegionDAO implements RegionRepository {
     private static final int DUPLICATE_ITEM_CODE = 19;

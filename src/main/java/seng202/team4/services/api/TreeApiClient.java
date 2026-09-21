@@ -1,9 +1,10 @@
 package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
-
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +15,7 @@ import java.nio.charset.StandardCharsets;
  * @author Team 4
  */
 public class TreeApiClient implements TreeClientInterface {
-
+    private static final Logger LOG = LogManager.getLogger(TreeApiClient.class);
     static final String API_LINK = "https://gis.ccc.govt.nz/server/rest/services/OpenData/Tree/FeatureServer/0/";
 
 
@@ -67,7 +68,7 @@ public class TreeApiClient implements TreeClientInterface {
                 ), StandardCharsets.UTF_8
         );
 
-        System.out.println(API_LINK + url);
+        LOG.info(API_LINK + url);
 
         return url;
     }

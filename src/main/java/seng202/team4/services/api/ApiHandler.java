@@ -96,7 +96,6 @@ public class ApiHandler {
                 String.format("%f,%f,%f,%f", west, south, east, north), StandardCharsets.UTF_8
         );
 
-        System.out.println(API_LINK + url);
 
         return url;
     }
