@@ -20,11 +20,15 @@ and browse saved notes in a dedicated journal screen.
 - **Table** - View the tree data as a table.
 
 ## Running the app
+To run the application through Gradle:
+Include .env file found on Mattermost in Team 4 Teaching comms in the root directory.
 ```bash
 ./gradlew run
 ```
-This compiles and launches the application directly.
-
+To run the application from the JAR:
+```bash
+java -jar seng202_team4-1.0-SNAPSHOT.jar
+```
 ## Running tests
 ```bash
 ./gradlew test
@@ -32,5 +36,5 @@ This compiles and launches the application directly.
 An HTML test report is generated under 'build/reports/tests/test/index.html'.
 
 ## Notes
-- Tree and recipe data are fetched from an external API at runtime, meaning an interned connection
+- Tree and recipe data are fetched from an external API at runtime, meaning an internet connection
 is required for the map and recipes screen to populate.
