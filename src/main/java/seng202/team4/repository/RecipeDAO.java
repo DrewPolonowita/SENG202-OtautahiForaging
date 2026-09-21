@@ -7,9 +7,18 @@ import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,7 +35,9 @@ public class RecipeDAO implements RecipeRepository {
      * Constructor
      * @param databaseManager means of connecting to the database
      */
-    public RecipeDAO(DatabaseManager databaseManager) { this.databaseManager = databaseManager; }
+    public RecipeDAO(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
+    }
 
 
     /**
@@ -287,7 +298,6 @@ public class RecipeDAO implements RecipeRepository {
                    ingredient_unit_number,
                    ingredient_measurement_description,
                    ingredient_description
-                   
                    ) VALUES (?,?,?,?,?,?);
                    """;
         try (Connection conn = databaseManager.connect();
@@ -359,7 +369,7 @@ public class RecipeDAO implements RecipeRepository {
                 AND retrieval_time >= DATETIME('now', '-24 hours')
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, recipeId);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -373,7 +383,11 @@ public class RecipeDAO implements RecipeRepository {
     }
 
 
-
+    /**
+     * Adds data about recipes using a specific food to the database table recipe uses food
+     * @param food food to add
+     * @param recipeId recipe id with the food in it
+     */
     @Override
     public void addRecipeUseFood(String food, int recipeId) {
         String sql = """
@@ -381,11 +395,9 @@ public class RecipeDAO implements RecipeRepository {
                    common_name,
                    recipe_id
                    ) VALUES (?,?);
-        
                 """;
-
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, food);
             ps.setInt(2, recipeId);
@@ -398,6 +410,10 @@ public class RecipeDAO implements RecipeRepository {
         }
     }
 
+    /**
+     * Replaces recipes data that exists in the database but have to be updated to comply with FatSecret API data storage time requirements
+     * @param recipe recipe needing to be replaced
+     */
     @Override
     public void replaceRecipe(Recipe recipe) {
         String sql = """
@@ -416,7 +432,7 @@ public class RecipeDAO implements RecipeRepository {
                 WHERE recipe_id = ?;
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, recipe.getName());
             ps.setString(2, recipe.getMethod());

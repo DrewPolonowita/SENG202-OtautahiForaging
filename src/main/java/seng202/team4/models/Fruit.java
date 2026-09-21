@@ -8,8 +8,10 @@ public enum Fruit {
     PEAR,
     CHERRY,
     PEACH,
-    APRICOT;
-
+    APRICOT,
+    WALNUT,
+    STRAWBERRY;
+    //ONLY add food that are keys in FoodMapper createFoodMap()
     /**
      * Returns the string format of a given fruit for the api and database
      * @return the string format of a given fruit for the api and database
@@ -21,6 +23,8 @@ public enum Fruit {
             case CHERRY -> "Cherry";
             case PEACH -> "Peach";
             case APRICOT -> "Apricot";
+            case WALNUT -> "Walnut";
+            case STRAWBERRY -> "Strawberry";
             default -> {
                 String message = "Not yet implemented for " + this.name();
                 throw new UnsupportedOperationException(message);

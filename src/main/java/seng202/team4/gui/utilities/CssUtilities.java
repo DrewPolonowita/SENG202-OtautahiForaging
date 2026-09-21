@@ -6,7 +6,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 /**
- * Meathods for helping with CSS functionality
+ * Methods for helping with CSS functionality
+ * @author Team 4
  */
 public final class CssUtilities {
     private CssUtilities() {

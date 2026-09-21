@@ -2,17 +2,14 @@ package seng202.team4.unittests.services;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.io.TempDir;
 import seng202.team4.helpers.TestTreeData;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.*;
 import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.repository.DatabaseManager;
-import seng202.team4.repository.FoodDAO;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.services.FoodMapper;
-import seng202.team4.services.dataCentre.foodData.FoodService;
 import seng202.team4.services.api.FoodApiClient;
 import seng202.team4.services.api.FoodClientInterface;
 import seng202.team4.services.dataCentre.treeData.TreeService;
@@ -20,7 +17,6 @@ import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
 import seng202.team4.unittests.TestSuite;
 
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

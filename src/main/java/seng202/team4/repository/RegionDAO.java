@@ -6,20 +6,24 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Region;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * DAO Interface implementation for regions, handles the region related actions to the database
  * A class to interact with the database for regions
  */
 public class RegionDAO implements RegionRepository {
+    private static final int DUPLICATE_ITEM_CODE = 19;
     private static final Logger LOG = LogManager.getLogger(RegionDAO.class);
     private final DatabaseManager databaseManager;
 
-    private static final int DUPLICATE_ITEM_CODE = 19;
 
     /**
      * Creates a new instance with a {@link DatabaseManager}
@@ -30,11 +34,20 @@ public class RegionDAO implements RegionRepository {
         this.databaseManager = databaseManager;
     }
 
+    /**
+     * Not implemented
+     * @param region the primary key of object to get
+     * @return not implemented exception
+     */
     @Override
     public Region getOne(Region region) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Gets all regions from the database
+     * @return a list of regions from the database if successful, otherwise null
+     */
     @Override
     public List<Region> getAll() {
         String sql = "SELECT * FROM REGIONS";
@@ -42,8 +55,8 @@ public class RegionDAO implements RegionRepository {
         List<Region> regions = new ArrayList<>();
 
         try (Connection conn = databaseManager.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
         ) {
             while (rs.next()) {
                 Region region = new Region(
@@ -107,8 +120,8 @@ public class RegionDAO implements RegionRepository {
     }
 
     /**
-     * Placeholder
-     * @param region primary key of object to delete
+     * Deletes a region from the database
+     * @param region region to delete from database
      */
     @Override
     public void delete(Region region) {
@@ -132,6 +145,7 @@ public class RegionDAO implements RegionRepository {
             LOG.error(sqlException);
         }
     }
+
 
     @Override
     public Region getRegion(Region region) {

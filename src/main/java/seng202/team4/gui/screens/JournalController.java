@@ -1,12 +1,15 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
@@ -23,15 +26,13 @@ import java.util.List;
  */
 public class JournalController extends ScreenController {
 
-    @FXML
-    private FlowPane notesFlowPane;
-    private StateManager stateManager;
-
     private static final Logger LOG = LogManager.getLogger(JournalController.class);
 
+    @FXML
+    private FlowPane notesFlowPane;
+
     /**
-     * Initialise the window
-     *
+     * Constructs a JournalController with the given state manager.
      * @param stateManager Reference for window manager
      */
     public JournalController(StateManager stateManager) {
@@ -39,12 +40,17 @@ public class JournalController extends ScreenController {
         super(stateManager);
     }
 
+    /**
+     * Initializes the journal screen by retrieving all saved notes.
+     * If no notes exist, an empty state message is displayed.
+     * Otherwise, a card is created and displayed for each note.
+     */
     @FXML
     private void initialize() {
         LOG.info("JournalController initialize() called");
         List<Note> notes = getStateManager().getNoteService().getAll();
         if (notes.isEmpty()) {
-            notesFlowPane.getChildren().add(new Label("No notes yet! click a tree on the map to add one."));
+            notesFlowPane.getChildren().add(buildEmptyState());
         } else {
             for (Note note : notes) {
                 notesFlowPane.getChildren().add(buildNoteCard(note));
@@ -53,9 +59,10 @@ public class JournalController extends ScreenController {
     }
 
     /**
-     * Builds the card for each node in a grid style
-     * @param note note added by user
-     * @return the built card to be iterated through
+     * Builds a visual card displaying the details of a journal note.
+     * The card includes the note's image, name, and creation timestamp.
+     * @param note the journal note to display
+     * @return a Vbox containing the note card
      */
     private VBox buildNoteCard(Note note) {
         VBox card = new VBox();
@@ -64,34 +71,81 @@ public class JournalController extends ScreenController {
         card.setCursor(Cursor.HAND);
 
         ImageView thumbnail = new ImageView();
-        thumbnail.setFitWidth(365);
-        thumbnail.setFitHeight(195);
-        thumbnail.setPreserveRatio(false);
+        StackPane photoContainer = new StackPane(thumbnail);
+        photoContainer.getStyleClass().add("photo-container");
+        photoContainer.setPrefSize(260, 140);
+        photoContainer.setMaxSize(260, 140);
+
         if (note.getImagePath() != null) {
+            thumbnail.setFitWidth(260);
+            thumbnail.setFitHeight(140);
+            thumbnail.setPreserveRatio(false);
             thumbnail.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
+        } else {
+            thumbnail.setFitWidth(90);
+            thumbnail.setFitHeight(90);
+            thumbnail.setPreserveRatio(true);
+            thumbnail.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
         }
 
         Label name = new Label(note.getName());
-        name.getStyleClass().add("note-card-title");
+        name.getStyleClass().add("note-card-subtitle");
 
         Label timestamp = new Label(note.getTimeCreated().format(DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a")));
         timestamp.getStyleClass().add("note-card-date");
 
-        card.getChildren().addAll(thumbnail, name, timestamp);
-
+        card.getChildren().addAll(photoContainer, name, timestamp);
         card.setOnMouseClicked(event -> handleNoteClicked(note));
         return card;
     }
 
+    /**
+     * Builds the empty state display shown when the journal contains no notes.
+     * The display contains an icon, title, and explanatory message.
+     * @return a VBox containing the empty state display
+     */
+    private VBox buildEmptyState() {
+        VBox emptyState = new VBox(8);
+        emptyState.getStyleClass().add("empty-state");
+        emptyState.setPrefWidth(400);
+        emptyState.setAlignment(Pos.CENTER);
+
+        ImageView icon = new ImageView(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
+        icon.getStyleClass().add("empty-state-icon");
+
+        Label title = new Label("No notes yet");
+        title.getStyleClass().add("empty-state-title");
+
+        Label subtitle = new Label("Click a tree on the map to add your first journal entry");
+        subtitle.getStyleClass().add("empty-state-subtitle");
+        subtitle.setWrapText(true);
+        subtitle.setTextAlignment(TextAlignment.CENTER);
+
+        emptyState.getChildren().addAll(icon, title, subtitle);
+        return emptyState;
+    }
+
+    /**
+     * Opens the expanded view for the selected journal note.
+     * @param note the journal note selected by the user
+     */
     private void handleNoteClicked(Note note) {
         getStateManager().getWindowManager().openExpandNote(note, getStateManager());
     }
 
+    /**
+     * Returns the FXML file used to create the journal screen.
+     * @return the journal screen FXML path file
+     */
     @Override
     public String getFxmlFile() {
         return "/fxml/journal_screen.fxml";
     }
 
+    /**
+     * Returns the title displayed for the journal screen.
+     * @return the title of the journal screen
+     */
     @Override
     public String getTitle() {
         return "Field Journal";

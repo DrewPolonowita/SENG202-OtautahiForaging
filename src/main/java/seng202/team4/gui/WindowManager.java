@@ -1,7 +1,6 @@
 package seng202.team4.gui;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -15,9 +14,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.*;
+import seng202.team4.gui.screens.AddNoteController;
+import seng202.team4.gui.screens.ExpandNoteController;
+import seng202.team4.gui.screens.JournalController;
+import seng202.team4.gui.screens.MapController;
+import seng202.team4.gui.screens.NavController;
+import seng202.team4.gui.screens.RecipesController;
+import seng202.team4.gui.screens.SettingsController;
+import seng202.team4.gui.screens.TableViewController;
 import seng202.team4.models.Note;
-import seng202.team4.models.Recipe;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
@@ -126,17 +131,6 @@ public class WindowManager {
         ScreenController controller = new RecipesController(stateManager);
         launchScreen(controller, rootPane);
     }
-
-    /**
-     * Launches the recipes screen
-     *
-     * @param stateManager the state manager for the application
-     */
-    public void launchRecipesScreenHighlight(StateManager stateManager, Recipe recipe) {
-        ScreenController controller = new RecipeHighlightController(stateManager, recipe);
-        launchScreen(controller, rootPane);
-    }
-
 
     /**
      * Launches the table screen

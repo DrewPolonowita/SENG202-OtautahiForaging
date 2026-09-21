@@ -32,6 +32,7 @@ public class NavController extends ScreenController {
     @FXML private Button journalsButton;
     @FXML private Button recipesButton;
     @FXML private Button settingsButton;
+    @FXML private Button tableButton;
     @FXML private Button selectedButton;
 
     /**
@@ -134,6 +135,17 @@ public class NavController extends ScreenController {
         stateManager.getWindowManager().launchSettingsScreen(stateManager);
         setSelectedButton(settingsButton);
 
+    }
+
+    /**
+     * Method to call when our counter button is clicked
+     *
+     */
+    @FXML
+    public void onTableButtonClicked() {
+        StateManager stateManager = getStateManager();
+        stateManager.getWindowManager().launchTableScreen(stateManager);
+        setSelectedButton(tableButton);
     }
 
     /**

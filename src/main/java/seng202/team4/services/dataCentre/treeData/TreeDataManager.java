@@ -49,5 +49,10 @@ public interface TreeDataManager {
      */
     boolean isRegionRecent(String type, double north, double east, double south, double west);
 
+    /**
+     * For use in table view, get trees by food without regard for region
+     * @param food food to look for
+     * @return list of trees
+     */
     List<TreeModel> getTreesByFood(String food);
 }

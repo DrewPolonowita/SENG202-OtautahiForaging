@@ -12,6 +12,11 @@ import seng202.team4.services.StateManager;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller for the expanded note window, displaying the details of
+ * a selected journal note.
+ * @author Team 4
+ */
 public class ExpandNoteController extends ScreenController {
 
     private final Note note;
@@ -28,32 +33,68 @@ public class ExpandNoteController extends ScreenController {
     private Label descriptionLabel;
 
 
+    /**
+     * Constructs an ExpandNoteController for the given note.
+     * @param stateManager reference to the application's state manager
+     * @param note the journal note to display
+     */
     public ExpandNoteController(StateManager stateManager, Note note) {
         super(stateManager);
         this.note = note;
     }
 
+    /**
+     * Returns the FXML file used to create the expanded note window.
+     * @return the expanded note FXML path file
+     */
     @Override
     public String getFxmlFile() {
         return "/fxml/expand_note.fxml";
     }
 
+    /**
+     * Returns the title displayed for the expanded note window.
+     * @return the title of the window.
+     */
     @Override
     public String getTitle() {
         return "Note details";
     }
 
+    /**
+     * Initializes the expanded note window by displaying the note's
+     * name, creation date, time, description, and image.
+     */
     @FXML
     private void initialize() {
         nameLabel.setText(note.getName());
         dateLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
         timeLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("h:mm a")));
         descriptionLabel.setText(note.getDescription());
+        setNoteImage();
+    }
+
+    /**
+     * Sets the note image displayed in the expanded note window.
+     * If the note has no image, the default application icon is displayed.
+     */
+    private void setNoteImage() {
         if (note.getImagePath() != null) {
+            photoView.setFitWidth(780);
+            photoView.setFitHeight(370);
+            photoView.setPreserveRatio(false);
             photoView.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
+        } else {
+            photoView.setFitWidth(360);
+            photoView.setFitHeight(360);
+            photoView.setPreserveRatio(true);
+            photoView.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
         }
     }
 
+    /**
+     * Closes the expanded note window.
+     */
     @FXML
     private void handleClose() {
         ((Stage) nameLabel.getScene().getWindow()).close();

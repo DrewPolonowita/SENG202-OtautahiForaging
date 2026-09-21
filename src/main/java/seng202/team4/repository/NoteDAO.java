@@ -5,22 +5,27 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.Note;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for accessing note related data in database
+ */
 public class NoteDAO implements NoteRepository {
-
+    private static final DateTimeFormatter SQLITE_FORMAT =
+            DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
     private static final Logger LOG = LogManager.getLogger(NoteDAO.class);
     private final DatabaseManager databaseManager;
 
-    private static final DateTimeFormatter SQLITE_FORMAT =
-            DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
     /**
      * Constructor
-     * @param databaseManager connects to the database
      */
     public NoteDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
@@ -68,6 +73,10 @@ public class NoteDAO implements NoteRepository {
         }
     }
 
+    /**
+     * Gets all notes from database as note models and returns them as a list
+     * @return a list of all notes stored in the database
+     */
     @Override
     public List<Note> getAll() {
         List<Note> notes = new ArrayList<>();
@@ -84,6 +93,12 @@ public class NoteDAO implements NoteRepository {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * Get a note from the database
+     * @param id the primary key of object to get
+     * @return the note with id provided
+     */
     @Override
     public Note getOne(Integer id) {
         Note note = null;
@@ -103,6 +118,10 @@ public class NoteDAO implements NoteRepository {
         return note;
     }
 
+    /**
+     * Deletes a note from the database
+     * @param id of the note deleted from the database
+     */
     @Override
     public void delete(Integer id) {
         String sql = "DELETE FROM note WHERE id=?";
@@ -115,11 +134,21 @@ public class NoteDAO implements NoteRepository {
         }
     }
 
+    /**
+     * Not implemented
+     * @param toUpdate Object that needs to be updated
+     * (this object must be able to identify itself and its previous self)
+     */
     @Override
     public void update(Note toUpdate) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Gets notes associated with a specific tree using the trees unique id
+     * @param treeId the tree's unique id
+     * @return a list of all the notes made for a given tree, or an empty list if no notes are made
+     */
     @Override
     public List<Note> getNotesByTreeId(int treeId) {
         List<Note> notes = new ArrayList<>();

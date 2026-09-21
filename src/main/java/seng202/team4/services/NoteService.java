@@ -2,8 +2,6 @@ package seng202.team4.services;
 
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
-import seng202.team4.repository.DatabaseManager;
-import seng202.team4.repository.NoteDAO;
 import seng202.team4.repository.NoteRepository;
 
 import java.util.List;

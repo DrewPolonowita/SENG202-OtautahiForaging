@@ -17,14 +17,14 @@ public interface TreeRepository extends DAOInterface<TreeModel, Integer> {
     List<TreeModel> getTreesByFoodName(String food);
 
     /**
-     * Returns a {@link List<TreeModel>}
-     *
-     * @param type
-     * @param north
-     * @param east
-     * @param south
-     * @param west
-     * @return
+     * Method to get trees that are within a certain region and of a type
+     * @param food Type of tree to look for, should be a mapped food from
+     * {@link seng202.team4.services.FoodMapper} e.g "Apple" or "Walnut"
+     * @param north north
+     * @param east east
+     * @param south south
+     * @param west west
+     * @return list of trees of type in the region
      */
-    List<TreeModel> getTreesByRegion(String type, double north, double east, double south, double west);
+    List<TreeModel> getTreesByRegion(String food, double north, double east, double south, double west);
 }

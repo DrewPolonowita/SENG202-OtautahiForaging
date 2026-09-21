@@ -12,5 +12,10 @@ public interface RegionRepository extends DAOInterface<Region, Region> {
      */
     void delete(Region region);
 
+    /**
+     * Method to get a specific region from database
+     * @param region region to find
+     * @return Region object found
+     */
     Region getRegion(Region region);
 }

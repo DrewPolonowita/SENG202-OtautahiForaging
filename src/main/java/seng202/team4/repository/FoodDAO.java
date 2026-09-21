@@ -7,7 +7,11 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.models.Food;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -247,7 +251,11 @@ public class FoodDAO implements FoodRepository {
     }
 
 
-
+    /**
+     * Retrieves the food id for a given food with a specific common name
+     * @param foodName the common name of a food
+     * @return food id for the food with the specified common name if successful, otherwise null
+     */
     @Override
     public Integer getFoodIdByFoodName(String foodName) {
         String sql = """
@@ -255,7 +263,7 @@ public class FoodDAO implements FoodRepository {
                 """;
 
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)
+                PreparedStatement ps = conn.prepareStatement(sql)
         ) {
             ps.setString(1, foodName);
             try (ResultSet rs = ps.executeQuery()) {
@@ -269,6 +277,11 @@ public class FoodDAO implements FoodRepository {
         return null;
     }
 
+    /**
+     * Method to check that the details stored for a specific food in the database are up to date as data can only be stored for up to 24 hours
+     * @param foodId the id of the food being checked
+     * @return true if up details are up-to-date and exist, false otherwise
+     */
     @Override
     public boolean foodDetailsUpToDateAndExist(int foodId) {
         String sql = """
@@ -278,7 +291,7 @@ public class FoodDAO implements FoodRepository {
                 AND retrieval_time >= DATETIME('now', '-24 hours')
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, foodId);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -291,6 +304,10 @@ public class FoodDAO implements FoodRepository {
         }
     }
 
+    /**
+     * Replaces food data that exists in the database but have to be updated to comply with FatSecret API data storage time requirements
+     * @param food food needing to be replaced
+     */
     @Override
     public void replaceFood(Food food) {
         String sql = """
@@ -308,7 +325,7 @@ public class FoodDAO implements FoodRepository {
                 WHERE food_id = ?;
                 """;
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, food.getId());
             ps.setString(2, food.getName());
