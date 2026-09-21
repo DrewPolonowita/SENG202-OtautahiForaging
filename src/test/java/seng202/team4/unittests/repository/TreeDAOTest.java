@@ -16,7 +16,7 @@ public class TreeDAOTest extends TestSuite {
 
     @BeforeEach
     void setUpTest() {
-        databaseManager = new DatabaseManager(TEST_DB);
+        databaseManager = new DatabaseManager(getTestDb());
         treeDao = new TreeDAO(databaseManager);
     }
 }
