@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Placeholder
+ * A class to interact with the database for regions
  */
 public class RegionDAO implements RegionRepository {
     private static final Logger LOG = LogManager.getLogger(RegionDAO.class);
