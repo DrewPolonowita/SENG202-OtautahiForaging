@@ -42,7 +42,19 @@ public class RecipeApiHandler {
             return List.of();
         }
         List<Integer> recipeIds = new ArrayList<>();
-        for (RecipeSearchRecord recipe : response.getApiResponse().recipes().recipe()) {
+        RecipeSearchResponse apiResponse = response.getApiResponse();
+        if (apiResponse.error() != null) {
+            LOG.error("FatSecret recipe search error for '{}': code={}, message={}",
+                    searchExpression, apiResponse.error().code(), apiResponse.error().message()
+            );
+            return List.of();
+        }
+        if (apiResponse == null || apiResponse.recipes() == null || apiResponse.recipes().recipe() == null) {
+            LOG.error("Unexpected recipe search response for '{}': {}", searchExpression, apiResponse);
+            return List.of();
+        }
+
+        for (RecipeSearchRecord recipe : apiResponse.recipes().recipe()) {
             recipeIds.add(recipe.id());
         }
 

@@ -186,7 +186,8 @@ public class RecipeServiceTest extends TestSuite {
         RecipeClientInterface recipeClient = mock(RecipeClientInterface.class);
 
         RecipeSearchResponse emptySearchResponse = new RecipeSearchResponse(
-                new RecipeSearchDetails(0, List.of())
+                new RecipeSearchDetails(0, List.of()),
+                null
         );
         when(recipeClient.searchRecipe(eq("Apple"), eq(true), eq(20)))
                 .thenReturn(new Request<>(emptySearchResponse, 200));
