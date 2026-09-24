@@ -16,4 +16,5 @@ public interface NoteRepository extends DAOInterface<Note, Integer> {
      */
     List<Note> getNotesByTreeId(int treeId);
 
+
 }

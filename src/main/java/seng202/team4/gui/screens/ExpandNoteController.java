@@ -1,6 +1,7 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 public class ExpandNoteController extends ScreenController {
 
     private final Note note;
+    private final JournalController journalController;
 
     @FXML
     private ImageView photoView;
@@ -31,6 +33,8 @@ public class ExpandNoteController extends ScreenController {
     private Label timeLabel;
     @FXML
     private Label descriptionLabel;
+    @FXML
+    private Button deleteLabel;
 
 
     /**
@@ -38,9 +42,10 @@ public class ExpandNoteController extends ScreenController {
      * @param stateManager reference to the application's state manager
      * @param note the journal note to display
      */
-    public ExpandNoteController(StateManager stateManager, Note note) {
+    public ExpandNoteController(StateManager stateManager, Note note, JournalController journalController) {
         super(stateManager);
         this.note = note;
+        this.journalController = journalController;
     }
 
     /**
@@ -90,6 +95,13 @@ public class ExpandNoteController extends ScreenController {
             photoView.setPreserveRatio(true);
             photoView.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
         }
+    }
+
+    @FXML
+    private void handleDelete() {
+        getStateManager().getNoteService().delete(note);
+        handleClose();
+        journalController.refreshNotes();
     }
 
     /**

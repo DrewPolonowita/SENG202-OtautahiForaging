@@ -225,9 +225,9 @@ public class WindowManager {
      * @param note the note of the tree user clicks
      * @param stateManager the provided state manager for the application
      */
-    public void openExpandNote(Note note, StateManager stateManager) {
+    public void openExpandNote(Note note, StateManager stateManager, JournalController journalController) {
         try {
-            showCenteredDialog(loadScreen(new ExpandNoteController(stateManager, note)));
+            showCenteredDialog(loadScreen(new ExpandNoteController(stateManager, note, journalController)));
         } catch (IOException e) {
             LOG.error(e);
         }

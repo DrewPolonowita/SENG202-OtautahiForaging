@@ -48,4 +48,12 @@ public class NoteService {
     public List<Note> getNotesByTreeId(int treeId) {
         return noteRepository.getNotesByTreeId(treeId);
     }
+
+    /**
+     * Deletes note from database
+     * @param note the specified id of the note.
+     */
+    public void delete(Note note) {
+        noteRepository.delete(note.getId());
+    }
 }
