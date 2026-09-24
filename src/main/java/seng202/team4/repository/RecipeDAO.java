@@ -3,6 +3,7 @@ package seng202.team4.repository;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 
@@ -104,7 +105,7 @@ public class RecipeDAO implements RecipeRepository {
     /**
      * Gets a single recipe from the database by its id
      * @param id the recipe id
-     * @return recipe model that has the given id, null if failed
+     * @return recipe model that has the given id, null recipe doesn't exist
      */
     @Override
     public Recipe getOne(Integer id) {
@@ -163,14 +164,13 @@ public class RecipeDAO implements RecipeRepository {
         return recipe;
     }
 
-
     /**
      * Add a recipe object to the database
      * @param toAdd recipe object to add
      * @return id of recipe if success, -1 if failed
      */
     @Override
-    public int add(Recipe toAdd) {
+    public int add(Recipe toAdd) throws DuplicateEntryException {
         String sql = """
                    INSERT INTO recipes (
                    recipe_id,
@@ -201,7 +201,7 @@ public class RecipeDAO implements RecipeRepository {
                    ;
                    """;
         try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
 
             ps.setInt(1, toAdd.getId());
@@ -220,11 +220,14 @@ public class RecipeDAO implements RecipeRepository {
             ps.executeUpdate();
             return toAdd.getId();
         } catch (SQLException sqlException) {
+            if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
+                throw new DuplicateEntryException("Recipe exists with id " + toAdd.getId()
+                        + " and name " + toAdd.getName());
+            }
             LOG.error(sqlException);
             return -1;
         }
     }
-
 
     /**
      * Deletes a specific recipe from the database
@@ -461,7 +464,11 @@ public class RecipeDAO implements RecipeRepository {
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
-                add(recipe);
+                try {
+                    add(recipe);
+                } catch (DuplicateEntryException e) {
+                    LOG.error(e);
+                }
             }
         } catch (SQLException e) {
             LOG.error(e);

@@ -75,7 +75,8 @@ CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
     serving_id INTEGER NOT NULL,
     ingredient_description TEXT NOT NULL,
     PRIMARY KEY (recipe_id, ingredient_id, serving_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
+
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE,
     FOREIGN KEY (serving_id, ingredient_id) REFERENCES ingredient(serving_id, ingredient_id)
 );
 --SPLIT
@@ -114,6 +115,6 @@ CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT,
     recipe_id INTEGER,
     PRIMARY KEY (common_name, recipe_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
 );
 
