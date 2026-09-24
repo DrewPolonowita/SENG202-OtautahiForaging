@@ -12,15 +12,16 @@ import java.util.List;
 
 public class TestRecipeData {
 
-
     public static RecipeByIdRecord createFakeRecipeByIdRecord() {
         RecipeNutrition nutrition = new RecipeNutrition(123, 345,567,789);
         RecipeServingSizes servingSizes = new RecipeServingSizes(nutrition);
-        RecipeDirections directions = new RecipeDirections(List.of(
-                new RecipeDirection(1, "Direction step 1"),
-                new RecipeDirection(2, "Direction step 2")));
+        RecipeDirections directions = new RecipeDirections(
+                List.of(new RecipeDirection(1, "Direction step 1"),
+                        new RecipeDirection(2, "Direction step 2"))
+        );
         RecipeIngredients ingredients = new RecipeIngredients(
-                List.of(new RecipeIngredient(123, "Apple", 1234, 1, "", "1 Apple")));
+                List.of(new RecipeIngredient(123, "Apple", 1234, 1, "", "1 Apple"))
+        );
         RecipeImages images = new RecipeImages(
                 List.of("Image URL")
         );
