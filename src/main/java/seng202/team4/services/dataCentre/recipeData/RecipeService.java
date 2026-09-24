@@ -10,12 +10,14 @@ import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.RecipeRepository;
 import seng202.team4.services.api.RecipeClientInterface;
+import seng202.team4.services.dataCentre.LoadingCache;
 
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 
 
 /**
@@ -26,14 +28,66 @@ public class RecipeService implements RecipeDataManager {
     private static final Logger log = LogManager.getLogger(RecipeService.class);
     private final RecipeRepository recipeDAO;
     private final RecipeApiHandler recipeApiHandler;
-
+    private final LoadingCache<Integer, Recipe> recipeCache;
 
     /**
      * Constructor
      */
     public RecipeService(RecipeRepository recipeRepository, RecipeClientInterface recipeClientInterface) {
         this.recipeDAO = recipeRepository;
-        recipeApiHandler = new RecipeApiHandler(recipeClientInterface);
+        this.recipeApiHandler = new RecipeApiHandler(recipeClientInterface);
+        this.recipeCache = new LoadingCache<>(
+                this::getRecipeFromDatabase,
+                this::getRecipeFromApi);
+    }
+
+    /**
+     * method to get recipe from database for use with LoadingCache
+     * @param id recipe being looked for
+     * @return Recipe returned from database
+     */
+    private Recipe getRecipeFromDatabase(int id) {
+        if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
+            log.info("loaded from database");
+            return recipeDAO.getOne(id);
+        }
+        return null;
+    }
+
+    /**
+     * method to get recipe from api, and store it, for use with loading cache
+     * @param id recipe being looked for
+     * @return recipe returned from database
+     */
+    private Recipe getRecipeFromApi(int id) {
+        RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
+        log.info("Loaded recipe {} from api", id);
+
+        if (recipeRecord == null) {
+            return null;
+        }
+
+        Recipe recipe = createRecipeObjectById(recipeRecord);
+        recipeDAO.replaceRecipe(recipe);
+
+        List<RecipeIngredient> ingredients = getRecipeIngredients(recipeRecord);
+        populateIngredientTable(ingredients);
+        populateIngredientInRecipeTable(ingredients, recipe);
+
+        return recipe;
+    }
+
+    /**
+     * Get ingredients from api record
+     *
+     * @param recipeRecord api recipe record
+     * @return ingredient list, if api returned none then an empty list
+     */
+    private List<RecipeIngredient> getRecipeIngredients(RecipeByIdRecord recipeRecord) {
+        if (recipeRecord.ingredients() == null) {
+            return List.of();
+        }
+        return recipeRecord.ingredients().ingredient();
     }
 
     /**
@@ -74,24 +128,7 @@ public class RecipeService implements RecipeDataManager {
      * @return Recipe we get from the database or api
      */
     private Recipe getRecipeById(int id) {
-        if (recipeDAO.recipeDetailsUpToDateAndExist(id)) {
-            log.info("loaded from database");
-            return recipeDAO.getOne(id);
-
-        } else {
-            RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
-            log.info("Loaded from api ");
-            if (recipeRecord == null) {
-                return null;
-            }
-            Recipe recipe = createRecipeObjectById(recipeRecord);
-            recipeDAO.replaceRecipe(recipe);
-            populateIngredientTable(recipeRecord.ingredients()
-                    == null ? List.of() : recipeRecord.ingredients().ingredient());
-            populateIngredientInRecipeTable(recipeRecord.ingredients()
-                    == null ? List.of() : recipeRecord.ingredients().ingredient(), recipe);
-            return recipe;
-        }
+        return recipeCache.get(id);
     }
 
 
