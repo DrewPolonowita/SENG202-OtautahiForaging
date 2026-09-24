@@ -97,6 +97,9 @@ public class ExpandNoteController extends ScreenController {
         }
     }
 
+    /**
+     * Deletes note and refreshes screen
+     */
     @FXML
     private void handleDelete() {
         getStateManager().getNoteService().delete(note);
