@@ -111,7 +111,14 @@ public class RegionDAO implements RegionRepository {
 
         } catch (SQLException sqlException) {
             if (sqlException.getErrorCode() == DUPLICATE_ITEM_CODE) {
-                return -2;
+                throw new DuplicateEntryException(
+                        "Region already exists: "
+                                + region.getType() + " "
+                                + region.getNorthBound() + ", "
+                                + region.getEastBound() + ", "
+                                + region.getSouthBound() + ", "
+                                + region.getWestBound()
+                );
             }
 
             LOG.error(sqlException);
