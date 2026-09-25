@@ -48,6 +48,15 @@ public class JournalController extends ScreenController {
     @FXML
     private void initialize() {
         LOG.info("JournalController initialize() called");
+        refreshNotes();
+    }
+
+    /**
+     * Refresh the notes.
+     * called on init and when a note is deleted.
+     */
+    public void refreshNotes() {
+        notesFlowPane.getChildren().clear();
         List<Note> notes = getStateManager().getNoteService().getAll();
         if (notes.isEmpty()) {
             notesFlowPane.getChildren().add(buildEmptyState());
@@ -130,7 +139,7 @@ public class JournalController extends ScreenController {
      * @param note the journal note selected by the user
      */
     private void handleNoteClicked(Note note) {
-        getStateManager().getWindowManager().openExpandNote(note, getStateManager());
+        getStateManager().getWindowManager().openExpandNote(note, getStateManager(), this);
     }
 
     /**

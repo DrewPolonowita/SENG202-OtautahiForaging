@@ -84,7 +84,7 @@ public class MapController extends ScreenController {
                 id -> {
                     TreeModel tree = currentTrees.get(id);
                     if (tree != null) {
-                        stateManager.getWindowManager().openAddNoteMenu(tree, stateManager);
+                        stateManager.getWindowManager().openAddNoteMenu(tree, stateManager, null);
                     } else {
                         LOG.warn("Add to Journal clicked for unknown tree id {}", id);
                     }

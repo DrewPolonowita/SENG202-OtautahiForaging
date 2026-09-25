@@ -1,6 +1,7 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -36,17 +37,21 @@ public class AddNoteController extends ScreenController {
     private VBox uploadZone;
     @FXML
     private Label uploadHint;
+    @FXML
+    private Button recordButton;
 
     private String selectedImagePath;
+    private Note existingNote;
 
     /**
      * Constructor
      * @param stateManager stateManager
      * @param tree provided tree
      */
-    public AddNoteController(StateManager stateManager, TreeModel tree) {
+    public AddNoteController(StateManager stateManager, TreeModel tree, Note existingNote) {
         super(stateManager);
         this.treeModel = tree;
+        this.existingNote = existingNote;
     }
 
     /**
@@ -72,7 +77,13 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void initialize() {
-        commonNameDisplay.setText(treeModel.getCommonName());
+        if (existingNote != null) {
+            commonNameDisplay.setText("Editing " + existingNote.getName());
+            fieldNotesArea.setText(existingNote.getDescription());
+            recordButton.setText("Edit Note");
+        } else {
+            commonNameDisplay.setText(treeModel.getCommonName());
+        }
     }
 
     /**
@@ -104,11 +115,16 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void handleRecord() {
-        Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
-        try {
-            getStateManager().getNoteService().add(note);
-        } catch (DuplicateEntryException e) {
-            LOG.warn("Failed to add note for tree {}: duplicate entry", treeModel.getId(), e);
+        if (existingNote != null) {
+            Note updated = new Note(existingNote.getId(), existingNote.getName(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath);
+            getStateManager().getNoteService().update(updated);
+        } else {
+            Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
+            try {
+                getStateManager().getNoteService().add(note);
+            } catch (DuplicateEntryException e) {
+                LOG.warn("Failed to add note for tree {}: duplicate entry", treeModel.getId(), e);
+            }
         }
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
     }

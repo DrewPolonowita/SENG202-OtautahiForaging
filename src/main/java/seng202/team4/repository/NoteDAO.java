@@ -135,13 +135,28 @@ public class NoteDAO implements NoteRepository {
     }
 
     /**
-     * Not implemented
-     * @param toUpdate Object that needs to be updated
-     * (this object must be able to identify itself and its previous self)
+     * Updates an existing note in the database
+     * @param toUpdate the note to update
      */
     @Override
     public void update(Note toUpdate) {
-        throw new NotImplementedException();
+        String sql = """
+                UPDATE note
+                SET name = ?, description = ?, image_path = ?, tree_id = ?
+                WHERE id = ?;
+                """;
+        try (Connection conn = databaseManager.connect();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, toUpdate.getName());
+            ps.setString(2, toUpdate.getDescription());
+            ps.setString(3, toUpdate.getImagePath());
+            ps.setInt(4, toUpdate.getTreeId());
+            ps.setInt(5, toUpdate.getId());
+
+            ps.executeUpdate();
+        } catch (SQLException error) {
+            LOG.error(error);
+        }
     }
 
     /**
