@@ -121,8 +121,4 @@ public class Region {
 
         return false;
     }
-
-    public double getWews() {
-        return 0;
-    }
 }

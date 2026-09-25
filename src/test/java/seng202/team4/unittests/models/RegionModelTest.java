@@ -48,4 +48,20 @@ public class RegionModelTest {
         region.setLastUpdated(date);
         Assertions.assertEquals(date, region.getLastUpdated());
     }
+
+    @Test
+    public void testEquals() {
+        Assertions.assertEquals(region, region);
+    }
+
+    @Test
+    public void testNotEquals() {
+        Region region2 = new Region("", 0, 0, 0, 0);
+        Assertions.assertNotEquals(region, region2);
+    }
+
+    @Test
+    public void testEqualsNullReturnsFalse() {
+        Assertions.assertNotEquals(null, region);
+    }
 }
