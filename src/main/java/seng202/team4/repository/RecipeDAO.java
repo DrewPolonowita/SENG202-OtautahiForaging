@@ -185,20 +185,7 @@ public class RecipeDAO implements RecipeRepository {
                    recipe_image,
                    cooking_time_min,
                    preparation_time_min
-                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?)
-                   ON CONFLICT(recipe_id) DO UPDATE SET
-                   recipe_name = excluded.recipe_name,
-                   recipe_method = excluded.recipe_method,
-                   carbohydrates = excluded.carbohydrates,
-                   calories = excluded.calories,
-                   protein = excluded.protein,
-                   fat = excluded.fat,
-                   recipe_description = excluded.recipe_description,
-                   retrieval_time = CURRENT_TIMESTAMP,
-                   recipe_image = excluded.recipe_image,
-                   cooking_time_min = excluded.cooking_time_min,
-                   preparation_time_min = excluded.preparation_time_min
-                   ;
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?);
                    """;
         try (Connection conn = databaseManager.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {

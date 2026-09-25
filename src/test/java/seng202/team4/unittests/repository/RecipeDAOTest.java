@@ -289,13 +289,19 @@ public class RecipeDAOTest extends TestSuite {
     }
 
     @Test
-    void getRecipeIdsByFoodNameGivesRightIds() {
-        recipeDAO.addRecipeUseFood("Apple", 123);
-        recipeDAO.addRecipeUseFood("Apple", 456);
+    void getRecipeIdsByFoodNameGivesRightIds() throws DuplicateEntryException {
+        Recipe recipe1 = TestRecipeData.createRecipeModels().get(0);
+        Recipe recipe2 = TestRecipeData.createRecipeModels().get(1);
+
+        recipeDAO.add(recipe1);
+        recipeDAO.add(recipe2);
+
+        recipeDAO.addRecipeUseFood("Apple", recipe1.getId());
+        recipeDAO.addRecipeUseFood("Apple", recipe2.getId());
 
         List<Integer> ids = recipeDAO.getRecipeIdsByFoodName("Apple");
 
-        assertTrue(ids.contains(123));
-        assertTrue(ids.contains(456));
+        assertTrue(ids.contains(recipe1.getId()));
+        assertTrue(ids.contains(recipe2.getId()));
     }
 }

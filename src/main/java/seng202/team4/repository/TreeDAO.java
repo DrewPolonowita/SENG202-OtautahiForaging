@@ -1,6 +1,7 @@
 package seng202.team4.repository;
 
 import org.apache.commons.lang3.NotImplementedException;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.TreeModel;
 
 import java.sql.Connection;
@@ -70,17 +71,15 @@ public class TreeDAO implements TreeRepository {
         }
     }
 
-    @Override
-    public TreeModel getOne(Integer primaryKey) {
-        return null;
-    }
+
 
     /**
      * Method to return the tree model of choice by id
      * @param id id of object to get
      * @return TreeModel object of specific id, null if failed
      */
-    public TreeModel getOne(int id) {
+    @Override
+    public TreeModel getOne(Integer id) {
         TreeModel tree = null;
         String sql = "SELECT * FROM trees WHERE id=?";
         try (Connection conn = databaseManager.connect();
@@ -126,7 +125,7 @@ public class TreeDAO implements TreeRepository {
      * @return id of tree if success, -1 if failed
      */
     @Override
-    public int add(TreeModel toAdd) {
+    public int add(TreeModel toAdd) throws DuplicateEntryException {
         String sql = """
                     INSERT INTO trees (
                         id,
@@ -156,6 +155,10 @@ public class TreeDAO implements TreeRepository {
             ps.executeUpdate();
             return toAdd.getId();
         } catch (SQLException sqlException) {
+            if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
+                throw new DuplicateEntryException("Tree exists with id " + toAdd.getId()
+                        + " with food " + toAdd.getFood());
+            }
             LOG.error(sqlException);
             return -1;
         }
@@ -240,6 +243,7 @@ public class TreeDAO implements TreeRepository {
      * @param west west
      * @return list of trees of type in the region
      */
+    @Override
     public List<TreeModel> getTreesByRegion(String food, double north, double east, double south, double west) {
         List<TreeModel> trees = new ArrayList<>();
         String query = """

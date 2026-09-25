@@ -147,7 +147,9 @@ public class RecipeService implements RecipeDataManager {
 
         for (int id : recipeIds) {
             Recipe recipe = getRecipeById(id);
-            recipes.add(recipe);
+            if (recipe != null) {
+                recipes.add(recipe);
+            }
         }
         return recipes;
     }

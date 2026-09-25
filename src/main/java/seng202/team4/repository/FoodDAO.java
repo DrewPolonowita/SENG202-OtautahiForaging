@@ -4,6 +4,7 @@ package seng202.team4.repository;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Food;
 
 
@@ -74,7 +75,7 @@ public class FoodDAO implements FoodRepository {
      * @return unique food id of food if success, -1 if failed
      */
     @Override
-    public int add(Food toAdd) {
+    public int add(Food toAdd) throws DuplicateEntryException {
         String sql = """
                    INSERT INTO food (
                    food_id,
@@ -105,6 +106,10 @@ public class FoodDAO implements FoodRepository {
             ps.executeUpdate();
             return toAdd.getId();
         } catch (SQLException sqlException) {
+            if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
+                throw new DuplicateEntryException("Food exists with id " + toAdd.getId()
+                        + " and name " + toAdd.getName());
+            }
             LOG.error(sqlException);
             return -1;
         }
@@ -341,7 +346,11 @@ public class FoodDAO implements FoodRepository {
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
-                add(food);
+                try {
+                    add(food);
+                } catch (DuplicateEntryException e) {
+                    LOG.error(e);
+                }
             }
         } catch (SQLException e) {
             LOG.error(e);
