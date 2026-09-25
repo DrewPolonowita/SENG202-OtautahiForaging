@@ -38,7 +38,7 @@
         </VBox>
     </VBox>
 
-    <Button text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity">
+    <Button fx:id="recordButton" text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity">
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>

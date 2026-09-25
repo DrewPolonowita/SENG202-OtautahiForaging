@@ -240,6 +240,20 @@
 .delete-button:hover {
     -fx-background-color: rgba(168, 92, 92, 0.15);
 }
+.edit-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -primary-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 6 12;
+    -fx-font-size: 0.85em;
+    -fx-cursor: hand;
+}
+.edit-button:hover {
+    -fx-background-color: rgba(168, 92, 92, 0.15);
+}
+
 
 /* ---------- Add-note dialog ---------- */
 .expand-note-root {

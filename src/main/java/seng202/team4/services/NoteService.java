@@ -1,5 +1,6 @@
 package seng202.team4.services;
 
+import org.apache.commons.lang3.NotImplementedException;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
 import seng202.team4.repository.NoteRepository;
@@ -55,5 +56,13 @@ public class NoteService {
      */
     public void delete(Note note) {
         noteRepository.delete(note.getId());
+    }
+
+    /**
+     * Updates a pre-existing note
+     * @param toUpdate the note being updated
+     */
+    public void update(Note toUpdate) {
+        noteRepository.update(toUpdate);
     }
 }

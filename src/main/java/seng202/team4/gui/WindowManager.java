@@ -212,9 +212,9 @@ public class WindowManager {
      * @param tree the select tree to be converted to note
      * @param stateManager the provided state manager for the application
      */
-    public void openAddNoteMenu(TreeModel tree, StateManager stateManager) {
+    public void openAddNoteMenu(TreeModel tree, StateManager stateManager, Note existingNote) {
         try {
-            showCenteredDialog(loadScreen(new AddNoteController(stateManager, tree)));
+            showCenteredDialog(loadScreen(new AddNoteController(stateManager, tree, existingNote)));
         } catch (IOException e) {
             LOG.error(e);
         }

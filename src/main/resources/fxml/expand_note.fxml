@@ -36,11 +36,10 @@
         </HBox>
 
         <Label fx:id="descriptionLabel" styleClass="expand-note-description" wrapText="true" />
-        <Button text="Delete Note" styleClass="delete-button" onAction="#handleDelete" maxWidth="200">
-            <VBox.margin>
-                <Insets top="4"/>
-            </VBox.margin>
-        </Button>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Edit Note" styleClass="edit-button" onAction="#handleEdit" maxWidth="100" />
+            <Button text="Delete Note" styleClass="delete-button" onAction="#handleDelete" maxWidth="100" />
+        </HBox>
     </VBox>
 
 </VBox>

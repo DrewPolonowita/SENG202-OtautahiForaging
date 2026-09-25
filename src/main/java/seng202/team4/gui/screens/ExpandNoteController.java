@@ -1,5 +1,6 @@
 package seng202.team4.gui.screens;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -105,6 +106,20 @@ public class ExpandNoteController extends ScreenController {
         getStateManager().getNoteService().delete(note);
         handleClose();
         journalController.refreshNotes();
+    }
+
+    /**
+     * Closes the expanded note window and opens the note editor.
+     * runLater used to fully close the expanded note dialog
+     * before opening the new modal dialog.
+     */
+    @FXML
+    private void handleEdit() {
+        handleClose();
+        Platform.runLater(() -> {
+            getStateManager().getWindowManager().openAddNoteMenu(null, getStateManager(), note);
+            journalController.refreshNotes();
+        });
     }
 
     /**
