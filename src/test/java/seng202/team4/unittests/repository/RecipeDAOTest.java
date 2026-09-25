@@ -9,7 +9,10 @@ import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RecipeDAO;
 import seng202.team4.repository.RecipeRepository;
+import seng202.team4.services.api.RecipeClientInterface;
+import seng202.team4.services.dataCentre.recipeData.RecipeService;
 import seng202.team4.unittests.TestSuite;
+import seng202.team4.unittests.services.RecipeServiceTest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,18 +25,25 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 
 public class RecipeDAOTest extends TestSuite {
 
     RecipeRepository recipeDAO;
     DatabaseManager databaseManager;
+    RecipeService testRecipeService;
+    RecipeClientInterface testRecipeClient;
+
 
 
     @BeforeEach
     void setUpTest() {
         databaseManager = new DatabaseManager(this.getTestDb());
         recipeDAO = new RecipeDAO(databaseManager);
+        testRecipeClient = mock(RecipeClientInterface.class);
+        testRecipeService = new RecipeService(recipeDAO, testRecipeClient);
+
     }
 
     @Test
@@ -244,5 +254,48 @@ public class RecipeDAOTest extends TestSuite {
         recipeDAO.replaceRecipe(updatedRecipe);
 
         assertTrue(recipeDAO.recipeDetailsUpToDateAndExist(recipe.getId()));
+    }
+
+    private List<Recipe> fillDatabase() {
+        List<Recipe> testRecipes = TestRecipeData.createRecipeModels();
+        List<RecipeIngredient> testIngredients = TestRecipeData.createFakeRecipeIngredient();
+        testRecipeService.populateIngredientTable(testIngredients);
+
+        for (Recipe recipe : testRecipes) {
+            try {
+                recipeDAO.add(recipe);
+            } catch (DuplicateEntryException e) {
+
+            }
+            testRecipeService.populateIngredientInRecipeTable(testIngredients, recipe);
+        }
+        return testRecipes;
+    }
+
+    @Test
+    public void testGetAllRecipesWithPopulatedDatabase() {
+        List<Recipe> populatedList = fillDatabase();
+
+
+        List<Recipe> allRecipes = testRecipeService.getAllRecipes();
+
+
+        assertEquals(3, allRecipes.size());
+
+
+        for (Recipe expectedRecipe : populatedList) {
+            assertTrue(allRecipes.contains(expectedRecipe));
+        }
+    }
+
+    @Test
+    void getRecipeIdsByFoodNameGivesRightIds() {
+        recipeDAO.addRecipeUseFood("Apple", 123);
+        recipeDAO.addRecipeUseFood("Apple", 456);
+
+        List<Integer> ids = recipeDAO.getRecipeIdsByFoodName("Apple");
+
+        assertTrue(ids.contains(123));
+        assertTrue(ids.contains(456));
     }
 }
