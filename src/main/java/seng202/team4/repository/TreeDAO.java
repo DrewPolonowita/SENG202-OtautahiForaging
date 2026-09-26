@@ -38,7 +38,10 @@ public class TreeDAO implements TreeRepository {
     @Override
     public List<TreeModel> getAll() {
         List<TreeModel> trees = new ArrayList<>();
-        String sql = "SELECT id, x, y, ownership, genus, food, common_name, last_modified, service_status FROM trees";
+        String sql = """
+                SELECT id, x, y, ownership, genus, food, common_name, last_modified, service_status
+                FROM trees
+                """;
         try (Connection conn = databaseManager.connect();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)
@@ -72,7 +75,7 @@ public class TreeDAO implements TreeRepository {
 
     @Override
     public TreeModel getOne(Integer primaryKey) {
-        return null;
+        return getOne(primaryKey.intValue());
     }
 
     /**
