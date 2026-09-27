@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FoodMapperTest {
 
     @Test
-    public void testHallsCrabAppleExistsInFoodMap() {
+    public void testCommonAppleExistsInFoodMap() {
         FoodMapper foodMapper = new FoodMapper();
 
-        assertTrue(foodMapper.getFoodMap().get("Apple").contains("Hall's Crab Apple"));
+        assertTrue(foodMapper.getFoodMap().get("Apple").contains("Common Apple"));
     }
 
     @Test

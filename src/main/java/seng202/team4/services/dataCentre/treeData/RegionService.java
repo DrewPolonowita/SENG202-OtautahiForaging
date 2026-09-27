@@ -85,7 +85,7 @@ public class RegionService {
         if (notUpToDateRegions.isEmpty()) {
             return null;
         }
-        
+
         System.out.println(notUpToDateRegions);
         System.out.println(notUpToDateRegions.getFirst());
 
