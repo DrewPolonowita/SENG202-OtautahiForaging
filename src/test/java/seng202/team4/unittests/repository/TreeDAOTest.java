@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.exceptions.DuplicateEntryException;
+import seng202.team4.models.Food;
 import seng202.team4.models.TreeModel;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
@@ -12,6 +13,8 @@ import seng202.team4.unittests.TestSuite;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TreeDAOTest extends TestSuite {
 
@@ -31,6 +34,12 @@ public class TreeDAOTest extends TestSuite {
 
         id = 34;
         tree = new TreeModel(id, coordinates, "CCC", "Malus", "Apple", "Apple", LocalDateTime.now(), "");
+    }
+
+    @Test
+    void testDuplicateEntryException() throws DuplicateEntryException {
+        treeDao.add(tree);
+        assertThrows(DuplicateEntryException.class, () -> treeDao.add(tree));
     }
 
     @Test
