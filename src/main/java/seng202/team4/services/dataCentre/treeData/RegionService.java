@@ -61,10 +61,8 @@ public class RegionService {
                     ) {
                         Region region = new Region(type, north, east, south, west);
                         try {
-                            if (regionRepository.add(region) == -2) {
-                                region = regionRepository.getRegion(region);
-                            }
-                        } catch(DuplicateEntryException e) {
+                            regionRepository.add(region);
+                        } catch (DuplicateEntryException e) {
                             region = regionRepository.getRegion(region);
                         }
                         regionsList.add(region);

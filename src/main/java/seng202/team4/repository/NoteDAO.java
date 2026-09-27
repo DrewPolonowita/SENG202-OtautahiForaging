@@ -3,6 +3,7 @@ package seng202.team4.repository;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
 
 import java.sql.Connection;
@@ -48,7 +49,7 @@ public class NoteDAO implements NoteRepository {
      * @param toAdd object of type T to add
      * @return id of the key if successful or -1 if fault
      */
-    public int add(Note toAdd) {
+    public int add(Note toAdd) throws DuplicateEntryException {
         String sql = """
                 INSERT INTO note (time_created, name, tree_id, description, image_path)
                 VALUES (datetime('now', 'localtime'), ?, ?, ?, ?);
@@ -67,8 +68,12 @@ public class NoteDAO implements NoteRepository {
                 }
             }
             return -1;
-        } catch (SQLException error) {
-            LOG.error(error);
+        } catch (SQLException sqlException) {
+            if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
+                throw new DuplicateEntryException("Note exists with id " + toAdd.getId()
+                        + " with description " + toAdd.getDescription());
+            }
+            LOG.error(sqlException);
             return -1;
         }
     }

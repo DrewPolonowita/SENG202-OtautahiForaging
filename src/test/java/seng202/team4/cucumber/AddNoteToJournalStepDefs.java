@@ -47,7 +47,7 @@ public class AddNoteToJournalStepDefs {
     }
 
     @Given("a tree is selected on the map")
-    public void aTreeIsSelectedOnTheMap() {
+    public void aTreeIsSelectedOnTheMap() throws DuplicateEntryException {
         treeId = 2452;
         treeName = "Apple";
 

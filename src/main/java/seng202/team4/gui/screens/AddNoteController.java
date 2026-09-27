@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -35,8 +37,6 @@ public class AddNoteController extends ScreenController {
     private TextArea fieldNotesArea;
     @FXML
     private VBox uploadZone;
-    @FXML
-    private Label uploadHint;
     @FXML
     private Button recordButton;
 
@@ -81,8 +81,29 @@ public class AddNoteController extends ScreenController {
             commonNameDisplay.setText("Editing " + existingNote.getName());
             fieldNotesArea.setText(existingNote.getDescription());
             recordButton.setText("Edit Note");
+            selectedImagePath = existingNote.getImagePath();
+            updateUploadZonePreview();
         } else {
             commonNameDisplay.setText(treeModel.getCommonName());
+        }
+    }
+
+    /**
+     * Refreshes the upload zone's contents to show the selected image.
+     * a preview of that image is shown in place of the default hint text.
+     */
+    private void updateUploadZonePreview() {
+        uploadZone.getChildren().clear();
+        if (selectedImagePath != null) {
+            ImageView preview = new ImageView(new Image(new File(selectedImagePath).toURI().toString()));
+            preview.setFitWidth(280);
+            preview.setFitHeight(110);
+            preview.setPreserveRatio(true);
+            uploadZone.getChildren().add(preview);
+        } else {
+            Label hint = new Label("Upload a photo");
+            hint.getStyleClass().add("upload-hint");
+            uploadZone.getChildren().add(hint);
         }
     }
 
@@ -103,7 +124,7 @@ public class AddNoteController extends ScreenController {
                 Path destination = imageDir.resolve(newFileName);
                 Files.copy(selected.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
                 selectedImagePath = destination.toString();
-                uploadHint.setText(selected.getName());
+                updateUploadZonePreview();
             } catch (IOException e) {
                 LOG.error("Failed to copy over selected photo", e);
             }
