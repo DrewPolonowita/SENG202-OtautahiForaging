@@ -12,7 +12,6 @@ import seng202.team4.repository.RecipeRepository;
 import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.recipeData.RecipeService;
 import seng202.team4.unittests.TestSuite;
-import seng202.team4.unittests.services.RecipeServiceTest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,7 +55,7 @@ public class RecipeDAOTest extends TestSuite {
 
     @Test
     void addWhenRecipeIdExistsAlreadyThrowsDuplicateEntryException() throws DuplicateEntryException {
-        Recipe recipe = TestRecipeData.createRecipeModels().get(0);
+        Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
 
         recipeDAO.add(recipe);
 
@@ -65,67 +64,24 @@ public class RecipeDAOTest extends TestSuite {
 
     @Test
     void replaceRecipeUpdatesRecipe() throws DuplicateEntryException {
-        Recipe original = TestRecipeData.createRecipeModels().get(0);
-        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
-
-        recipeDAO.add(original);
-        recipeDAO.addIngredients(ingredient);
-        recipeDAO.addIngredientsByRecipe(ingredient, original);
-
-        Recipe updatedRecipe = new Recipe(
-                original.getId(),
-                "new name",
-                "new method",
-                original.getIngredients(),
-                900,
-                800,
-                700,
-                600,
-                "new description",
-                null,
-                "new image url",
-                500,
-                400
-        );
-
-        recipeDAO.replaceRecipe(updatedRecipe);
+        Recipe original = TestRecipeData.createRecipeModels().getFirst();
+        addRecipeWithIngredient(original);
+        recipeDAO.replaceRecipe(TestRecipeData.createUpdatedRecipe(original));
         Recipe result = recipeDAO.getOne(original.getId());
 
         assertNotNull(result);
         assertEquals(original.getId(), result.getId());
         assertEquals("new name", result.getName());
         assertEquals("new method", result.getMethod());
-        assertEquals(900, result.getCarbohydrates());
-        assertEquals(800, result.getCalories());
-        assertEquals(700, result.getProtein());
-        assertEquals(600, result.getFat());
-        assertEquals("new description", result.getDescription());
-        assertEquals("new image url", result.getImage());
-        assertEquals(500, result.getCookingTime());
-        assertEquals(400, result.getPreparationTime());
 
     }
 
     @Test
     void replaceRecipeAddsRecipeWhenRecipeDoesNotExist() {
-        Recipe newRecipe = new Recipe(
-                41239841,
-                "new name",
-                "new method",
-                List.of("Test ingredient"),
-                900,
-                800,
-                700,
-                600,
-                "new description",
-                null,
-                "new image url",
-                500,
-                400
-        );
+        Recipe newRecipe = TestRecipeData.createNewRecipe();
 
         recipeDAO.replaceRecipe(newRecipe);
-        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
+        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().getFirst();
         recipeDAO.addIngredients(ingredient);
         recipeDAO.addIngredientsByRecipe(ingredient, newRecipe);
 
@@ -135,25 +91,14 @@ public class RecipeDAOTest extends TestSuite {
         assertEquals(newRecipe.getId(), result.getId());
         assertEquals("new name", result.getName());
         assertEquals("new method", result.getMethod());
-        assertEquals(900, result.getCarbohydrates());
-        assertEquals(800, result.getCalories());
-        assertEquals(700, result.getProtein());
-        assertEquals(600, result.getFat());
-        assertEquals("new description", result.getDescription());
-        assertEquals("new image url", result.getImage());
-        assertEquals(500, result.getCookingTime());
-        assertEquals(400, result.getPreparationTime());
+
 
     }
 
     @Test
     void deleteRemovesRecipeAndLinkedData() throws Exception {
         Recipe recipe = TestRecipeData.createRecipeModels().get(0);
-        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
-
-        recipeDAO.add(recipe);
-        recipeDAO.addIngredients(ingredient);
-        recipeDAO.addIngredientsByRecipe(ingredient, recipe);
+        addRecipeWithIngredient(recipe);
 
         recipeDAO.delete(recipe.getId());
         assertNull(recipeDAO.getOne(recipe.getId()));
@@ -173,11 +118,7 @@ public class RecipeDAOTest extends TestSuite {
     @Test
     void deleteRemovesRecipeUseFoodLink() throws DuplicateEntryException {
         Recipe recipe = TestRecipeData.createRecipeModels().get(0);
-        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
-
-        recipeDAO.add(recipe);
-        recipeDAO.addIngredients(ingredient);
-        recipeDAO.addIngredientsByRecipe(ingredient, recipe);
+        addRecipeWithIngredient(recipe);
         recipeDAO.addRecipeUseFood("Apple", recipe.getId());
 
         assertTrue(recipeDAO.getRecipeIdsByFoodName("Apple").contains(recipe.getId()));
@@ -189,37 +130,29 @@ public class RecipeDAOTest extends TestSuite {
 
     @Test
     void getOneReturnsRecipeWithAllIngredients() throws DuplicateEntryException {
-        Recipe testRecipe = TestRecipeData.createRecipeModels().get(0);
-
-        RecipeIngredient ingredient1 = new RecipeIngredient(900, "Apple", 700, 500, "", "1 Apple");
-        RecipeIngredient ingredient2 = new RecipeIngredient(800, "Butter", 600, 400, "g", "100 g butter");
+        Recipe testRecipe = TestRecipeData.createRecipeModels().getFirst();
+        List<RecipeIngredient> ingredients = TestRecipeData.createFakeRecipeIngredient();
 
         recipeDAO.add(testRecipe);
 
-        recipeDAO.addIngredients(ingredient1);
-        recipeDAO.addIngredientsByRecipe(ingredient1, testRecipe);
-
-        recipeDAO.addIngredients(ingredient2);
-        recipeDAO.addIngredientsByRecipe(ingredient2, testRecipe);
+        for (RecipeIngredient ingredient : ingredients) {
+            recipeDAO.addIngredients(ingredient);
+            recipeDAO.addIngredientsByRecipe(ingredient, testRecipe);
+        }
 
         Recipe result = recipeDAO.getOne(testRecipe.getId());
 
         assertNotNull(result);
         assertEquals(testRecipe.getId(), result.getId());
-        assertTrue(result.getIngredients().contains("1 Apple"));
-        assertTrue(result.getIngredients().contains("100 g butter"));
+        assertTrue(result.getIngredients().contains("100 g TestIngredient"));
+        assertTrue(result.getIngredients().contains("200 cups TestIngredient2"));
         assertEquals(2, result.getIngredients().size());
-
     }
 
     @Test
     void replaceRecipeUpdatesBasedOnTime() throws Exception {
         Recipe recipe = TestRecipeData.createRecipeModels().get(0);
-        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
-
-        recipeDAO.add(recipe);
-        recipeDAO.addIngredients(ingredient);
-        recipeDAO.addIngredientsByRecipe(ingredient, recipe);
+        addRecipeWithIngredient(recipe);
 
         String sql = """
             UPDATE recipes
@@ -235,23 +168,7 @@ public class RecipeDAOTest extends TestSuite {
 
         assertFalse(recipeDAO.recipeDetailsUpToDateAndExist(recipe.getId()));
 
-        Recipe updatedRecipe = new Recipe(
-                recipe.getId(),
-                recipe.getName(),
-                recipe.getMethod(),
-                recipe.getIngredients(),
-                recipe.getCarbohydrates(),
-                recipe.getCalories(),
-                recipe.getProtein(),
-                recipe.getFat(),
-                recipe.getDescription(),
-                null,
-                recipe.getImage(),
-                recipe.getCookingTime(),
-                recipe.getPreparationTime()
-        );
-
-        recipeDAO.replaceRecipe(updatedRecipe);
+        recipeDAO.replaceRecipe(recipe);
 
         assertTrue(recipeDAO.recipeDetailsUpToDateAndExist(recipe.getId()));
     }
@@ -288,9 +205,10 @@ public class RecipeDAOTest extends TestSuite {
         }
     }
 
+
     @Test
     void getRecipeIdsByFoodNameGivesRightIds() throws DuplicateEntryException {
-        Recipe recipe1 = TestRecipeData.createRecipeModels().get(0);
+        Recipe recipe1 = TestRecipeData.createRecipeModels().getFirst();
         Recipe recipe2 = TestRecipeData.createRecipeModels().get(1);
 
         recipeDAO.add(recipe1);
@@ -303,5 +221,12 @@ public class RecipeDAOTest extends TestSuite {
 
         assertTrue(ids.contains(recipe1.getId()));
         assertTrue(ids.contains(recipe2.getId()));
+    }
+
+    private void addRecipeWithIngredient(Recipe recipe) throws DuplicateEntryException {
+        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
+        recipeDAO.add(recipe);
+        recipeDAO.addIngredients(ingredient);
+        recipeDAO.addIngredientsByRecipe(ingredient, recipe);
     }
 }

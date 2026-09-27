@@ -36,30 +36,17 @@ public class RecipeApiHandler {
      */
     public List<Integer> getRecipeIdsByFoodFromApi(String searchExpression) {
         Request<RecipeSearchResponse> response = recipeApiClient.searchRecipe(searchExpression, true, 20);
-        int responseCode = response.getResponseCode();
-        if (responseCode != 200) {
-            LOG.error("Error: getRecipesByIngredientFromApi doesn't return response, code: {}", responseCode);
-            return List.of();
-        }
-        List<Integer> recipeIds = new ArrayList<>();
-        RecipeSearchResponse apiResponse = response.getApiResponse();
-        if (apiResponse.error() != null) {
-            LOG.error("FatSecret recipe search error for '{}': code={}, message={}",
-                    searchExpression, apiResponse.error().code(), apiResponse.error().message()
-            );
-            return List.of();
-        }
-        if (apiResponse == null || apiResponse.recipes() == null || apiResponse.recipes().recipe() == null) {
-            LOG.error("Unexpected recipe search response for '{}': {}", searchExpression, apiResponse);
+
+        if (!validateApiResponse(response, searchExpression)) {
             return List.of();
         }
 
-        for (RecipeSearchRecord recipe : apiResponse.recipes().recipe()) {
+        List<Integer> recipeIds = new ArrayList<>();
+        for (RecipeSearchRecord recipe : response.getApiResponse().recipes().recipe()) {
             recipeIds.add(recipe.id());
         }
 
         return recipeIds;
-
 
     }
 
@@ -70,15 +57,69 @@ public class RecipeApiHandler {
      */
     public RecipeByIdRecord getRecipeById(int id) {
         Request<RecipeByIdResponse> response = recipeApiClient.getRecipeById(id);
-        int responseCode = response.getResponseCode();
-        if (responseCode != 200) {
-            LOG.error("Error: getRecipeById doesn't return response, code: {}", responseCode);
+
+        if (!validateApiResponse(response, id)) {
             return null;
         }
 
         return response.getApiResponse().recipe();
+    }
 
+    /**
+     * Validating get recipe ids by food from api
+     * @return true if there are no errors, false if an error is found
+     */
+    private boolean validateApiResponse(Request<RecipeSearchResponse> response, String searchExpression) {
+        int responseCode = response.getResponseCode();
+        if (responseCode != 200) {
+            LOG.error("Error: getRecipesByIngredientFromApi doesn't return response, code: {}", responseCode);
+            return false;
+        }
 
+        RecipeSearchResponse apiResponse = response.getApiResponse();
+        if (apiResponse == null) {
+            LOG.error("Unexpected recipe search response for '{}': null", searchExpression);
+            return false;
+        }
 
+        if (apiResponse.error() != null) {
+            LOG.error("FatSecret recipe search error for '{}': code={}, message={}",
+                    searchExpression, apiResponse.error().code(), apiResponse.error().message()
+            );
+            return false;
+        }
+
+        if (apiResponse.recipes() == null || apiResponse.recipes().recipe() == null) {
+            LOG.error("Unexpected recipe search response for '{}': {}", searchExpression, apiResponse);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validate recipe by id response
+     * @return true if there are no errors, false if an error is found
+     */
+    private boolean validateApiResponse(Request<RecipeByIdResponse> response, int id) {
+        int responseCode = response.getResponseCode();
+        if (responseCode != 200) {
+            LOG.error("Error: getRecipeById doesn't return response, code: {}", responseCode);
+            return false;
+        }
+
+        RecipeByIdResponse apiResponse = response.getApiResponse();
+        if (apiResponse == null) {
+            LOG.error("Unexpected recipe by id response for id {}: null", id);
+            return false;
+        }
+
+        if (apiResponse.recipe() == null) {
+            LOG.error("Unexpected recipe by id response for id {}: {}", id, apiResponse);
+            return false;
+        }
+
+        return true;
     }
 }
+
+

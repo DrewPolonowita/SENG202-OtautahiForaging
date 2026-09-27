@@ -40,8 +40,8 @@ public class TestRecipeData {
 
     public static List<RecipeIngredient> createFakeRecipeIngredient() {
         List<RecipeIngredient> testIngredients = new ArrayList<>();
-        testIngredients.add(new RecipeIngredient(123,"TestIngredient", 1234, 100, "g", "Description"));
-        testIngredients.add(new RecipeIngredient(234, "TestIngredient2", 4567, 200,"cups", "Description"));
+        testIngredients.add(new RecipeIngredient(123, "TestIngredient", 1234, 100, "g", "100 g TestIngredient"));
+        testIngredients.add(new RecipeIngredient(234, "TestIngredient2", 4567, 200, "cups", "200 cups TestIngredient2"));
         return testIngredients;
     }
 
@@ -55,4 +55,43 @@ public class TestRecipeData {
         testRecipes.add(new Recipe(1235, "Test3", "Methods 3: tester", testIngredients3, 125, 421, 432, 431, "Description 3", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 30, 30));
         return testRecipes;
     }
+
+    public static Recipe createUpdatedRecipe(Recipe recipe) {
+        return new Recipe(
+                recipe.getId(),
+                "new name",
+                "new method",
+                recipe.getIngredients(),
+                900,
+                800,
+                700,
+                600,
+                "new description",
+                null,
+                "new image url",
+                500,
+                400
+        );
+    }
+
+    public static Recipe createNewRecipe() {
+        return new Recipe(
+                41239841,
+                "new name",
+                "new method",
+                List.of("Test ingredient"),
+                900,
+                800,
+                700,
+                600,
+                "new description",
+                null,
+                "new image url",
+                500,
+                400
+        );
+    }
+
+
+
 }
