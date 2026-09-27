@@ -136,6 +136,25 @@ public class FoodDAOTest extends TestSuite {
         assertTrue(foodDAO.foodDetailsUpToDateAndExist(food.getId()));
     }
 
+    @Test
+    public void getFoodIdByFoodNameWorksWhenFoodExists() throws DuplicateEntryException {
+        Food food = createFood(90000, "Apple", "Fruit");
+
+        foodDAO.add(food);
+
+        Integer result = foodDAO.getFoodIdByFoodName("Apple");
+
+        assertEquals(food.getId(), result);
+    }
+
+    @Test
+    public void getFoodByIdGivesNullWhenDoesntExist() throws DuplicateEntryException {
+        Integer result = foodDAO.getFoodIdByFoodName("Apple");
+
+        assertNull(result);
+
+    }
+
     private void assertFoodEquals(Food expected, Food actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());

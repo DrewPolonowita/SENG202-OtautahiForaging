@@ -5,9 +5,9 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.models.Food;
 import seng202.team4.services.FoodMapper;
 import seng202.team4.services.api.FoodClientInterface;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.repository.FoodRepository;
+import seng202.team4.services.dataCentre.LoadingCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +18,13 @@ import java.util.Map;
  * @author Team 4
  */
 public class FoodService implements FoodDataManager {
-    private static final Logger log = LogManager.getLogger(FoodService.class);
     private final FoodMapper foodMapper;
 
     private final FoodRepository foodDao;
     private final FoodApiHandler foodApiHandler;
+
+    private final LoadingCache<String, Food> foodCache;
+    private final LoadingCache<String, Integer> foodIdByNameCache;
 
     /**
      * Constructor
@@ -32,16 +34,59 @@ public class FoodService implements FoodDataManager {
         this.foodDao = foodDao;
         this.foodApiHandler = new FoodApiHandler(foodApiClient);
         this.foodMapper = foodMapper;
+
+        this.foodCache = new LoadingCache<>(
+                this::getFoodFromDatabase,
+                this::getFoodFromApi
+        );
+
+        this.foodIdByNameCache = new LoadingCache<>(
+                this::getFoodIdFromDatabase,
+                this::getFoodIdFromApi
+        );
     }
 
-    /**
-     * Test constructor
-     */
-    public FoodService(FoodRepository foodDao) {
-        this.foodDao = foodDao;
-        this.foodApiHandler = null;
-        this.foodMapper = new FoodMapper();
+
+
+    private Food getFoodFromDatabase(String foodName) {
+        Integer foodId = foodDao.getFoodIdByFoodName(foodName);
+
+        if (foodId != null && foodDao.foodDetailsUpToDateAndExist(foodId)) {
+            return foodDao.getOne(foodId);
+        }
+
+        return null;
     }
+
+    private Food getFoodFromApi(String foodName) {
+        Integer foodId = foodIdByNameCache.get(foodName);
+
+        if (foodId == null || foodId == 0) {
+            return null;
+        }
+        Food food = foodApiHandler.getFoodById(
+                foodId,
+                foodName,
+                foodMapper.getFoodType(foodName)
+        );
+
+        if (food != null) {
+            foodDao.replaceFood(food);
+        }
+
+        return food;
+
+    }
+
+    private Integer getFoodIdFromDatabase(String foodName) {
+        return foodDao.getFoodIdByFoodName(foodName);
+    }
+
+    private Integer getFoodIdFromApi(String foodName) {
+        return foodApiHandler.getFoodBySearchFromApi(foodName);
+    }
+
+
 
     /**
      * Method to get all the foods we have mapped for the trees with api data
@@ -53,21 +98,11 @@ public class FoodService implements FoodDataManager {
     public List<Food> getFoods() {
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMapper.getFoodMap().keySet()) {
-            Integer foodId = foodDao.getFoodIdByFoodName(foodName);
+            Food food = foodCache.get(foodName);
 
-            boolean noIdExists = foodId == null;
-            if (noIdExists) {
-                foodId = foodApiHandler != null ? foodApiHandler.getFoodBySearchFromApi(foodName) : 0;
+            if (food != null) {
+                foods.add(food);
             }
-            Food food;
-            if (foodDao.foodDetailsUpToDateAndExist(foodId)) {
-                food = foodDao.getOne(foodId);
-            } else {
-                food = foodApiHandler != null
-                        ? foodApiHandler.getFoodById(foodId, foodName, foodMapper.getFoodType(foodName)) : null;
-                foodDao.replaceFood(food);
-            }
-            foods.add(food);
 
         }
 
@@ -93,7 +128,7 @@ public class FoodService implements FoodDataManager {
             }
         }
         double calories = foodRecord.servings().serving().getFirst().calories();
-        double fat = foodRecord.servings().serving().getFirst().carbohydrate();
+        double fat = foodRecord.servings().serving().getFirst().fat();
         double protein = foodRecord.servings().serving().getFirst().protein();
         double carbohydrate = foodRecord.servings().serving().getFirst().carbohydrate();
         String servingDescription = foodRecord.servings().serving().getFirst().servingDescription();
@@ -111,37 +146,4 @@ public class FoodService implements FoodDataManager {
                 servingId
         );
     }
-
-    /**
-     * Method to return all food from API
-     * @return List of all food from API
-     */
-    public List<Food> getAllFoodFromApi() {
-        return null;
-    }
-
-    /**
-     * Method to get all the food in the database if the database is populated
-     * otherwise populate it
-     * @return all foods
-     */
-    public List<Food> getAllFood() {
-        List<Food> databaseFood = foodDao.getAll();
-        if (!databaseFood.isEmpty()) {
-            log.info("Loaded {} food from database", databaseFood.size());
-            return databaseFood;
-        }
-        List<Food> apiFood = getAllFoodFromApi();
-        log.info("Loaded {} foods from api", apiFood.size());
-        for (Food food : apiFood) {
-            try {
-                foodDao.add(food);
-            } catch (DuplicateEntryException e) {
-                log.warn("(All Food) Skip duplicate id: {}", food.getId());
-            }
-        }
-        databaseFood = foodDao.getAll();
-        return databaseFood;
-    }
-
 }

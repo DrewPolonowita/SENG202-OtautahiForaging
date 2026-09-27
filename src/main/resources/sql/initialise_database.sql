@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS trees (
     last_modified DATETIME,
     service_status TEXT
 );
+DROP TABLE IF EXISTS regions;
 --SPLIT
 CREATE TABLE regions (
     north REAL NOT NULL,
@@ -112,8 +113,8 @@ CREATE TABLE IF NOT EXISTS food (
 DROP TABLE IF EXISTS recipe_uses_food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS recipe_uses_food (
-    common_name TEXT,
-    recipe_id INTEGER,
+    common_name TEXT NOT NULL,
+    recipe_id INTEGER NOT NULL,
     PRIMARY KEY (common_name, recipe_id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
 );
