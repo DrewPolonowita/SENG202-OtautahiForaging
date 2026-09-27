@@ -67,7 +67,7 @@ public class MapService {
 
         return allTasks.thenApply(v -> {
             if (thisRequest != currentRequestCounter.get()) {
-                return Collections.emptyList(); // The UI should be configured to ignore empty lists (or you can throw a CancellationException)
+                return null;
             }
 
             List<TreeModel> combinedTrees = new ArrayList<>();

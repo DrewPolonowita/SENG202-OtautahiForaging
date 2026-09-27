@@ -85,6 +85,9 @@ public class RegionService {
         if (notUpToDateRegions.isEmpty()) {
             return null;
         }
+        
+        System.out.println(notUpToDateRegions);
+        System.out.println(notUpToDateRegions.getFirst());
 
         double maxLat = notUpToDateRegions.getFirst().getNorthBound();
         double maxLon = notUpToDateRegions.getFirst().getEastBound();
