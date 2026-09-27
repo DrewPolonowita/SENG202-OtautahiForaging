@@ -185,16 +185,19 @@ public class MapController extends ScreenController {
                 )
 
                 .thenAccept(trees -> {
-                    javafx.application.Platform.runLater(() -> {
-                        removeTreeMarkers();
-                        for (TreeModel tree : trees) {
-                            addTreeMarker(tree);
-                        }
-                    });
+                    if (trees != null) {
+                        LOG.info("Completed request for " + trees.size() + " trees.");
+                        javafx.application.Platform.runLater(() -> {
+                            removeTreeMarkers();
+                            for (TreeModel tree : trees) {
+                                addTreeMarker(tree);
+                            }
+                        });
+                    }
                 })
                 .exceptionally(ex -> {
                     javafx.application.Platform.runLater(() -> {
-                        System.err.println("Error fetching trees for map view: " + ex.getMessage());
+                        System.err.println("Error fetching trees for map view: " + ex);
                     });
                     return null;
                 });

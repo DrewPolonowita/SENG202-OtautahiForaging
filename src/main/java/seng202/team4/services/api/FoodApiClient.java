@@ -19,7 +19,6 @@ import java.util.Map;
  */
 public class FoodApiClient implements FoodClientInterface {
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
-    private static final Logger log = LogManager.getLogger(FoodApiClient.class);
 
     static final String FOOD_BY_ID = BASE_URL + "/food/v5";
     static final String FOOD_BY_SEARCH = BASE_URL + "/foods/search/v1";
@@ -56,7 +55,6 @@ public class FoodApiClient implements FoodClientInterface {
      * @return url extension
      */
     private String encodeFoodSearchParams(String searchExpression, int maxResults) {
-
         return "?search_expression=" + URLEncoder
                 .encode(searchExpression == null ? "" : searchExpression, StandardCharsets.UTF_8)
                 .replace("+", "%20")
