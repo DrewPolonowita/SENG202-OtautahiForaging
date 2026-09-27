@@ -130,22 +130,23 @@ public class NoteDAOTest extends TestSuite {
     }
 
     /**
-     * Verifies that a note remains accessible after its linked tree is deleted,
-     * and that looking up the tree returns null.
+     * Verifies that a tree referenced by a note cannot be deleted,
+     * preserving the note's link to the tree.
      */
     @Test
-    void testDeletedNoteTree() throws DuplicateEntryException {
+    void testReferencedTreeNotDeleted() throws DuplicateEntryException {
         TreeModel tree = new TreeModel(202, new float[]{172.65f, -43.55f},
                 "Council", "Pyrus", "Pear", "Pear", null, "serviced");
         treeDAO.add(tree);
-        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null));
+        int noteId = noteDAO.add(new Note(0, "Pear", null, tree.getId(), "wow i really like pears", null));
         assertTrue(noteId > 0);
         treeDAO.delete(tree.getId());
         Note savedNote = noteDAO.getOne(noteId);
         assertNotNull(savedNote);
 
         TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
-        assertNull(resolvedTree);
+        assertNotNull(resolvedTree);
+        assertEquals(tree.getId(), resolvedTree.getId());
     }
 
     private void addTree(int id) throws DuplicateEntryException {
