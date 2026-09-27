@@ -7,10 +7,12 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A service class for the Map to handle getting trees and filtering the map
@@ -24,6 +26,7 @@ public class MapService {
         thread.setDaemon(true);
         return thread;
     });
+    private final AtomicInteger currentRequestCounter = new AtomicInteger(0);
 
     /**
      * Creates a new instance of a MapService
@@ -47,7 +50,10 @@ public class MapService {
     public CompletableFuture<List<TreeModel>> getAllTreesInRegion(
             double north, double east, double south, double west
     ) {
+        int thisRequest = currentRequestCounter.incrementAndGet();
+
         LOG.info(selectedFruits);
+
         List<CompletableFuture<List<TreeModel>>> futures = selectedFruits.stream()
                 .map(fruit -> CompletableFuture.supplyAsync(() ->
                                 treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west),
@@ -60,6 +66,10 @@ public class MapService {
         );
 
         return allTasks.thenApply(v -> {
+            if (thisRequest != currentRequestCounter.get()) {
+                return Collections.emptyList(); // The UI should be configured to ignore empty lists (or you can throw a CancellationException)
+            }
+
             List<TreeModel> combinedTrees = new ArrayList<>();
             for (CompletableFuture<List<TreeModel>> future : futures) {
                 combinedTrees.addAll(future.join());
