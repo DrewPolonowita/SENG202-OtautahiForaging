@@ -3,8 +3,10 @@ package seng202.team4.unittests.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.models.Note;
+import seng202.team4.models.TreeModel;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.NoteDAO;
+import seng202.team4.repository.TreeDAO;
 import seng202.team4.unittests.TestSuite;
 
 import java.util.List;
@@ -88,5 +90,53 @@ public class NoteDAOTest extends TestSuite {
         List<Note> remaining = noteDAO.getAll();
         assertEquals(1, remaining.size());
         assertEquals(id2, remaining.get(0).getId());
+    }
+
+    /**
+     * Verifies that a saved note retrieves its linked tree,
+     * including the correct ID and coordinates.
+     */
+    @Test
+    void testNoteTreeLookup() {
+        TreeDAO treeDAO = new TreeDAO(new DatabaseManager(getTestDb()));
+
+        TreeModel tree1 = new TreeModel(101, new float[]{172.60f, -43.50f},
+                "Council", "Malus", "Apple", "Apple", null, "serviced");
+        TreeModel tree2 = new TreeModel(202, new float[]{172.65f, -43.55f},
+                "Council", "Pyrus", "Pear", "Pear", null, "serviced");
+        treeDAO.add(tree1);
+        treeDAO.add(tree2);
+
+        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null));
+        assertTrue(noteId > 0); // saved successful
+
+        Note savedNote = noteDAO.getOne(noteId);
+        assertNotNull(savedNote);
+
+        TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
+        assertNotNull(resolvedTree);
+        assertEquals(202, resolvedTree.getId());
+        assertEquals(172.65, resolvedTree.getXCoord(), 0.0001);
+        assertEquals(-43.55, resolvedTree.getYCoord(), 0.0001);
+    }
+
+    /**
+     * Verifies that a note remains accessible after its linked tree is deleted,
+     * and that looking up the tree returns null.
+     */
+    @Test
+    void testDeletedNoteTree() {
+        TreeDAO treeDAO = new TreeDAO(new DatabaseManager(getTestDb()));
+        TreeModel tree = new TreeModel(202, new float[]{172.65f, -43.55f},
+                "Council", "Pyrus", "Pear", "Pear", null, "serviced");
+        treeDAO.add(tree);
+        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null));
+        assertTrue(noteId > 0);
+        treeDAO.delete(tree.getId());
+        Note savedNote = noteDAO.getOne(noteId);
+        assertNotNull(savedNote);
+
+        TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
+        assertNull(resolvedTree);
     }
 }

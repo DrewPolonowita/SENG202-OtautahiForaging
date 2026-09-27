@@ -7,8 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.models.Note;
+import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 
 import java.io.File;
@@ -20,6 +23,8 @@ import java.time.format.DateTimeFormatter;
  * @author Team 4
  */
 public class ExpandNoteController extends ScreenController {
+
+    private static final Logger LOG = LogManager.getLogger(NavController.class);
 
     private final Note note;
     private final JournalController journalController;
@@ -128,5 +133,20 @@ public class ExpandNoteController extends ScreenController {
     @FXML
     private void handleClose() {
         ((Stage) nameLabel.getScene().getWindow()).close();
+    }
+
+    /**
+     * Closes the note dialogue and opens the map at its linked tree.
+     * Keeps the dialogue open if the tree can't be found.
+     */
+    @FXML
+    private void handleViewMap() {
+        TreeModel tree = getStateManager().getTreeRepository().getOne(note.getTreeId());
+        if (tree == null) {
+            LOG.error("The tree linked to this note could not be found.");
+        } else {
+            handleClose();
+            getStateManager().getWindowManager().launchMapScreen(getStateManager(), tree);
+        }
     }
 }
