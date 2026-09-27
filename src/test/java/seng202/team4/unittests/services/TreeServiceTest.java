@@ -2,6 +2,7 @@ package seng202.team4.unittests.services;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.helpers.TestTreeData;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.*;
@@ -57,7 +58,7 @@ public class TreeServiceTest extends TestSuite {
     }
 
     //region creating specific models and records
-    private List<TreeModel> fillDatabase() {
+    private List<TreeModel> fillDatabase() throws DuplicateEntryException  {
         List<TreeModel> testTrees = TestTreeData.createTreeModels();
 
         for (TreeModel tree : testTrees) {
@@ -68,7 +69,7 @@ public class TreeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetTreesByTypeWithPopulatedDatabase() {
+    public void testGetTreesByTypeWithPopulatedDatabase() throws DuplicateEntryException {
         fillDatabase();
 
         List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
@@ -120,7 +121,7 @@ public class TreeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetAllTreesWithPopulatedDatabase() {
+    public void testGetAllTreesWithPopulatedDatabase() throws DuplicateEntryException {
         List<TreeModel> populatedList = fillDatabase();
 
         List<TreeModel> allTrees = testTreeService.getAllTrees();

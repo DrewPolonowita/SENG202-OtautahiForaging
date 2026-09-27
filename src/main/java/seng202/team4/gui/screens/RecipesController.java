@@ -1,6 +1,5 @@
 package seng202.team4.gui.screens;
 
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -23,11 +22,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
+import seng202.team4.gui.utilities.RecipeFilterService;
 import seng202.team4.models.Fruit;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,9 +56,12 @@ public class RecipesController extends ScreenController {
     @FXML
     private VBox filterList;
 
+    private RecipeFilterService recipeFilterService;
+
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
     private final Set<Integer> displayedRecipeIds = new HashSet<>();
+
     /**
      * Initialise the window
      *
@@ -85,7 +89,29 @@ public class RecipesController extends ScreenController {
         ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage();
         attributionPane.getChildren().add(attribution);
         createFruitButtons();
+        this.recipeFilterService = new RecipeFilterService(recipeService);
 
+        setUpEvents();
+
+    }
+
+    /**
+     * Sets up events for progress indicator and tasks
+     */
+    private void setUpEvents() {
+        recipeFilterService.setOnSucceeded(event -> {
+            progressIndicator.setVisible(false);
+            displayRecipes(recipeFilterService.getValue());
+        });
+
+        recipeFilterService.setOnRunning(event -> progressIndicator.setVisible(true));
+
+        recipeFilterService.setOnFailed(event -> {
+            progressIndicator.setVisible(false);
+            LOG.error("Failed to load recipes", recipeFilterService.getException());
+        });
+
+        recipeFilterService.setOnCancelled(event -> progressIndicator.setVisible(false));
     }
 
     /**
@@ -95,53 +121,6 @@ public class RecipesController extends ScreenController {
     private void onFilterClicked() {
         filterList.setVisible(!filterList.isVisible());
     }
-
-    /**
-     * https://stackoverflow.com/questions/9165251/execute-task-in-background-in-javafx
-     * @param food type of search food
-     */
-    private void recipeSearch(String food) {
-
-        Task<List<Recipe>> task = new Task<>() {
-            @Override
-            protected List<Recipe> call() {
-                return recipeService.getRecipesForFood(food);
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                progressIndicator.visibleProperty().unbind();
-                progressIndicator.setVisible(false);
-
-                List<Recipe> recipes = getValue();
-                for (Recipe recipe : recipes) {
-                    if (recipe == null || displayedRecipeIds.contains(recipe.getId())) {
-                        continue;
-                    }
-                    displayedRecipeIds.add(recipe.getId());
-                    createRecipeCard(recipe);
-                }
-            }
-
-            @Override
-            protected void failed() {
-                super.failed();
-                progressIndicator.visibleProperty().unbind();
-                progressIndicator.setVisible(false);
-                LOG.error("Failed to load recipes for {}", food);
-            }
-
-        };
-
-        progressIndicator.visibleProperty().bind(task.runningProperty());
-
-
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
-    }
-
 
     /**
      * Sets up a recipe card to display the recipes from the FatSecret API
@@ -311,15 +290,52 @@ public class RecipesController extends ScreenController {
      * Refresh recipe pane base on the filters, without having duplicate tiles
      */
     private void refreshRecipesForSelectedFilters() {
+        List<String> selectedFoods = getSelectedFoods();
+
         recipeTilePane.getChildren().clear();
         displayedRecipeIds.clear();
+
+        if (selectedFoods.isEmpty()) {
+            recipeFilterService.cancel();
+            progressIndicator.setVisible(false);
+            return;
+        }
+        recipeFilterService.restartFor(selectedFoods);
+    }
+
+    /**
+     * Find which foods on the filter have been selected
+     * @return list of foods selected
+     */
+    private List<String> getSelectedFoods() {
+        List<String> selectedFoods = new ArrayList<>();
 
         for (Node node : filterList.getChildren()) {
             Button button = (Button) node;
 
             if (button.getStyleClass().contains("sideBar-button-selected")) {
-                recipeSearch(button.getText().trim());
+                selectedFoods.add(button.getText().trim());
             }
+        }
+
+        return selectedFoods;
+    }
+
+    /**
+     * Create the recipe cards to display
+     * @param recipes
+     */
+    private void displayRecipes(List<Recipe> recipes) {
+        recipeTilePane.getChildren().clear();
+        displayedRecipeIds.clear();
+
+        for (Recipe recipe : recipes) {
+            if (recipe == null || displayedRecipeIds.contains(recipe.getId())) {
+                continue;
+            }
+
+            displayedRecipeIds.add(recipe.getId());
+            createRecipeCard(recipe);
         }
     }
 
@@ -329,15 +345,5 @@ public class RecipesController extends ScreenController {
     private static String formatFruitName(Fruit fruit) {
         String name = fruit.name().toLowerCase();
         return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-    }
-
-    /**
-     * Toggles on and off all the fruits to be included in the map by default
-     **/
-    public void toggleAllFilterButtons() {
-        for (Node node : filterList.getChildren()) {
-            Button button = (Button) node;
-            toggleButtonStyle(button);
-        }
     }
 }
