@@ -88,7 +88,7 @@ public class ExpandNoteController extends ScreenController {
         if (note.getImagePath() != null) {
             photoView.setFitWidth(780);
             photoView.setFitHeight(370);
-            photoView.setPreserveRatio(false);
+            photoView.setPreserveRatio(true);
             photoView.setImage(new Image(new File(note.getImagePath()).toURI().toString()));
         } else {
             photoView.setFitWidth(360);
