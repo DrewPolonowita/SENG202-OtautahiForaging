@@ -215,6 +215,7 @@ public class MapController extends ScreenController {
         javaScriptConnector.call("addMarker",
                 tree.getId(),
                 popup,
+                tree.getFood(),
                 tree.getYCoord(),
                 tree.getXCoord()
         );
