@@ -146,12 +146,10 @@
         marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
 
         markers.push(marker);
-        m.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
-        markers.push(m);
 
         if (id == pendingTreeId) {
             pendingTreeId = null;
-            m.openPopup();
+            marker.openPopup();
         }
     }
 
