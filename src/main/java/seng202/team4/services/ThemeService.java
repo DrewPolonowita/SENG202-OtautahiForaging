@@ -11,12 +11,14 @@ import seng202.team4.gui.utilities.CssUtilities;
  * @author Team 4
  */
 public class ThemeService {
+    private final String STARTINGPRIMARY = "#67AF76";
+
     private static final String DARK_THEME_PATH = "/css/dark-theme.css";
 
     private final Scene scene;
     private final GridPane sceneRoot;
     private WebEngine webEngine;
-    private Color primaryColor = Color.web("#86CA82");
+    private Color primaryColor = Color.web(STARTINGPRIMARY);
     private boolean darkMode;
 
     /**
@@ -53,7 +55,7 @@ public class ThemeService {
     public void setPrimaryColor(Color color) {
         primaryColor = color;
         String hex = CssUtilities.toHex(color);
-        String highlightHex = CssUtilities.toHex(color.deriveColor(0, 1, 0.9, 1));
+        String highlightHex = CssUtilities.toHex(color.deriveColor(20, 1, 0.85, 1));
         sceneRoot.setStyle(String.format("-primary-color: %s; -primary-color-highlight: %s;", hex, highlightHex));
         CssUtilities.refreshStylesheets(scene);
 

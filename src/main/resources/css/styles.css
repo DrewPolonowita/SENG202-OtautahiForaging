@@ -1,9 +1,11 @@
 .root {
-    -primary-color: #86CA82;
-    -primary-color-highlight: #7cbf82;
+    -primary-color: #67AF76; /* defined in ThemeService */
+    -primary-color-highlight: #7cbf82; /* defined in ThemeService */
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
     -text-color: #1a1a1a;
+    -fx-background-color: -secondary-bg-color;
+    -fx-text-fill: -text-color;
 
     /* Journal / note dialog */
     -note-bg: #112212;
@@ -12,8 +14,7 @@
     -note-accent-hover: #4a7c59;
     -note-accent-pressed: #345940;
     -note-border: #3a5a44;
-    -fx-background-color: -secondary-bg-color;
-    -fx-text-fill: -text-color;
+
 }
 
 /* ---------- Title bar ---------- */
@@ -122,6 +123,7 @@
     -fx-background-color: -primary-bg-color;
     -fx-background-radius: 8;
 }
+
 .color-picker {
     -fx-background-color: -primary-bg-color;
     -fx-border-color: -secondary-bg-color;
