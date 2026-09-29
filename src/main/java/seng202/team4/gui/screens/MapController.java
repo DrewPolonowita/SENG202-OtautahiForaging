@@ -221,7 +221,14 @@ public class MapController extends ScreenController {
                 tree.getGenus(),
                 tree.getId()
         );
-        javaScriptConnector.call("addMarker", tree.getId(), popup, tree.getYCoord(), tree.getXCoord());
+
+        javaScriptConnector.call("addMarker",
+                tree.getId(),
+                popup,
+                tree.getFood(),
+                tree.getYCoord(),
+                tree.getXCoord()
+        );
     }
 
     /**
