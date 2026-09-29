@@ -6,7 +6,6 @@ package seng202.team4.models;
 public enum Fruit {
     APPLE,
     PEAR,
-    CHERRY,
     PEACH,
     APRICOT,
     WALNUT,
@@ -20,7 +19,6 @@ public enum Fruit {
         return switch (this) {
             case APPLE -> "Apple";
             case PEAR -> "Pear";
-            case CHERRY -> "Cherry";
             case PEACH -> "Peach";
             case APRICOT -> "Apricot";
             case WALNUT -> "Walnut";

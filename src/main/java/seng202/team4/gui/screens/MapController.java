@@ -178,29 +178,29 @@ public class MapController extends ScreenController {
         setCurrentBounds(north, east, south, west);
 
         mapService.getAllTreesInRegion(
-                        north + height / 2,
-                        east + width / 2,
-                        south - height / 2,
-                        west - width / 2
-                )
-
-                .thenAccept(trees -> {
-                    if (trees != null) {
-                        LOG.info("Completed request for " + trees.size() + " trees.");
-                        javafx.application.Platform.runLater(() -> {
-                            removeTreeMarkers();
-                            for (TreeModel tree : trees) {
-                                addTreeMarker(tree);
-                            }
-                        });
+                north + height / 2,
+                east + width / 2,
+                south - height / 2,
+                west - width / 2
+        ).thenAccept(trees -> {
+            javafx.application.Platform.runLater(() -> {
+                if (trees != null) {
+                    LOG.info("Completed request for " + trees.size() + " trees.");
+                    removeTreeMarkers();
+                    for (TreeModel tree : trees) {
+                        addTreeMarker(tree);
                     }
-                })
-                .exceptionally(ex -> {
-                    javafx.application.Platform.runLater(() -> {
-                        System.err.println("Error fetching trees for map view: " + ex);
-                    });
-                    return null;
+                }
+            });
+        }).exceptionally(ex -> {
+            // Silently ignore CancellationExceptions (these happen when a newer map movement overwrites an older pending one)
+            if (!(ex instanceof java.util.concurrent.CancellationException)) {
+                javafx.application.Platform.runLater(() -> {
+                    System.err.println("Error fetching trees for map view: " + ex);
                 });
+            }
+            return null;
+        });
     }
 
 
