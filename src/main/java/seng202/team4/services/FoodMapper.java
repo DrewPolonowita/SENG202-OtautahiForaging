@@ -33,13 +33,13 @@ public class FoodMapper {
      */
     private void createFoodMap() {
         foodMap.put("Apple", List.of(
-                "Chinese Crab Apple",
-                "Midget Crab Apple",
-                "Pillar Crab Apple",
-                "Siberian Crab",
-                "Southern crabapple",
-                "Hall's Crab Apple",
-                "Zumi Crab Apple",
+//                "Chinese Crab Apple",
+//                "Midget Crab Apple",
+//                "Pillar Crab Apple",
+//                "Siberian Crab",
+//                "Southern crabapple",
+//                "Hall's Crab Apple",
+//                "Zumi Crab Apple",
                 "Common Apple"
         ));
         foodMap.put("Beech", List.of(
@@ -52,8 +52,8 @@ public class FoodMapper {
                 "Walnut"
         ));
         foodMap.put("Strawberry", List.of(
-                "Strawberry Tree",
-                "Cyprus Strawberry Tree"
+                "Strawberry Tree"
+//                "Cyprus Strawberry Tree"
         ));
         foodMap.put("Sweet Chestnut", List.of(
                 "Sweet Chestnut"
@@ -76,28 +76,28 @@ public class FoodMapper {
         ));
         foodMap.put("Apricot", List.of(
                 "Apricot",
-                "Flowering Apricot",
-                "Japanese Apricot"
+                "Flowering Apricot"
+//                "Japanese Apricot"
         ));
         foodMap.put("Sweet bay", List.of(
                 "Bay laurel"
         ));
         foodMap.put("Mulberry", List.of(
-                "Common Mulberry",
-                "Weeping Mulberry"
+                "Common Mulberry"
+//                "Weeping Mulberry"
         ));
         foodMap.put("Loquat", List.of(
                 "Loquat Tree"
         ));
         foodMap.put("Quince", List.of(
-                "Quince",
-                "Chinese Quince"
+                "Quince"
+//                "Chinese Quince"
         ));
         foodMap.put("Almond", List.of(
                 "Almond"
         ));
         foodMap.put("Cherry", List.of(
-                "Bird Cherry"
+//                "Bird Cherry"
         ));
         foodMap.put("Elderberry", List.of(
                 "Common Elder"

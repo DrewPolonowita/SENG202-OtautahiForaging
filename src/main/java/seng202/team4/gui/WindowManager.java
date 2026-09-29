@@ -41,6 +41,8 @@ public class WindowManager {
     private final GridPane gridPane;
     private final ThemeService themeService;
 
+    private NavController navController;
+
     /**
      * Launches the application and creates a base border pane for the screens to be built with
      * This method should eventually own its own FXML screen instead of constructing the element
@@ -98,18 +100,30 @@ public class WindowManager {
      * @param stateManager the state manager for the application
      */
     public void launchNavScreen(StateManager stateManager) {
-        ScreenController controller = new NavController(stateManager);
-        launchScreen(controller, navPane);
+        navController = new NavController(stateManager);
+        launchScreen(navController, navPane);
     }
 
     /**
-     * Launches the main screen
-     *
+     * Launches the applications map at its default location.
      * @param stateManager the state manager for the application
      */
     public void launchMapScreen(StateManager stateManager) {
-        ScreenController controller = new MapController(stateManager, themeService);
+        launchMapScreen(stateManager, null);
+    }
+
+    /**
+     * Launches the map centred on the target tree, or at the default location if null.
+     *
+     * @param stateManager the state manager for the application
+     * @param targetTree the tree from the note.
+     */
+    public void launchMapScreen(StateManager stateManager, TreeModel targetTree) {
+        ScreenController controller = new MapController(stateManager, themeService, targetTree);
         launchScreen(controller, rootPane);
+        if (navController != null) {
+            navController.selectMapButton();
+        }
     }
 
     /**

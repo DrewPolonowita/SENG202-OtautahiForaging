@@ -2,11 +2,17 @@ package seng202.team4.unittests.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
+import seng202.team4.models.TreeModel;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.NoteDAO;
+import seng202.team4.repository.NoteRepository;
+import seng202.team4.repository.TreeDAO;
+import seng202.team4.repository.TreeRepository;
 import seng202.team4.unittests.TestSuite;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class NoteDAOTest extends TestSuite {
 
-    private NoteDAO noteDAO;
+    private NoteRepository noteDAO;
+    private TreeRepository treeDAO;
 
     /**
      * Initializes a NoteDAO backed by the test database before each test
@@ -26,13 +33,15 @@ public class NoteDAOTest extends TestSuite {
     void setUp() {
         DatabaseManager databaseManager = new DatabaseManager(this.getTestDb());
         noteDAO = new NoteDAO(databaseManager);
+        treeDAO = new TreeDAO(databaseManager);
     }
 
     /**
      * Verifies that a note added to the database can be retrieved with matching fields
      */
     @Test
-    void testAddNote() {
+    void testAddNote() throws DuplicateEntryException {
+        addTree(1298);
         Note toAdd = new Note(0, "Test Tree", null, 1298, "yo morgan", null);
 
         int newId = noteDAO.add(toAdd);
@@ -50,7 +59,8 @@ public class NoteDAOTest extends TestSuite {
      * returning -1 rather than throwing
      */
     @Test
-    void testFailsBadInput() {
+    void testFailsBadInput() throws DuplicateEntryException{
+        addTree(1298);
         Note invalid = new Note(0, null, null, 1298, null, null);
 
         int result = noteDAO.add(invalid);
@@ -61,7 +71,8 @@ public class NoteDAOTest extends TestSuite {
      * Verifies that a deleted note is no longer retrievable
      */
     @Test
-    void testDeleteNote() {
+    void testDeleteNote() throws DuplicateEntryException {
+        addTree(5678);
         Note toAdd = new Note(0, "doomed Tree", null, 5678, null, null);
         int newId = noteDAO.add(toAdd);
         assertTrue(newId > 0);
@@ -77,9 +88,11 @@ public class NoteDAOTest extends TestSuite {
      * returning an empty list initially and updating correctly after each change
      */
     @Test
-    void testGetAll() {
+    void testGetAll() throws DuplicateEntryException {
         assertTrue(noteDAO.getAll().isEmpty());
 
+        addTree(1);
+        addTree(2);
         int id1 = noteDAO.add(new Note(0, "Tree A", null, 1, null, null));
         int id2 = noteDAO.add(new Note(0, "Tree B", null, 2, null, null));
         assertEquals(2, noteDAO.getAll().size());
@@ -88,5 +101,64 @@ public class NoteDAOTest extends TestSuite {
         List<Note> remaining = noteDAO.getAll();
         assertEquals(1, remaining.size());
         assertEquals(id2, remaining.get(0).getId());
+    }
+
+    /**
+     * Verifies that a saved note retrieves its linked tree,
+     * including the correct ID and coordinates.
+     */
+    @Test
+    void testNoteTreeLookup() throws DuplicateEntryException {
+        TreeModel tree1 = new TreeModel(101, new float[]{172.60f, -43.50f},
+                "Council", "Malus", "Apple", "Apple", null, "serviced");
+        TreeModel tree2 = new TreeModel(202, new float[]{172.65f, -43.55f},
+                "Council", "Pyrus", "Pear", "Pear", null, "serviced");
+        treeDAO.add(tree1);
+        treeDAO.add(tree2);
+
+        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null));
+        assertTrue(noteId > 0); // saved successful
+
+        Note savedNote = noteDAO.getOne(noteId);
+        assertNotNull(savedNote);
+
+        TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
+        assertNotNull(resolvedTree);
+        assertEquals(202, resolvedTree.getId());
+        assertEquals(172.65, resolvedTree.getXCoord(), 0.0001);
+        assertEquals(-43.55, resolvedTree.getYCoord(), 0.0001);
+    }
+
+    /**
+     * Verifies that a tree referenced by a note cannot be deleted,
+     * preserving the note's link to the tree.
+     */
+    @Test
+    void testReferencedTreeNotDeleted() throws DuplicateEntryException {
+        TreeModel tree = new TreeModel(202, new float[]{172.65f, -43.55f},
+                "Council", "Pyrus", "Pear", "Pear", null, "serviced");
+        treeDAO.add(tree);
+        int noteId = noteDAO.add(new Note(0, "Pear", null, tree.getId(), "wow i really like pears", null));
+        assertTrue(noteId > 0);
+        treeDAO.delete(tree.getId());
+        Note savedNote = noteDAO.getOne(noteId);
+        assertNotNull(savedNote);
+
+        TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
+        assertNotNull(resolvedTree);
+        assertEquals(tree.getId(), resolvedTree.getId());
+    }
+
+    private void addTree(int id) throws DuplicateEntryException {
+        treeDAO.add(new TreeModel(
+                id,
+                new float[]{1.0f, 1.0f},
+                "CCC",
+                "Malus",
+                "Apple",
+                "Apple",
+                LocalDateTime.now(),
+                ""
+        ));
     }
 }

@@ -99,6 +99,13 @@ public class NavController extends ScreenController {
     public void onMapButtonClicked() {
         StateManager stateManager = getStateManager();
         stateManager.getWindowManager().launchMapScreen(stateManager);
+    }
+
+    /**
+     * Highlights the map button in the nav bar without changing screens.
+     * used for navigation through note.
+     */
+    public void selectMapButton() {
         setSelectedButton(mapButton);
     }
 

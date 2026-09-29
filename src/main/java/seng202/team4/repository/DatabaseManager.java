@@ -49,6 +49,9 @@ public class DatabaseManager {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(this.url);
+            try (Statement statement = conn.createStatement()) {
+                statement.execute("PRAGMA foreign_keys = ON");
+            }
         } catch (SQLException e) {
             log.error(e);
         }

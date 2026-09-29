@@ -258,6 +258,11 @@
 .edit-button:hover {
     -fx-background-color: rgba(168, 92, 92, 0.15);
 }
+.photo-container {
+    -fx-background-color: #0a1a0d;
+    -fx-background-radius: 20 20 0 0;
+    -fx-alignment: center;
+}
 
 
 /* ---------- Add-note dialog ---------- */

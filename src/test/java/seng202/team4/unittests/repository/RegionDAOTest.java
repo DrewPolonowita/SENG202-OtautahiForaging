@@ -1,6 +1,5 @@
 package seng202.team4.unittests.repository;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.exceptions.DuplicateEntryException;
@@ -8,14 +7,13 @@ import seng202.team4.models.Region;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.RegionDAO;
 import seng202.team4.repository.RegionRepository;
-import seng202.team4.services.DoubleService;
 import seng202.team4.unittests.TestSuite;
-
-import java.io.File;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A test class for the {@link RegionDAO}
@@ -36,23 +34,23 @@ public class RegionDAOTest extends TestSuite {
     void testAddToDatabase() throws DuplicateEntryException {
         regionDAO.add(region);
         List<Region> regions = regionDAO.getAll();
-        Assertions.assertEquals(1, regions.size());
+        assertEquals(1, regions.size());
 
         region.setLastUpdated(regions.getFirst().getLastUpdated());
-        Assertions.assertEquals(region, regions.getFirst());
+        assertEquals(region, regions.getFirst());
     }
 
     @Test
-    void testDuplicateItemReturnsNegativeTwo() throws DuplicateEntryException {
+    void testDuplicateItemThrowsDuplicateError() throws DuplicateEntryException {
         regionDAO.add(region);
-        Assertions.assertEquals(-2, regionDAO.add(region));
+        assertThrows(DuplicateEntryException.class, () -> regionDAO.add(region));
     }
 
     @Test
     void testDeleteWorks() throws DuplicateEntryException {
         regionDAO.add(region);
         regionDAO.delete(region);
-        Assertions.assertEquals(0, regionDAO.getAll().size());
+        assertEquals(0, regionDAO.getAll().size());
     }
 
     @Test
@@ -61,7 +59,7 @@ public class RegionDAOTest extends TestSuite {
         Region fromDB = regionDAO.getRegion(region);
         region.setLastUpdated(fromDB.getLastUpdated());
 
-        Assertions.assertEquals(region, fromDB);
+        assertEquals(region, fromDB);
     }
 
     @Test
@@ -69,7 +67,7 @@ public class RegionDAOTest extends TestSuite {
         regionDAO.add(region);
         Region fromDB = regionDAO.getRegion(region);
 
-        Assertions.assertTrue(fromDB.getLastUpdated().isAfter(fromDB.getLastUpdated().minusMinutes(1)));
+        assertTrue(fromDB.getLastUpdated().isAfter(fromDB.getLastUpdated().minusMinutes(1)));
     }
 
     @Test
@@ -77,7 +75,7 @@ public class RegionDAOTest extends TestSuite {
         LocalDateTime date = LocalDateTime.of(1999, 12, 12, 12, 12, 12);
         region.setLastUpdated(date);
         regionDAO.add(region);
-        Assertions.assertEquals(date, regionDAO.getRegion(region).getLastUpdated());
+        assertEquals(date, regionDAO.getRegion(region).getLastUpdated());
     }
 
     @Test
@@ -86,6 +84,6 @@ public class RegionDAOTest extends TestSuite {
         regionDAO.add(region);
         region.setLastUpdated(date);
         regionDAO.update(region);
-        Assertions.assertEquals(date, regionDAO.getRegion(region).getLastUpdated());
+        assertEquals(date, regionDAO.getRegion(region).getLastUpdated());
     }
 }

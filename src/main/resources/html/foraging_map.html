@@ -77,12 +77,14 @@
     };
 
     /**
-     * creates and initialises the Leaflet map, also defines on click event that calls java code
+     * Creates and initialises the Leaflet map, and registers map movement handling.
+     * If a target tree ID is provided, its popup opens when its marker loads.
      */
-    function initMap() {
+    function initMap(lat = -43.53, lon = 172.63, zoom = 13.5, treeId = null) {
+        pendingTreeId = treeId;
         let mapOptions = {
-            center: [-43.53, 172.63],
-            zoom: 13.5,
+            center: [lat, lon],
+            zoom: zoom,
         }
         mapOptions.zoomControl = false;
 
@@ -144,6 +146,13 @@
         marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
 
         markers.push(marker);
+        m.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
+        markers.push(m);
+
+        if (id == pendingTreeId) {
+            pendingTreeId = null;
+            m.openPopup();
+        }
     }
 
     function removeMarkers() {
