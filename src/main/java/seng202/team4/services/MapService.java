@@ -133,13 +133,11 @@ public class MapService {
         CompletableFuture<List<TreeModel>> resultFuture = new CompletableFuture<>();
 
         if (isRequestRunning) {
-            // A network call is happening. Cancel the old pending UI update (if any) and queue this new one.
             if (pendingRequest != null) {
                 pendingRequest.future.cancel(false);
             }
             pendingRequest = new PendingRequest(north, east, south, west, resultFuture);
         } else {
-            // Server is idle. Send immediately.
             executeNetworkCall(north, east, south, west, resultFuture);
         }
 
@@ -149,27 +147,24 @@ public class MapService {
     private void executeNetworkCall(double n, double e, double s, double w, CompletableFuture<List<TreeModel>> futureToComplete) {
         isRequestRunning = true;
 
-        // Replace this with your actual HTTP/Database call implementation
         actualBackendCall(n, e, s, w)
                 .thenAccept(trees -> {
-                    futureToComplete.complete(trees); // Send data back to the UI
-                    checkQueue(); // See if the user moved the map while we were waiting
+                    futureToComplete.complete(trees);
+                    checkQueue();
                 })
                 .exceptionally(ex -> {
                     futureToComplete.completeExceptionally(ex);
-                    checkQueue(); // Even on failure, process the next item in the queue
+                    checkQueue();
                     return null;
                 });
     }
 
     private synchronized void checkQueue() {
         if (pendingRequest != null) {
-            // Pop the newest request off the queue and send it to the server
             PendingRequest next = pendingRequest;
             pendingRequest = null;
             executeNetworkCall(next.n, next.e, next.s, next.w, next.future);
         } else {
-            // Queue is empty. Server is fully caught up.
             isRequestRunning = false;
         }
     }

@@ -22,6 +22,12 @@ public class RegionServiceTest extends TestSuite {
     DatabaseManager databaseManager;
     Region region;
 
+    Region region1;
+    Region region2;
+    Region region3;
+    Region region4;
+    List<Region> regions;
+
     @BeforeEach
     public void setUpTest() {
         databaseManager = new DatabaseManager(this.getTestDb());
@@ -29,6 +35,13 @@ public class RegionServiceTest extends TestSuite {
         regionRepository = new RegionDAO(databaseManager);
         regionService = new RegionService(regionRepository);
         region = new Region("Test", 1.0, 2.0, 3.0, 4.0);
+
+        region1 = new Region(null, 200, 100, 100, 0);
+        region2 = new Region(null, 200, 200, 100, 100);
+        region3 = new Region(null, 100, 100, 0, 0);
+        region4 = new Region(null, 100, 200, 0, 100);
+
+        regions = List.of(region1, region2, region3, region4);
     }
 
     @Test
@@ -123,5 +136,156 @@ public class RegionServiceTest extends TestSuite {
         LocalDateTime dateTime = LocalDateTime.now().minusWeeks(2);
         region.setLastUpdated(dateTime);
         Assertions.assertFalse(regionService.isRegionRecent(region));
+    }
+
+    @Test
+    public void testNewDateIsRecentWithNullRegionIsFalse() {
+        Assertions.assertFalse(regionService.isRegionRecent(null));
+    }
+
+    @Test
+    public void testNewDateIsRecentWithNullDateIsFalse() {
+        Assertions.assertFalse(regionService.isRegionRecent(region));
+    }
+
+    @Test
+    public void testGetInsideRegions1() {
+        Region master = new Region("", 200, 200, 0, 0);
+
+        Assertions.assertEquals(
+                List.of(
+                    region1, region2, region3, region4
+                ),
+                regionService.getRegionsInside(master, regions));
+    }
+
+    @Test
+    public void testGetInsideRegions2() {
+        Region master = new Region("", 50, 200, 0, 0);
+
+        Assertions.assertEquals(
+                List.of(
+                        region3, region4
+                ),
+                regionService.getRegionsInside(master, regions));
+    }
+
+    @Test
+    public void testGetInsideRegions3() {
+        Region master = new Region("", 200, 200, 150, 0);
+
+        Assertions.assertEquals(
+                List.of(
+                        region1, region2
+                ),
+                regionService.getRegionsInside(master, regions));
+    }
+
+    @Test
+    public void testGetInsideRegions4() {
+        Region master = new Region("", 200, 50, 0, 0);
+
+        Assertions.assertEquals(
+                List.of(
+                        region1, region3
+                ),
+                regionService.getRegionsInside(master, regions));
+    }
+
+    @Test
+    public void testGetInsideRegions5() {
+        Region master = new Region("", 200, 200, 0, 150);
+
+        Assertions.assertEquals(
+                List.of(
+                        region2, region4
+                ),
+                regionService.getRegionsInside(master, regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDateIsNull() {
+        region1.setLastUpdated(LocalDateTime.now());
+        region2.setLastUpdated(LocalDateTime.now());
+        region3.setLastUpdated(LocalDateTime.now());
+        region4.setLastUpdated(LocalDateTime.now());
+
+        Assertions.assertNull(regionService.getQueryRegion(regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDate1() {
+        region1.setLastUpdated(LocalDateTime.now());
+        region2.setLastUpdated(LocalDateTime.now());
+        region3.setLastUpdated(LocalDateTime.now());
+
+        Assertions.assertEquals(region4, regionService.getQueryRegion(regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDate2() {
+        region1.setLastUpdated(LocalDateTime.now());
+        region3.setLastUpdated(LocalDateTime.now());
+
+        Assertions.assertEquals(new Region(
+                null,
+                region2.getNorthBound(),
+                region2.getEastBound(),
+                region4.getSouthBound(),
+                region4.getWestBound()
+        ), regionService.getQueryRegion(regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDate3() {
+        region2.setLastUpdated(LocalDateTime.now());
+        region3.setLastUpdated(LocalDateTime.now());
+
+        Assertions.assertEquals(new Region(
+                null,
+                region1.getNorthBound(),
+                region2.getEastBound(),
+                region4.getSouthBound(),
+                region3.getWestBound()
+        ), regionService.getQueryRegion(regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDate4() {
+        region1.setLastUpdated(LocalDateTime.now());
+        region2.setLastUpdated(LocalDateTime.now());
+
+        Assertions.assertEquals(new Region(
+                null,
+                region3.getNorthBound(),
+                region4.getEastBound(),
+                region4.getSouthBound(),
+                region3.getWestBound()
+        ), regionService.getQueryRegion(regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDate5() {
+        region3.setLastUpdated(LocalDateTime.now());
+        region4.setLastUpdated(LocalDateTime.now());
+
+        Assertions.assertEquals(new Region(
+                null,
+                region1.getNorthBound(),
+                region2.getEastBound(),
+                region2.getSouthBound(),
+                region1.getWestBound()
+        ), regionService.getQueryRegion(regions));
+    }
+
+    @Test
+    public void testGetQuerryRegionWhileUpToDate6() {
+        Assertions.assertEquals(new Region(
+                null,
+                region1.getNorthBound(),
+                region2.getEastBound(),
+                region4.getSouthBound(),
+                region3.getWestBound()
+        ), regionService.getQueryRegion(regions));
     }
 }
