@@ -37,6 +37,7 @@
 
         <Label fx:id="descriptionLabel" styleClass="expand-note-description" wrapText="true" />
         <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="View on Map" styleClass="edit-button" onAction="#handleViewMap" maxWidth="100" />
             <Button text="Edit Note" styleClass="edit-button" onAction="#handleEdit" maxWidth="100" />
             <Button text="Delete Note" styleClass="delete-button" onAction="#handleDelete" maxWidth="100" />
         </HBox>

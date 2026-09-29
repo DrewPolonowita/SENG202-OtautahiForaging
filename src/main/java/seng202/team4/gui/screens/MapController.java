@@ -60,17 +60,20 @@ public class MapController extends ScreenController {
 
     private final Map<Integer, TreeModel> currentTrees = new HashMap<>();
 
+    private final TreeModel targetTree;
+
     /**
      * Initialise the window
      *
      * @param stateManager Reference for window manager
      */
-    public MapController(StateManager stateManager, ThemeService themeService) {
+    public MapController(StateManager stateManager, ThemeService themeService, TreeModel targetTree) {
         super(stateManager);
         treeService = stateManager.getTreeService();
         this.mapService = new MapService(treeService);
         this.themeService = themeService;
         this.stateManager = stateManager;
+        this.targetTree = targetTree;
     }
 
     /**
@@ -115,7 +118,11 @@ public class MapController extends ScreenController {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
-                        javaScriptConnector.call("initMap");
+                        if (targetTree == null) {
+                            javaScriptConnector.call("initMap");
+                        } else {
+                            javaScriptConnector.call("initMap", targetTree.getYCoord(), targetTree.getXCoord(), 17, targetTree.getId());
+                        }
                     }
                 });
     }
@@ -178,16 +185,19 @@ public class MapController extends ScreenController {
                 )
 
                 .thenAccept(trees -> {
-                    javafx.application.Platform.runLater(() -> {
-                        removeTreeMarkers();
-                        for (TreeModel tree : trees) {
-                            addTreeMarker(tree);
-                        }
-                    });
+                    if (trees != null) {
+                        LOG.info("Completed request for " + trees.size() + " trees.");
+                        javafx.application.Platform.runLater(() -> {
+                            removeTreeMarkers();
+                            for (TreeModel tree : trees) {
+                                addTreeMarker(tree);
+                            }
+                        });
+                    }
                 })
                 .exceptionally(ex -> {
                     javafx.application.Platform.runLater(() -> {
-                        System.err.println("Error fetching trees for map view: " + ex.getMessage());
+                        System.err.println("Error fetching trees for map view: " + ex);
                     });
                     return null;
                 });
@@ -215,6 +225,7 @@ public class MapController extends ScreenController {
         javaScriptConnector.call("addMarker",
                 tree.getId(),
                 popup,
+                tree.getFood(),
                 tree.getYCoord(),
                 tree.getXCoord()
         );

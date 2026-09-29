@@ -65,7 +65,7 @@
     let map;
     let markers = [];
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
-
+    const iconCache = {};
     /**
      * This object can be returned to our java code, where we can call the functions we define inside of it
      */
@@ -77,12 +77,14 @@
     };
 
     /**
-     * creates and initialises the Leaflet map, also defines on click event that calls java code
+     * Creates and initialises the Leaflet map, and registers map movement handling.
+     * If a target tree ID is provided, its popup opens when its marker loads.
      */
-    function initMap() {
+    function initMap(lat = -43.53, lon = 172.63, zoom = 13.5, treeId = null) {
+        pendingTreeId = treeId;
         let mapOptions = {
-            center: [-43.53, 172.63],
-            zoom: 13.5,
+            center: [lat, lon],
+            zoom: zoom,
         }
         mapOptions.zoomControl = false;
 
@@ -114,32 +116,46 @@
         javaScriptBridge.mapMoved(north, east, south, west);
     }
 
+    function getIcon(food) {
+        const fruitName = food.trim().toLowerCase().replace(/\s+/g, "");
+        const pinFileName = fruitName + "Pin.png";
 
+        if (!iconCache[pinFileName]) {
+            iconCache[pinFileName] = new L.Icon({
+                iconUrl: "../images/pins/" + pinFileName,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [1, -34],
+                tooltipAnchor: [16, -28],
+                shadowSize: [0, 0]
+            });
+        }
+        return iconCache[pinFileName];
+    }
     /**
      * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
      * @param title tooltip to display on hover
      * @param lat latitude to place marker at
      * @param lng longitude to place marker at
      */
-    function addMarker(id, title, lat, lng) {
-        let icon = new L.Icon({
-            iconUrl: "../images/treePinBrown.png",
-            iconSize: [40, 40],
-            iconAnchor: [20, 40],
-            popupAnchor: [1, -34],
-            tooltipAnchor: [16, -28],
-            shadowSize: [0, 0]
-        });
 
-        let m = new L.Marker([lat, lng], { icon: icon });
-        m.bindPopup(title, { className: 'tree-popup', closeButton: true });
+    function addMarker(id, title, food, lat, lng) {
+        const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
 
-        m.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
-        markers.push(m);
+        marker.bindPopup(title, { className: 'tree-popup', closeButton: true });
+        marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
+
+        markers.push(marker);
+
+        if (id == pendingTreeId) {
+            pendingTreeId = null;
+            marker.openPopup();
+        }
     }
 
     function removeMarkers() {
         markers.forEach(m => m.remove())
+        markers = [];
     }
 
     function displayMarkers() {

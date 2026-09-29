@@ -103,6 +103,52 @@ public class NoteDAOTest extends TestSuite {
         assertEquals(id2, remaining.get(0).getId());
     }
 
+    /**
+     * Verifies that a saved note retrieves its linked tree,
+     * including the correct ID and coordinates.
+     */
+    @Test
+    void testNoteTreeLookup() throws DuplicateEntryException {
+        TreeModel tree1 = new TreeModel(101, new float[]{172.60f, -43.50f},
+                "Council", "Malus", "Apple", "Apple", null, "serviced");
+        TreeModel tree2 = new TreeModel(202, new float[]{172.65f, -43.55f},
+                "Council", "Pyrus", "Pear", "Pear", null, "serviced");
+        treeDAO.add(tree1);
+        treeDAO.add(tree2);
+
+        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null));
+        assertTrue(noteId > 0); // saved successful
+
+        Note savedNote = noteDAO.getOne(noteId);
+        assertNotNull(savedNote);
+
+        TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
+        assertNotNull(resolvedTree);
+        assertEquals(202, resolvedTree.getId());
+        assertEquals(172.65, resolvedTree.getXCoord(), 0.0001);
+        assertEquals(-43.55, resolvedTree.getYCoord(), 0.0001);
+    }
+
+    /**
+     * Verifies that a tree referenced by a note cannot be deleted,
+     * preserving the note's link to the tree.
+     */
+    @Test
+    void testReferencedTreeNotDeleted() throws DuplicateEntryException {
+        TreeModel tree = new TreeModel(202, new float[]{172.65f, -43.55f},
+                "Council", "Pyrus", "Pear", "Pear", null, "serviced");
+        treeDAO.add(tree);
+        int noteId = noteDAO.add(new Note(0, "Pear", null, tree.getId(), "wow i really like pears", null));
+        assertTrue(noteId > 0);
+        treeDAO.delete(tree.getId());
+        Note savedNote = noteDAO.getOne(noteId);
+        assertNotNull(savedNote);
+
+        TreeModel resolvedTree = treeDAO.getOne(savedNote.getTreeId());
+        assertNotNull(resolvedTree);
+        assertEquals(tree.getId(), resolvedTree.getId());
+    }
+
     private void addTree(int id) throws DuplicateEntryException {
         treeDAO.add(new TreeModel(
                 id,
