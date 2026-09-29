@@ -4,6 +4,8 @@
     <title>Foraging Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../css/map.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -61,9 +63,11 @@
 <body>
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
     let map;
     let markers = [];
+    let markerClusterGroup;
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     const iconCache = {};
     /**
@@ -72,7 +76,6 @@
     let jsConnector = {
         addMarker: addMarker,
         removeMarkers: removeMarkers,
-        displayMarkers: displayMarkers,
         initMap: initMap
     };
 
@@ -83,8 +86,10 @@
     function initMap(lat = -43.53, lon = 172.63, zoom = 13.5, treeId = null) {
         pendingTreeId = treeId;
         let mapOptions = {
-            center: [lat, lon],
-            zoom: zoom,
+            center: [-43.53, 172.63],
+            zoom: 13.5,
+            maxZoom: 19,
+            minZoom: 11
         }
         mapOptions.zoomControl = false;
 
@@ -103,6 +108,8 @@
 
         createMapMarkers();
 
+        markerClusterGroup = L.markerClusterGroup();
+        map.addLayer(markerClusterGroup);
     }
 
     const createMapMarkers = () => {
@@ -142,10 +149,10 @@
     function addMarker(id, title, food, lat, lng) {
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
 
-        marker.bindPopup(title, { className: 'tree-popup', closeButton: true });
-        marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
-
-        markers.push(marker);
+        let m = new L.Marker([lat, lng], { icon: getIcon(food)});
+        m.bindPopup(title, { className: 'tree-popup', closeButton: true });
+        markerClusterGroup.addLayer(m);
+        markers.push(m);
 
         if (id == pendingTreeId) {
             pendingTreeId = null;
@@ -154,12 +161,8 @@
     }
 
     function removeMarkers() {
-        markers.forEach(m => m.remove())
+        markerClusterGroup.clearLayers();
         markers = [];
-    }
-
-    function displayMarkers() {
-        markers.forEach(m => m.addTo(map))
     }
 
 </script>
