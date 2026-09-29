@@ -135,6 +135,7 @@ public class TreeApiHandler {
      * @return List of tree models of requested food from API
      */
     public List<TreeModel> getTreesFromApiByFood(String food) {
+
         Request request = treeApiHandler.getTrees(createApiTypeQuery(food),
                 "TreeID,Ownership,Genus,CommonName",
                 100);

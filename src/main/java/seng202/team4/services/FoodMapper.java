@@ -96,9 +96,6 @@ public class FoodMapper {
         foodMap.put("Almond", List.of(
                 "Almond"
         ));
-        foodMap.put("Cherry", List.of(
-//                "Bird Cherry"
-        ));
         foodMap.put("Elderberry", List.of(
                 "Common Elder"
         ));
