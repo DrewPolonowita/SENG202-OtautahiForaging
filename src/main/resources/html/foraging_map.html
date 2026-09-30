@@ -17,30 +17,33 @@
             width: 150px !important;
         }
         .tree-popup .leaflet-popup-close-button {
-            color: white !important;
+            color: var(--primary-color) !important;
         }
         .tree-popup .leaflet-popup-close-button:hover {
-            color: #cccccc !important;
+            color: var(--primary-color-highlight) !important;
         }
         .tree-card {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
-            color: white;
+            color: var(--text-color);
             border-radius: 16px;
             overflow: hidden;
         }
         .tree-card-body {
-            background: #1a2e21;
+            background: var(--primary-bg-color);
             padding: 10px 14px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
+        .tree-card-body b {
+            color: var(--primary-color);
+        }
         .journal-btn {
-            background: #3f6b4a;
+            background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
@@ -51,10 +54,10 @@
             margin-top: 6px;
         }
         .journal-btn:hover {
-            background: #4a7c59;
+            background: var(--primary-color-highlight);
         }
         .journal-btn:active {
-            background: #345940;
+            background: var(--primary-color-dark);
         }
     </style>
 </head>

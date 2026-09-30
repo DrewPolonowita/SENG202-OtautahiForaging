@@ -8,16 +8,27 @@
 
 <?import javafx.geometry.Insets?>
 <VBox styleClass="note-card" spacing="16" alignment="CENTER" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.AddNoteController">
-    <HBox alignment="CENTER_LEFT">
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="✕" styleClass="close-button" onAction="#handleClose"/>
+    <HBox alignment="TOP_RIGHT">
+        <padding>
+            <Insets top="10" right="10" bottom="0" left="10"/>
+        </padding>
+        <Button maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#handleClose" prefHeight="26" prefWidth="26" styleClass="sideBar-button">
+            <graphic>
+                <Region>
+                    <styleClass>
+                        <String fx:value="icon-close" />
+                        <String fx:value="icon" />
+                    </styleClass>
+                </Region>
+            </graphic>
+        </Button>
     </HBox>
 
     <VBox spacing="6" alignment="CENTER">
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>
-        <Label fx:id="commonNameDisplay" styleClass="note-card-title"/>
+        <Label fx:id="commonNameDisplay" styleClass="note-card-edited-title"/>
     </VBox>
 
     <VBox spacing="6" alignment="CENTER">

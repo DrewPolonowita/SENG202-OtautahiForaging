@@ -199,6 +199,7 @@ public class WindowManager {
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
+        themeService.applyTo(scene);
         return scene;
     }
 
