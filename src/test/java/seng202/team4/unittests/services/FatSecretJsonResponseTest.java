@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
@@ -18,7 +17,6 @@ import seng202.team4.services.api.RecipeApiClient;
 import seng202.team4.services.api.RecipeClientInterface;
 
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -97,8 +95,8 @@ public class FatSecretJsonResponseTest {
 
         assertEquals(200, actualRequest1.getResponseCode());
         assertEquals(1641, actualRequest1.getApiResponse().food().foodId());
-        assertEquals(5034, actualRequest1.getApiResponse().food().servings().serving().get(1).servingId());
-        assertEquals(164, actualRequest1.getApiResponse().food().servings().serving().get(1).calories());
+        assertEquals(5034, actualRequest1.getApiResponse().food().servings().servings().get(1).servingId());
+        assertEquals(164, actualRequest1.getApiResponse().food().servings().servings().get(1).calories());
         assertEquals("Chicken Breast", actualRequest1.getApiResponse().food().foodName());
     }
 

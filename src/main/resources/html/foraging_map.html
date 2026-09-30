@@ -39,6 +39,32 @@
             justify-content: center;
             align-items: center;
         }
+
+        .serving-select {
+            background-color: #3f6b4a;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+            padding: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .nutrition-info {
+            width: 100%;
+            margin-top: 8px;
+            font-size: 0.85em;
+            text-align: left;
+        }
+
+        .nutrition-info div {
+            margin: 2px 0;
+        }
+
         .journal-btn {
             background: #3f6b4a;
             color: white;
@@ -134,15 +160,15 @@
     }
     /**
      * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
-     * @param title tooltip to display on hover
+     * @param html tooltip to display on hover
+     * @param food type of food in enum
      * @param lat latitude to place marker at
      * @param lng longitude to place marker at
      */
-
-    function addMarker(id, title, food, lat, lng) {
+    function addMarker(id, html, food, lat, lng) {
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
 
-        marker.bindPopup(title, { className: 'tree-popup', closeButton: true });
+        marker.bindPopup(html, { className: 'tree-popup', closeButton: true });
         marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
 
         markers.push(marker);
@@ -160,6 +186,20 @@
 
     function displayMarkers() {
         markers.forEach(m => m.addTo(map))
+    }
+
+    function updateNutrition(select) {
+        const selected = select.selectedOptions[0];
+        const card = select.closest(".tree-card");
+
+        updateNutritionText(card, "calories", "Calories", "kcal", selected.dataset.calories);
+        updateNutritionText(card, "carbohydrates", "Carbohydrates", "g", selected.dataset.carbohydrates);
+        updateNutritionText(card, "protein", "Protein", "g", selected.dataset.protein);
+        updateNutritionText(card, "fat", "Fat", "g", selected.dataset.fat);
+    }
+
+    function updateNutritionText(card, className, label, unit, value) {
+        card.querySelector("." + className).textContent = label + ": " + value + " " + unit;
     }
 
 </script>

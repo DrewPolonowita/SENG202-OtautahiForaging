@@ -194,7 +194,7 @@ public class FoodServiceTest {
         assertEquals(20, food.getCarbohydrates());
         assertEquals(5, food.getProtein());
         assertEquals(2, food.getFat());
-        assertEquals("100 g", food.getServingDescription());
+        assertEquals("100 g", food.getServingDescriptions());
         assertEquals(1234, food.getServingId());
     }
 

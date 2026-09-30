@@ -82,6 +82,7 @@ public class FoodApiClient implements FoodClientInterface {
         Map<String, String> params = new HashMap<>();
         params.put("search_expression", searchExpression);
         params.put("max_results", String.valueOf(maxResults));
+        params.put("format", "json");
         String authenticatedString = oauth1Signature.createSignature("GET", FOOD_BY_SEARCH, params);
         String url = FOOD_BY_SEARCH + encodeFoodSearchParams(searchExpression, maxResults);
         return apiClient.getOauth(url, new TypeReference<FoodSearchResponse>() {

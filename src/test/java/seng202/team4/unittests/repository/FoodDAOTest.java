@@ -164,7 +164,7 @@ public class FoodDAOTest extends TestSuite {
         assertEquals(expected.getCarbohydrates(), actual.getCarbohydrates());
         assertEquals(expected.getProtein(), actual.getProtein());
         assertEquals(expected.getFat(), actual.getFat());
-        assertEquals(expected.getServingDescription(), actual.getServingDescription());
+        assertEquals(expected.getServingDescriptions(), actual.getServingDescriptions());
         assertEquals(expected.getServingId(), actual.getServingId());
     }
 

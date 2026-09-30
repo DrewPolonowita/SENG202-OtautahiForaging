@@ -324,7 +324,7 @@ public class RecipeDAO implements RecipeRepository {
      * Adds ingredients alongside recipe id to the ingredients in recipe table in database
      * @param recipe a recipe model of the recipe the ingredients are from
      * @param toAdd a recipe ingredient to add information about to the database
-     * @return a map mapping recipe id to ingredient and serving ids if successful, null otherwise
+     * @return a map mapping recipe id to ingredient and servings ids if successful, null otherwise
      */
     public Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe) {
         String sql = """
@@ -461,9 +461,6 @@ public class RecipeDAO implements RecipeRepository {
             LOG.error(e);
         }
     }
-
-
-
 }
 
 

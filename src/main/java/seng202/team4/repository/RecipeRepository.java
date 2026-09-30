@@ -33,7 +33,7 @@ public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
      * Adds recipeIngredient information alongside recipe ids in the ingredients in recipe table
      * @param toAdd the ingredient to add
      * @param recipe the recipe the ingredient is in
-     * @return a map mapping recipe id to ingredient id and serving id
+     * @return a map mapping recipe id to ingredient id and servings id
      */
     Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe);
 
