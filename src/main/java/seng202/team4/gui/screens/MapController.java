@@ -118,7 +118,10 @@ public class MapController extends ScreenController {
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
                         if (targetTree == null) {
-                            javaScriptConnector.call("initMap");
+                            javaScriptConnector.call("initMap",
+                                    stateManager.getMapLatitude(),
+                                    stateManager.getMapLongitude(),
+                                    stateManager.getMapZoom());
                         } else {
                             javaScriptConnector.call("initMap", targetTree.getYCoord(), targetTree.getXCoord(), 17, targetTree.getId());
                         }
@@ -165,9 +168,11 @@ public class MapController extends ScreenController {
      * @param south the south-bound
      * @param west the west-bound
      */
-    private void mapMoved(double north, double east, double south, double west) {
+    private void mapMoved(double north, double east, double south, double west, double latitude, double longitude, double zoom) {
         double height = Math.abs(north - south);
         double width = Math.abs(east - west);
+
+        stateManager.setMapView(latitude, longitude, zoom);
 
         if (height > MAX_HEIGHT_FOR_DISPLAYING) {
             removeTreeMarkers();
@@ -298,7 +303,10 @@ public class MapController extends ScreenController {
 
             mapService.addSelectedFruit(fruit);
         }
-        mapMoved(northBound, eastBound, southBound, westBound);
+        mapMoved(northBound, eastBound, southBound, westBound,
+                stateManager.getMapLatitude(),
+                stateManager.getMapLongitude(),
+                stateManager.getMapZoom());
     }
 
     /**

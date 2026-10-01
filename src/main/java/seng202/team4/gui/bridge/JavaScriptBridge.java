@@ -40,9 +40,9 @@ public class JavaScriptBridge {
         mapMovedInterface = null;
     }
 
-    public void mapMoved(double north, double east, double south, double west) {
+    public void mapMoved(double north, double east, double south, double west, double latitude, double longitude, double zoom) {
         assert mapMovedInterface != null;
-        mapMovedInterface.mapMoved(north, east, south, west);
+        mapMovedInterface.mapMoved(north, east, south, west, latitude, longitude, zoom);
     }
 
     /**
