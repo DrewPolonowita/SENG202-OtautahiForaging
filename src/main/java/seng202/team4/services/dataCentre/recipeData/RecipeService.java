@@ -15,7 +15,6 @@ import seng202.team4.services.dataCentre.LoadingCache;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -88,10 +87,11 @@ public class RecipeService implements RecipeDataManager {
      * @param food the food type to query
      * @return ids from database, or null if we don't have any
      */
+    @SuppressWarnings("squid:S1168") // null is used to trigger the api
     private List<Integer> getRecipeIdsForFoodFromDatabase(String food) {
         List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
         if (recipeIds.isEmpty()) {
-            return Collections.emptyList();
+            return null;
         }
         return recipeIds;
     }

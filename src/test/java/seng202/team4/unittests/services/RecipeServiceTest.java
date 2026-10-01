@@ -31,7 +31,6 @@ import java.util.List;
 
 /**
  * Mostly tests getRecipesForFood, heres the branches
- *
  * getRecipesForFood decides between database and api.
  * It essentially asks:
  * Do we have the recipe ids for the food?
@@ -39,7 +38,7 @@ import java.util.List;
  *
  *
  */
-public class RecipeServiceTest extends TestSuite {
+class RecipeServiceTest extends TestSuite {
 
     RecipeRepository testRecipeRepository;
     RecipeClientInterface testRecipeClient;
@@ -48,7 +47,7 @@ public class RecipeServiceTest extends TestSuite {
 
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         testRecipeRepository = mock(RecipeRepository.class);
         testRecipeClient = mock(RecipeClientInterface.class);
         testRecipeService = new RecipeService(testRecipeRepository, testRecipeClient);
@@ -56,7 +55,7 @@ public class RecipeServiceTest extends TestSuite {
 
 
     @Test
-    public void testIdsExistsAndDetailsUpToDate() {
+    void testIdsExistsAndDetailsUpToDate() {
         Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -80,7 +79,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsExistsButDetailsNotUpToDate() {
+    void testIdsExistsButDetailsNotUpToDate() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -107,7 +106,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsDontExistAndApiReturnsIds() {
+    void testIdsDontExistAndApiReturnsIds() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
         Recipe expectedRecipe = testRecipeService.createRecipeObjectById(recipeRecord);
 
@@ -136,7 +135,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsDontExistButApiThrowsErrorsOnSearch() {
+    void testIdsDontExistButApiThrowsErrorsOnSearch() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -163,7 +162,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsAreFoundAtApiButApiThrowsErrorWhenLookingForMoreDetail() {
+    void testIdsAreFoundAtApiButApiThrowsErrorWhenLookingForMoreDetail() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -214,7 +213,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testCreateRecipeObjectById() {
+    void testCreateRecipeObjectById() {
         RecipeByIdRecord testByIdRecord = TestRecipeData.createFakeRecipeByIdRecord();
         Recipe testRecipeRecord = testRecipeService.createRecipeObjectById(testByIdRecord);
         List<String> testIngredients = List.of("1 Apple");
