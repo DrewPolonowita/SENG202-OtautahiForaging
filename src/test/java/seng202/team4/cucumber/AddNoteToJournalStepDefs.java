@@ -85,8 +85,8 @@ public class AddNoteToJournalStepDefs {
         );
 
         int noteId = noteService.add(note);
-
-        Assertions.assertTrue(noteId != -1);
+        
+        Assertions.assertNotEquals(-1, noteId);
     }
 
     @Then("the journal should have a note with description {string}")

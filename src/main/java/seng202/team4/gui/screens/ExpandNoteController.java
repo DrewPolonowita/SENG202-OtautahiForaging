@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class ExpandNoteController extends ScreenController {
 
-    private static final Logger LOG = LogManager.getLogger(NavController.class);
+    private static final Logger LOG = LogManager.getLogger(ExpandNoteController.class);
 
     private final Note note;
     private final JournalController journalController;
