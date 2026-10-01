@@ -11,8 +11,6 @@ import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.services.FoodMapper;
-import seng202.team4.services.api.FoodApiClient;
-import seng202.team4.services.api.FoodClientInterface;
 import seng202.team4.services.dataCentre.treeData.TreeService;
 import seng202.team4.services.api.TreeApiClient;
 import seng202.team4.services.api.TreeClientInterface;
@@ -32,29 +30,27 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TreeServiceTest extends TestSuite {
+class TreeServiceTest extends TestSuite {
 
     private TreeService testTreeService;
     private TreeClientInterface treeApiClient;
     private DatabaseManager databaseManager;
     private TreeDAO treeDAO;
-    private FoodClientInterface foodApiClient;
     private FoodMapper foodMapper;
 
-    int tuple_max;
-    String returning_string;
+    int tupleMax;
+    String returningString;
 
 
     @BeforeEach
-    public void setUpTest(){
+    void setUpTest(){
         foodMapper = new FoodMapper();
         treeApiClient = mock(TreeApiClient.class);
-        foodApiClient = mock(FoodApiClient.class);
         databaseManager = new DatabaseManager(getTestDb());
         treeDAO = new TreeDAO(databaseManager);
         testTreeService = new TreeService(treeDAO, treeApiClient, null, foodMapper);
-        returning_string = "TreeID,Ownership,Genus,CommonName";
-        tuple_max = 100;
+        returningString = "TreeID,Ownership,Genus,CommonName";
+        tupleMax = 100;
     }
 
     //region creating specific models and records
@@ -69,7 +65,7 @@ public class TreeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetTreesByTypeWithPopulatedDatabase() throws DuplicateEntryException {
+    void testGetTreesByTypeWithPopulatedDatabase() throws DuplicateEntryException {
         fillDatabase();
 
         List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
@@ -83,13 +79,13 @@ public class TreeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetTreesByFoodWithoutPopulatedDatabase() {
+    void testGetTreesByFoodWithoutPopulatedDatabase() {
         TreeRecord[] fakeTrees = TestTreeData.createFakeAppleRecords();
 
         TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
         Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 200);
 
-        when(treeApiClient.getTrees(anyString(), eq(returning_string), eq(tuple_max)))
+        when(treeApiClient.getTrees(anyString(), eq(returningString), eq(tupleMax)))
                 .thenReturn(fakeRequest);
         List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
 
@@ -99,29 +95,11 @@ public class TreeServiceTest extends TestSuite {
 
         // invoke just once because just the call for getting apples should be made
         verify(treeApiClient, times(1))
-                .getTrees(anyString(), eq(returning_string), eq(tuple_max));
+                .getTrees(anyString(), eq(returningString), eq(tupleMax));
     }
 
-//    @Test
-//    public void convertTreeRecordToModelTest() {
-//
-//        float[] coordinates = {5252,3423};
-//
-//        TreeRecord testRecord = TestTreeData.createFakeRecord(5252, 3423, 2452, "Council", "Malus", "Chinese Crab Apple");
-//
-//        TreeRecord[] fakeTrees = {testRecord};
-//        TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
-//        Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 200);
-//
-//        when(treeApiClient.getTrees(anyString(), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
-//
-//        List<TreeModel> result = testTreeService.getTreesByFood("Apple");
-//        TreeModel expectedTree = new TreeModel(2452, coordinates, "Council", "Malus", "Apple", "Chinese Crab Apple", null, "Serviced");
-//        assertEquals(result.getFirst(), expectedTree);
-//    }
-
     @Test
-    public void testGetAllTreesWithPopulatedDatabase() throws DuplicateEntryException {
+    void testGetAllTreesWithPopulatedDatabase() throws DuplicateEntryException {
         List<TreeModel> populatedList = fillDatabase();
 
         List<TreeModel> allTrees = testTreeService.getAllTrees();
@@ -133,31 +111,8 @@ public class TreeServiceTest extends TestSuite {
         }
     }
 
-//    @Test
-//    public void testGetAllTreesWithoutPopulatedDatabase() {
-//
-//        when(treeApiClient.getTrees(contains("Common Apple"), eq(returning_string), eq(tuple_max)))
-//                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeAppleRecords(), false), 200));
-//
-//        when(treeApiClient.getTrees(contains("Pear"), eq(returning_string), eq(tuple_max)))
-//                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePearRecords(), false), 200));
-//
-//        when(treeApiClient.getTrees(contains("Peach"), eq(returning_string), eq(tuple_max)))
-//                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakePeachRecords(), false), 200));
-//
-//        when(treeApiClient.getTrees(contains("Apricot"), eq(returning_string), eq(tuple_max)))
-//                .thenReturn(new Request<>(new TreeApiResponse("Feature", TestTreeData.createFakeApricotRecords(), false), 200));
-//
-//        List<TreeModel> allTrees = testTreeService.getAllTrees();
-//        assertEquals(4, allTrees.size());
-//
-//        // invoke 5 separate times, because 5 api calls should be used
-//        verify(treeApiClient, times(1))
-//                .getTrees(anyString(), eq(returning_string), eq(tuple_max));
-//    }
-
     @Test
-    public void testWrongResponseCode() {
+    void testWrongResponseCode() {
 
         TreeRecord testRecord = TestTreeData
                 .createFakeRecord(5252,3423, 2452, "Council", "Malus", "Chinese Crab Apple");
@@ -167,7 +122,7 @@ public class TreeServiceTest extends TestSuite {
         TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
         Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 404);
 
-        when(treeApiClient.getTrees(contains("Apple"), eq(returning_string), eq(tuple_max))).thenReturn(fakeRequest);
+        when(treeApiClient.getTrees(contains("Apple"), eq(returningString), eq(tupleMax))).thenReturn(fakeRequest);
         List<TreeModel> result = testTreeService.getTreesByFood("Apple");
         assertTrue(result.isEmpty());
 

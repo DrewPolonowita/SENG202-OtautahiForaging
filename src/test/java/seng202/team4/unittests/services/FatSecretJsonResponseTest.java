@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
@@ -18,7 +17,6 @@ import seng202.team4.services.api.RecipeApiClient;
 import seng202.team4.services.api.RecipeClientInterface;
 
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FatSecretJsonResponseTest {
+class FatSecretJsonResponseTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -47,7 +45,7 @@ public class FatSecretJsonResponseTest {
     RecipeClientInterface recipeApiClient;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         apiClient = mock(ApiClientInterface.class);
         oauth1Signature = mock(OAuth1Signature.class);
 
@@ -71,7 +69,7 @@ public class FatSecretJsonResponseTest {
     }
 
     @Test
-    public void ChickenFoodByIdBecomesCorrectRecords() throws Exception {
+    void ChickenFoodByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(chickenJson);
 
@@ -97,13 +95,13 @@ public class FatSecretJsonResponseTest {
 
         assertEquals(200, actualRequest1.getResponseCode());
         assertEquals(1641, actualRequest1.getApiResponse().food().foodId());
-        assertEquals(5034, actualRequest1.getApiResponse().food().servings().serving().get(1).servingId());
-        assertEquals(164, actualRequest1.getApiResponse().food().servings().serving().get(1).calories());
+        assertEquals(5034, actualRequest1.getApiResponse().food().servings().servings().get(1).servingId());
+        assertEquals(164, actualRequest1.getApiResponse().food().servings().servings().get(1).calories());
         assertEquals("Chicken Breast", actualRequest1.getApiResponse().food().foodName());
     }
 
     @Test
-    public void BakedLemonSnapperRecipeByIdBecomesCorrectRecords() throws Exception {
+    void BakedLemonSnapperRecipeByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(idBakedLemonSnapperJson);
 
@@ -134,7 +132,7 @@ public class FatSecretJsonResponseTest {
     }
 
     @Test
-    public void CheeriosFoodByIdBecomesCorrectRecords() throws Exception {
+    void CheeriosFoodByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(cheeriosJson);
 
@@ -160,7 +158,7 @@ public class FatSecretJsonResponseTest {
         assertEquals("Whole Grain Cheerios", actualRequest.getApiResponse().food().foodName());
     }
     @Test
-    public void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
+    void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(cheeseburgerJson);
 
@@ -187,7 +185,7 @@ public class FatSecretJsonResponseTest {
         assertEquals("Cheeseburger", actualResponse.getApiResponse().foods().food().get(0).foodName());
     }
 
-    public void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
+    void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
         FoodByIdResponse foodByIdResponse = objectMapper.readValue(
                 mushroomsJson,
                 FoodByIdResponse.class
@@ -202,7 +200,7 @@ public class FatSecretJsonResponseTest {
 
 
     @Test
-    public void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
+    void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(searchBakedLemonSnapperJson);
 

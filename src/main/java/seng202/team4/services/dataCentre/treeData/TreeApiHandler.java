@@ -21,14 +21,14 @@ import java.util.Map;
  */
 public class TreeApiHandler {
     private static final Logger LOG = LogManager.getLogger(TreeApiHandler.class);
-    private final TreeClientInterface treeApiHandler;
+    private final TreeClientInterface treeApiClient;
     private final FoodMapper foodMapper;
 
     /**
      * Constructor for the TreeApiHandler
      */
     public TreeApiHandler(TreeClientInterface treeApiClient, FoodMapper foodMapper) {
-        this.treeApiHandler = treeApiClient;
+        this.treeApiClient = treeApiClient;
         this.foodMapper = foodMapper;
     }
 
@@ -41,36 +41,20 @@ public class TreeApiHandler {
         String genus = treeRecord.properties().genus();
         String commonName = treeRecord.properties().commonName();
         String foodType = foodMapper.getFoodName(commonName);
+        List<Float> coords = new ArrayList<>();
+        for (float coord : treeRecord.geometry().coordinates()) {
+            coords.add(coord);
+        }
 
         return new TreeModel(
                 treeRecord.properties().treeId(),
-                treeRecord.geometry().coordinates(),
+                coords,
                 treeRecord.properties().ownership(),
                 genus,
                 foodType,
                 commonName,
                 null,
                 null);
-    }
-
-
-
-    /**
-     * Mapping the genus to a fruit type in a new column
-     *
-     * @param commonName common name
-     * @return the fruit type based on genus
-     */
-    private String getFruitType(String commonName) {
-        return switch (commonName) {
-            case "Apple" -> "Apple";
-            case "Pear" -> "Pear";
-            case "Cherry" -> "Cherry";
-            case "Peach" -> "Peach";
-            case "Apricot" -> "Apricot";
-            case "Juglans" -> "Walnut";
-            default -> "N/A";
-        };
     }
 
     /**
@@ -136,7 +120,7 @@ public class TreeApiHandler {
      */
     public List<TreeModel> getTreesFromApiByFood(String food) {
 
-        Request request = treeApiHandler.getTrees(createApiTypeQuery(food),
+        Request<TreeApiResponse> request = treeApiClient.getTrees(createApiTypeQuery(food),
                 "TreeID,Ownership,Genus,CommonName",
                 100);
         if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -144,7 +128,7 @@ public class TreeApiHandler {
             return List.of();
         }
 
-        TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
+        TreeApiResponse response = request.getApiResponse();
 
         if (response == null || response.featureTrees() == null) {
             LOG.warn("Tree api has no trees for {}", food);
@@ -171,7 +155,7 @@ public class TreeApiHandler {
      */
     public List<TreeModel> getTreesByRegion(String commonName, double north, double east, double south, double west) {
         String query = createApiTypeQuery(commonName);
-        Request request = treeApiHandler.getTrees(query,
+        Request<TreeApiResponse> request = treeApiClient.getTrees(query,
                 "TreeID,Ownership,Genus,CommonName",
                 1000,
                 north,
@@ -184,7 +168,7 @@ public class TreeApiHandler {
             return List.of();
         }
 
-        TreeApiResponse response = (TreeApiResponse) request.getApiResponse();
+        TreeApiResponse response = request.getApiResponse();
 
         if (response == null || response.featureTrees() == null) {
             LOG.warn("Tree api has no trees for {} in region",

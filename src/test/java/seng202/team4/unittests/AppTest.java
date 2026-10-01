@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Unit test for simple App, default from Maven
  */
-public class AppTest
+class AppTest
 {
     /**
      * Rigorous Test :-)
      */
     @Test
-    public void testApp()
+    void testApp()
     {
         assertTrue( true );
     }

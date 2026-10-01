@@ -1,17 +1,14 @@
 package seng202.team4.services.dataCentre.foodData;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import seng202.team4.models.Food;
 import seng202.team4.services.FoodMapper;
 import seng202.team4.services.api.FoodClientInterface;
-import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.repository.FoodRepository;
 import seng202.team4.services.dataCentre.LoadingCache;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service for handling food related business logic
@@ -64,11 +61,8 @@ public class FoodService implements FoodDataManager {
         if (foodId == null || foodId == 0) {
             return null;
         }
-        Food food = foodApiHandler.getFoodById(
-                foodId,
-                foodName,
-                foodMapper.getFoodType(foodName)
-        );
+        Food food = foodApiHandler != null ? foodApiHandler
+                .getFoodById(foodId, foodName, foodMapper.getFoodType(foodName)) : null;
 
         if (food != null) {
             foodDao.replaceFood(food);
@@ -99,51 +93,11 @@ public class FoodService implements FoodDataManager {
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMapper.getFoodMap().keySet()) {
             Food food = foodCache.get(foodName);
-
             if (food != null) {
                 foods.add(food);
             }
-
         }
 
         return foods;
-    }
-
-    /**
-     * Create a food model using a FoodByIdRecord
-     * @param foodRecord a foodByIdRecord
-     * @return a food model
-     */
-    public Food createFoodObjectById(FoodByIdRecord foodRecord) {
-        int foodId = foodRecord.foodId();
-        String name = foodRecord.foodName();
-        String type = null;
-        for (Map.Entry<String, List<String>> typeEntry : foodMapper.getTypeMap().entrySet()) {
-            List<String> commonNames = typeEntry.getValue();
-            for (String commonName : commonNames) {
-                if (name.equals(commonName)) {
-                    type = typeEntry.getKey();
-                    break;
-                }
-            }
-        }
-        double calories = foodRecord.servings().serving().getFirst().calories();
-        double fat = foodRecord.servings().serving().getFirst().fat();
-        double protein = foodRecord.servings().serving().getFirst().protein();
-        double carbohydrate = foodRecord.servings().serving().getFirst().carbohydrate();
-        String servingDescription = foodRecord.servings().serving().getFirst().servingDescription();
-        int servingId = foodRecord.servings().serving().getFirst().servingId();
-
-        return new Food(
-                foodId,
-                name,
-                type,
-                calories,
-                carbohydrate,
-                protein,
-                fat,
-                servingDescription,
-                servingId
-        );
     }
 }

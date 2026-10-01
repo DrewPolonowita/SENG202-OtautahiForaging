@@ -8,7 +8,7 @@ import seng202.team4.models.api.TreeApi.Properties;
 /**
  * A test class for {@link Properties}
  */
-public class PropertiesTest {
+class PropertiesTest {
 
     Properties properties;
     int testId;

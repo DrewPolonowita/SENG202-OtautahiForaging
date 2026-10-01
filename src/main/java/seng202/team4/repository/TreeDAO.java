@@ -21,7 +21,11 @@ import org.apache.logging.log4j.Logger;
  */
 public class TreeDAO implements TreeRepository {
     private static final Logger LOG = LogManager.getLogger(TreeDAO.class);
-
+    private static final String SERVICE_STATUS_REFERENCE = "service_status";
+    private static final String COMMON_NAME_REFERENCE = "common_name";
+    private static final String LAST_MODIFIED_REFERENCE = "last_modified";
+    private static final String OWNERSHIP_REFERENCE = "ownership";
+    private static final String GENUS_REFERENCE = "genus";
     private final DatabaseManager databaseManager;
 
     /**
@@ -48,23 +52,21 @@ public class TreeDAO implements TreeRepository {
                 ResultSet rs = stmt.executeQuery(sql)
         ) {
             while (rs.next()) {
-                float[] coords = new float[] {
-                        rs.getFloat("x"),
-                        rs.getFloat("y")
-                };
+                List<Float> coords = getFloatList(rs.getFloat("x"),
+                        rs.getFloat("y"));
 
-                Timestamp timestamp = rs.getTimestamp("last_modified");
+                Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
                 LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
 
                 trees.add(new TreeModel(
                         rs.getInt("id"),
                         coords,
-                        rs.getString("ownership"),
-                        rs.getString("genus"),
+                        rs.getString(OWNERSHIP_REFERENCE),
+                        rs.getString(GENUS_REFERENCE),
                         rs.getString("food"),
-                        rs.getString("common_name"),
+                        rs.getString(COMMON_NAME_REFERENCE),
                         lastUpdated,
-                        rs.getString("service_status")
+                        rs.getString(SERVICE_STATUS_REFERENCE)
                         ));
             }
             return trees;
@@ -72,6 +74,13 @@ public class TreeDAO implements TreeRepository {
             LOG.error(sqlException);
             return new ArrayList<>();
         }
+    }
+
+    private List<Float> getFloatList(Float x, Float y) {
+        List<Float> coords = new ArrayList<>();
+        coords.add(x);
+        coords.add(y);
+        return coords;
     }
 
 
@@ -91,23 +100,21 @@ public class TreeDAO implements TreeRepository {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    float[] coords = new float[] {
-                            rs.getFloat("x"),
-                            rs.getFloat("y")
-                    };
+                    List<Float> coords = getFloatList(rs.getFloat("x"),
+                            rs.getFloat("y"));
 
-                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
                     LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
 
                     tree = new TreeModel(
                             rs.getInt("id"),
                             coords,
-                            rs.getString("ownership"),
-                            rs.getString("genus"),
+                            rs.getString(OWNERSHIP_REFERENCE),
+                            rs.getString(GENUS_REFERENCE),
                             rs.getString("food"),
-                            rs.getString("common_name"),
+                            rs.getString(COMMON_NAME_REFERENCE),
                             lastUpdated,
-                            rs.getString("service_status")
+                            rs.getString(SERVICE_STATUS_REFERENCE)
                     );
 
                 }
@@ -208,23 +215,21 @@ public class TreeDAO implements TreeRepository {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    float[] coords = new float[] {
-                            rs.getFloat("x"),
-                            rs.getFloat("y")
-                    };
+                    List<Float> coords = getFloatList(rs.getFloat("x"),
+                            rs.getFloat("y"));
 
-                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
                     LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
 
                     trees.add(new TreeModel(
                             rs.getInt("id"),
                             coords,
-                            rs.getString("ownership"),
-                            rs.getString("genus"),
+                            rs.getString(OWNERSHIP_REFERENCE),
+                            rs.getString(GENUS_REFERENCE),
                             rs.getString("food"),
-                            rs.getString("common_name"),
+                            rs.getString(COMMON_NAME_REFERENCE),
                             lastUpdated,
-                            rs.getString("service_status")
+                            rs.getString(SERVICE_STATUS_REFERENCE)
 
                     ));
                 }
@@ -265,23 +270,21 @@ public class TreeDAO implements TreeRepository {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    float[] coords = new float[] {
-                            rs.getFloat("x"),
-                            rs.getFloat("y")
-                    };
+                    List<Float> coords = getFloatList(rs.getFloat("x"),
+                            rs.getFloat("y"));
 
-                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
                     LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
 
                     trees.add(new TreeModel(
                             rs.getInt("id"),
                             coords,
-                            rs.getString("ownership"),
-                            rs.getString("genus"),
+                            rs.getString(OWNERSHIP_REFERENCE),
+                            rs.getString(GENUS_REFERENCE),
                             rs.getString("food"),
-                            rs.getString("common_name"),
+                            rs.getString(COMMON_NAME_REFERENCE),
                             lastUpdated,
-                            rs.getString("service_status")
+                            rs.getString(SERVICE_STATUS_REFERENCE)
                     ));
                 }
             }
@@ -306,23 +309,21 @@ public class TreeDAO implements TreeRepository {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    float[] coords = new float[] {
-                            rs.getFloat("x"),
-                            rs.getFloat("y")
-                    };
+                    List<Float> coords = getFloatList(rs.getFloat("x"),
+                            rs.getFloat("y"));
 
-                    Timestamp timestamp = rs.getTimestamp("last_modified");
+                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
                     LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
 
                     trees.add(new TreeModel(
                             rs.getInt("id"),
                             coords,
-                            rs.getString("ownership"),
-                            rs.getString("genus"),
+                            rs.getString(OWNERSHIP_REFERENCE),
+                            rs.getString(GENUS_REFERENCE),
                             rs.getString("food"),
-                            rs.getString("common_name"),
+                            rs.getString(COMMON_NAME_REFERENCE),
                             lastUpdated,
-                            rs.getString("service_status")
+                            rs.getString(SERVICE_STATUS_REFERENCE)
                     ));
                 }
             }

@@ -15,6 +15,7 @@ public enum Fruit {
      * Returns the string format of a given fruit for the api and database
      * @return the string format of a given fruit for the api and database
      */
+    @Override
     public String toString() {
         return switch (this) {
             case APPLE -> "Apple";

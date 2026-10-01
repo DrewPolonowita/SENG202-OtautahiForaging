@@ -3,6 +3,7 @@ package seng202.team4.services;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,8 +163,9 @@ public class FoodMapper {
         }
         for (Map.Entry<String, List<String>> entry : foodMap.entrySet()) {
             List<String> commonNames = entry.getValue();
+            String trimmedCommonName = commonName.trim();
             for (String name : commonNames) {
-                if (name.trim().equalsIgnoreCase(commonName.trim())) {
+                if (name.trim().equalsIgnoreCase(trimmedCommonName)) {
                     return entry.getKey();
                 }
             }
@@ -177,7 +179,7 @@ public class FoodMapper {
      * @return the food map
      */
     public Map<String, List<String>> getFoodMap () {
-        return foodMap;
+        return Collections.unmodifiableMap(foodMap);
     }
 
     /**
@@ -185,6 +187,6 @@ public class FoodMapper {
      * @return the type map
      */
     public Map<String, List<String>> getTypeMap () {
-        return typeMap;
+        return Collections.unmodifiableMap(typeMap);
     }
 }

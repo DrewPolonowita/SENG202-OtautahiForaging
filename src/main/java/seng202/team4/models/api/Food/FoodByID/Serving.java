@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Object holding the nutritional information of a particular serving of a food
- * @param servingId id of serving
- * @param servingDescription description of serving
+ * Object holding the nutritional information of a particular servings of a food
+ * @param servingId id of servings
+ * @param servingDescription description of servings
  * @param calories Energy content in kcal
  * @param carbohydrate Total carbohydrate content in grams
  * @param protein Protein content in grams

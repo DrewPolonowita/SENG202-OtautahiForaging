@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 public class RecipeDAO implements RecipeRepository {
     private static final Logger LOG = LogManager.getLogger(RecipeDAO.class);
-
+    private static final String RECIPE_ID_REFERENCE = "recipe_id";
 
     private final DatabaseManager databaseManager;
 
@@ -79,7 +80,7 @@ public class RecipeDAO implements RecipeRepository {
 
 
                 recipes.add(new Recipe(
-                        rs.getInt("recipe_id"),
+                        rs.getInt(RECIPE_ID_REFERENCE),
                         rs.getString("recipe_name"),
                         rs.getString("recipe_method"),
                         ingredients,
@@ -141,7 +142,7 @@ public class RecipeDAO implements RecipeRepository {
 
 
                     recipe = new Recipe(
-                            rs.getInt("recipe_id"),
+                            rs.getInt(RECIPE_ID_REFERENCE),
                             rs.getString("recipe_name"),
                             rs.getString("recipe_method"),
                             ingredients,
@@ -260,7 +261,7 @@ public class RecipeDAO implements RecipeRepository {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    recipeIds.add(rs.getInt("recipe_id"));
+                    recipeIds.add(rs.getInt(RECIPE_ID_REFERENCE));
                 }
             }
             return recipeIds;
@@ -292,7 +293,7 @@ public class RecipeDAO implements RecipeRepository {
      *
      * @param toAdd recipe object to add
      */
-    public void addIngredients(RecipeIngredient toAdd) {
+    public void addIngredient(RecipeIngredient toAdd) {
         String sql = """
                    INSERT OR IGNORE INTO ingredient (
                    ingredient_id,
@@ -324,7 +325,7 @@ public class RecipeDAO implements RecipeRepository {
      * Adds ingredients alongside recipe id to the ingredients in recipe table in database
      * @param recipe a recipe model of the recipe the ingredients are from
      * @param toAdd a recipe ingredient to add information about to the database
-     * @return a map mapping recipe id to ingredient and serving ids if successful, null otherwise
+     * @return a map mapping recipe id to ingredient and servings ids if successful, null otherwise
      */
     public Map<Integer, List<Integer>> addIngredientsByRecipe(RecipeIngredient toAdd, Recipe recipe) {
         String sql = """
@@ -354,7 +355,7 @@ public class RecipeDAO implements RecipeRepository {
             return recipeFoodIdMap;
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
-            return null;
+            return Collections.emptyMap();
         }
     }
 
@@ -451,19 +452,20 @@ public class RecipeDAO implements RecipeRepository {
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
-                try {
-                    add(recipe);
-                } catch (DuplicateEntryException e) {
-                    LOG.error(e);
-                }
+                tryAddRecipe(recipe);
             }
         } catch (SQLException e) {
             LOG.error(e);
         }
     }
 
-
-
+    private void tryAddRecipe(Recipe recipe) {
+        try {
+            add(recipe);
+        } catch (DuplicateEntryException e) {
+            LOG.error(e);
+        }
+    }
 }
 
 

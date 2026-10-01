@@ -10,7 +10,7 @@ import seng202.team4.models.api.TreeApi.TreeRecord;
 /**
  * A test class for {@link TreeRecord}
  */
-public class TreeRecordTest {
+class TreeRecordTest {
     TreeRecord treeRecord;
     String apiType;
     int id;

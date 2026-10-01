@@ -11,7 +11,7 @@ import seng202.team4.models.api.TreeApi.TreeRecord;
 /**
  * A test class for {@link TreeApiResponse}
  */
-public class TreeApiResponseTest {
+class TreeApiResponseTest {
 
     TreeRecord treeRecord;
     String apiType;

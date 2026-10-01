@@ -87,6 +87,7 @@ public class RecipeService implements RecipeDataManager {
      * @param food the food type to query
      * @return ids from database, or null if we don't have any
      */
+    @SuppressWarnings("squid:S1168") // null is used to trigger the api
     private List<Integer> getRecipeIdsForFoodFromDatabase(String food) {
         List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
         if (recipeIds.isEmpty()) {
@@ -281,7 +282,7 @@ public class RecipeService implements RecipeDataManager {
      */
     public void populateIngredientTable(List<RecipeIngredient> ingredients) {
         for (RecipeIngredient ingredient : ingredients) {
-            recipeDAO.addIngredients(ingredient);
+            recipeDAO.addIngredient(ingredient);
         }
     }
 
@@ -316,7 +317,7 @@ public class RecipeService implements RecipeDataManager {
         for (Recipe recipe: apiRecipes) {
             try {
                 recipeDAO.add(recipe);
-            } catch (DuplicateEntryException e) {
+            } catch (DuplicateEntryException _) {
                 log.warn("(All Recipes) Skip duplicate id: {}", recipe.getId());
             }
         }

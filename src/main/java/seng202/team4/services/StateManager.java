@@ -55,10 +55,8 @@ public class StateManager {
         this.treeRepository = new TreeDAO(databaseManager);
         this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)), foodMapper);
         this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeApiClient(apiClient));
-
         this.noteRepository = new NoteDAO(databaseManager);
         this.noteService = new NoteService(noteRepository);
-
         this.windowManager.launchMapScreen(this);
         this.windowManager.launchNavScreen(this);
     }

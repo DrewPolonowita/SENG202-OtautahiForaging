@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
 import seng202.team4.models.api.Request;
 
@@ -85,13 +86,8 @@ public class ApiClient implements ApiClientInterface {
     public <T> Request<T> get(String url, TypeReference<T> responseType) {
         try {
             HttpsURLConnection connection = createConnection(url);
-            try {
-                T apiResponse = getJsonData(connection, responseType);
-                return new Request<>(apiResponse, connection.getResponseCode());
-            } catch (IOException e) {
-                return new Request<>(null, connection.getResponseCode());
-            }
-        } catch (IOException e) {
+            return getRequest(responseType, connection);
+        } catch (IOException _) {
             return new Request<>(null, -1);
         }
 
@@ -108,15 +104,28 @@ public class ApiClient implements ApiClientInterface {
     public <T> Request<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
         try {
             HttpsURLConnection connection = createOAuthConnection(url, oauthHeader);
-            try {
-                T apiResponse = getJsonData(connection, responseType);
-                return new Request<>(apiResponse, connection.getResponseCode());
-            } catch (IOException e) {
-                return new Request<>(null, connection.getResponseCode());
-            }
-        } catch (IOException e) {
+            return getRequest(responseType, connection);
+        } catch (IOException _) {
             return new Request<>(null, -1);
         }
 
+    }
+
+    /**
+     * Wraps a http api call in its {@link Request} object
+     * @param responseType expected type
+     * @param connection the open http connection
+     * @param <T> the response body type
+     * @return a request wrapper with the parsed response
+     * @throws IOException if the response code can't be read
+     */
+    private <T> @NotNull Request<T> getRequest(TypeReference<T> responseType, HttpsURLConnection connection)
+            throws IOException {
+        try {
+            T apiResponse = getJsonData(connection, responseType);
+            return new Request<>(apiResponse, connection.getResponseCode());
+        } catch (IOException _) {
+            return new Request<>(null, connection.getResponseCode());
+        }
     }
 }
