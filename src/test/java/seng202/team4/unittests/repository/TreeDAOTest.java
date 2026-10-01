@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.exceptions.DuplicateEntryException;
-import seng202.team4.models.Food;
 import seng202.team4.models.TreeModel;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.TreeDAO;
-import seng202.team4.repository.TreeRepository;
 import seng202.team4.unittests.TestSuite;
 
 import java.time.LocalDateTime;
@@ -16,22 +14,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TreeDAOTest extends TestSuite {
+class TreeDAOTest extends TestSuite {
 
     TreeDAO treeDao;
     DatabaseManager databaseManager;
     TreeModel tree;
-    float[] coordinates;
+    List<Float> coordinates;
     int id;
 
     @BeforeEach
     void setUpTest() {
         databaseManager = new DatabaseManager(getTestDb());
         treeDao = new TreeDAO(databaseManager);
-        float[] coordinates = new float[2];
-        coordinates[0] = 1.0f;
-        coordinates[1] = 1.0f;
-
+        List<Float> coordinates = List.of(1.0f, 1.0f);
         id = 34;
         tree = new TreeModel(id, coordinates, "CCC", "Malus", "Apple", "Apple", LocalDateTime.now(), "");
     }
@@ -78,7 +73,7 @@ public class TreeDAOTest extends TestSuite {
     void testGetTreesByCommonName() throws DuplicateEntryException {
         TreeModel apple = new TreeModel(
                 1,
-                new float[]{1.0f, 1.0f},
+                List.of(2.0f, 2.0f),
                 "CCC",
                 "Malus",
                 "Apple",
@@ -89,7 +84,7 @@ public class TreeDAOTest extends TestSuite {
 
         TreeModel walnut = new TreeModel(
                 2,
-                new float[]{2.0f, 2.0f},
+                List.of(1.0f, 1.0f),
                 "CCC",
                 "Juglans",
                 "Walnut",
@@ -112,7 +107,7 @@ public class TreeDAOTest extends TestSuite {
     void testGetTreesByFoodName() throws DuplicateEntryException {
         TreeModel apple = new TreeModel(
                 1,
-                new float[]{1.0f, 1.0f},
+                List.of(1.0f, 1.0f),
                 "Public",
                 "Malus",
                 "Apple",
@@ -123,7 +118,7 @@ public class TreeDAOTest extends TestSuite {
 
         TreeModel walnut = new TreeModel(
                 2,
-                new float[]{2.0f, 2.0f},
+                List.of(2.0f, 2.0f),
                 "Public",
                 "Juglans",
                 "Walnut",
@@ -160,7 +155,7 @@ public class TreeDAOTest extends TestSuite {
     void testGetTreesByRegion() throws DuplicateEntryException {
         TreeModel inside = new TreeModel(
                 1,
-                new float[]{5.0f, 5.0f},
+                List.of(5.0f, 5.0f),
                 "Public",
                 "Malus",
                 "Apple",
@@ -171,7 +166,7 @@ public class TreeDAOTest extends TestSuite {
 
         TreeModel outside = new TreeModel(
                 2,
-                new float[]{20.0f, 20.0f},
+                List.of(20.0f, 20.0f),
                 "Public",
                 "Malus",
                 "Apple",
@@ -191,7 +186,7 @@ public class TreeDAOTest extends TestSuite {
     void testGetTreesByRegionWrongFood() throws DuplicateEntryException {
         TreeModel apple = new TreeModel(
                 1,
-                new float[]{5.0f, 5.0f},
+                List.of(5.0f, 5.0f),
                 "Public",
                 "Malus",
                 "Apple",
@@ -202,7 +197,7 @@ public class TreeDAOTest extends TestSuite {
 
         TreeModel walnut = new TreeModel(
                 2,
-                new float[]{5.0f, 5.0f},
+                List.of(5.0f, 5.0f),
                 "Public",
                 "Juglans",
                 "Walnut",

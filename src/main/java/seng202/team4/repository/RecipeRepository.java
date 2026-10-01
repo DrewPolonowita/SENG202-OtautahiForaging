@@ -27,7 +27,7 @@ public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
      *
      * @param toAdd the ingredient to add
      */
-    void addIngredients(RecipeIngredient toAdd);
+    void addIngredient(RecipeIngredient toAdd);
 
     /**
      * Adds recipeIngredient information alongside recipe ids in the ingredients in recipe table

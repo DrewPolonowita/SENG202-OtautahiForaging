@@ -4,7 +4,6 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.TreeApi.Geometry;
 import seng202.team4.models.api.TreeApi.Properties;
 import seng202.team4.models.api.TreeApi.TreeRecord;
-import seng202.team4.models.api.TreeApi.TreeRecord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,11 +25,11 @@ public class TestTreeData {
     }
     public static List<TreeModel> createTreeModels() {
         List<TreeModel> testTrees = new ArrayList<>();
-        testTrees.add(new TreeModel(2452, new float[]{5252, 3423}, "Council", "Malus", "Apple", "Apple", null, "serviced"));
-        testTrees.add(new TreeModel(2454, new float[]{2252, 5423}, "Council", "Malus", "Apple", "Apple", null, "serviced"));
-        testTrees.add(new TreeModel(2453, new float[]{5253, 8424}, "Council", "Pyrus", "Pear", "Pear", null, "serviced"));
-        testTrees.add(new TreeModel(724, new float[]{4313, 8591}, "Council", "Prunus", "Cherry", "Cherry", null, "serviced"));
-        testTrees.add(new TreeModel(2042, new float[]{4539, 7854}, "Council", "Prunus", "Apricot", "Apricot", null, "serviced"));
+        testTrees.add(new TreeModel(2452, List.of(5252f, 3423f), "Council", "Malus", "Apple", "Apple", null, "serviced"));
+        testTrees.add(new TreeModel(2454, List.of(2252f, 5423f), "Council", "Malus", "Apple", "Apple", null, "serviced"));
+        testTrees.add(new TreeModel(2453, List.of(5253f, 8424f), "Council", "Pyrus", "Pear", "Pear", null, "serviced"));
+        testTrees.add(new TreeModel(724, List.of(4313f, 8591f), "Council", "Prunus", "Cherry", "Cherry", null, "serviced"));
+        testTrees.add(new TreeModel(2042, List.of(4539f, 7854f), "Council", "Prunus", "Apricot", "Apricot", null, "serviced"));
         return testTrees;
     }
 

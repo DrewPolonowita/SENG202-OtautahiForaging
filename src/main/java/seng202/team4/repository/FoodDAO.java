@@ -24,6 +24,9 @@ import java.util.List;
  */
 public class FoodDAO implements FoodRepository {
     private static final Logger LOG = LogManager.getLogger(FoodDAO.class);
+    private static final String FOOD_ID_REFERENCE = "food_id";
+    private static final String FOOD_TYPE_REFERENCE = "food_type";
+    private static final String FOOD_COMMON_NAME_REFERENCE = "common_name";
 
 
     private final DatabaseManager databaseManager;
@@ -45,17 +48,17 @@ public class FoodDAO implements FoodRepository {
     @Override
     public List<Food> getAll() {
         List<Food> food = new ArrayList<>();
-        String sql = "SELECT * FROM food";
+            String sql = "SELECT * FROM food";
         try (Connection conn = databaseManager.connect();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)
         ) {
             while (rs.next()) {
                 food.add(FoodFactory.create(
-                        rs.getInt("food_id"),
-                        rs.getString("common_name"),
-                        rs.getString("food_type"),
-                        getServings(rs.getInt("food_id"))
+                        rs.getInt(FOOD_ID_REFERENCE),
+                        rs.getString(FOOD_COMMON_NAME_REFERENCE),
+                        rs.getString(FOOD_TYPE_REFERENCE),
+                        getServings(rs.getInt(FOOD_ID_REFERENCE))
                 ));
             }
             return food;
@@ -133,10 +136,10 @@ public class FoodDAO implements FoodRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     foods.add(FoodFactory.create(
-                            rs.getInt("food_id"),
-                            rs.getString("common_name"),
-                            rs.getString("food_type"),
-                            getServings(rs.getInt("food_id"))
+                            rs.getInt(FOOD_ID_REFERENCE),
+                            rs.getString(FOOD_COMMON_NAME_REFERENCE),
+                            rs.getString(FOOD_TYPE_REFERENCE),
+                            getServings(rs.getInt(FOOD_ID_REFERENCE))
                     ));
                 }
             }
@@ -164,10 +167,10 @@ public class FoodDAO implements FoodRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     food = FoodFactory.create(
-                            rs.getInt("food_id"),
-                            rs.getString("common_name"),
-                            rs.getString("food_type"),
-                            getServings(rs.getInt("food_id"))
+                            rs.getInt(FOOD_ID_REFERENCE),
+                            rs.getString(FOOD_COMMON_NAME_REFERENCE),
+                            rs.getString(FOOD_TYPE_REFERENCE),
+                            getServings(rs.getInt(FOOD_ID_REFERENCE))
                     );
                 }
             }
@@ -197,10 +200,10 @@ public class FoodDAO implements FoodRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     food = FoodFactory.create(
-                            rs.getInt("food_id"),
-                            rs.getString("common_name"),
-                            rs.getString("food_type"),
-                            getServings(rs.getInt("food_id"))
+                            rs.getInt(FOOD_ID_REFERENCE),
+                            rs.getString(FOOD_COMMON_NAME_REFERENCE),
+                            rs.getString(FOOD_TYPE_REFERENCE),
+                            getServings(rs.getInt(FOOD_ID_REFERENCE))
                     );
                 }
             }
@@ -242,7 +245,7 @@ public class FoodDAO implements FoodRepository {
             ps.setString(1, foodName);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("food_id");
+                    return rs.getInt(FOOD_ID_REFERENCE);
                 }
             }
         } catch (SQLException sqlException) {
@@ -301,11 +304,7 @@ public class FoodDAO implements FoodRepository {
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
-                try {
-                    add(food);
-                } catch (DuplicateEntryException e) {
-                    LOG.error(e);
-                }
+                tryAddFood(food);
             } else {
                 String deleteServingsSql = "DELETE FROM food_serving WHERE food_id=?";
 
@@ -316,6 +315,14 @@ public class FoodDAO implements FoodRepository {
                 addServings(food);
             }
         } catch (SQLException e) {
+            LOG.error(e);
+        }
+    }
+
+    private void tryAddFood(Food food) {
+        try {
+            add(food);
+        } catch (DuplicateEntryException e) {
             LOG.error(e);
         }
     }
@@ -385,5 +392,8 @@ public class FoodDAO implements FoodRepository {
 
         return servings;
     }
+
+
+
 
 }

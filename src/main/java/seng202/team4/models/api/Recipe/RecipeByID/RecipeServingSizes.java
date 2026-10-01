@@ -6,7 +6,7 @@ import seng202.team4.models.api.Recipe.RecipeNutrition;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeServingSizes(
-        @JsonProperty("servings") RecipeNutrition serving
+        @JsonProperty("serving") RecipeNutrition serving
 ) {
 
 }

@@ -1,21 +1,21 @@
 package seng202.team4.models;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+
 
 /**
  * Model representation of a tree
  * @author Team 4
  */
 public class TreeModel {
-    private static final Logger log = LogManager.getLogger(TreeModel.class);
 
     private final int id;
-    private final float[] coordinates;
+    private final List<Float> coordinates;
     private final String ownership;
     private final String genus;
     private final String food;
@@ -31,7 +31,7 @@ public class TreeModel {
      * @param genus Genus of tree
      * @param food Food type of a tree
      */
-    public TreeModel(int id, float[] coordinates, String ownership, String genus,
+    public TreeModel(int id, List<Float> coordinates, String ownership, String genus,
                      String food, String commonName, LocalDateTime lastUpdated, String serviceStatus) {
         this.id = id;
         this.coordinates = coordinates;
@@ -57,16 +57,16 @@ public class TreeModel {
      * Getter for coordinates
      * @return returns integer array coordinates
      */
-    public float[] getCoordinates() {
-        return coordinates;
+    public List<Float> getCoordinates() {
+        return Collections.unmodifiableList(coordinates);
     }
 
     public float getXCoord() {
-        return coordinates[0];
+        return coordinates.get(0);
     }
 
     public float getYCoord() {
-        return coordinates[1];
+        return coordinates.get(1);
     }
 
     /**
@@ -125,7 +125,7 @@ public class TreeModel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(coordinates), ownership, genus, food, commonName);
+        return Objects.hash(id);
     }
 
     public String getServiceStatus() {

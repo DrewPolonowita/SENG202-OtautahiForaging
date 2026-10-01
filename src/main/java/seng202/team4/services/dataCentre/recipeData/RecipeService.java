@@ -15,6 +15,7 @@ import seng202.team4.services.dataCentre.LoadingCache;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class RecipeService implements RecipeDataManager {
     private List<Integer> getRecipeIdsForFoodFromDatabase(String food) {
         List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
         if (recipeIds.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
         return recipeIds;
     }
@@ -281,7 +282,7 @@ public class RecipeService implements RecipeDataManager {
      */
     public void populateIngredientTable(List<RecipeIngredient> ingredients) {
         for (RecipeIngredient ingredient : ingredients) {
-            recipeDAO.addIngredients(ingredient);
+            recipeDAO.addIngredient(ingredient);
         }
     }
 
@@ -316,7 +317,7 @@ public class RecipeService implements RecipeDataManager {
         for (Recipe recipe: apiRecipes) {
             try {
                 recipeDAO.add(recipe);
-            } catch (DuplicateEntryException e) {
+            } catch (DuplicateEntryException _) {
                 log.warn("(All Recipes) Skip duplicate id: {}", recipe.getId());
             }
         }

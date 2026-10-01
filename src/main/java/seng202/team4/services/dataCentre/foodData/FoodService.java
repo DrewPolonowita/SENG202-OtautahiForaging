@@ -61,11 +61,8 @@ public class FoodService implements FoodDataManager {
         if (foodId == null || foodId == 0) {
             return null;
         }
-        Food food = foodApiHandler.getFoodById(
-                foodId,
-                foodName,
-                foodMapper.getFoodType(foodName)
-        );
+        Food food = foodApiHandler != null ? foodApiHandler
+                .getFoodById(foodId, foodName, foodMapper.getFoodType(foodName)) : null;
 
         if (food != null) {
             foodDao.replaceFood(food);
@@ -96,11 +93,9 @@ public class FoodService implements FoodDataManager {
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMapper.getFoodMap().keySet()) {
             Food food = foodCache.get(foodName);
-
             if (food != null) {
                 foods.add(food);
             }
-
         }
 
         return foods;
