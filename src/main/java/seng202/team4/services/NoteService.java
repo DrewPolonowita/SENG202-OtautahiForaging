@@ -1,6 +1,5 @@
 package seng202.team4.services;
 
-import org.apache.commons.lang3.NotImplementedException;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
 import seng202.team4.repository.NoteRepository;

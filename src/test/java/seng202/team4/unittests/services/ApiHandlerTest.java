@@ -12,16 +12,16 @@ import seng202.team4.services.api.ApiHandler;
  *
  * @author Drew Polonowita
  */
-public class ApiHandlerTest {
+class ApiHandlerTest {
     private ApiHandler apiHandeler;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         apiHandeler = new ApiHandler();
     }
 
     @Test
-    public void testEmptyValues() {
+    void testEmptyValues() {
         String urlEncode = apiHandeler.urlEncodeParams("", "", 0);
         String expectedUrl = "query?where=1%3D1&outFields=*&resultRecordCount=0&f=geojson";
 
@@ -29,7 +29,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testSingleWhereClause() {
+    void testSingleWhereClause() {
         String urlEncode = apiHandeler.urlEncodeParams("TreeID=38083", "", 0);
         String expectedUrl = "query?where=TreeID%3D38083&outFields=*&resultRecordCount=0&f=geojson";
 
@@ -37,7 +37,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testSingleWhereLikeClause() {
+    void testSingleWhereLikeClause() {
         String urlEncode = apiHandeler.urlEncodeParams("CommonName LIKE '%Apple%'", "", 0);
         String expectedUrl =
                 "query?where=CommonName%20LIKE%20%27%25Apple%25%27&outFields=*&resultRecordCount=0&f=geojson";
@@ -46,7 +46,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testMultipleWhereClauses() {
+    void testMultipleWhereClauses() {
         String urlEncode = apiHandeler.urlEncodeParams("CommonName LIKE '%Apple%' AND TreeID=38083", "", 0);
         String expectedUrl = "query?where=CommonName%20LIKE%20%27%25Ap" +
                 "ple%25%27%20AND%20TreeID%3D38083&outFields=*&resultRecordCount=0&f=geojson";
@@ -55,7 +55,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testOutFieldClause() {
+    void testOutFieldClause() {
         String urlEncode = apiHandeler.urlEncodeParams("", "TreeID", 0);
         String expectedUrl = "query?where=1%3D1&outFields=TreeID&resultRecordCount=0&f=geojson";
 
@@ -63,7 +63,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testMultipleOutFieldClause() {
+    void testMultipleOutFieldClause() {
         String urlEncode = apiHandeler.urlEncodeParams("", "TreeID,Ownership,Genus", 0);
         String expectedUrl = "query?where=1%3D1&outFields=TreeID%2COwnership%2CGenus&resultRecordCount=0&f=geojson";
 
@@ -71,7 +71,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testMaxRequests1() {
+    void testMaxRequests1() {
         String urlEncode = apiHandeler.urlEncodeParams("", "", 100);
         String expectedUrl = "query?where=1%3D1&outFields=*&resultRecordCount=100&f=geojson";
 
@@ -79,7 +79,7 @@ public class ApiHandlerTest {
     }
 
     @Test
-    public void testMaxRequests2() {
+    void testMaxRequests2() {
         String urlEncode = apiHandeler.urlEncodeParams("", "", 10);
         String expectedUrl = "query?where=1%3D1&outFields=*&resultRecordCount=10&f=geojson";
 

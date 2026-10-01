@@ -111,10 +111,8 @@ public class OAuth1Signature {
 
             return Base64.getEncoder().encodeToString(result);
 
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException();
+        } catch (InvalidKeyException | NoSuchAlgorithmException _) {
+            throw new IllegalStateException("Failed to create OAuth HMAC-SHA1 signature");
         }
     }
 

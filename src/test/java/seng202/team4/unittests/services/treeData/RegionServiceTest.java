@@ -16,14 +16,14 @@ import java.util.List;
 /**
  * A test class for the {@link RegionService}
  */
-public class RegionServiceTest extends TestSuite {
+class RegionServiceTest extends TestSuite {
     RegionService regionService;
     RegionRepository regionRepository;
     DatabaseManager databaseManager;
     Region region;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         databaseManager = new DatabaseManager(this.getTestDb());
         databaseManager.resetDB();
         regionRepository = new RegionDAO(databaseManager);
@@ -32,7 +32,7 @@ public class RegionServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetOverlappingRegions1() {
+    void testGetOverlappingRegions1() {
         double north = -43.64;
         double east = 172.40;
         double south = -43.70;
@@ -51,7 +51,7 @@ public class RegionServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetOverlappingRegions2() {
+    void testGetOverlappingRegions2() {
         double north = -43.40;
         double east = 172.85;
         double south = -43.46;
@@ -72,7 +72,7 @@ public class RegionServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetOverlappingRegionsDoesntGiveRegionsOutsideChristchurch1() {
+    void testGetOverlappingRegionsDoesntGiveRegionsOutsideChristchurch1() {
         double north = -43.64;
         double east = 172.40;
         double south = -43.70;
@@ -91,7 +91,7 @@ public class RegionServiceTest extends TestSuite {
     }
 
     @Test
-    public void testGetOverlappingRegionsDoesntGiveRegionsOutsideChristchurch2() {
+    void testGetOverlappingRegionsDoesntGiveRegionsOutsideChristchurch2() {
         double north = -43.40;
         double east = 172.85;
         double south = -43.46;
@@ -112,14 +112,14 @@ public class RegionServiceTest extends TestSuite {
     }
 
     @Test
-    public void testNewDateIsRecent() {
+    void testNewDateIsRecent() {
         LocalDateTime dateTime = LocalDateTime.now();
         region.setLastUpdated(dateTime);
         Assertions.assertTrue(regionService.isRegionRecent(region));
     }
 
     @Test
-    public void testOldDateIsNotRecent() {
+    void testOldDateIsNotRecent() {
         LocalDateTime dateTime = LocalDateTime.now().minusWeeks(2);
         region.setLastUpdated(dateTime);
         Assertions.assertFalse(regionService.isRegionRecent(region));

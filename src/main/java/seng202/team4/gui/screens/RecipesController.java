@@ -62,6 +62,8 @@ public class RecipesController extends ScreenController {
 
     private final Set<Integer> displayedRecipeIds = new HashSet<>();
 
+    private static final String SIDEBAR_BUTTON_SELECTED = "sideBar-button-selected";
+
     /**
      * Initialise the window
      *
@@ -256,7 +258,7 @@ public class RecipesController extends ScreenController {
             icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
             filterButton.setGraphic(icon);
             filterButton.getStyleClass().add("sideBar-button");
-            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton));
             filterList.getChildren().add(filterButton);
         }
     }
@@ -265,11 +267,11 @@ public class RecipesController extends ScreenController {
      * Toggles styling of the filter buttons
      */
     public static void toggleButtonStyle(Button button) {
-        if (button.getStyleClass().contains("sideBar-button-selected")) {
-            button.getStyleClass().remove("sideBar-button-selected");
+        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
+            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
             button.getGraphic().getStyleClass().remove("icon-selected");
         } else {
-            button.getStyleClass().add("sideBar-button-selected");
+            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
             button.getGraphic().getStyleClass().add("icon-selected");
         }
     }
@@ -278,9 +280,8 @@ public class RecipesController extends ScreenController {
      * Toggles the fruit button being clicked, and updates the
      * map to show only the relevant fruit trees
      * @param buttons filter buttons
-     * @param fruit
      */
-    public void filterButtonClicked(Button buttons, Fruit fruit) {
+    public void filterButtonClicked(Button buttons) {
         toggleButtonStyle(buttons);
 
         refreshRecipesForSelectedFilters();
@@ -313,7 +314,7 @@ public class RecipesController extends ScreenController {
         for (Node node : filterList.getChildren()) {
             Button button = (Button) node;
 
-            if (button.getStyleClass().contains("sideBar-button-selected")) {
+            if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
                 selectedFoods.add(button.getText().trim());
             }
         }

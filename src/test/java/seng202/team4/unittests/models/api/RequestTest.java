@@ -8,18 +8,18 @@ import seng202.team4.models.api.Request;
 /**
  * A test class for the {@link Request}
  */
-public class RequestTest {
+class RequestTest {
     Request<String> request;
     String testObj;
     int errorCode;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         request = new Request<>(testObj, errorCode);
     }
 
     @Test
-    public void testInitialValues() {
+    void testInitialValues() {
         Assertions.assertEquals(testObj, request.getApiResponse());
         Assertions.assertEquals(errorCode, request.getResponseCode());
     }

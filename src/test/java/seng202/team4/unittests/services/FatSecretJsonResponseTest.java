@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FatSecretJsonResponseTest {
+class FatSecretJsonResponseTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,7 +45,7 @@ public class FatSecretJsonResponseTest {
     RecipeClientInterface recipeApiClient;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         apiClient = mock(ApiClientInterface.class);
         oauth1Signature = mock(OAuth1Signature.class);
 
@@ -69,7 +69,7 @@ public class FatSecretJsonResponseTest {
     }
 
     @Test
-    public void ChickenFoodByIdBecomesCorrectRecords() throws Exception {
+    void ChickenFoodByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(chickenJson);
 
@@ -101,7 +101,7 @@ public class FatSecretJsonResponseTest {
     }
 
     @Test
-    public void BakedLemonSnapperRecipeByIdBecomesCorrectRecords() throws Exception {
+    void BakedLemonSnapperRecipeByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(idBakedLemonSnapperJson);
 
@@ -132,7 +132,7 @@ public class FatSecretJsonResponseTest {
     }
 
     @Test
-    public void CheeriosFoodByIdBecomesCorrectRecords() throws Exception {
+    void CheeriosFoodByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(cheeriosJson);
 
@@ -158,7 +158,7 @@ public class FatSecretJsonResponseTest {
         assertEquals("Whole Grain Cheerios", actualRequest.getApiResponse().food().foodName());
     }
     @Test
-    public void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
+    void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(cheeseburgerJson);
 
@@ -185,7 +185,7 @@ public class FatSecretJsonResponseTest {
         assertEquals("Cheeseburger", actualResponse.getApiResponse().foods().food().get(0).foodName());
     }
 
-    public void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
+    void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
         FoodByIdResponse foodByIdResponse = objectMapper.readValue(
                 mushroomsJson,
                 FoodByIdResponse.class
@@ -200,7 +200,7 @@ public class FatSecretJsonResponseTest {
 
 
     @Test
-    public void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
+    void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(searchBakedLemonSnapperJson);
 

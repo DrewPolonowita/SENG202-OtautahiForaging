@@ -8,7 +8,7 @@ import seng202.team4.services.DoubleService;
 /**
  * A test class for {@link DoubleService}
  */
-public class DoubleServiceTest {
+class DoubleServiceTest {
     DoubleService doubleService;
 
     @BeforeEach
@@ -59,7 +59,7 @@ public class DoubleServiceTest {
     void testStrictLesserThanIsTrue() {
         double a = 0.03434235534;
         double b = 0.03534235534;
-        Assertions.assertFalse(doubleService.lesserThanTolerance(b, a));
+        Assertions.assertTrue(doubleService.lesserThanTolerance(a, b));
     }
 
     @Test

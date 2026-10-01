@@ -2,17 +2,15 @@ package seng202.team4.unittests.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team4.services.api.ApiClientInterface;
-import seng202.team4.services.api.FoodApiClient;
+
 import seng202.team4.services.api.OAuth1Signature;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 
-public class Oauth1Tests {
+class Oauth1Tests {
 
     OAuth1Signature oAuth1Signature;
     String authHeader;
@@ -20,7 +18,7 @@ public class Oauth1Tests {
 
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         oAuth1Signature = new OAuth1Signature(fakeConsumerKey, "fakeSecretKey");
         Map<String, String> params = new HashMap<>();
         params.put("food_id", "123");
@@ -34,7 +32,7 @@ public class Oauth1Tests {
     }
 
     @Test
-    public void createSignatureIncludesOAuthParams() {
+    void createSignatureIncludesOAuthParams() {
         assertTrue(authHeader.contains("oauth_consumer_key"));
         assertTrue(authHeader.contains("oauth_signature_method"));
         assertTrue(authHeader.contains("oauth_timestamp"));
@@ -43,16 +41,16 @@ public class Oauth1Tests {
     }
 
     @Test
-    public void createSignatureUsesCorrectMethod() {
+    void createSignatureUsesCorrectMethod() {
         assertTrue(authHeader.contains("HMAC-SHA1"));
     }
 
     @Test
-    public void createSignatureUsesCorrectVersion() {
+    void createSignatureUsesCorrectVersion() {
         assertTrue(authHeader.contains("1.0"));
     }
     @Test
-    public void createSignatureUsesProvidedKey() {
+    void createSignatureUsesProvidedKey() {
         assertTrue(authHeader.contains(fakeConsumerKey));
     }
 

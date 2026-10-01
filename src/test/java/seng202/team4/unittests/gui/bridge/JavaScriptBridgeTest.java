@@ -10,10 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JavaScriptBridgeTest {
+class JavaScriptBridgeTest {
 
     @Test
-    public void testGetTreeFromClick(){
+    void testGetTreeFromClick(){
         int testid = 45;
         AtomicInteger receivedID = new AtomicInteger(-1);
         TreeClickedInterface clickedCallback = id -> {
@@ -28,10 +28,10 @@ public class JavaScriptBridgeTest {
     }
 
     @Test
-    public void testAddTreeToJournal() {
+    void testAddTreeToJournal() {
         int testId = 45;
         AtomicInteger receivedId = new AtomicInteger(-1);
-        AddToJournalInterface journalCallback = id -> receivedId.set(id);
+        AddToJournalInterface journalCallback = receivedId::set;
         AddTreeInterface addCallback = tree -> {};
         TreeClickedInterface clickedCallback = id -> false;
 

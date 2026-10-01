@@ -9,8 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
@@ -26,7 +24,6 @@ import java.util.List;
  */
 public class TableViewController extends ScreenController {
 
-    private static final Logger LOG = LogManager.getLogger(TableViewController.class);
 
     private final TreeDataManager treeService;
 
@@ -37,6 +34,11 @@ public class TableViewController extends ScreenController {
 
     @FXML
     private VBox filterList;
+
+    private static final String SIDEBAR_BUTTON_SELECTED = "sideBar-button-selected";
+    private static final String ICON_SELECTED = "icon-selected";
+
+
 
     /**
      * Initialise the window
@@ -82,9 +84,6 @@ public class TableViewController extends ScreenController {
         TableColumn<TreeModel, Integer> idCol = new TableColumn<>("Tree Id");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        //TableColumn<TreeModel, Float> coordsCol = new TableColumn<>("Coordinates");
-        //coordsCol.setCellValueFactory(new PropertyValueFactory<>("coordinates"));
-
         TableColumn<TreeModel, String> ownerCol = new TableColumn<>("Ownership");
         ownerCol.setCellValueFactory(new PropertyValueFactory<>("ownership"));
 
@@ -98,7 +97,6 @@ public class TableViewController extends ScreenController {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("commonName"));
 
         treeTableView.getColumns().add(idCol);
-        //treeTableView.getColumns().add(coordsCol);
         treeTableView.getColumns().add(ownerCol);
         treeTableView.getColumns().add(genusCol);
         treeTableView.getColumns().add(fruitCol);
@@ -165,12 +163,12 @@ public class TableViewController extends ScreenController {
      * Toggles styling of the filter buttons
      */
     public static void toggleButtonStyle(Button button) {
-        if (button.getStyleClass().contains("sideBar-button-selected")) {
-            button.getStyleClass().remove("sideBar-button-selected");
-            button.getGraphic().getStyleClass().remove("icon-selected");
+        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
+            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
+            button.getGraphic().getStyleClass().remove(ICON_SELECTED);
         } else {
-            button.getStyleClass().add("sideBar-button-selected");
-            button.getGraphic().getStyleClass().add("icon-selected");
+            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
+            button.getGraphic().getStyleClass().add(ICON_SELECTED);
         }
     }
 
@@ -188,16 +186,16 @@ public class TableViewController extends ScreenController {
      * @param fruit
      */
     public void filterButtonClicked(Button button, Fruit fruit) {
-        if (button.getStyleClass().contains("sideBar-button-selected")) {
-            button.getStyleClass().remove("sideBar-button-selected");
-            button.getGraphic().getStyleClass().remove("icon-selected");
+        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
+            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
+            button.getGraphic().getStyleClass().remove(ICON_SELECTED);
         } else {
-            button.getStyleClass().add("sideBar-button-selected");
-            button.getGraphic().getStyleClass().add("icon-selected");
+            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
+            button.getGraphic().getStyleClass().add(ICON_SELECTED);
         }
 
         String fruitName = fruit.name().charAt(0) + fruit.name().substring(1).toLowerCase();
-        if (button.getStyleClass().contains("sideBar-button-selected")) {
+        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
             filteredTrees.addAll(treeService.getTreesByFood(fruitName));
         } else {
             filteredTrees.removeAll(treeService.getTreesByFood(fruitName));

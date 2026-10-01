@@ -2,8 +2,6 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
 import seng202.team4.models.api.Request;
@@ -18,7 +16,6 @@ import java.util.Map;
  */
 public class RecipeApiClient implements RecipeClientInterface {
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
-    private static final Logger log = LogManager.getLogger(FoodApiClient.class);
     static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
     static final String RECIPE_BY_SEARCH = BASE_URL + "/recipes/search/v3";
 

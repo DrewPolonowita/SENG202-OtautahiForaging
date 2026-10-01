@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * A test class for {@link Region}
  */
-public class RegionModelTest {
+class RegionModelTest {
     Region region;
     String type;
     double north;
@@ -20,7 +20,7 @@ public class RegionModelTest {
     LocalDateTime date;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         type = "test";
 
         north = 1.0;
@@ -34,7 +34,7 @@ public class RegionModelTest {
     }
 
     @Test
-    public void testInitialValues() {
+    void testInitialValues() {
         Assertions.assertEquals(type, region.getType());
         Assertions.assertEquals(north, region.getNorthBound());
         Assertions.assertEquals(east, region.getEastBound());
@@ -44,24 +44,24 @@ public class RegionModelTest {
     }
 
     @Test
-    public void testSetDate() {
+    void testSetDate() {
         region.setLastUpdated(date);
         Assertions.assertEquals(date, region.getLastUpdated());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         Assertions.assertEquals(region, region);
     }
 
     @Test
-    public void testNotEquals() {
+    void testNotEquals() {
         Region region2 = new Region("", 0, 0, 0, 0);
         Assertions.assertNotEquals(region, region2);
     }
 
     @Test
-    public void testEqualsNullReturnsFalse() {
+    void testEqualsNullReturnsFalse() {
         Assertions.assertNotEquals(null, region);
     }
 }

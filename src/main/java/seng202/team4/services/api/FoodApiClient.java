@@ -3,8 +3,6 @@ package seng202.team4.services.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 import seng202.team4.models.api.Request;

@@ -8,7 +8,7 @@ import seng202.team4.models.api.TreeApi.Geometry;
 /**
  * A test class for {@link Geometry}
  */
-public class GeometryTest {
+class GeometryTest {
 
     Geometry geometry;
     String type;

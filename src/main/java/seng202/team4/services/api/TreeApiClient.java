@@ -68,7 +68,7 @@ public class TreeApiClient implements TreeClientInterface {
                 ), StandardCharsets.UTF_8
         );
 
-        LOG.info(API_LINK + url);
+        LOG.info("{}{}", API_LINK, url);
 
         return url;
     }

@@ -7,7 +7,6 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +32,10 @@ public class MapService {
 
     // Inner class to act as our stored function pointer + future
     private class PendingRequest {
-        double n, e, s, w;
+        double n;
+        double e;
+        double s;
+        double w;
         CompletableFuture<List<TreeModel>> future;
 
         PendingRequest(double n, double e, double s, double w, CompletableFuture<List<TreeModel>> future) {
