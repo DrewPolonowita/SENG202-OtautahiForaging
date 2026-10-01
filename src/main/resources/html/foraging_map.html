@@ -169,6 +169,13 @@
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
 
         marker.bindPopup(html, { className: 'tree-popup', closeButton: true });
+
+        marker.on("popupopen", function (event) {
+            const select = event.popup.getElement().querySelector(".serving-select");
+
+            updateNutrition(select)
+        });
+
         marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
 
         markers.push(marker);
@@ -192,14 +199,19 @@
         const selected = select.selectedOptions[0];
         const card = select.closest(".tree-card");
 
-        updateNutritionText(card, "calories", "Calories", "kcal", selected.dataset.calories);
-        updateNutritionText(card, "carbohydrates", "Carbohydrates", "g", selected.dataset.carbohydrates);
-        updateNutritionText(card, "protein", "Protein", "g", selected.dataset.protein);
-        updateNutritionText(card, "fat", "Fat", "g", selected.dataset.fat);
+        updateNutritionText(card, "calories", "Calories", "kcal", selected.dataset.calories, 0);
+        updateNutritionText(card, "carbohydrates", "Carbohydrates", "g", selected.dataset.carbohydrates, 1);
+        updateNutritionText(card, "protein", "Protein", "g", selected.dataset.protein, 1);
+        updateNutritionText(card, "fat", "Fat", "g", selected.dataset.fat, 1);
     }
 
-    function updateNutritionText(card, className, label, unit, value) {
-        card.querySelector("." + className).textContent = label + ": " + value + " " + unit;
+    function updateNutritionText(card, className, label, unit, value, decimals) {
+        card.querySelector("." + className).textContent =
+            label + ": " + formatNutrition(value, decimals) + " " + unit;
+    }
+    function formatNutrition(value, decimals) {
+        const number = Number(value);
+        return number.toFixed(decimals);
     }
 
 </script>
