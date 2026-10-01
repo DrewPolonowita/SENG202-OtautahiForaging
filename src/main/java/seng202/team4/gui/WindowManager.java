@@ -70,6 +70,7 @@ public class WindowManager {
         gridPane.add(rootPane, 1, 0);
 
         themeService = new ThemeService(stage.getScene(), gridPane);
+
         // Setup Row and Column constraints to stretch content correctly
         ColumnConstraints navigationColumn = new ColumnConstraints();
         navigationColumn.setHgrow(Priority.NEVER);
