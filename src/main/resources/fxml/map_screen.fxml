@@ -10,7 +10,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.MapController">
    <center>
       <StackPane BorderPane.alignment="CENTER">
-         <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" styleClass="f" />
+         <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity"/>
          <Button fx:id="filterButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#filterClicked" styleClass="filters" StackPane.alignment="TOP_LEFT">
             <graphic>
                <Region>

@@ -14,7 +14,6 @@ public class App {
      */
     void main(String[] args) {
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
