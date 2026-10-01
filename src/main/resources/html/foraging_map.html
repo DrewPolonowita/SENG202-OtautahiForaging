@@ -65,6 +65,14 @@
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
+    const NORTH_BOUND = -43.40;
+    const EAST_BOUND = 172.85;
+    const SOUTH_BOUND = -43.70;
+    const WEST_BOUND = 172.35;
+
+    const MAX_ZOOM = 17;
+    const MIN_ZOOM = 13;
+
     let map;
     let markers = [];
     let markerClusterGroup;
@@ -72,6 +80,9 @@
     let pendingTreeId = null; // specific tree from journal.
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     const iconCache = {};
+    var southWest = L.latLng(SOUTH_BOUND, WEST_BOUND),
+        northEast = L.latLng(NORTH_BOUND, EAST_BOUND),
+        bounds = L.latLngBounds(southWest, northEast);
 
     /**
      * This object can be returned to our java code, where we can call the functions we define inside of it
@@ -96,8 +107,8 @@
         let mapOptions = {
             center: [lat, lon],
             zoom: zoom,
-            maxZoom: 19,
-            minZoom: 11
+            maxZoom: MAX_ZOOM,
+            minZoom: MIN_ZOOM
         }
         mapOptions.zoomControl = false;
 
@@ -107,10 +118,8 @@
             attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury',
             maxZoom: 19
         }).addTo(map)
-        /**
-         * Signals the JavaScriptBridge when the map is finished moving and updates the coordinates
-         * for query purposes
-         */
+        map.setMaxBounds(bounds);
+        map.options.maxBoundsViscosity = 1.0;
         markerClusterGroup = L.markerClusterGroup();
         map.addLayer(markerClusterGroup);
         map.on('moveend', function () {
