@@ -90,7 +90,6 @@
     let jsConnector = {
         addMarker: addMarker,
         removeMarkers: removeMarkers,
-        displayMarkers: displayMarkers,
         initMap: initMap
     };
 
@@ -180,7 +179,6 @@
     function addMarker(id, title, food, lat, lng) {
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
         marker.bindPopup(title, { className: 'tree-popup', closeButton: true });
-        marker.addTo(map);
 
         markerClusterGroup.addLayer(marker);
         markers.push(marker);
