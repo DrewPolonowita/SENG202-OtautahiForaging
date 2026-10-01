@@ -3,10 +3,10 @@ package seng202.team4.services.dataCentre.foodData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.Food;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
-import seng202.team4.models.api.Request;
 import seng202.team4.services.FoodFactory;
 import seng202.team4.services.api.FoodClientInterface;
 
@@ -34,14 +34,14 @@ public class FoodApiHandler {
      * @return id of the food returned
      */
     public int getFoodBySearchFromApi(String searchExpression) {
-        Request<FoodSearchResponse> response = foodApiClient.searchFood(searchExpression, 1);
+        ApiResponseWrapper<FoodSearchResponse> response = foodApiClient.searchFood(searchExpression, 1);
         if (!validateFoodSearchResponse(response, searchExpression)) {
             return 0;
         }
         return response.getApiResponse().foods().food().getFirst().foodId();
     }
 
-    private boolean validateFoodSearchResponse(Request<FoodSearchResponse> response, String searchExpression) {
+    private boolean validateFoodSearchResponse(ApiResponseWrapper<FoodSearchResponse> response, String searchExpression) {
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
             LOG.error("Error: getFoodBySearchFromApi doesn't return response, code: {}", responseCode);
@@ -60,7 +60,7 @@ public class FoodApiHandler {
         return true;
     }
 
-    private boolean validateFoodByIdResponse(Request<FoodByIdResponse> response, String foodName) {
+    private boolean validateFoodByIdResponse(ApiResponseWrapper<FoodByIdResponse> response, String foodName) {
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
             LOG.error("Error: getFoodById doesn't return response, code: {}", responseCode);
@@ -90,7 +90,7 @@ public class FoodApiHandler {
      * @return Food model using the fatsecret api details (null if it fails)
      */
     public Food getFoodById(int id, String foodName, String foodType) {
-        Request<FoodByIdResponse> response = foodApiClient.getFoodById(id);
+        ApiResponseWrapper<FoodByIdResponse> response = foodApiClient.getFoodById(id);
         if (!validateFoodByIdResponse(response, foodName)) {
             return null;
         }

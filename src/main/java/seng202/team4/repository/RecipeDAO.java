@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
+import seng202.team4.services.RecipeFactory;
 
 
 import java.sql.Connection;
@@ -79,7 +80,7 @@ public class RecipeDAO implements RecipeRepository {
                 LocalDateTime retrievalTime = retrieveTimestamp(timestamp);
 
 
-                recipes.add(new Recipe(
+                recipes.add(RecipeFactory.create(
                         rs.getInt(RECIPE_ID_REFERENCE),
                         rs.getString("recipe_name"),
                         rs.getString("recipe_method"),
@@ -141,7 +142,7 @@ public class RecipeDAO implements RecipeRepository {
                     LocalDateTime retrievalTime = retrieveTimestamp(timestamp);
 
 
-                    recipe = new Recipe(
+                    recipe = RecipeFactory.create(
                             rs.getInt(RECIPE_ID_REFERENCE),
                             rs.getString("recipe_name"),
                             rs.getString("recipe_method"),

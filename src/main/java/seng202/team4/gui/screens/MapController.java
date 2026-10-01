@@ -26,6 +26,7 @@ import seng202.team4.services.ThemeService;
 import seng202.team4.services.dataCentre.foodData.FoodDataManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,10 @@ public class MapController extends ScreenController {
     private final TreeModel targetTree;
     private List<Food> foods = new ArrayList<>();
     private boolean foodsLoaded = false;
+
+    private static final String SIDEBAR_BUTTON_SELECTED = "sideBar-button-selected";
+    private static final String ICON_SELECTED = "icon-selected";
+
 
     /**
      * Initialise the window
@@ -168,12 +173,12 @@ public class MapController extends ScreenController {
             filterBox.setVisible(false);
             filterOpened = false;
             filterButton.getStyleClass().remove("filters-selected");
-            filterButton.getGraphic().getStyleClass().remove("icon-selected");
+            filterButton.getGraphic().getStyleClass().remove(ICON_SELECTED);
         } else {
             filterBox.setVisible(true);
             filterOpened = true;
             filterButton.getStyleClass().add("filters-selected");
-            filterButton.getGraphic().getStyleClass().add("icon-selected");
+            filterButton.getGraphic().getStyleClass().add(ICON_SELECTED);
         }
     }
 
@@ -214,7 +219,7 @@ public class MapController extends ScreenController {
         ).thenAccept(trees -> {
             javafx.application.Platform.runLater(() -> {
                 if (trees != null) {
-                    LOG.info("Completed request for " + trees.size() + " trees.");
+                    LOG.info(MessageFormat.format("Completed request for {0} trees.", trees.size()));
                     removeTreeMarkers();
                     for (TreeModel tree : trees) {
                         Food treeFood = findTreeFood(tree.getFood());
@@ -227,7 +232,7 @@ public class MapController extends ScreenController {
         }).exceptionally(ex -> {
             if (!(ex instanceof java.util.concurrent.CancellationException)) {
                 javafx.application.Platform.runLater(() -> {
-                    System.err.println("Error fetching trees for map view: " + ex);
+                    LOG.error("Error fetching trees for map view: " + ex);
                 });
             }
             return null;
@@ -272,10 +277,10 @@ public class MapController extends ScreenController {
                         + buildServingOptions(food)
                         + "</select>"
                         + "<div class=\"nutrition-info\">"
-                        + "<div class=\"calories\">Calories: %f kcal </div>"
-                        + "<div class=\"carbohydrates\">Carbohydrates: %f g</div>"
-                        + "<div class=\"protein\">Protein: %f g</div>"
-                        + "<div class=\"fat\">Fat: %f g </div>"
+                        + "<div class=\"calories\">Calories: %f kcal </div>" //cal
+                        + "<div class=\"carbohydrates\">Carbohydrates: %f g</div>" //carb
+                        + "<div class=\"protein\">Protein: %f g</div>" //protein
+                        + "<div class=\"fat\">Fat: %f g </div>" // fat
                         + "</div>"
                         + "<button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>" // id
                         + "</div></div>",
@@ -340,12 +345,12 @@ public class MapController extends ScreenController {
      * Toggles styling of the fruit filter buttons on the Map screen
      */
     public static void toggleButtonStyle(Button button) {
-        if (button.getStyleClass().contains("sideBar-button-selected")) {
-            button.getStyleClass().remove("sideBar-button-selected");
-            button.getGraphic().getStyleClass().remove("icon-selected");
+        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
+            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
+            button.getGraphic().getStyleClass().remove(ICON_SELECTED);
         } else {
-            button.getStyleClass().add("sideBar-button-selected");
-            button.getGraphic().getStyleClass().add("icon-selected");
+            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
+            button.getGraphic().getStyleClass().add(ICON_SELECTED);
         }
     }
 
@@ -366,14 +371,14 @@ public class MapController extends ScreenController {
      * @param fruit
      */
     public void filterButtonClicked(Button buttons, Fruit fruit) {
-        if (buttons.getStyleClass().contains("sideBar-button-selected")) {
-            buttons.getStyleClass().remove("sideBar-button-selected");
-            buttons.getGraphic().getStyleClass().remove("icon-selected");
+        if (buttons.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
+            buttons.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
+            buttons.getGraphic().getStyleClass().remove(ICON_SELECTED);
 
             mapService.removeSelectedFruit(fruit);
         } else {
-            buttons.getStyleClass().add("sideBar-button-selected");
-            buttons.getGraphic().getStyleClass().add("icon-selected");
+            buttons.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
+            buttons.getGraphic().getStyleClass().add(ICON_SELECTED);
 
             mapService.addSelectedFruit(fruit);
         }

@@ -2,9 +2,9 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.cdimascio.dotenv.Dotenv;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
-import seng202.team4.models.api.Request;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -76,7 +76,7 @@ public class RecipeApiClient implements RecipeClientInterface {
      * @return request object including the Json and error codes
      */
     @Override
-    public Request<RecipeByIdResponse> getRecipeById(int recipeId) {
+    public ApiResponseWrapper<RecipeByIdResponse> getRecipeById(int recipeId) {
         Map<String, String> params = new HashMap<>();
         params.put("recipe_id", String.valueOf(recipeId));
         params.put("format", "json");
@@ -94,7 +94,7 @@ public class RecipeApiClient implements RecipeClientInterface {
      * @return request object including the Json and error codes
      */
     @Override
-    public Request<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults) {
+    public ApiResponseWrapper<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults) {
         Map<String, String> params = new HashMap<>();
         params.put("search_expression", searchExpression);
         params.put("must_have_images", String.valueOf(mustHaveImages));

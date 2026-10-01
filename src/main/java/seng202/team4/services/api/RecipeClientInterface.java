@@ -2,7 +2,7 @@ package seng202.team4.services.api;
 
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
-import seng202.team4.models.api.Request;
+import seng202.team4.models.api.ApiResponseWrapper;
 
 /**
  * Interface to call the FatSecret API for recipe information
@@ -14,7 +14,7 @@ public interface RecipeClientInterface {
      * @param recipeId recipe being searched for
      * @return request object including the Json and error codes
      */
-    Request<RecipeByIdResponse> getRecipeById(int recipeId);
+    ApiResponseWrapper<RecipeByIdResponse> getRecipeById(int recipeId);
 
 
     /**
@@ -24,5 +24,5 @@ public interface RecipeClientInterface {
      * @param maxResults maximum number of results
      * @return request object including the Json and error codes
      */
-    Request<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults);
+    ApiResponseWrapper<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults);
 }

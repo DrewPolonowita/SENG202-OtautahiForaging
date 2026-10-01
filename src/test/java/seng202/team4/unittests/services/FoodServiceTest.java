@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import seng202.team4.helpers.TestFoodData;
 import seng202.team4.models.Food;
 import seng202.team4.models.FoodServing;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 
 import seng202.team4.models.api.Food.SearchFood.FoodSearchDetails;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchRecord;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
-import seng202.team4.models.api.Request;
 import seng202.team4.repository.FoodRepository;
 import seng202.team4.services.FoodMapper;
 import seng202.team4.services.api.FoodClientInterface;
@@ -112,7 +112,7 @@ class FoodServiceTest {
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
                 .thenReturn(false);
         when(testFoodClient.getFoodById(foodRecord.foodId()))
-                .thenReturn(new Request<>(createFakeFoodByIdResponse(), 200));
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodByIdResponse(), 200));
 
         List<Food> foods = testFoodService.getFoods();
 
@@ -134,9 +134,9 @@ class FoodServiceTest {
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
                 .thenReturn(false);
         when(testFoodClient.searchFood("Apple", 1))
-                .thenReturn(new Request<>(createFakeFoodSearchResponse(), 200));
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodSearchResponse(), 200));
         when(testFoodClient.getFoodById(foodRecord.foodId()))
-                .thenReturn(new Request<>(createFakeFoodByIdResponse(), 200));
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodByIdResponse(), 200));
 
         List<Food> foods = testFoodService.getFoods();
 
@@ -158,7 +158,7 @@ class FoodServiceTest {
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
                 .thenReturn(false);
         when(testFoodClient.searchFood("Apple", 1))
-                .thenReturn(new Request<>(null, 500));
+                .thenReturn(new ApiResponseWrapper<>(null, 500));
 
         List<Food> foods = testFoodService.getFoods();
 

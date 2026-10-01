@@ -2,11 +2,11 @@ package seng202.team4.models.api;
 
 
 /**
- * Returns the apiResponse JSON object and a code. The apiResponse can be null so the responseCode must be verified
+ * Encapsulates the result of an API call with the payload at HTTP status code
  *
  * @param <T> the api response object
  */
-public class Request<T> {
+public class ApiResponseWrapper<T> {
     private final T apiResponse;
     private final int responseCode;
 
@@ -16,7 +16,7 @@ public class Request<T> {
      * @param apiResponse the apiResponse JSON object
      * @param responseCode the api response code
      */
-    public Request(T apiResponse, int responseCode) {
+    public ApiResponseWrapper(T apiResponse, int responseCode) {
         this.apiResponse = apiResponse;
         this.responseCode = responseCode;
     }

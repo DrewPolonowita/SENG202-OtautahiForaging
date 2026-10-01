@@ -4,6 +4,7 @@ package seng202.team4.helpers;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.*;
 import seng202.team4.models.api.Recipe.RecipeNutrition;
+import seng202.team4.services.RecipeFactory;
 
 
 import java.util.ArrayList;
@@ -50,14 +51,14 @@ public class TestRecipeData {
         List<String> testIngredients1 = List.of("1 Apple", "100 g butter", "2 Peaches");
         List<String> testIngredients2 = List.of("2 Apple", "1 pinch cinnamon", "1 teaspoon honey");
         List<String> testIngredients3 = List.of("ingredient 1", "ingredient 2", "ingredient 3");
-        testRecipes.add(new Recipe(1234, "Test1", "Methods 1: tester", testIngredients1, 123, 456, 187, 168, "Description 1", null,  "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 10, 10));
-        testRecipes.add(new Recipe(2345, "Test2", "Methods 2: tester", testIngredients2, 126, 123, 3, 22, "Description 2", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 20, 20));
-        testRecipes.add(new Recipe(1235, "Test3", "Methods 3: tester", testIngredients3, 125, 421, 432, 431, "Description 3", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 30, 30));
+        testRecipes.add(RecipeFactory.create(1234, "Test1", "Methods 1: tester", testIngredients1, 123, 456, 187, 168, "Description 1", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 10, 10));
+        testRecipes.add(RecipeFactory.create(2345, "Test2", "Methods 2: tester", testIngredients2, 126, 123, 3, 22, "Description 2", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 20, 20));
+        testRecipes.add(RecipeFactory.create(1235, "Test3", "Methods 3: tester", testIngredients3, 125, 421, 432, 431, "Description 3", null, "https://m.ftscrt.com/static/recipe/bf0c5912-9cf8-4e7a-b07a-6703c4b77082.jpg", 30, 30));
         return testRecipes;
     }
 
     public static Recipe createUpdatedRecipe(Recipe recipe) {
-        return new Recipe(
+        return RecipeFactory.create(
                 recipe.getId(),
                 "new name",
                 "new method",
@@ -75,7 +76,7 @@ public class TestRecipeData {
     }
 
     public static Recipe createNewRecipe() {
-        return new Recipe(
+        return RecipeFactory.create(
                 41239841,
                 "new name",
                 "new method",

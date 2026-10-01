@@ -1,0 +1,128 @@
+package seng202.team4.services;
+
+import seng202.team4.models.Recipe;
+import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
+import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
+import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public final class RecipeFactory {
+    private RecipeFactory() {
+    }
+
+    public static Recipe create(
+            int id,
+            String name,
+            String method,
+            List<String> ingredients,
+            double carbohydrates,
+            double calories,
+            double protein,
+            double fat,
+            String description,
+            LocalDateTime retrievalTime,
+            String image,
+            int cookingTime,
+            int preparationTime
+    ) {
+        return new Recipe(
+                id,
+                name,
+                method,
+                ingredients,
+                carbohydrates,
+                calories,
+                protein,
+                fat,
+                description,
+                retrievalTime,
+                image,
+                cookingTime,
+                preparationTime
+        );
+    }
+
+    /**
+     * Creates a recipe using a RecipeByIdRecord
+     * @param recipeRecord a RecipeByIdRecord
+     * @return a Recipe model
+     */
+    public static Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
+        int recipeId = recipeRecord.recipeId();
+        String recipeName = recipeRecord.recipeName();
+        String method = buildMethodString(recipeRecord.directions()
+                == null ? List.of() : recipeRecord.directions().direction());
+        List<String> ingredients = getIngredientString(recipeRecord.ingredients()
+                == null ? List.of() : recipeRecord.ingredients().ingredient());
+
+
+        double carbohydrates = recipeRecord.servingSizes().serving().carbohydrate();
+        double calories = recipeRecord.servingSizes().serving().calories();
+        double protein = recipeRecord.servingSizes().serving().protein();
+        double fat = recipeRecord.servingSizes().serving().fat();
+        String description = recipeRecord.recipeDescription();
+        String imageUrl = null;
+        if (recipeRecord.images()
+                != null && recipeRecord.images().imageUrl()
+                != null && !recipeRecord.images().imageUrl().isEmpty()
+        ) {
+            imageUrl = recipeRecord.images().imageUrl().getFirst();
+        }
+        int cookingTime = recipeRecord.cookingTime();
+        int preparationTime = recipeRecord.preparationTime();
+
+
+        return new Recipe(
+                recipeId,
+                recipeName,
+                method,
+                ingredients,
+                carbohydrates,
+                calories,
+                protein,
+                fat,
+                description,
+                LocalDateTime.now(),
+                imageUrl,
+                cookingTime,
+                preparationTime
+        );
+    }
+
+    /**
+     * Take RecipeIngredient objects and get all their ingredient descriptions
+     * @param ingredients list of ingredients
+     * @return a list of all the ingredient descriptions
+     */
+    public static List<String> getIngredientString(List<RecipeIngredient> ingredients) {
+        List<String> ingredientStrings = new ArrayList<>();
+        for (RecipeIngredient ingredient : ingredients) {
+            ingredientStrings.add(ingredient.ingredientDescription());
+        }
+        return ingredientStrings;
+    }
+
+
+    /**
+     * Method to build string of recipe method with steps each on a new line
+     * @param directions a list of RecipeDirection models
+     * @return a string containing the recipe's method
+     */
+    private static String buildMethodString(List<RecipeDirection> directions) {
+        List<RecipeDirection> sortedDirections = directions
+                .stream()
+                .sorted(Comparator.comparing(RecipeDirection::directionNumber))
+                .toList();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (RecipeDirection sortedDirection : sortedDirections) {
+            stringBuilder.append(sortedDirection.directionNumber());
+            stringBuilder.append(": ").append(sortedDirection.directionDescription()).append("\n");
+        }
+        return stringBuilder.toString();
+    }
+}

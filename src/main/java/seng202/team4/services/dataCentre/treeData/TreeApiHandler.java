@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
-import seng202.team4.models.api.Request;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.TreeApi.TreeRecord;
 import seng202.team4.services.FoodMapper;
 import seng202.team4.services.api.TreeClientInterface;
@@ -120,15 +120,15 @@ public class TreeApiHandler {
      */
     public List<TreeModel> getTreesFromApiByFood(String food) {
 
-        Request<TreeApiResponse> request = treeApiClient.getTrees(createApiTypeQuery(food),
+        ApiResponseWrapper<TreeApiResponse> apiResponseWrapper = treeApiClient.getTrees(createApiTypeQuery(food),
                 "TreeID,Ownership,Genus,CommonName",
                 100);
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            LOG.warn("API connection failed with a {}", request.getResponseCode());
+        if (apiResponseWrapper.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            LOG.warn("API connection failed with a {}", apiResponseWrapper.getResponseCode());
             return List.of();
         }
 
-        TreeApiResponse response = request.getApiResponse();
+        TreeApiResponse response = apiResponseWrapper.getApiResponse();
 
         if (response == null || response.featureTrees() == null) {
             LOG.warn("Tree api has no trees for {}", food);
@@ -155,7 +155,7 @@ public class TreeApiHandler {
      */
     public List<TreeModel> getTreesByRegion(String commonName, double north, double east, double south, double west) {
         String query = createApiTypeQuery(commonName);
-        Request<TreeApiResponse> request = treeApiClient.getTrees(query,
+        ApiResponseWrapper<TreeApiResponse> apiResponseWrapper = treeApiClient.getTrees(query,
                 "TreeID,Ownership,Genus,CommonName",
                 1000,
                 north,
@@ -163,12 +163,12 @@ public class TreeApiHandler {
                 south,
                 west);
 
-        if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            LOG.warn("API connection failed with a {}", request.getResponseCode());
+        if (apiResponseWrapper.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            LOG.warn("API connection failed with a {}", apiResponseWrapper.getResponseCode());
             return List.of();
         }
 
-        TreeApiResponse response = request.getApiResponse();
+        TreeApiResponse response = apiResponseWrapper.getApiResponse();
 
         if (response == null || response.featureTrees() == null) {
             LOG.warn("Tree api has no trees for {} in region",

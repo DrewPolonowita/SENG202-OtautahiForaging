@@ -83,10 +83,11 @@ class TreeServiceTest extends TestSuite {
         TreeRecord[] fakeTrees = TestTreeData.createFakeAppleRecords();
 
         TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
-        Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 200);
+        ApiResponseWrapper<TreeApiResponse>
+                fakeApiResponseWrapper = new ApiResponseWrapper<TreeApiResponse>(fakeResponse, 200);
 
         when(treeApiClient.getTrees(anyString(), eq(returningString), eq(tupleMax)))
-                .thenReturn(fakeRequest);
+                .thenReturn(fakeApiResponseWrapper);
         List<TreeModel> appleTrees = testTreeService.getTreesByFood("Apple");
 
         for (TreeModel tree : appleTrees) {
@@ -120,9 +121,11 @@ class TreeServiceTest extends TestSuite {
 
         TreeRecord[] fakeTrees = {testRecord};
         TreeApiResponse fakeResponse = new TreeApiResponse("Feature", fakeTrees, false);
-        Request<TreeApiResponse> fakeRequest = new Request<TreeApiResponse>(fakeResponse, 404);
+        ApiResponseWrapper<TreeApiResponse>
+                fakeApiResponseWrapper = new ApiResponseWrapper<TreeApiResponse>(fakeResponse, 404);
 
-        when(treeApiClient.getTrees(contains("Apple"), eq(returningString), eq(tupleMax))).thenReturn(fakeRequest);
+        when(treeApiClient.getTrees(contains("Apple"), eq(returningString), eq(tupleMax))).thenReturn(
+                fakeApiResponseWrapper);
         List<TreeModel> result = testTreeService.getTreesByFood("Apple");
         assertTrue(result.isEmpty());
 

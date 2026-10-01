@@ -1,7 +1,7 @@
 package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import seng202.team4.models.api.Request;
+import seng202.team4.models.api.ApiResponseWrapper;
 
 /**
  * Interface for https methods
@@ -14,7 +14,7 @@ public interface ApiClientInterface {
      * @param responseType type of record object to be created
      * @return request object of type request
      */
-    <T> Request<T> get(String url, TypeReference<T> responseType);
+    <T> ApiResponseWrapper<T> get(String url, TypeReference<T> responseType);
 
     /**
      * Get from api with oauth authentication
@@ -23,5 +23,5 @@ public interface ApiClientInterface {
      * @param oauthHeader oauth header string
      * @return Request object of type request
      */
-    <T> Request<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader);
+    <T> ApiResponseWrapper<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader);
 }

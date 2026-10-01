@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -28,6 +27,10 @@ public class OAuth1Signature {
      * @param secretKey secret key
      */
     public OAuth1Signature(String consumerKey, String secretKey) {
+        if (consumerKey == null || secretKey == null
+        || consumerKey.isEmpty() || secretKey.isEmpty()) {
+            throw new IllegalArgumentException("Consumer and/or secret keys not present");
+        }
         this.consumerKey = consumerKey;
         this.secretKey = secretKey;
     }
@@ -47,7 +50,8 @@ public class OAuth1Signature {
             String baseUrl,
             Map<String, String> requestParams
     ) {
-        Map<String, String> authParams = new HashMap<>();
+
+        Map<String, String> authParams = new TreeMap<>();
         authParams.put("oauth_consumer_key", consumerKey);
         authParams.put("oauth_signature_method", "HMAC-SHA1");
         authParams.put("oauth_timestamp", String.valueOf(getTimeInSecondsSince1970()));
