@@ -169,8 +169,10 @@
         const east = bounds.getEast();
         const south = bounds.getSouth();
         const west = bounds.getWest();
+        const center = map.getCenter();
 
-        javaScriptBridge.mapMoved(north, east, south, west);
+        javaScriptBridge.mapMoved(north, east, south, west,
+            center.lat, center.lng, map.getZoom());
     }
 
     /**

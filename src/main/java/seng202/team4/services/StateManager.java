@@ -39,6 +39,10 @@ public class StateManager {
     private final RecipeDataManager recipeService;
     private final FoodMapper foodMapper;
 
+    private double mapLatitude = -43.53;
+    private double mapLongitude = 172.63;
+    private double mapZoom = 13.5;
+
 
     /**
      * A constructor which launches the mainScreen of the application
@@ -115,5 +119,24 @@ public class StateManager {
      */
     public TreeRepository getTreeRepository() {
         return treeRepository;
+    }
+
+    public double getMapLatitude(){
+        return mapLatitude;
+    }
+
+    public double getMapLongitude(){
+        return mapLongitude;
+    }
+
+    public double getMapZoom(){
+        return mapZoom;
+    }
+
+
+    public void setMapView(double latitude, double longitude, double zoom) {
+        mapLatitude = latitude;
+        mapLongitude = longitude;
+        mapZoom = zoom;
     }
 }
