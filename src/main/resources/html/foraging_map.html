@@ -4,6 +4,8 @@
     <title>Foraging Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../css/map.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -87,50 +89,79 @@
 <body>
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
+    const NORTH_BOUND = -43.40;
+    const EAST_BOUND = 172.85;
+    const SOUTH_BOUND = -43.70;
+    const WEST_BOUND = 172.35;
+
+    const MAX_ZOOM = 17;
+    const MIN_ZOOM = 13;
+
     let map;
     let markers = [];
+    let markerClusterGroup;
+    let revealingTree = false; // prevents marker refresh while revealing journal target's tree.
+    let pendingTreeId = null; // specific tree from journal.
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     const iconCache = {};
+    var southWest = L.latLng(SOUTH_BOUND, WEST_BOUND),
+        northEast = L.latLng(NORTH_BOUND, EAST_BOUND),
+        bounds = L.latLngBounds(southWest, northEast);
+
     /**
      * This object can be returned to our java code, where we can call the functions we define inside of it
      */
     let jsConnector = {
         addMarker: addMarker,
         removeMarkers: removeMarkers,
-        displayMarkers: displayMarkers,
         initMap: initMap
     };
 
     /**
-     * Creates and initialises the Leaflet map, and registers map movement handling.
-     * If a target tree ID is provided, its popup opens when its marker loads.
+     * Creates and initialises the map, tile layer, marker cluster group
+     * Registers map movement handling and requests initial trees.
+     *
+     * @param lat latitude to centre the map on.
+     * @param lon longitude to centre the map on.
+     * @param zoom initial zoom level
+     * @param treeId journal linked tree to reveal, or null.
      */
     function initMap(lat = -43.53, lon = 172.63, zoom = 13.5, treeId = null) {
         pendingTreeId = treeId;
         let mapOptions = {
             center: [lat, lon],
             zoom: zoom,
+            maxZoom: MAX_ZOOM,
+            minZoom: MIN_ZOOM
         }
         mapOptions.zoomControl = false;
 
         map = new L.map('map', mapOptions);
         L.control.zoom({position: "bottomleft" }).addTo(map);
         new L.TileLayer('https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png', { // UCs tilemap server
-            attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
+            attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury',
+            maxZoom: 19
         }).addTo(map)
-        /**
-         * Signals the JavaScriptBridge when the map is finished moving and updates the coordinates
-         * for query purposes
-         */
+        map.setMaxBounds(bounds);
+        map.options.maxBoundsViscosity = 1.0;
+        markerClusterGroup = L.markerClusterGroup();
+        map.addLayer(markerClusterGroup);
         map.on('moveend', function () {
-            createMapMarkers();
+            if (!revealingTree) {
+                createMapMarkers();
+            }
         });
 
         createMapMarkers();
 
     }
 
+    /**
+     * Requests trees for the current map bounds through the Java bridge.
+     * Java supplies the resulting markers through addMarker().
+     */
     const createMapMarkers = () => {
         const bounds = map.getBounds();
 
@@ -142,6 +173,9 @@
         javaScriptBridge.mapMoved(north, east, south, west);
     }
 
+    /**
+     * Returns the marker icon for a food.
+     */
     function getIcon(food) {
         const fruitName = food.trim().toLowerCase().replace(/\s+/g, "");
         const pinFileName = fruitName + "Pin.png";
@@ -159,9 +193,11 @@
         return iconCache[pinFileName];
     }
     /**
-     * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
+     * Adds a marker to the cluster group and binds its popup.
+     * If a tree matches the journal target, it reveals it and opens its popup.
+     * @param id the tree's ID
      * @param html tooltip to display on hover
-     * @param food type of food in enum
+     * @param food name of the food used to select the marker icon
      * @param lat latitude to place marker at
      * @param lng longitude to place marker at
      */
@@ -178,21 +214,26 @@
 
         marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
 
+        markerClusterGroup.addLayer(marker);
         markers.push(marker);
 
-        if (id == pendingTreeId) {
+        if (id == pendingTreeId && pendingTreeId != null) {
             pendingTreeId = null;
-            marker.openPopup();
+            revealingTree = true;
+            markerClusterGroup.zoomToShowLayer(marker, function () {
+                marker.openPopup();
+                revealingTree = false;
+            });
         }
     }
 
+    /**
+     * Removes all the tree markers from the cluster group and clears
+     * the stored marker array
+    */
     function removeMarkers() {
-        markers.forEach(m => m.remove())
+        markerClusterGroup.clearLayers();
         markers = [];
-    }
-
-    function displayMarkers() {
-        markers.forEach(m => m.addTo(map))
     }
 
     function updateNutrition(select) {

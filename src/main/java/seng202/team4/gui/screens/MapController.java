@@ -109,7 +109,6 @@ public class MapController extends ScreenController {
                     }
                 },
                 tree -> { },
-                id -> false, // TODO: replace with real handleTreeClicked + add-tree flow
                 this::mapMoved
         );
         createFruitButtons();
