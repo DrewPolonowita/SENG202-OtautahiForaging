@@ -52,22 +52,7 @@ public class TreeDAO implements TreeRepository {
                 ResultSet rs = stmt.executeQuery(sql)
         ) {
             while (rs.next()) {
-                List<Float> coords = getFloatList(rs.getFloat("x"),
-                        rs.getFloat("y"));
-
-                Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
-                LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
-
-                trees.add(new TreeModel(
-                        rs.getInt("id"),
-                        coords,
-                        rs.getString(OWNERSHIP_REFERENCE),
-                        rs.getString(GENUS_REFERENCE),
-                        rs.getString("food"),
-                        rs.getString(COMMON_NAME_REFERENCE),
-                        lastUpdated,
-                        rs.getString(SERVICE_STATUS_REFERENCE)
-                        ));
+                trees.add(buildTree(rs));
             }
             return trees;
         } catch (SQLException sqlException) {
@@ -100,23 +85,7 @@ public class TreeDAO implements TreeRepository {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    List<Float> coords = getFloatList(rs.getFloat("x"),
-                            rs.getFloat("y"));
-
-                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
-                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
-
-                    tree = new TreeModel(
-                            rs.getInt("id"),
-                            coords,
-                            rs.getString(OWNERSHIP_REFERENCE),
-                            rs.getString(GENUS_REFERENCE),
-                            rs.getString("food"),
-                            rs.getString(COMMON_NAME_REFERENCE),
-                            lastUpdated,
-                            rs.getString(SERVICE_STATUS_REFERENCE)
-                    );
-
+                    tree = buildTree(rs);
                 }
             }
         } catch (SQLException sqlException) {
@@ -212,33 +181,51 @@ public class TreeDAO implements TreeRepository {
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
             ps.setString(1, type);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    List<Float> coords = getFloatList(rs.getFloat("x"),
-                            rs.getFloat("y"));
-
-                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
-                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
-
-                    trees.add(new TreeModel(
-                            rs.getInt("id"),
-                            coords,
-                            rs.getString(OWNERSHIP_REFERENCE),
-                            rs.getString(GENUS_REFERENCE),
-                            rs.getString("food"),
-                            rs.getString(COMMON_NAME_REFERENCE),
-                            lastUpdated,
-                            rs.getString(SERVICE_STATUS_REFERENCE)
-
-                    ));
-                }
-            }
+            populateTreesList(ps, trees);
             return trees;
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Populate a passed in list of trees that is being built to output from a database request
+     * @param ps SQL statement being parsed into a result set
+     * @param trees List of trees being updated in place
+     */
+    private void populateTreesList(PreparedStatement ps, List<TreeModel> trees) throws SQLException {
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                trees.add(buildTree(rs));
+            }
+        }
+    }
+
+    /**
+     * Build a tree from the result set of a sql statement
+     * @param rs result set
+     * @return Tree model from result set
+     */
+    private TreeModel buildTree(ResultSet rs) throws SQLException {
+        List<Float> coords = getFloatList(rs.getFloat("x"),
+                rs.getFloat("y"));
+
+        Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
+        LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
+
+        return new TreeModel(
+                rs.getInt("id"),
+                coords,
+                rs.getString(OWNERSHIP_REFERENCE),
+                rs.getString(GENUS_REFERENCE),
+                rs.getString("food"),
+                rs.getString(COMMON_NAME_REFERENCE),
+                lastUpdated,
+                rs.getString(SERVICE_STATUS_REFERENCE)
+
+        );
+
     }
 
     /**
@@ -268,26 +255,7 @@ public class TreeDAO implements TreeRepository {
             ps.setDouble(4, south);
             ps.setDouble(5, north);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    List<Float> coords = getFloatList(rs.getFloat("x"),
-                            rs.getFloat("y"));
-
-                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
-                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
-
-                    trees.add(new TreeModel(
-                            rs.getInt("id"),
-                            coords,
-                            rs.getString(OWNERSHIP_REFERENCE),
-                            rs.getString(GENUS_REFERENCE),
-                            rs.getString("food"),
-                            rs.getString(COMMON_NAME_REFERENCE),
-                            lastUpdated,
-                            rs.getString(SERVICE_STATUS_REFERENCE)
-                    ));
-                }
-            }
+            populateTreesList(ps, trees);
             return trees;
         } catch (SQLException sqlException) {
             LOG.error(sqlException);
@@ -307,26 +275,7 @@ public class TreeDAO implements TreeRepository {
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, food);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    List<Float> coords = getFloatList(rs.getFloat("x"),
-                            rs.getFloat("y"));
-
-                    Timestamp timestamp = rs.getTimestamp(LAST_MODIFIED_REFERENCE);
-                    LocalDateTime lastUpdated = retrieveTimestamp(timestamp);
-
-                    trees.add(new TreeModel(
-                            rs.getInt("id"),
-                            coords,
-                            rs.getString(OWNERSHIP_REFERENCE),
-                            rs.getString(GENUS_REFERENCE),
-                            rs.getString("food"),
-                            rs.getString(COMMON_NAME_REFERENCE),
-                            lastUpdated,
-                            rs.getString(SERVICE_STATUS_REFERENCE)
-                    ));
-                }
-            }
+            populateTreesList(ps, trees);
             return trees;
         } catch (SQLException sqlException) {
             LOG.error(sqlException);

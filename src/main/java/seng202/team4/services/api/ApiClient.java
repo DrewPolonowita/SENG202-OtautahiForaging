@@ -21,6 +21,7 @@ import java.util.Scanner;
 public class ApiClient implements ApiClientInterface {
 
     private static final Logger log = LogManager.getLogger(ApiClient.class);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Creates a connection to the server
@@ -61,7 +62,8 @@ public class ApiClient implements ApiClientInterface {
             Scanner scanner = new Scanner(connection.getErrorStream());
 
             while (scanner.hasNextLine()) {
-                log.error(scanner.nextLine());
+                String errorLine = scanner.nextLine();
+                log.error("{}", errorLine);
             }
             return null;
         }
@@ -71,8 +73,6 @@ public class ApiClient implements ApiClientInterface {
         while (scanner.hasNext()) {
             stringBuilder.append(scanner.nextLine());
         }
-
-        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(
                 String.valueOf(stringBuilder), responseType);
     }
