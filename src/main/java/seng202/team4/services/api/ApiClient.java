@@ -84,11 +84,16 @@ public class ApiClient implements ApiClientInterface {
      */
     @Override
     public <T> ApiResponseWrapper<T> get(String url, TypeReference<T> responseType) {
+        HttpsURLConnection connection = null;
         try {
-            HttpsURLConnection connection = createConnection(url);
+            connection = createConnection(url);
             return getRequest(responseType, connection);
         } catch (IOException _) {
             return new ApiResponseWrapper<>(null, -1);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
 
     }
@@ -102,11 +107,17 @@ public class ApiClient implements ApiClientInterface {
      */
     @Override
     public <T> ApiResponseWrapper<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
+        HttpsURLConnection connection = null;
+
         try {
-            HttpsURLConnection connection = createOAuthConnection(url, oauthHeader);
+            connection = createOAuthConnection(url, oauthHeader);
             return getRequest(responseType, connection);
         } catch (IOException _) {
             return new ApiResponseWrapper<>(null, -1);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
 
     }
