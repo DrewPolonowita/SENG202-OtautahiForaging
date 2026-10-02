@@ -210,11 +210,9 @@
 
         marker.on("popupopen", function (event) {
             const select = event.popup.getElement().querySelector(".serving-select");
-
             updateNutrition(select)
         });
 
-        marker.addTo(map).on('click', e => javaScriptBridge.getTreeFromClick(id));
 
         markerClusterGroup.addLayer(marker);
         markers.push(marker);

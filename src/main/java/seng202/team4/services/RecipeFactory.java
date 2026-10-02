@@ -1,9 +1,11 @@
 package seng202.team4.services;
 
+import org.jetbrains.annotations.Nullable;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
+import seng202.team4.models.api.Recipe.RecipeNutrition;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,19 +54,47 @@ public final class RecipeFactory {
      * @return a Recipe model
      */
     public static Recipe createRecipeObjectById(RecipeByIdRecord recipeRecord) {
+
         int recipeId = recipeRecord.recipeId();
         String recipeName = recipeRecord.recipeName();
         String method = buildMethodString(recipeRecord.directions()
                 == null ? List.of() : recipeRecord.directions().direction());
         List<String> ingredients = getIngredientString(recipeRecord.ingredients()
                 == null ? List.of() : recipeRecord.ingredients().ingredient());
+        RecipeNutrition nutrition = getRecipeNutrition(recipeRecord);
 
-
-        double carbohydrates = recipeRecord.servingSizes().serving().carbohydrate();
-        double calories = recipeRecord.servingSizes().serving().calories();
-        double protein = recipeRecord.servingSizes().serving().protein();
-        double fat = recipeRecord.servingSizes().serving().fat();
         String description = recipeRecord.recipeDescription();
+
+        String imageUrl = getUrl(recipeRecord);
+        int cookingTime = recipeRecord.cookingTime();
+        int preparationTime = recipeRecord.preparationTime();
+
+
+        return create(recipeId,
+                recipeName,
+                method,
+                ingredients,
+                nutrition == null ? 0 : nutrition.carbohydrate(),
+                nutrition == null ? 0 : nutrition.calories(),
+                nutrition == null ? 0 : nutrition.protein(),
+                nutrition == null ? 0 : nutrition.fat(),
+                description,
+                LocalDateTime.now(),
+                imageUrl,
+                cookingTime,
+                preparationTime
+        );
+    }
+
+    private static @Nullable RecipeNutrition getRecipeNutrition(RecipeByIdRecord recipeRecord) {
+        RecipeNutrition nutrition = null;
+        if (recipeRecord.servingSizes() != null) {
+            nutrition = recipeRecord.servingSizes().serving();
+        }
+        return nutrition;
+    }
+
+    private static @Nullable String getUrl(RecipeByIdRecord recipeRecord) {
         String imageUrl = null;
         if (recipeRecord.images()
                 != null && recipeRecord.images().imageUrl()
@@ -72,25 +102,7 @@ public final class RecipeFactory {
         ) {
             imageUrl = recipeRecord.images().imageUrl().getFirst();
         }
-        int cookingTime = recipeRecord.cookingTime();
-        int preparationTime = recipeRecord.preparationTime();
-
-
-        return new Recipe(
-                recipeId,
-                recipeName,
-                method,
-                ingredients,
-                carbohydrates,
-                calories,
-                protein,
-                fat,
-                description,
-                LocalDateTime.now(),
-                imageUrl,
-                cookingTime,
-                preparationTime
-        );
+        return imageUrl;
     }
 
     /**

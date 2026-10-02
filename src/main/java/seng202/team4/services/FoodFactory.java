@@ -7,7 +7,7 @@ import seng202.team4.models.api.Food.FoodByID.Serving;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodFactory {
+public final class FoodFactory {
     private FoodFactory() {
     }
 

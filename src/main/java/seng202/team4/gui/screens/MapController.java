@@ -123,7 +123,10 @@ public class MapController extends ScreenController {
                     LOG.info("Found {} foods", foods.size());
 
                     if (northBound != 0 || eastBound != 0 || southBound != 0 || westBound != 0) {
-                        mapMoved(northBound, eastBound, southBound, westBound);
+                        mapMoved(northBound, eastBound, southBound, westBound,
+                                stateManager.getMapLatitude(),
+                                stateManager.getMapLongitude(),
+                                stateManager.getMapZoom());
                     }
                 }))
                 .exceptionally(ex -> {
