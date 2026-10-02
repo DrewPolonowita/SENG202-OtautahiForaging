@@ -12,10 +12,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Class that acts as a place for making recipe objects around the application
+ */
 public final class RecipeFactory {
     private RecipeFactory() {
     }
 
+    /**
+     * Create a {@link Recipe} object
+     * @param id unique id
+     * @param retrievalTime time the object was retrieved from the API
+     * @param image url
+     * @return recipe object
+     */
     public static Recipe create(
             int id,
             String name,
@@ -86,6 +96,11 @@ public final class RecipeFactory {
         );
     }
 
+    /**
+     * Get the nutrition object for a recipe
+     * @param recipeRecord Recipe record to search
+     * @return RecipeNutrition record
+     */
     private static @Nullable RecipeNutrition getRecipeNutrition(RecipeByIdRecord recipeRecord) {
         RecipeNutrition nutrition = null;
         if (recipeRecord.servingSizes() != null) {
@@ -94,6 +109,11 @@ public final class RecipeFactory {
         return nutrition;
     }
 
+    /**
+     * Get image url from the recipe record
+     * @param recipeRecord recipe record to search
+     * @return String url
+     */
     private static @Nullable String getUrl(RecipeByIdRecord recipeRecord) {
         String imageUrl = null;
         if (recipeRecord.images()

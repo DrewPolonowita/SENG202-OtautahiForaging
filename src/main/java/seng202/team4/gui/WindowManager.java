@@ -51,38 +51,53 @@ public class WindowManager {
      */
     public WindowManager(Stage primaryStage) {
         this.stage = primaryStage;
-        stage.setResizable(true);
 
         // Creates a GridPane and sets it as the primaryStage
         gridPane = new GridPane();
-        stage.setScene(new Scene(gridPane));
-
-        // Scaling minimum sizes
-        stage.setMinWidth(600);
-        stage.setMinHeight(360);
-
         // Creates the BorderPane for the navBar and the mainScreen
         rootPane = new BorderPane();
         navPane = new BorderPane();
 
+        configureStage();
+        configureLayout();
+        configureStyles();
+
+        themeService = new ThemeService(stage.getScene(), gridPane);
+    }
+
+    private void configureStage()
+    {
+        stage.setResizable(true);
+        stage.setScene(new Scene(gridPane));
+        // Scaling minimum sizes
+        stage.setMinWidth(600);
+        stage.setMinHeight(360);
+        stage.setMaximized(true);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
+
+    }
+
+    private void configureStyles() {
+        Scene scene = stage.getScene();
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
+    }
+
+    private void configureLayout() {
         // Places the navBar and the mainScreen into the primaryStage
         gridPane.add(navPane, 0, 0);
         gridPane.add(rootPane, 1, 0);
-
-        themeService = new ThemeService(stage.getScene(), gridPane);
-
         // Setup Row and Column constraints to stretch content correctly
         ColumnConstraints navigationColumn = new ColumnConstraints();
         navigationColumn.setHgrow(Priority.NEVER);
+
         ColumnConstraints contentColumn = new ColumnConstraints();
         contentColumn.setHgrow(Priority.ALWAYS);
+
         gridPane.getColumnConstraints().addAll(navigationColumn, contentColumn);
+    }
 
-        stage.setMaximized(true);
-
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
-        gridPane.getScene().getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-        gridPane.getScene().getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
+    public void show() {
         stage.show();
     }
 

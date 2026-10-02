@@ -5,6 +5,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -14,8 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
-import javafx.geometry.Pos;
-import javafx.scene.layout.Region;
+import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.models.Food;
 import seng202.team4.models.FoodServing;
 import seng202.team4.models.Fruit;
@@ -59,6 +61,13 @@ public class MapController extends ScreenController {
     @FXML
     private Button filterButton;
 
+    @FXML
+    private VBox mapLoadingOverlay;
+    @FXML
+    private ProgressBar mapLoadingBar;
+    @FXML
+    private Label mapLoadingLabel;
+
     private WebEngine webEngine;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
@@ -73,7 +82,6 @@ public class MapController extends ScreenController {
     private List<Food> foods = new ArrayList<>();
     private boolean foodsLoaded = false;
 
-    private static final String SIDEBAR_BUTTON_SELECTED = "sideBar-button-selected";
     private static final String ICON_SELECTED = "icon-selected";
 
 
@@ -99,6 +107,7 @@ public class MapController extends ScreenController {
     @FXML
     private void initialize() {
         LOG.info("MapController initialize() called");
+        showMapLoadingBar("Loading map...");
         javaScriptBridge = new JavaScriptBridge(
                 id -> {
                     TreeModel tree = currentTrees.get(id);
@@ -113,8 +122,8 @@ public class MapController extends ScreenController {
         );
         createFruitButtons();
         toggleAllFilterButtons();
-
-        initMap();
+        LOG.info("start get foods");
+        showMapLoadingBar("Loading food data... ");
         CompletableFuture
                 .supplyAsync(foodService::getFoods)
                 .thenAccept(loadedFoods -> Platform.runLater(() -> {
@@ -133,7 +142,11 @@ public class MapController extends ScreenController {
                     LOG.error("Failed to load foods", ex);
                     return null;
                 });
+        initMap();
+
     }
+
+
 
     /**
      * Loads the Leaflet map HTML into the WebView and wires up the JS bridge
@@ -215,9 +228,15 @@ public class MapController extends ScreenController {
         }
 
         setCurrentBounds(north, east, south, west);
+
+
         if (!foodsLoaded) {
+            showMapLoadingBar("Loading food data...");
             return;
         }
+        showMapLoadingBar("Loading nearby trees...");
+
+
         mapService.getAllTreesInRegion(
                 north + height / 4,
                 east + width / 4,
@@ -225,27 +244,55 @@ public class MapController extends ScreenController {
                 west - width / 4
         ).thenAccept(trees -> {
             javafx.application.Platform.runLater(() -> {
-                if (trees != null) {
-                    LOG.info(MessageFormat.format("Completed request for {0} trees.", trees.size()));
-                    removeTreeMarkers();
-                    for (TreeModel tree : trees) {
-                        Food treeFood = findTreeFood(tree.getFood());
-                        if (treeFood != null) {
-                            addTreeMarker(tree, treeFood);
-                        }
-                    }
-                }
+                addTreeMarkersAfterTreeRequest(trees);
             });
         }).exceptionally(ex -> {
             if (!(ex instanceof java.util.concurrent.CancellationException)) {
                 javafx.application.Platform.runLater(() -> {
                     LOG.error("Error fetching trees for map view: " + ex);
+                    hideMapLoadingBar();
                 });
             }
             return null;
         });
     }
 
+    private void showMapLoadingBar(String loadingMessage) {
+        mapLoadingLabel.setText(loadingMessage);
+        mapLoadingBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        mapLoadingOverlay.setVisible(true);
+        mapLoadingOverlay.setManaged(true);
+    }
+
+    private void hideMapLoadingBar() {
+        mapLoadingOverlay.setVisible(false);
+        mapLoadingOverlay.setManaged(false);
+    }
+
+    /**
+     * To run once trees have been returned
+     * @param trees list of trees to make markers for
+     */
+    private void addTreeMarkersAfterTreeRequest(List<TreeModel> trees) {
+        if (trees != null) {
+            LOG.info(MessageFormat.format("Completed request for {0} trees.", trees.size()));
+            removeTreeMarkers();
+            for (TreeModel tree : trees) {
+                Food treeFood = findTreeFood(tree.getFood());
+                if (treeFood != null) {
+                    addTreeMarker(tree, treeFood);
+                }
+            }
+        }
+        hideMapLoadingBar();
+
+    }
+
+    /**
+     * Method to find the food object and information for the food on a tree
+     * @param foodName name of food from the tree
+     * @return food
+     */
     private Food findTreeFood(String foodName) {
         for (Food food : foods) {
             if (food.getName().equalsIgnoreCase(foodName)) {
@@ -334,60 +381,25 @@ public class MapController extends ScreenController {
     private void createFruitButtons() {
         filterBox.getChildren().clear();
         for (Fruit fruit : Fruit.values()) {
-            Button filterButton = new Button("  " + formatFruitName(fruit));
-            filterButton.setAlignment(Pos.TOP_LEFT);
-            filterButton.setMaxWidth(Double.MAX_VALUE);
-            filterButton.setPrefHeight(35);
-            Region icon = new Region();
-            icon.getStyleClass().add("icon");
-            icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
-            filterButton.setGraphic(icon);
-            filterButton.getStyleClass().add("sideBar-button");
+            Button filterButton = FruitFilterUtilities.createFruitButton(fruit);
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
             filterBox.getChildren().add(filterButton);
         }
     }
 
     /**
-     * Toggles styling of the fruit filter buttons on the Map screen
-     */
-    public static void toggleButtonStyle(Button button) {
-        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
-            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
-            button.getGraphic().getStyleClass().remove(ICON_SELECTED);
-        } else {
-            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
-            button.getGraphic().getStyleClass().add(ICON_SELECTED);
-        }
-    }
-
-    /**
-     * Formats the enum FRUIT values to a string format
-     * which will be shown to the user when filter button is clicked
-     *
-     */
-    private static String formatFruitName(Fruit fruit) {
-        String name = fruit.name().toLowerCase();
-        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-    }
-
-    /**
      * Toggles the fruit button being clicked, and updates the
      * map to show only the relevant fruit trees
-     * @param buttons
+     * @param button
      * @param fruit
      */
-    public void filterButtonClicked(Button buttons, Fruit fruit) {
-        if (buttons.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
-            buttons.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
-            buttons.getGraphic().getStyleClass().remove(ICON_SELECTED);
+    public void filterButtonClicked(Button button, Fruit fruit) {
+        FruitFilterUtilities.toggleButtonStyle(button);
 
-            mapService.removeSelectedFruit(fruit);
-        } else {
-            buttons.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
-            buttons.getGraphic().getStyleClass().add(ICON_SELECTED);
-
+        if (FruitFilterUtilities.isSelected(button)) {
             mapService.addSelectedFruit(fruit);
+        } else {
+            mapService.removeSelectedFruit(fruit);
         }
         mapMoved(northBound, eastBound, southBound, westBound,
                 stateManager.getMapLatitude(),
@@ -402,7 +414,7 @@ public class MapController extends ScreenController {
     public void toggleAllFilterButtons() {
         for (Node node : filterBox.getChildren()) {
             Button button = (Button) node;
-            toggleButtonStyle(button);
+            FruitFilterUtilities.toggleButtonStyle(button);
         }
         for (Fruit fruit : Fruit.values()) {
             mapService.addSelectedFruit(fruit);

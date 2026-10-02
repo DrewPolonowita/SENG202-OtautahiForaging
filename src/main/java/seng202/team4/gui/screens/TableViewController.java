@@ -2,14 +2,13 @@ package seng202.team4.gui.screens;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.TableColumn;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
@@ -34,10 +33,6 @@ public class TableViewController extends ScreenController {
 
     @FXML
     private VBox filterList;
-
-    private static final String SIDEBAR_BUTTON_SELECTED = "sideBar-button-selected";
-    private static final String ICON_SELECTED = "icon-selected";
-
 
 
     /**
@@ -142,43 +137,15 @@ public class TableViewController extends ScreenController {
      *For each fruit name in the enum FRUIT, a filter button is creaated
      */
     private void createFruitButtons() {
-
         filterList.getChildren().clear();
 
         for (Fruit fruit : Fruit.values()) {
-            Button filterButton = new Button("  " + formatFruitName(fruit));
-            filterButton.setAlignment(Pos.TOP_LEFT);
-            filterButton.setMaxWidth(Double.MAX_VALUE);
-            filterButton.setPrefHeight(35);
-            Region icon = new Region();
-            icon.getStyleClass().add("icon");
-            icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
-            filterButton.setGraphic(icon);
-            filterButton.getStyleClass().add("sideBar-button");
+            Button filterButton = FruitFilterUtilities.createFruitButton(fruit);
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
             filterList.getChildren().add(filterButton);
         }
     }
-    /**
-     * Toggles styling of the filter buttons
-     */
-    public static void toggleButtonStyle(Button button) {
-        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
-            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
-            button.getGraphic().getStyleClass().remove(ICON_SELECTED);
-        } else {
-            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
-            button.getGraphic().getStyleClass().add(ICON_SELECTED);
-        }
-    }
 
-    /**
-     * Mapping enum FRUIT values to string format
-     */
-    private static String formatFruitName(Fruit fruit) {
-        String name = fruit.name().toLowerCase();
-        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-    }
     /**
      *Toggles the fruit button being clicked, and updates the
      *table contents to show only the relevant fruit trees
@@ -186,16 +153,11 @@ public class TableViewController extends ScreenController {
      * @param fruit
      */
     public void filterButtonClicked(Button button, Fruit fruit) {
-        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
-            button.getStyleClass().remove(SIDEBAR_BUTTON_SELECTED);
-            button.getGraphic().getStyleClass().remove(ICON_SELECTED);
-        } else {
-            button.getStyleClass().add(SIDEBAR_BUTTON_SELECTED);
-            button.getGraphic().getStyleClass().add(ICON_SELECTED);
-        }
+        FruitFilterUtilities.toggleButtonStyle(button);
 
-        String fruitName = fruit.name().charAt(0) + fruit.name().substring(1).toLowerCase();
-        if (button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED)) {
+        String fruitName = FruitFilterUtilities.formatFruitName(fruit);
+
+        if (FruitFilterUtilities.isSelected(button)) {
             filteredTrees.addAll(treeService.getTreesByFood(fruitName));
         } else {
             filteredTrees.removeAll(treeService.getTreesByFood(fruitName));
