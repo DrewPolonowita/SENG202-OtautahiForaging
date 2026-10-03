@@ -2,7 +2,7 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.models.Fruit;
+import seng202.team4.models.FilterCategory;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MapService {
     private static final Logger LOG = LogManager.getLogger(MapService.class);
     private final TreeDataManager treeDataManager;
-    private final ArrayList<Fruit> selectedFruits;
+    private final ArrayList<FilterCategory> selectedFilterCategories;
     private final ExecutorService executor = Executors.newFixedThreadPool(8, runnable -> {
         Thread thread = new Thread(runnable, "map-service-worker");
         thread.setDaemon(true);
@@ -53,7 +53,7 @@ public class MapService {
      */
     public MapService(TreeDataManager treeDataManager) {
         this.treeDataManager = treeDataManager;
-        this.selectedFruits = new ArrayList<>();
+        this.selectedFilterCategories = new ArrayList<>();
     }
 
     /**
@@ -71,9 +71,9 @@ public class MapService {
     ) {
         int thisRequest = currentRequestCounter.incrementAndGet();
 
-        LOG.info(selectedFruits);
+        LOG.info(selectedFilterCategories);
 
-        List<CompletableFuture<List<TreeModel>>> futures = selectedFruits.stream()
+        List<CompletableFuture<List<TreeModel>>> futures = selectedFilterCategories.stream()
                 .map(fruit -> CompletableFuture.supplyAsync(() ->
                                 treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west),
                         executor
@@ -99,36 +99,36 @@ public class MapService {
 
     /**
      * Adds a selected fruit to the filter
-     * @param fruit the fruit to add to the filter
+     * @param filterCategory the fruit to add to the filter
      */
-    public void addSelectedFruit(Fruit fruit) {
-        if (fruit == null) {
+    public void addSelectedFruit(FilterCategory filterCategory) {
+        if (filterCategory == null) {
             throw new NullPointerException("fruit parameter is null");
         }
 
-        if (selectedFruits.contains(fruit)) {
-            String message = "Fruit: " + fruit.toString() + " is already selected";
+        if (selectedFilterCategories.contains(filterCategory)) {
+            String message = "Fruit: " + filterCategory.toString() + " is already selected";
             throw new IllegalArgumentException(message);
         }
 
-        selectedFruits.add(fruit);
+        selectedFilterCategories.add(filterCategory);
     }
 
     /**
      * Removes a fruit from the filter
-     * @param fruit the friut to be unselected
+     * @param filterCategory the friut to be unselected
      */
-    public void removeSelectedFruit(Fruit fruit) {
-        if (fruit == null) {
+    public void removeSelectedFruit(FilterCategory filterCategory) {
+        if (filterCategory == null) {
             throw new NullPointerException("fruit parameter is null");
         }
 
-        if (!selectedFruits.contains(fruit)) {
-            String message = "Fruit: " + fruit.toString() + " is not currently selected";
+        if (!selectedFilterCategories.contains(filterCategory)) {
+            String message = "Fruit: " + filterCategory.toString() + " is not currently selected";
             throw new IllegalArgumentException(message);
         }
 
-        selectedFruits.remove(fruit);
+        selectedFilterCategories.remove(filterCategory);
     }
 
     public synchronized CompletableFuture<List<TreeModel>> getAllTreesInRegion(double north, double east, double south, double west) {

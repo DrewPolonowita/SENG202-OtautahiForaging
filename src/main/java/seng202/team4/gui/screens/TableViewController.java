@@ -12,7 +12,7 @@ import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
-import seng202.team4.models.Fruit;
+import seng202.team4.models.FilterCategory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,9 +139,9 @@ public class TableViewController extends ScreenController {
     private void createFruitButtons() {
         filterList.getChildren().clear();
 
-        for (Fruit fruit : Fruit.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(fruit);
-            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterList.getChildren().add(filterButton);
         }
     }
@@ -150,12 +150,12 @@ public class TableViewController extends ScreenController {
      *Toggles the fruit button being clicked, and updates the
      *table contents to show only the relevant fruit trees
      * @param button
-     * @param fruit
+     * @param filterCategory
      */
-    public void filterButtonClicked(Button button, Fruit fruit) {
+    public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(button);
 
-        String fruitName = FruitFilterUtilities.formatFruitName(fruit);
+        String fruitName = FruitFilterUtilities.formatFruitName(filterCategory);
 
         if (FruitFilterUtilities.isSelected(button)) {
             filteredTrees.addAll(treeService.getTreesByFood(fruitName));

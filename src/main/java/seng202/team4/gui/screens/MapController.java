@@ -23,8 +23,8 @@ import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
 
+import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Food;
-import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
@@ -375,9 +375,9 @@ public class MapController extends ScreenController {
      */
     private void createFruitButtons() {
         filterBox.getChildren().clear();
-        for (Fruit fruit : Fruit.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(fruit);
-            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterBox.getChildren().add(filterButton);
         }
     }
@@ -386,15 +386,15 @@ public class MapController extends ScreenController {
      * Toggles the fruit button being clicked, and updates the
      * map to show only the relevant fruit trees
      * @param button
-     * @param fruit
+     * @param filterCategory
      */
-    public void filterButtonClicked(Button button, Fruit fruit) {
+    public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(button);
 
         if (FruitFilterUtilities.isSelected(button)) {
-            mapService.addSelectedFruit(fruit);
+            mapService.addSelectedFruit(filterCategory);
         } else {
-            mapService.removeSelectedFruit(fruit);
+            mapService.removeSelectedFruit(filterCategory);
         }
         mapMoved(northBound, eastBound, southBound, westBound,
                 stateManager.getMapLatitude(),
@@ -411,8 +411,8 @@ public class MapController extends ScreenController {
             Button button = (Button) node;
             FruitFilterUtilities.toggleButtonStyle(button);
         }
-        for (Fruit fruit : Fruit.values()) {
-            mapService.addSelectedFruit(fruit);
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            mapService.addSelectedFruit(filterCategory);
         }
     }
 

@@ -3,7 +3,7 @@ package seng202.team4.gui.utilities;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
-import seng202.team4.models.Fruit;
+import seng202.team4.models.FilterCategory;
 
 public class FruitFilterUtilities {
     private static final String SIDEBAR_BUTTON = "sideBar-button";
@@ -17,16 +17,16 @@ public class FruitFilterUtilities {
     /**
      * For each fruit name in the enum FRUIT, a filter button is created
      */
-    public static Button createFruitButton(Fruit fruit) {
+    public static Button createFruitButton(FilterCategory filterCategory) {
 
-        Button filterButton = new Button("  " + formatFruitName(fruit));
+        Button filterButton = new Button("  " + formatFruitName(filterCategory));
         filterButton.setAlignment(Pos.TOP_LEFT);
         filterButton.setMaxWidth(Double.MAX_VALUE);
         filterButton.setPrefHeight(35);
 
         Region icon = new Region();
         icon.getStyleClass().add(ICON);
-        icon.getStyleClass().add("icon-" + fruit.name().toLowerCase());
+        icon.getStyleClass().add("icon-" + filterCategory.name().toLowerCase());
 
         filterButton.setGraphic(icon);
         filterButton.getStyleClass().add(SIDEBAR_BUTTON);
@@ -57,8 +57,8 @@ public class FruitFilterUtilities {
      * which will be shown to the user when filter button is clicked
      *
      */
-    public static String formatFruitName(Fruit fruit) {
-        String name = fruit.name().toLowerCase();
+    public static String formatFruitName(FilterCategory filterCategory) {
+        String name = filterCategory.name().toLowerCase();
         return Character.toUpperCase(name.charAt(0)) + name.substring(1);
     }
 }
