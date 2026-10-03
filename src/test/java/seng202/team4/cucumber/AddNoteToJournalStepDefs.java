@@ -53,7 +53,7 @@ public class AddNoteToJournalStepDefs {
 
         TreeModel tree = new TreeModel(
                 treeId,
-                new float[]{5252, 3423},
+                List.of(5252f, 3423f),
                 "Council",
                 "Malus",
                 "Apple",
@@ -85,8 +85,7 @@ public class AddNoteToJournalStepDefs {
         );
 
         int noteId = noteService.add(note);
-        
-        Assertions.assertNotEquals(-1, noteId);
+        Assertions.assertNotEquals(noteId, -1);
     }
 
     @Then("the journal should have a note with description {string}")

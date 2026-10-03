@@ -3,11 +3,9 @@ package seng202.team4.services.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
-import seng202.team4.models.api.Request;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -78,10 +76,11 @@ public class FoodApiClient implements FoodClientInterface {
      * @return Request object with the data
      */
     @Override
-    public Request<FoodSearchResponse> searchFood(String searchExpression, int maxResults) {
+    public ApiResponseWrapper<FoodSearchResponse> searchFood(String searchExpression, int maxResults) {
         Map<String, String> params = new HashMap<>();
         params.put("search_expression", searchExpression);
         params.put("max_results", String.valueOf(maxResults));
+        params.put("format", "json");
         String authenticatedString = oauth1Signature.createSignature("GET", FOOD_BY_SEARCH, params);
         String url = FOOD_BY_SEARCH + encodeFoodSearchParams(searchExpression, maxResults);
         return apiClient.getOauth(url, new TypeReference<FoodSearchResponse>() {
@@ -94,7 +93,7 @@ public class FoodApiClient implements FoodClientInterface {
      * @return Request object with the data
      */
     @Override
-    public Request<FoodByIdResponse> getFoodById(int foodId) {
+    public ApiResponseWrapper<FoodByIdResponse> getFoodById(int foodId) {
 
         Map<String, String> params = new HashMap<>();
         params.put("food_id", String.valueOf(foodId));

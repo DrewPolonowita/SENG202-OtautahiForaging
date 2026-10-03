@@ -2,11 +2,9 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
-import seng202.team4.models.api.Request;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +16,6 @@ import java.util.Map;
  */
 public class RecipeApiClient implements RecipeClientInterface {
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
-    private static final Logger log = LogManager.getLogger(FoodApiClient.class);
     static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
     static final String RECIPE_BY_SEARCH = BASE_URL + "/recipes/search/v3";
 
@@ -79,7 +76,7 @@ public class RecipeApiClient implements RecipeClientInterface {
      * @return request object including the Json and error codes
      */
     @Override
-    public Request<RecipeByIdResponse> getRecipeById(int recipeId) {
+    public ApiResponseWrapper<RecipeByIdResponse> getRecipeById(int recipeId) {
         Map<String, String> params = new HashMap<>();
         params.put("recipe_id", String.valueOf(recipeId));
         params.put("format", "json");
@@ -97,7 +94,7 @@ public class RecipeApiClient implements RecipeClientInterface {
      * @return request object including the Json and error codes
      */
     @Override
-    public Request<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults) {
+    public ApiResponseWrapper<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults) {
         Map<String, String> params = new HashMap<>();
         params.put("search_expression", searchExpression);
         params.put("must_have_images", String.valueOf(mustHaveImages));

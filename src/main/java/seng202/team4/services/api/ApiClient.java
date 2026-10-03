@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
-import seng202.team4.models.api.Request;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.Scanner;
 public class ApiClient implements ApiClientInterface {
 
     private static final Logger log = LogManager.getLogger(ApiClient.class);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Creates a connection to the server
@@ -60,7 +62,8 @@ public class ApiClient implements ApiClientInterface {
             Scanner scanner = new Scanner(connection.getErrorStream());
 
             while (scanner.hasNextLine()) {
-                log.error(scanner.nextLine());
+                String errorLine = scanner.nextLine();
+                log.error("{}", errorLine);
             }
             return null;
         }
@@ -70,29 +73,27 @@ public class ApiClient implements ApiClientInterface {
         while (scanner.hasNext()) {
             stringBuilder.append(scanner.nextLine());
         }
-
-        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(
                 String.valueOf(stringBuilder), responseType);
     }
 
     /**
-     * Makes a request to the API and returns an {@link Request} with the JSON data
+     * Makes a request to the API and returns an {@link ApiResponseWrapper} with the JSON data
      *
-     * @return {@link Request} if the request is valid, otherwise returns a null
+     * @return {@link ApiResponseWrapper} if the request is valid, otherwise returns a null
      */
     @Override
-    public <T> Request<T> get(String url, TypeReference<T> responseType) {
+    public <T> ApiResponseWrapper<T> get(String url, TypeReference<T> responseType) {
+        HttpsURLConnection connection = null;
         try {
-            HttpsURLConnection connection = createConnection(url);
-            try {
-                T apiResponse = getJsonData(connection, responseType);
-                return new Request<>(apiResponse, connection.getResponseCode());
-            } catch (IOException e) {
-                return new Request<>(null, connection.getResponseCode());
+            connection = createConnection(url);
+            return getRequest(responseType, connection);
+        } catch (IOException _) {
+            return new ApiResponseWrapper<>(null, -1);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
             }
-        } catch (IOException e) {
-            return new Request<>(null, -1);
         }
 
     }
@@ -105,18 +106,37 @@ public class ApiClient implements ApiClientInterface {
      * @return Request object of type request
      */
     @Override
-    public <T> Request<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
+    public <T> ApiResponseWrapper<T> getOauth(String url, TypeReference<T> responseType, String oauthHeader) {
+        HttpsURLConnection connection = null;
+
         try {
-            HttpsURLConnection connection = createOAuthConnection(url, oauthHeader);
-            try {
-                T apiResponse = getJsonData(connection, responseType);
-                return new Request<>(apiResponse, connection.getResponseCode());
-            } catch (IOException e) {
-                return new Request<>(null, connection.getResponseCode());
+            connection = createOAuthConnection(url, oauthHeader);
+            return getRequest(responseType, connection);
+        } catch (IOException _) {
+            return new ApiResponseWrapper<>(null, -1);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
             }
-        } catch (IOException e) {
-            return new Request<>(null, -1);
         }
 
+    }
+
+    /**
+     * Wraps a http api call in its {@link ApiResponseWrapper} object
+     * @param responseType expected type
+     * @param connection the open http connection
+     * @param <T> the response body type
+     * @return a request wrapper with the parsed response
+     * @throws IOException if the response code can't be read
+     */
+    private <T> @NotNull ApiResponseWrapper<T> getRequest(TypeReference<T> responseType, HttpsURLConnection connection)
+            throws IOException {
+        try {
+            T apiResponse = getJsonData(connection, responseType);
+            return new ApiResponseWrapper<>(apiResponse, connection.getResponseCode());
+        } catch (IOException _) {
+            return new ApiResponseWrapper<>(null, connection.getResponseCode());
+        }
     }
 }

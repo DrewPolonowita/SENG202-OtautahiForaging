@@ -8,8 +8,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.services.StateManager;
 
@@ -19,7 +17,6 @@ import seng202.team4.services.StateManager;
  */
 public class SettingsController extends ScreenController {
 
-    private static final Logger LOG = LogManager.getLogger(SettingsController.class);
     @FXML
     private ToggleButton darkModeToggle;
     @FXML

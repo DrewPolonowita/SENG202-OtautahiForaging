@@ -1,5 +1,6 @@
 package seng202.team4;
 
+
 import seng202.team4.gui.FXAppEntry;
 
 /**
@@ -7,6 +8,7 @@ import seng202.team4.gui.FXAppEntry;
  * @author seng202 teaching team
  */
 public class App {
+
     /**
      * Entry point which runs the javaFX application
      * Also shows off some different logging levels
@@ -14,6 +16,7 @@ public class App {
      */
     void main(String[] args) {
         try {
+            Class.forName("org.mariadb.jdbc.Driver");
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

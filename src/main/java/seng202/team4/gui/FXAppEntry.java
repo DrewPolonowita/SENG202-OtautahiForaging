@@ -19,6 +19,9 @@ public class FXAppEntry extends Application {
      */
     @Override
     public void start(Stage stage) {
-        new StateManager(new WindowManager(stage));
+        WindowManager windowManager = new WindowManager(stage);
+        new StateManager(windowManager);
+        windowManager.show();
+
     }
 }

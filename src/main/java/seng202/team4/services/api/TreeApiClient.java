@@ -3,8 +3,8 @@ package seng202.team4.services.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
-import seng202.team4.models.api.Request;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +68,7 @@ public class TreeApiClient implements TreeClientInterface {
                 ), StandardCharsets.UTF_8
         );
 
-        LOG.info(API_LINK + url);
+        LOG.info("{}{}", API_LINK, url);
 
         return url;
     }
@@ -80,7 +80,7 @@ public class TreeApiClient implements TreeClientInterface {
      * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
     @Override
-    public Request<TreeApiResponse> getTrees(
+    public ApiResponseWrapper<TreeApiResponse> getTrees(
             String params, String outFields, int maxTuples,  double north, double east, double south, double west
     ) {
         String url = API_LINK
@@ -98,7 +98,7 @@ public class TreeApiClient implements TreeClientInterface {
      * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
     @Override
-    public Request<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
+    public ApiResponseWrapper<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
         String url = API_LINK
                 + urlEncodeParams(params, outFields, maxTuples);
         return apiClient.get(url, new TypeReference<TreeApiResponse>() {

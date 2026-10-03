@@ -3,23 +3,27 @@ package seng202.team4.unittests.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.exceptions.DuplicateEntryException;
+import seng202.team4.helpers.TestFoodData;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.FoodDAO;
 import seng202.team4.repository.FoodRepository;
 import seng202.team4.models.Food;
+import seng202.team4.services.FoodFactory;
 import seng202.team4.unittests.TestSuite;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seng202.team4.helpers.TestFoodData.assertFoodEquals;
+import static seng202.team4.helpers.TestFoodData.createFoodServing;
 
-public class FoodDAOTest extends TestSuite {
+class FoodDAOTest extends TestSuite {
 
     FoodRepository foodDAO;
     DatabaseManager databaseManager;
@@ -31,9 +35,6 @@ public class FoodDAOTest extends TestSuite {
         foodDAO = new FoodDAO(databaseManager);
     }
 
-    private Food createFood(int id, String name, String type) {
-        return new Food(id, name, type, 100, 20, 5, 2, "100 g", 1234);
-    }
 
     @Test
     void getOneReturnsNullWhenFoodDoesntExist() {
@@ -44,7 +45,7 @@ public class FoodDAOTest extends TestSuite {
 
     @Test
     void addWhenFoodIdExistsAlreadyThrowsDuplicateEntryException() throws DuplicateEntryException {
-        Food food = createFood(90000, "Apple", "Fruit");
+        Food food = TestFoodData.createFood(90000, "Apple", "Fruit");
 
         foodDAO.add(food);
 
@@ -53,20 +54,22 @@ public class FoodDAOTest extends TestSuite {
 
     @Test
     void replaceFoodUpdatesFood() throws DuplicateEntryException {
-        Food original = createFood(90000, "Apple", "Fruit");
+        Food original = TestFoodData.createFood(90000, "Apple", "Fruit");
 
         foodDAO.add(original);
 
-        Food updatedFood = new Food(
+        Food updatedFood = FoodFactory.create(
                 original.getId(),
                 "New Apple",
                 "New Fruit",
-                900,
-                800,
-                700,
-                600,
-                "1 apple",
-                500
+                List.of(
+                        TestFoodData.createFoodServing(500,
+                                        "1 apple",
+                                        900,
+                                        800,
+                                        700,
+                                        600)
+                )
         );
 
         foodDAO.replaceFood(updatedFood);
@@ -78,17 +81,17 @@ public class FoodDAOTest extends TestSuite {
 
     @Test
     void replaceFoodAddsFoodWhenFoodDoesNotExist() {
-        Food newFood = new Food(
-                90000,
+        Food newFood = FoodFactory.create(90000,
                 "Apple",
                 "Fruit",
-                1000,
-                142,
-                41424,
-                142134,
-                "1 banana",
-                41341
-        );
+                List.of(
+                        createFoodServing(1000,
+                                "1 banana",
+                                134143,
+                                13414,
+                                109,
+                                341)
+                ));
 
         foodDAO.replaceFood(newFood);
 
@@ -99,7 +102,7 @@ public class FoodDAOTest extends TestSuite {
 
     @Test
     void foodDetailsUpToDateAndExistReturnsTrueForRecentlyAddedFood() throws DuplicateEntryException {
-        Food food = createFood(90000, "Apple", "Fruit");
+        Food food = TestFoodData.createFood(90000, "Apple", "Fruit");
 
         foodDAO.add(food);
 
@@ -113,7 +116,7 @@ public class FoodDAOTest extends TestSuite {
 
     @Test
     void replaceFoodRefreshesRetrievalTime() throws Exception {
-        Food food = createFood(90000, "Apple", "Fruit");
+        Food food = TestFoodData.createFood(90000, "Apple", "Fruit");
 
         foodDAO.add(food);
 
@@ -137,8 +140,8 @@ public class FoodDAOTest extends TestSuite {
     }
 
     @Test
-    public void getFoodIdByFoodNameWorksWhenFoodExists() throws DuplicateEntryException {
-        Food food = createFood(90000, "Apple", "Fruit");
+    void getFoodIdByFoodNameWorksWhenFoodExists() throws DuplicateEntryException {
+        Food food = TestFoodData.createFood(90000, "Apple", "Fruit");
 
         foodDAO.add(food);
 
@@ -148,24 +151,13 @@ public class FoodDAOTest extends TestSuite {
     }
 
     @Test
-    public void getFoodByIdGivesNullWhenDoesntExist() throws DuplicateEntryException {
+    void getFoodIdByFoodNameGivesNullWhenDoesntExist() {
         Integer result = foodDAO.getFoodIdByFoodName("Apple");
 
         assertNull(result);
 
     }
 
-    private void assertFoodEquals(Food expected, Food actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getType(), actual.getType());
-        assertEquals(expected.getCalories(), actual.getCalories());
-        assertEquals(expected.getCarbohydrates(), actual.getCarbohydrates());
-        assertEquals(expected.getProtein(), actual.getProtein());
-        assertEquals(expected.getFat(), actual.getFat());
-        assertEquals(expected.getServingDescription(), actual.getServingDescription());
-        assertEquals(expected.getServingId(), actual.getServingId());
-    }
+
 
 }

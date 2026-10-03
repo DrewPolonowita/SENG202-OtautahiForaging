@@ -5,14 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.helpers.TestFoodData;
 import seng202.team4.models.Food;
+import seng202.team4.models.FoodServing;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
-import seng202.team4.models.api.Food.FoodByID.FoodServings;
-import seng202.team4.models.api.Food.FoodByID.Serving;
+
 import seng202.team4.models.api.Food.SearchFood.FoodSearchDetails;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchRecord;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
-import seng202.team4.models.api.Request;
 import seng202.team4.repository.FoodRepository;
 import seng202.team4.services.FoodMapper;
 import seng202.team4.services.api.FoodClientInterface;
@@ -21,7 +21,6 @@ import seng202.team4.services.dataCentre.foodData.FoodService;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -31,6 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static seng202.team4.helpers.TestFoodData.assertFoodEquals;
 
 /**
  * mostly tests getFoods like the recipe service
@@ -39,15 +39,19 @@ import static org.mockito.Mockito.when;
  * Do we have the food id for the food name?
  * Do we have recent details for it?
  */
-public class FoodServiceTest {
+class FoodServiceTest {
 
     private FoodRepository testFoodRepository;
     private FoodClientInterface testFoodClient;
     private FoodMapper foodMapper;
     private FoodService testFoodService;
 
+    private List<FoodServing> servings;
+    private FoodByIdRecord foodRecord;
+    private Food expectedFood;
+
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         testFoodRepository = mock(FoodRepository.class);
         testFoodClient = mock(FoodClientInterface.class);
         foodMapper = mock(FoodMapper.class);
@@ -58,27 +62,41 @@ public class FoodServiceTest {
         when(foodMapper.getFoodType("Apple"))
                 .thenReturn("Fruit");
 
+        servings = TestFoodData.createDefaultServings();
+
+        foodRecord = TestFoodData.createFakeFoodByIdRecord(
+                123,
+                "Apple",
+                servings
+        );
+
+        expectedFood = TestFoodData.createFood(
+                123,
+                "Apple",
+                "Fruit",
+                servings
+        );
+
         testFoodService = new FoodService(testFoodRepository, testFoodClient, foodMapper);
     }
 
     @Test
-    public void testFoodIdExistsAndDetailsUpToDate() {
-        Food apple = TestFoodData.createAppleFood();
+    void testFoodIdExistsAndDetailsUpToDate() {
 
         when(testFoodRepository.getFoodIdByFoodName("Apple"))
-                .thenReturn(apple.getId());
-        when(testFoodRepository.foodDetailsUpToDateAndExist(apple.getId()))
+                .thenReturn(expectedFood.getId());
+        when(testFoodRepository.foodDetailsUpToDateAndExist(expectedFood.getId()))
                 .thenReturn(true);
-        when(testFoodRepository.getOne(apple.getId()))
-                .thenReturn(apple);
+        when(testFoodRepository.getOne(expectedFood.getId()))
+                .thenReturn(expectedFood);
 
         List<Food> foods = testFoodService.getFoods();
 
-        assertTrue(foods.contains(apple));
+        assertTrue(foods.contains(expectedFood));
         //database used
         verify(testFoodRepository).getFoodIdByFoodName("Apple");
-        verify(testFoodRepository).foodDetailsUpToDateAndExist(apple.getId());
-        verify(testFoodRepository).getOne(apple.getId());
+        verify(testFoodRepository).foodDetailsUpToDateAndExist(expectedFood.getId());
+        verify(testFoodRepository).getOne(expectedFood.getId());
 
 
         // details up to date
@@ -86,27 +104,20 @@ public class FoodServiceTest {
     }
 
     @Test
-    public void testIdsExistsButDetailsNotUpToDate() {
-        FoodByIdRecord foodRecord = TestFoodData.createFakeFoodByIdRecord();
+    void testIdsExistsButDetailsNotUpToDate() {
+
 
         when(testFoodRepository.getFoodIdByFoodName("Apple"))
                 .thenReturn(foodRecord.foodId());
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
                 .thenReturn(false);
         when(testFoodClient.getFoodById(foodRecord.foodId()))
-                .thenReturn(new Request<>(createFakeFoodByIdResponse(), 200));
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodByIdResponse(), 200));
 
         List<Food> foods = testFoodService.getFoods();
 
-        boolean containsCorrectFood = false;
 
-        for (Food food : foods) {
-            if (food.getId() == foodRecord.foodId()) {
-                containsCorrectFood = true;
-                break;
-            }
-        }
-        assertTrue(containsCorrectFood);
+        assertFoodEquals(expectedFood, foods.getFirst());
 
         // api used just for details
         verify(testFoodClient, never()).searchFood(anyString(), anyInt());
@@ -116,22 +127,20 @@ public class FoodServiceTest {
     }
 
     @Test
-    public void testIdsDontExistAndApiReturnsIds() {
-        FoodByIdRecord foodRecord = TestFoodData.createFakeFoodByIdRecord();
+    void testIdsDontExistAndApiReturnsIds() {
 
         when(testFoodRepository.getFoodIdByFoodName("Apple"))
                 .thenReturn(null);
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
                 .thenReturn(false);
         when(testFoodClient.searchFood("Apple", 1))
-                .thenReturn(new Request<>(createFakeFoodSearchResponse(), 200));
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodSearchResponse(), 200));
         when(testFoodClient.getFoodById(foodRecord.foodId()))
-                .thenReturn(new Request<>(createFakeFoodByIdResponse(), 200));
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodByIdResponse(), 200));
 
         List<Food> foods = testFoodService.getFoods();
 
-        assertEquals(foodRecord.foodId(), foods.get(0).getId());
-
+        assertFoodEquals(expectedFood, foods.getFirst());
         //api used
         verify(testFoodClient).searchFood("Apple", 1);
         verify(testFoodClient).getFoodById(foodRecord.foodId());
@@ -142,15 +151,14 @@ public class FoodServiceTest {
     }
 
     @Test
-    public void testIdsDontExistButApiThrowsErrorsOnSearch() {
-        FoodByIdRecord foodRecord = TestFoodData.createFakeFoodByIdRecord();
+    void testIdsDontExistButApiThrowsErrorsOnSearch() {
 
         when(testFoodRepository.getFoodIdByFoodName("Apple"))
                 .thenReturn(null);
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
                 .thenReturn(false);
         when(testFoodClient.searchFood("Apple", 1))
-                .thenReturn(new Request<>(null, 500));
+                .thenReturn(new ApiResponseWrapper<>(null, 500));
 
         List<Food> foods = testFoodService.getFoods();
 
@@ -181,45 +189,8 @@ public class FoodServiceTest {
     }
 
 
-    @Test
-    public void testCreateFoodObjectById() {
-        FoodByIdRecord foodRecord = TestFoodData.createFakeFoodByIdRecord();
-
-        Food food = testFoodService.createFoodObjectById(foodRecord);
-
-        assertEquals(123, food.getId());
-        assertEquals("Apple", food.getName());
-        assertEquals("Fruit", food.getType());
-        assertEquals(100, food.getCalories());
-        assertEquals(20, food.getCarbohydrates());
-        assertEquals(5, food.getProtein());
-        assertEquals(2, food.getFat());
-        assertEquals("100 g", food.getServingDescription());
-        assertEquals(1234, food.getServingId());
-    }
 
     private FoodByIdResponse createFakeFoodByIdResponse() {
-        return new FoodByIdResponse(createFakeFoodByIdRecord());
+        return new FoodByIdResponse(foodRecord);
     }
-
-    private FoodByIdRecord createFakeFoodByIdRecord() {
-        Serving serving = new Serving(
-                1234,
-                "100 g",
-                100,
-                20,
-                5,
-                2
-        );
-
-        return new FoodByIdRecord(
-                123,
-                "Apple",
-                new FoodServings(List.of(serving))
-        );
-    }
-
-
-
-
 }

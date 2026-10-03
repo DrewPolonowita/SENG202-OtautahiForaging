@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Unit tests for NoteDAO verifying note creation, retrieval, and deletion.
  * @author Team 4
  */
-public class NoteDAOTest extends TestSuite {
+class NoteDAOTest extends TestSuite {
 
     private NoteRepository noteDAO;
     private TreeRepository treeDAO;
@@ -109,9 +109,9 @@ public class NoteDAOTest extends TestSuite {
      */
     @Test
     void testNoteTreeLookup() throws DuplicateEntryException {
-        TreeModel tree1 = new TreeModel(101, new float[]{172.60f, -43.50f},
+        TreeModel tree1 = new TreeModel(101, List.of(172.60f, -43.50f),
                 "Council", "Malus", "Apple", "Apple", null, "serviced");
-        TreeModel tree2 = new TreeModel(202, new float[]{172.65f, -43.55f},
+        TreeModel tree2 = new TreeModel(202, List.of(172.65f, -43.55f),
                 "Council", "Pyrus", "Pear", "Pear", null, "serviced");
         treeDAO.add(tree1);
         treeDAO.add(tree2);
@@ -135,7 +135,7 @@ public class NoteDAOTest extends TestSuite {
      */
     @Test
     void testReferencedTreeNotDeleted() throws DuplicateEntryException {
-        TreeModel tree = new TreeModel(202, new float[]{172.65f, -43.55f},
+        TreeModel tree = new TreeModel(202,List.of(172.60f, -43.55f),
                 "Council", "Pyrus", "Pear", "Pear", null, "serviced");
         treeDAO.add(tree);
         int noteId = noteDAO.add(new Note(0, "Pear", null, tree.getId(), "wow i really like pears", null));
@@ -152,7 +152,7 @@ public class NoteDAOTest extends TestSuite {
     private void addTree(int id) throws DuplicateEntryException {
         treeDAO.add(new TreeModel(
                 id,
-                new float[]{1.0f, 1.0f},
+                List.of(1.0f, 1.0f),
                 "CCC",
                 "Malus",
                 "Apple",

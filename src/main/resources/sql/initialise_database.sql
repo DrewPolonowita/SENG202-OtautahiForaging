@@ -95,22 +95,30 @@ CREATE TABLE IF NOT EXISTS note (
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 --SPLIT
+DROP TABLE IF EXISTS recipe_uses_food;
+--SPLIT
+DROP TABLE IF EXISTS food_serving;
+--SPLIT
 DROP TABLE IF EXISTS food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS food (
     food_id INTEGER PRIMARY KEY,
     common_name TEXT NOT NULL,
     food_type TEXT NOT NULL,
-    calories DOUBLE,
-    carbohydrates   DOUBLE,
-    protein DOUBLE,
-    fat DOUBLE,
-    serving_description TEXT,
-    serving_id INTEGER,
     retrieval_time DATETIME
 );
 --SPLIT
-DROP TABLE IF EXISTS recipe_uses_food;
+CREATE TABLE IF NOT EXISTS food_serving (
+    food_id INTEGER NOT NULL,
+    serving_id INTEGER NOT NULL,
+    serving_description TEXT NOT NULL,
+    calories DOUBLE,
+    carbohydrates DOUBLE,
+    protein DOUBLE,
+    fat DOUBLE,
+    PRIMARY KEY (food_id, serving_id),
+    FOREIGN KEY (food_id) REFERENCES food(food_id) ON DELETE CASCADE
+);
 --SPLIT
 CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT NOT NULL,

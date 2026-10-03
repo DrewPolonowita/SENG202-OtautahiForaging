@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 
-public class RecipeDAOTest extends TestSuite {
+class RecipeDAOTest extends TestSuite {
 
     RecipeRepository recipeDAO;
     DatabaseManager databaseManager;
@@ -82,7 +82,7 @@ public class RecipeDAOTest extends TestSuite {
 
         recipeDAO.replaceRecipe(newRecipe);
         RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().getFirst();
-        recipeDAO.addIngredients(ingredient);
+        recipeDAO.addIngredient(ingredient);
         recipeDAO.addIngredientsByRecipe(ingredient, newRecipe);
 
         Recipe result = recipeDAO.getOne(newRecipe.getId());
@@ -97,7 +97,7 @@ public class RecipeDAOTest extends TestSuite {
 
     @Test
     void deleteRemovesRecipeAndLinkedData() throws Exception {
-        Recipe recipe = TestRecipeData.createRecipeModels().get(0);
+        Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
         addRecipeWithIngredient(recipe);
 
         recipeDAO.delete(recipe.getId());
@@ -117,7 +117,7 @@ public class RecipeDAOTest extends TestSuite {
 
     @Test
     void deleteRemovesRecipeUseFoodLink() throws DuplicateEntryException {
-        Recipe recipe = TestRecipeData.createRecipeModels().get(0);
+        Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
         addRecipeWithIngredient(recipe);
         recipeDAO.addRecipeUseFood("Apple", recipe.getId());
 
@@ -136,7 +136,7 @@ public class RecipeDAOTest extends TestSuite {
         recipeDAO.add(testRecipe);
 
         for (RecipeIngredient ingredient : ingredients) {
-            recipeDAO.addIngredients(ingredient);
+            recipeDAO.addIngredient(ingredient);
             recipeDAO.addIngredientsByRecipe(ingredient, testRecipe);
         }
 
@@ -151,7 +151,7 @@ public class RecipeDAOTest extends TestSuite {
 
     @Test
     void replaceRecipeUpdatesBasedOnTime() throws Exception {
-        Recipe recipe = TestRecipeData.createRecipeModels().get(0);
+        Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
         addRecipeWithIngredient(recipe);
 
         String sql = """
@@ -173,24 +173,20 @@ public class RecipeDAOTest extends TestSuite {
         assertTrue(recipeDAO.recipeDetailsUpToDateAndExist(recipe.getId()));
     }
 
-    private List<Recipe> fillDatabase() {
+    private List<Recipe> fillDatabase() throws DuplicateEntryException {
         List<Recipe> testRecipes = TestRecipeData.createRecipeModels();
         List<RecipeIngredient> testIngredients = TestRecipeData.createFakeRecipeIngredient();
         testRecipeService.populateIngredientTable(testIngredients);
 
         for (Recipe recipe : testRecipes) {
-            try {
-                recipeDAO.add(recipe);
-            } catch (DuplicateEntryException e) {
-
-            }
+            recipeDAO.add(recipe);
             testRecipeService.populateIngredientInRecipeTable(testIngredients, recipe);
         }
         return testRecipes;
     }
 
     @Test
-    public void testGetAllRecipesWithPopulatedDatabase() {
+    void testGetAllRecipesWithPopulatedDatabase() throws DuplicateEntryException {
         List<Recipe> populatedList = fillDatabase();
 
 
@@ -224,9 +220,9 @@ public class RecipeDAOTest extends TestSuite {
     }
 
     private void addRecipeWithIngredient(Recipe recipe) throws DuplicateEntryException {
-        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().get(0);
+        RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().getFirst();
         recipeDAO.add(recipe);
-        recipeDAO.addIngredients(ingredient);
+        recipeDAO.addIngredient(ingredient);
         recipeDAO.addIngredientsByRecipe(ingredient, recipe);
     }
 }

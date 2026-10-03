@@ -4,12 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team4.models.api.Food.FoodByID.FoodByIdRecord;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Food.FoodByID.FoodByIdResponse;
 import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
-import seng202.team4.models.api.Request;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.FoodApiClient;
 import seng202.team4.services.api.FoodClientInterface;
@@ -18,7 +17,6 @@ import seng202.team4.services.api.RecipeApiClient;
 import seng202.team4.services.api.RecipeClientInterface;
 
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FatSecretJsonResponseTest {
+class FatSecretJsonResponseTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -47,7 +45,7 @@ public class FatSecretJsonResponseTest {
     RecipeClientInterface recipeApiClient;
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         apiClient = mock(ApiClientInterface.class);
         oauth1Signature = mock(OAuth1Signature.class);
 
@@ -71,7 +69,7 @@ public class FatSecretJsonResponseTest {
     }
 
     @Test
-    public void ChickenFoodByIdBecomesCorrectRecords() throws Exception {
+    void ChickenFoodByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(chickenJson);
 
@@ -84,26 +82,26 @@ public class FatSecretJsonResponseTest {
                 new TypeReference<FoodByIdResponse>() {}
         );
 
-        Request<FoodByIdResponse> fakeRequest1 = new Request<>(foodByIdResponse1, 200);
+        ApiResponseWrapper<FoodByIdResponse> fakeApiResponseWrapper1 = new ApiResponseWrapper<>(foodByIdResponse1, 200);
 
 
         when(apiClient.getOauth(
                 eq("https://platform.fatsecret.com/rest/food/v5?food_id=1641&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
-        )).thenReturn(fakeRequest1);
+        )).thenReturn(fakeApiResponseWrapper1);
 
-        Request<FoodByIdResponse> actualRequest1 = foodApiClient.getFoodById(1641);
+        ApiResponseWrapper<FoodByIdResponse> actualApiResponseWrapper1 = foodApiClient.getFoodById(1641);
 
-        assertEquals(200, actualRequest1.getResponseCode());
-        assertEquals(1641, actualRequest1.getApiResponse().food().foodId());
-        assertEquals(5034, actualRequest1.getApiResponse().food().servings().serving().get(1).servingId());
-        assertEquals(164, actualRequest1.getApiResponse().food().servings().serving().get(1).calories());
-        assertEquals("Chicken Breast", actualRequest1.getApiResponse().food().foodName());
+        assertEquals(200, actualApiResponseWrapper1.getResponseCode());
+        assertEquals(1641, actualApiResponseWrapper1.getApiResponse().food().foodId());
+        assertEquals(5034, actualApiResponseWrapper1.getApiResponse().food().servings().servings().get(1).servingId());
+        assertEquals(164, actualApiResponseWrapper1.getApiResponse().food().servings().servings().get(1).calories());
+        assertEquals("Chicken Breast", actualApiResponseWrapper1.getApiResponse().food().foodName());
     }
 
     @Test
-    public void BakedLemonSnapperRecipeByIdBecomesCorrectRecords() throws Exception {
+    void BakedLemonSnapperRecipeByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(idBakedLemonSnapperJson);
 
@@ -116,25 +114,25 @@ public class FatSecretJsonResponseTest {
                 new TypeReference<RecipeByIdResponse>() {}
         );
 
-        Request<RecipeByIdResponse> fakeRequest = new Request<>(recipeByIdResponse, 200);
+        ApiResponseWrapper<RecipeByIdResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(recipeByIdResponse, 200);
 
 
         when(apiClient.getOauth(
                 eq("https://platform.fatsecret.com/rest/recipe/v2?recipe_id=91&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
-        )).thenReturn(fakeRequest);
+        )).thenReturn(fakeApiResponseWrapper);
 
-        Request<RecipeByIdResponse> actualRequest = recipeApiClient.getRecipeById(91);
+        ApiResponseWrapper<RecipeByIdResponse> actualApiResponseWrapper = recipeApiClient.getRecipeById(91);
 
-        assertEquals(200, actualRequest.getResponseCode());
-        assertEquals(91, actualRequest.getApiResponse().recipe().recipeId());
-        assertEquals("Baked Lemon Snapper", actualRequest.getApiResponse().recipe().recipeName());
-        assertEquals(177, actualRequest.getApiResponse().recipe().servingSizes().serving().calories());
+        assertEquals(200, actualApiResponseWrapper.getResponseCode());
+        assertEquals(91, actualApiResponseWrapper.getApiResponse().recipe().recipeId());
+        assertEquals("Baked Lemon Snapper", actualApiResponseWrapper.getApiResponse().recipe().recipeName());
+        assertEquals(177, actualApiResponseWrapper.getApiResponse().recipe().servingSizes().serving().calories());
     }
 
     @Test
-    public void CheeriosFoodByIdBecomesCorrectRecords() throws Exception {
+    void CheeriosFoodByIdBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(cheeriosJson);
 
@@ -147,20 +145,20 @@ public class FatSecretJsonResponseTest {
                 new TypeReference<FoodByIdResponse>() {}
         );
 
-        Request<FoodByIdResponse> fakeRequest = new Request<>(foodByIdResponse, 200);
+        ApiResponseWrapper<FoodByIdResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(foodByIdResponse, 200);
         when(apiClient.getOauth(
                 eq("https://platform.fatsecret.com/rest/food/v5?food_id=50953&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
-        )).thenReturn(fakeRequest);
-        Request<FoodByIdResponse> actualRequest = foodApiClient.getFoodById(50953);
+        )).thenReturn(fakeApiResponseWrapper);
+        ApiResponseWrapper<FoodByIdResponse> actualApiResponseWrapper = foodApiClient.getFoodById(50953);
 
-        assertEquals(200, actualRequest.getResponseCode());
-        assertEquals(50953, actualRequest.getApiResponse().food().foodId());
-        assertEquals("Whole Grain Cheerios", actualRequest.getApiResponse().food().foodName());
+        assertEquals(200, actualApiResponseWrapper.getResponseCode());
+        assertEquals(50953, actualApiResponseWrapper.getApiResponse().food().foodId());
+        assertEquals("Whole Grain Cheerios", actualApiResponseWrapper.getApiResponse().food().foodName());
     }
     @Test
-    public void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
+    void CheeseburgerSearchFoodBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(cheeseburgerJson);
 
@@ -172,14 +170,14 @@ public class FatSecretJsonResponseTest {
                 new TypeReference<FoodSearchResponse>() {
                 }
         );
-        Request<FoodSearchResponse> fakeRequest = new Request<>(foodSearchResponse, 200);
+        ApiResponseWrapper<FoodSearchResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(foodSearchResponse, 200);
         when(apiClient.getOauth(
                 eq("https://platform.fatsecret.com/rest/foods/search/v1?search_expression=Cheeseburger&max_results=1&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
-        )).thenReturn(fakeRequest);
+        )).thenReturn(fakeApiResponseWrapper);
 
-        Request<FoodSearchResponse> actualResponse = foodApiClient.searchFood("Cheeseburger", 1);
+        ApiResponseWrapper<FoodSearchResponse> actualResponse = foodApiClient.searchFood("Cheeseburger", 1);
 
         assertEquals(200, actualResponse.getResponseCode());
         assertEquals(41963, actualResponse.getApiResponse().foods().food().get(0).foodId());
@@ -187,22 +185,22 @@ public class FatSecretJsonResponseTest {
         assertEquals("Cheeseburger", actualResponse.getApiResponse().foods().food().get(0).foodName());
     }
 
-    public void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
+    void MushroomsSearchFoodBecomesCorrectRecords() throws Exception {
         FoodByIdResponse foodByIdResponse = objectMapper.readValue(
                 mushroomsJson,
                 FoodByIdResponse.class
         );
-        Request<FoodByIdResponse> fakeRequest = new Request<>(foodByIdResponse, 200);
+        ApiResponseWrapper<FoodByIdResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(foodByIdResponse, 200);
         when(apiClient.getOauth(
                 eq("https://platform.fatsecret.com/rest/food/v5?food_id=50953&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
-        )).thenReturn(fakeRequest);
+        )).thenReturn(fakeApiResponseWrapper);
     }
 
 
     @Test
-    public void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
+    void BakedLemonSnapperSearchRecipeBecomesCorrectRecords() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         Scanner scanner = new Scanner(searchBakedLemonSnapperJson);
 
@@ -214,14 +212,16 @@ public class FatSecretJsonResponseTest {
                 new TypeReference<RecipeSearchResponse>() {
                 }
         );
-        Request<RecipeSearchResponse> fakeRequest = new Request<>(recipeSearchResponse, 200);
+        ApiResponseWrapper<RecipeSearchResponse>
+                fakeApiResponseWrapper = new ApiResponseWrapper<>(recipeSearchResponse, 200);
         when(apiClient.getOauth(
                 eq("https://platform.fatsecret.com/rest/recipes/search/v3?search_expression=Baked%20Lemon%20Snapper&must_have_images=false&max_results=1&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
-        )).thenReturn(fakeRequest);
+        )).thenReturn(fakeApiResponseWrapper);
 
-        Request<RecipeSearchResponse> actualResponse = recipeApiClient.searchRecipe("Baked Lemon Snapper", false, 1);
+        ApiResponseWrapper<RecipeSearchResponse>
+                actualResponse = recipeApiClient.searchRecipe("Baked Lemon Snapper", false, 1);
 
         assertEquals(200, actualResponse.getResponseCode());
         assertEquals(91, actualResponse.getApiResponse().recipes().recipe().get(0).id());

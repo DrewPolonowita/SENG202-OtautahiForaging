@@ -2,12 +2,12 @@ package seng202.team4.services.dataCentre.recipeData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchRecord;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
-import seng202.team4.models.api.Request;
 import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.foodData.FoodService;
 
@@ -35,7 +35,7 @@ public class RecipeApiHandler {
      * @return list of ids to use in calling the FatSecret api for specific recipes
      */
     public List<Integer> getRecipeIdsByFoodFromApi(String searchExpression) {
-        Request<RecipeSearchResponse> response = recipeApiClient.searchRecipe(searchExpression, true, 20);
+        ApiResponseWrapper<RecipeSearchResponse> response = recipeApiClient.searchRecipe(searchExpression, true, 20);
 
         if (!validateApiResponse(response, searchExpression)) {
             return List.of();
@@ -56,7 +56,7 @@ public class RecipeApiHandler {
      * @return recipe object
      */
     public RecipeByIdRecord getRecipeById(int id) {
-        Request<RecipeByIdResponse> response = recipeApiClient.getRecipeById(id);
+        ApiResponseWrapper<RecipeByIdResponse> response = recipeApiClient.getRecipeById(id);
 
         if (!validateApiResponse(response, id)) {
             return null;
@@ -69,7 +69,7 @@ public class RecipeApiHandler {
      * Validating get recipe ids by food from api
      * @return true if there are no errors, false if an error is found
      */
-    private boolean validateApiResponse(Request<RecipeSearchResponse> response, String searchExpression) {
+    private boolean validateApiResponse(ApiResponseWrapper<RecipeSearchResponse> response, String searchExpression) {
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
             LOG.error("Error: getRecipesByIngredientFromApi doesn't return response, code: {}", responseCode);
@@ -100,7 +100,7 @@ public class RecipeApiHandler {
      * Validate recipe by id response
      * @return true if there are no errors, false if an error is found
      */
-    private boolean validateApiResponse(Request<RecipeByIdResponse> response, int id) {
+    private boolean validateApiResponse(ApiResponseWrapper<RecipeByIdResponse> response, int id) {
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
             LOG.error("Error: getRecipeById doesn't return response, code: {}", responseCode);

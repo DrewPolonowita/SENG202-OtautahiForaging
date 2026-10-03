@@ -41,6 +41,32 @@
             justify-content: center;
             align-items: center;
         }
+
+        .serving-select {
+            background-color: #3f6b4a;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+            padding: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .nutrition-info {
+            width: 100%;
+            margin-top: 8px;
+            font-size: 0.85em;
+            text-align: left;
+        }
+
+        .nutrition-info div {
+            margin: 2px 0;
+        }
+
         .journal-btn {
             background: #3f6b4a;
             color: white;
@@ -143,8 +169,10 @@
         const east = bounds.getEast();
         const south = bounds.getSouth();
         const west = bounds.getWest();
+        const center = map.getCenter();
 
-        javaScriptBridge.mapMoved(north, east, south, west);
+        javaScriptBridge.mapMoved(north, east, south, west,
+            center.lat, center.lng, map.getZoom());
     }
 
     /**
@@ -170,15 +198,21 @@
      * Adds a marker to the cluster group and binds its popup.
      * If a tree matches the journal target, it reveals it and opens its popup.
      * @param id the tree's ID
-     * @param title HTML content for the popup
+     * @param html tooltip to display on hover
      * @param food name of the food used to select the marker icon
      * @param lat latitude to place marker at
      * @param lng longitude to place marker at
      */
-
-    function addMarker(id, title, food, lat, lng) {
+    function addMarker(id, html, food, lat, lng) {
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
-        marker.bindPopup(title, { className: 'tree-popup', closeButton: true });
+
+        marker.bindPopup(html, { className: 'tree-popup', closeButton: true });
+
+        marker.on("popupopen", function (event) {
+            const select = event.popup.getElement().querySelector(".serving-select");
+            updateNutrition(select)
+        });
+
 
         markerClusterGroup.addLayer(marker);
         markers.push(marker);
@@ -200,6 +234,25 @@
     function removeMarkers() {
         markerClusterGroup.clearLayers();
         markers = [];
+    }
+
+    function updateNutrition(select) {
+        const selected = select.selectedOptions[0];
+        const card = select.closest(".tree-card");
+
+        updateNutritionText(card, "calories", "Calories", "kcal", selected.dataset.calories, 0);
+        updateNutritionText(card, "carbohydrates", "Carbohydrates", "g", selected.dataset.carbohydrates, 1);
+        updateNutritionText(card, "protein", "Protein", "g", selected.dataset.protein, 1);
+        updateNutritionText(card, "fat", "Fat", "g", selected.dataset.fat, 1);
+    }
+
+    function updateNutritionText(card, className, label, unit, value, decimals) {
+        card.querySelector("." + className).textContent =
+            label + ": " + formatNutrition(value, decimals) + " " + unit;
+    }
+    function formatNutrition(value, decimals) {
+        const number = Number(value);
+        return number.toFixed(decimals);
     }
 
 </script>

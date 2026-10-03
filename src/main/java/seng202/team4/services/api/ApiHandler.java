@@ -2,8 +2,8 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.TreeApi.TreeApiResponse;
-import seng202.team4.models.api.Request;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -105,18 +105,18 @@ public class ApiHandler {
      *
      * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
-    public Request<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
+    public ApiResponseWrapper<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
         try {
             HttpsURLConnection connection = createConnection(API_LINK
                     + urlEncodeParams(params, outFields, maxTuples));
             try {
                 TreeApiResponse apiResponse = getJsonData(connection);
-                return new Request<>(apiResponse, connection.getResponseCode());
+                return new ApiResponseWrapper<>(apiResponse, connection.getResponseCode());
             } catch (IOException e) {
-                return new Request<>(null, connection.getResponseCode());
+                return new ApiResponseWrapper<>(null, connection.getResponseCode());
             }
         } catch (IOException e) {
-            return new Request<>(null, -1);
+            return new ApiResponseWrapper<>(null, -1);
         }
     }
 
@@ -125,7 +125,7 @@ public class ApiHandler {
      *
      * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
-    public Request<TreeApiResponse> getTrees(
+    public ApiResponseWrapper<TreeApiResponse> getTrees(
             String params, String outFields, int maxTuples,  double north, double east, double south, double west
     ) {
         try {
@@ -133,12 +133,12 @@ public class ApiHandler {
                     + urlEncodeParams(params, outFields, maxTuples, north, east, south, west));
             try {
                 TreeApiResponse apiResponse = getJsonData(connection);
-                return new Request<>(apiResponse, connection.getResponseCode());
+                return new ApiResponseWrapper<>(apiResponse, connection.getResponseCode());
             } catch (IOException e) {
-                return new Request<>(null, connection.getResponseCode());
+                return new ApiResponseWrapper<>(null, connection.getResponseCode());
             }
         } catch (IOException e) {
-            return new Request<>(null, -1);
+            return new ApiResponseWrapper<>(null, -1);
         }
     }
 }

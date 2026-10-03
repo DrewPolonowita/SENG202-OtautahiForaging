@@ -4,13 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team4.helpers.TestRecipeData;
 import seng202.team4.models.Recipe;
+import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchDetails;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchRecord;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
-import seng202.team4.models.api.Request;
 import seng202.team4.repository.RecipeRepository;
+import seng202.team4.services.RecipeFactory;
 import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.recipeData.RecipeService;
 import seng202.team4.unittests.TestSuite;
@@ -31,7 +32,6 @@ import java.util.List;
 
 /**
  * Mostly tests getRecipesForFood, heres the branches
- *
  * getRecipesForFood decides between database and api.
  * It essentially asks:
  * Do we have the recipe ids for the food?
@@ -39,7 +39,7 @@ import java.util.List;
  *
  *
  */
-public class RecipeServiceTest extends TestSuite {
+class RecipeServiceTest extends TestSuite {
 
     RecipeRepository testRecipeRepository;
     RecipeClientInterface testRecipeClient;
@@ -48,7 +48,7 @@ public class RecipeServiceTest extends TestSuite {
 
 
     @BeforeEach
-    public void setUpTest() {
+    void setUpTest() {
         testRecipeRepository = mock(RecipeRepository.class);
         testRecipeClient = mock(RecipeClientInterface.class);
         testRecipeService = new RecipeService(testRecipeRepository, testRecipeClient);
@@ -56,7 +56,7 @@ public class RecipeServiceTest extends TestSuite {
 
 
     @Test
-    public void testIdsExistsAndDetailsUpToDate() {
+    void testIdsExistsAndDetailsUpToDate() {
         Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -80,7 +80,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsExistsButDetailsNotUpToDate() {
+    void testIdsExistsButDetailsNotUpToDate() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -88,7 +88,7 @@ public class RecipeServiceTest extends TestSuite {
         when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
                 .thenReturn(false);
         when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
-                .thenReturn(new Request<>(recipeByIdResponse(recipeRecord), 200));
+                .thenReturn(new ApiResponseWrapper<>(recipeByIdResponse(recipeRecord), 200));
 
         List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
 
@@ -107,18 +107,18 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsDontExistAndApiReturnsIds() {
+    void testIdsDontExistAndApiReturnsIds() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
-        Recipe expectedRecipe = testRecipeService.createRecipeObjectById(recipeRecord);
+        Recipe expectedRecipe = RecipeFactory.createRecipeObjectById(recipeRecord);
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
                 .thenReturn(List.of());
         when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
                 .thenReturn(false, false, true);
         when(testRecipeClient.searchRecipe("Apple", true, 20))
-                .thenReturn(new Request<>(searchResponseWithRecipeId(recipeRecord.recipeId()), 200));
+                .thenReturn(new ApiResponseWrapper<>(searchResponseWithRecipeId(recipeRecord.recipeId()), 200));
         when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
-                .thenReturn(new Request<>(recipeByIdResponse(recipeRecord), 200));
+                .thenReturn(new ApiResponseWrapper<>(recipeByIdResponse(recipeRecord), 200));
         when(testRecipeRepository.getOne(recipeRecord.recipeId()))
                 .thenReturn(expectedRecipe);
 
@@ -136,7 +136,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsDontExistButApiThrowsErrorsOnSearch() {
+    void testIdsDontExistButApiThrowsErrorsOnSearch() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -144,7 +144,7 @@ public class RecipeServiceTest extends TestSuite {
         when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
                 .thenReturn(false);
         when(testRecipeClient.searchRecipe("Apple", true, 20))
-                .thenReturn(new Request<>(null, 500));
+                .thenReturn(new ApiResponseWrapper<>(null, 500));
 
         List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
 
@@ -163,7 +163,7 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testIdsAreFoundAtApiButApiThrowsErrorWhenLookingForMoreDetail() {
+    void testIdsAreFoundAtApiButApiThrowsErrorWhenLookingForMoreDetail() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
         when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
@@ -171,9 +171,9 @@ public class RecipeServiceTest extends TestSuite {
         when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
                 .thenReturn(false);
         when(testRecipeClient.searchRecipe("Apple", true, 20))
-                .thenReturn(new Request<>(searchResponseWithRecipeId(recipeRecord.recipeId()), 200));
+                .thenReturn(new ApiResponseWrapper<>(searchResponseWithRecipeId(recipeRecord.recipeId()), 200));
         when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
-                .thenReturn(new Request<>(null, 500));
+                .thenReturn(new ApiResponseWrapper<>(null, 500));
 
         List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
 
@@ -214,9 +214,9 @@ public class RecipeServiceTest extends TestSuite {
     }
 
     @Test
-    public void testCreateRecipeObjectById() {
+    void testCreateRecipeObjectById() {
         RecipeByIdRecord testByIdRecord = TestRecipeData.createFakeRecipeByIdRecord();
-        Recipe testRecipeRecord = testRecipeService.createRecipeObjectById(testByIdRecord);
+        Recipe testRecipeRecord = RecipeFactory.createRecipeObjectById(testByIdRecord);
         List<String> testIngredients = List.of("1 Apple");
         Recipe expectedRecord  = new Recipe(123, "Recipe Name", "1: Direction step 1\n2: Direction step 2", testIngredients, 345, 123,567, 789, "Description", null, "Image URL", 10, 10);
         assertEquals(expectedRecord, testRecipeRecord);
