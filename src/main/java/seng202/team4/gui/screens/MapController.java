@@ -114,6 +114,7 @@ public class MapController extends ScreenController {
         createFruitButtons();
         toggleAllFilterButtons();
 
+        createClusterGroups();
         initMap();
         CompletableFuture
                 .supplyAsync(foodService::getFoods)
@@ -345,6 +346,12 @@ public class MapController extends ScreenController {
             filterButton.getStyleClass().add("sideBar-button");
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
             filterBox.getChildren().add(filterButton);
+        }
+    }
+
+    private void createClusterGroups() {
+        for (Fruit fruit : Fruit.values()) {
+            javaScriptConnector.call("createClusterGroup", fruit);
         }
     }
 
