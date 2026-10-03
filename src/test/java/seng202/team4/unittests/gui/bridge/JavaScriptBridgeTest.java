@@ -19,17 +19,18 @@ class JavaScriptBridgeTest {
         AddToJournalInterface journalCallback = receivedId::set;
         AddTreeInterface addCallback = tree -> {};
 
-        JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, addCallback, null);
+        JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, addCallback, id->{}, null);
         testBridge.addTreeToJournal(testId);
         assertEquals(testId, receivedId.get());
     }
 
     @Test
-    public void testMapMoveValuesReachCallback() {
+    void testMapMoveValuesReachCallback() {
         double[] receivedValues = new double[7];
         JavaScriptBridge testBridge = new JavaScriptBridge(
                 id -> { },
                 tree -> { },
+                id -> {},
                 ((north, east, south, west, latitude, longitude, zoom) -> {
                     double[] values = {north, east, south, west, latitude, longitude, zoom};
                     for (int i=0; i < receivedValues.length; i++) {
