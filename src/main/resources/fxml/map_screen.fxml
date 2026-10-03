@@ -17,8 +17,8 @@
       <StackPane BorderPane.alignment="CENTER">
 
          <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" />
-         <VBox fx:id="mapLoadingOverlay" alignment="TOP_CENTER" spacing="10.0" visible="false" managed="false" StackPane.alignment="TOP_CENTER">
-            <ProgressBar fx:id="mapLoadingBar" prefWidth="200.0" progress="-1.0" StackPane.alignment="TOP_CENTER" >
+         <VBox fx:id="mapLoadingOverlay" mouseTransparent="true" alignment="TOP_CENTER" spacing="10.0" visible="false" managed="false" StackPane.alignment="TOP_CENTER">
+            <ProgressBar fx:id="mapLoadingBar" prefWidth="200.0" StackPane.alignment="TOP_CENTER" >
                <StackPane.margin>
                   <Insets top="25.0" />
                </StackPane.margin>
@@ -48,6 +48,13 @@
                <Insets bottom="10.0" left="10.0" right="10.0" top="8.0" />
             </padding>
          </VBox>
+         <StackPane fx:id="attributionPane"
+                    pickOnBounds="false"
+                    StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+               <Insets bottom="42.0" right="14.0" />
+            </StackPane.margin>
+         </StackPane>
       </StackPane>
    </center>
    <stylesheets>

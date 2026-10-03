@@ -1,6 +1,8 @@
 package seng202.team4.services.dataCentre.foodData;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team4.models.Food;
 import seng202.team4.services.FoodMapper;
 import seng202.team4.services.api.FoodClientInterface;
@@ -15,6 +17,7 @@ import java.util.List;
  * @author Team 4
  */
 public class FoodService implements FoodDataManager {
+    private static final Logger LOG = LogManager.getLogger(FoodService.class);
     private final FoodMapper foodMapper;
 
     private final FoodRepository foodDao;
@@ -90,6 +93,11 @@ public class FoodService implements FoodDataManager {
      */
     @Override
     public List<Food> getFoods() {
+        foodCache.resetStats();
+        foodIdByNameCache.resetStats();
+
+        long startTime = System.currentTimeMillis();
+
         List<Food> foods = new ArrayList<>();
         for (String foodName : foodMapper.getFoodMap().keySet()) {
             Food food = foodCache.get(foodName);
@@ -97,7 +105,29 @@ public class FoodService implements FoodDataManager {
                 foods.add(food);
             }
         }
+        long durationMs = System.currentTimeMillis() - startTime;
+
+        LOG.info("Loaded {} foods in {} ms", foods.size(), durationMs);
+        LOG.info("Food cache stats: {}", foodCache.stats());
+        LOG.info("Food ID cache stats: {}", foodIdByNameCache.stats());
+
 
         return foods;
+    }
+
+    @Override
+    public Food getFood(String foodName) {
+        Food foodToReturn;
+        foodCache.resetStats();
+        foodIdByNameCache.resetStats();
+
+        long startTime = System.currentTimeMillis();
+        foodToReturn = foodCache.get(foodName);
+        long durationMs = System.currentTimeMillis() - startTime;
+
+        LOG.info("Loaded food in {} ms", durationMs);
+        LOG.info("Food cache stats: {}", foodCache.stats());
+        LOG.info("Food ID cache stats: {}", foodIdByNameCache.stats());
+        return foodToReturn;
     }
 }
