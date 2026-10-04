@@ -60,6 +60,7 @@ public class WindowManager {
         // Scaling minimum sizes
         stage.setMinWidth(600);
         stage.setMinHeight(360);
+        stage.setTitle("Otautahi Foraging");
 
         // Creates the BorderPane for the navBar and the mainScreen
         rootPane = new BorderPane();
@@ -183,7 +184,7 @@ public class WindowManager {
         try {
             Parent setupParent = loadScreen(controller);
             pane.setCenter(setupParent);
-            stage.setTitle(controller.getTitle());
+            //stage.setTitle(controller.getTitle());
         } catch (IOException e) {
             LOG.error(e);
         }
