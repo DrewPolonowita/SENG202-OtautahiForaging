@@ -17,4 +17,6 @@ public interface FoodDataManager {
      */
     List<Food> getFoods();
 
+    Food getFood(String foodName);
+
 }

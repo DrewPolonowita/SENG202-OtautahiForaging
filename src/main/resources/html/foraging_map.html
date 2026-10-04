@@ -101,6 +101,7 @@
 
     let map;
     let markers = [];
+    let markersById = {};
     let markerClusterGroup;
     let revealingTree = false; // prevents marker refresh while revealing journal target's tree.
     let pendingTreeId = null; // specific tree from journal.
@@ -116,7 +117,8 @@
     let jsConnector = {
         addMarker: addMarker,
         removeMarkers: removeMarkers,
-        initMap: initMap
+        initMap: initMap,
+        updateMarkerPopup: updateMarkerPopup
     };
 
     /**
@@ -154,7 +156,12 @@
             }
         });
 
-        createMapMarkers();
+        map.whenReady(function () {
+            setTimeout(function () {
+                map.invalidateSize();
+                createMapMarkers();
+            }, 0);
+        });
 
     }
 
@@ -205,17 +212,26 @@
      */
     function addMarker(id, html, food, lat, lng) {
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
+        marker.nutritionLoaded = false;
 
         marker.bindPopup(html, { className: 'tree-popup', closeButton: true });
 
         marker.on("popupopen", function (event) {
+            if (!marker.nutritionLoaded) {
+                javaScriptBridge.loadTreeNutrition(id);
+                return;
+            }
+
             const select = event.popup.getElement().querySelector(".serving-select");
-            updateNutrition(select)
+            if (select) {
+                updateNutrition(select);
+            }
         });
 
 
         markerClusterGroup.addLayer(marker);
         markers.push(marker);
+        markersById[id] = marker;
 
         if (id == pendingTreeId && pendingTreeId != null) {
             pendingTreeId = null;
@@ -234,6 +250,7 @@
     function removeMarkers() {
         markerClusterGroup.clearLayers();
         markers = [];
+        markersById = {};
     }
 
     function updateNutrition(select) {
@@ -253,6 +270,26 @@
     function formatNutrition(value, decimals) {
         const number = Number(value);
         return number.toFixed(decimals);
+    }
+
+    function updateMarkerPopup(id, html) {
+        const marker = markersById[id];
+
+        if (!marker) {
+            return;
+        }
+
+        marker.nutritionLoaded = true;
+        marker.setPopupContent(html);
+
+        if (marker.isPopupOpen()) {
+            const popup = marker.getPopup();
+            const select = popup.getElement().querySelector(".serving-select");
+
+            if (select) {
+                updateNutrition(select);
+            }
+        }
     }
 
 </script>

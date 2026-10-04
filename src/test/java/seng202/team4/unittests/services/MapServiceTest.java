@@ -2,7 +2,7 @@ package seng202.team4.unittests.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team4.models.Fruit;
+import seng202.team4.models.FilterCategory;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.MapService;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
@@ -68,7 +68,7 @@ public class MapServiceTest {
     void testOneFruitSelected() throws Exception {
         TreeModel appleTree = mock(TreeModel.class);
         when(testTreeDataManager.getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(appleTree));
-        mapService.addSelectedFruit(Fruit.APPLE);
+        mapService.addSelectedFruit(FilterCategory.APPLE);
         CompletableFuture<List<TreeModel>> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5);
         assertEquals(List.of(appleTree), result.get(2, TimeUnit.SECONDS));
         verify(testTreeDataManager).getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5);
@@ -84,8 +84,8 @@ public class MapServiceTest {
         TreeModel pearTree = mock(TreeModel.class);
         when(testTreeDataManager.getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(appleTree));
         when(testTreeDataManager.getTreesByRegion("Pear", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(pearTree));
-        mapService.addSelectedFruit(Fruit.APPLE);
-        mapService.addSelectedFruit(Fruit.PEAR);
+        mapService.addSelectedFruit(FilterCategory.APPLE);
+        mapService.addSelectedFruit(FilterCategory.PEAR);
         List<TreeModel> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5).get(2, TimeUnit.SECONDS);
         assertEquals(2, result.size());
         assertTrue(result.containsAll(List.of(appleTree, pearTree)));
@@ -99,8 +99,8 @@ public class MapServiceTest {
      */
     @Test
     void removeSelectedFruit() throws Exception {
-        mapService.addSelectedFruit(Fruit.APPLE);
-        mapService.removeSelectedFruit(Fruit.APPLE);
+        mapService.addSelectedFruit(FilterCategory.APPLE);
+        mapService.removeSelectedFruit(FilterCategory.APPLE);
 
         List<TreeModel> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5).get(2, TimeUnit.SECONDS);
         assertTrue(result.isEmpty());
@@ -113,7 +113,7 @@ public class MapServiceTest {
     @Test
     void removeUnselectedFruit() {
         assertThrows(IllegalArgumentException.class, () -> {
-            mapService.removeSelectedFruit(Fruit.APPLE);
+            mapService.removeSelectedFruit(FilterCategory.APPLE);
         }, "Expected IllegalArgumentException");
     }
 
@@ -122,9 +122,9 @@ public class MapServiceTest {
      */
     @Test
     void addDuplicateFruit() {
-        mapService.addSelectedFruit(Fruit.APPLE);
+        mapService.addSelectedFruit(FilterCategory.APPLE);
         assertThrows(IllegalArgumentException.class, () -> {
-            mapService.addSelectedFruit(Fruit.APPLE);
+            mapService.addSelectedFruit(FilterCategory.APPLE);
         }, "Expected IllegalArgumentException");
     }
 
@@ -136,9 +136,9 @@ public class MapServiceTest {
     void testRemoveOneOfTwoFruits() throws Exception {
         TreeModel pearTree = mock(TreeModel.class);
         when(testTreeDataManager.getTreesByRegion("Pear", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(pearTree));
-        mapService.addSelectedFruit(Fruit.APPLE);
-        mapService.addSelectedFruit(Fruit.PEAR);
-        mapService.removeSelectedFruit(Fruit.APPLE);
+        mapService.addSelectedFruit(FilterCategory.APPLE);
+        mapService.addSelectedFruit(FilterCategory.PEAR);
+        mapService.removeSelectedFruit(FilterCategory.APPLE);
         CompletableFuture<List<TreeModel>> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5);
         assertEquals(List.of(pearTree), result.get(2, TimeUnit.SECONDS));
         verify(testTreeDataManager).getTreesByRegion("Pear", -43.4, 172.7, -43.6, 172.5);
@@ -152,7 +152,7 @@ public class MapServiceTest {
     void testBackendFailure() {
         RuntimeException failure = new RuntimeException("API ISSUE");
         when(testTreeDataManager.getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5)).thenThrow(failure);
-        mapService.addSelectedFruit(Fruit.APPLE);
+        mapService.addSelectedFruit(FilterCategory.APPLE);
         CompletableFuture<List<TreeModel>> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5);
         ExecutionException thrown = assertThrows(ExecutionException.class, () -> {
             result.get(2, TimeUnit.SECONDS);

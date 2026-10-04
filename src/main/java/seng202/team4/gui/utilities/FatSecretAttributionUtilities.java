@@ -27,10 +27,15 @@ public final class FatSecretAttributionUtilities {
     /**
      * Creates a FatSecret Atribution Image
      */
-    public static ImageView createStandardAttributionImage() {
+    public static ImageView createStandardAttributionImage(boolean darkMode) {
         ImageView imageView = new ImageView();
+        Image image;
         imageView.setFitWidth(200);
-        Image image = new Image(FATSECRET_ATTRIBUTION_STANDARD_IMAGE_URL, true);
+        if (darkMode) {
+            image = new Image(FATSECRET_ATTRIBUTION_DARK_IMAGE_URL, true);
+        } else {
+            image = new Image(FATSECRET_ATTRIBUTION_STANDARD_IMAGE_URL, true);
+        }
         imageView.setImage(image);
         imageView.setOnMouseClicked(event -> {
             try {

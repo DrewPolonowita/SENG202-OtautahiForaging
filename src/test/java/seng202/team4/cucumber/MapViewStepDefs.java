@@ -20,6 +20,7 @@ public class MapViewStepDefs {
         bridge = new JavaScriptBridge(
                 id -> {},
                 tree -> {},
+                id -> {},
                 (north, east, south, west, latitude, longitude, zoom) -> {
                     receivedLatitude = latitude;
                     receivedLongitude = longitude;

@@ -2,7 +2,9 @@ package seng202.team4.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.models.FilterCategory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ public class FoodMapper {
     public FoodMapper() {
         createFoodMap();
         createTypeMap();
+        validateFoodMap();
     }
 
 
@@ -137,6 +140,26 @@ public class FoodMapper {
         ));
     }
 
+    /**
+     * Method to confirm that nothing in the fruit enum doesn't exist in FoodMapper
+     */
+    private void validateFoodMap() {
+        List<String> missing = new ArrayList<>();
+
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            String fruitName = filterCategory.toString();
+
+            if (!foodMap.containsKey(fruitName)) {
+                missing.add(fruitName);
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            throw new IllegalStateException(
+                    "Missing FoodMapper entries for: " + missing
+            );
+        }
+    }
 
     /**
      * Given a food name get its type

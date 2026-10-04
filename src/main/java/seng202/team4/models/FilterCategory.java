@@ -3,14 +3,13 @@ package seng202.team4.models;
 /**
  * An enum class to handle different fruits using for filtering and querying.
  */
-public enum Fruit {
+public enum FilterCategory {
     APPLE,
     PEAR,
     PEACH,
     APRICOT,
     WALNUT,
     STRAWBERRY;
-    //ONLY add food that are keys in FoodMapper createFoodMap()
     /**
      * Returns the string format of a given fruit for the api and database
      * @return the string format of a given fruit for the api and database

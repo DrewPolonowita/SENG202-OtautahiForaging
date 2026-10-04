@@ -1,13 +1,16 @@
 package seng202.team4.gui.screens;
 
 import com.sun.javafx.webkit.WebConsoleListener;
-import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -17,23 +20,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
+import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
+
+import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Food;
-import seng202.team4.models.FoodServing;
-import seng202.team4.models.Fruit;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
+import seng202.team4.services.TreePopupBuilder;
 import seng202.team4.services.dataCentre.foodData.FoodDataManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.Objects;
 
 /**
  * Controller for the map_screen.fxml window which controls the map
@@ -42,11 +46,12 @@ import java.util.concurrent.CompletableFuture;
 public class MapController extends ScreenController {
 
     private static final Logger LOG = LogManager.getLogger(MapController.class);
+    private static final String ICON_SELECTED = "icon-selected";
+    private static final String UPDATE_POPUP_MARKER = "updateMarkerPopup";
+    private static final double MAX_HEIGHT_FOR_DISPLAYING = 1;
     private final MapService mapService;
 
-    private final TreeDataManager treeService;
     private final FoodDataManager foodService;
-    private static final double MAX_HEIGHT_FOR_DISPLAYING = 1;
 
     private double northBound;
     private double eastBound;
@@ -68,21 +73,22 @@ public class MapController extends ScreenController {
     @FXML
     private Label mapLoadingLabel;
 
+    @FXML
+    private StackPane attributionPane;
+
     private WebEngine webEngine;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
 
-    private StateManager stateManager;
+    private final StateManager stateManager;
 
     private final ThemeService themeService;
 
     private final Map<Integer, TreeModel> currentTrees = new HashMap<>();
 
     private final TreeModel targetTree;
-    private List<Food> foods = new ArrayList<>();
-    private boolean foodsLoaded = false;
 
-    private static final String ICON_SELECTED = "icon-selected";
+
 
 
     /**
@@ -93,7 +99,7 @@ public class MapController extends ScreenController {
     public MapController(StateManager stateManager, ThemeService themeService, TreeModel targetTree) {
         super(stateManager);
         this.stateManager = stateManager;
-        this.treeService = stateManager.getTreeService();
+        TreeDataManager treeService = stateManager.getTreeService();
         this.mapService = new MapService(treeService);
         this.themeService = themeService;
         this.targetTree = targetTree;
@@ -107,6 +113,10 @@ public class MapController extends ScreenController {
     @FXML
     private void initialize() {
         LOG.info("MapController initialize() called");
+        ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage(stateManager.getWindowManager().getThemeService().isDarkMode());
+        attributionPane.getChildren().add(attribution);
+        StackPane.setAlignment(attribution, Pos.BOTTOM_RIGHT);
+
         showMapLoadingBar("Loading map...");
         javaScriptBridge = new JavaScriptBridge(
                 id -> {
@@ -118,30 +128,12 @@ public class MapController extends ScreenController {
                     }
                 },
                 tree -> { },
+                this::loadNutritionForTree,
                 this::mapMoved
         );
         createFruitButtons();
         toggleAllFilterButtons();
-        LOG.info("start get foods");
-        showMapLoadingBar("Loading food data... ");
-        CompletableFuture
-                .supplyAsync(foodService::getFoods)
-                .thenAccept(loadedFoods -> Platform.runLater(() -> {
-                    foods = loadedFoods;
-                    foodsLoaded = true;
-                    LOG.info("Found {} foods", foods.size());
 
-                    if (northBound != 0 || eastBound != 0 || southBound != 0 || westBound != 0) {
-                        mapMoved(northBound, eastBound, southBound, westBound,
-                                stateManager.getMapLatitude(),
-                                stateManager.getMapLongitude(),
-                                stateManager.getMapZoom());
-                    }
-                }))
-                .exceptionally(ex -> {
-                    LOG.error("Failed to load foods", ex);
-                    return null;
-                });
         initMap();
 
     }
@@ -154,7 +146,7 @@ public class MapController extends ScreenController {
     private void initMap() {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
-        webEngine.load(getClass().getClassLoader().getResource("html/foraging_map.html").toExternalForm());
+        webEngine.load(Objects.requireNonNull(getClass().getClassLoader().getResource("html/foraging_map.html")).toExternalForm());
         WebConsoleListener.setDefaultListener((view, message, lineNumber, sourceId) ->
                 LOG.info(String.format("Map WebView console log line: %d, message : %s", lineNumber, message)));
 
@@ -228,12 +220,6 @@ public class MapController extends ScreenController {
         }
 
         setCurrentBounds(north, east, south, west);
-
-
-        if (!foodsLoaded) {
-            showMapLoadingBar("Loading food data...");
-            return;
-        }
         showMapLoadingBar("Loading nearby trees...");
 
 
@@ -257,6 +243,10 @@ public class MapController extends ScreenController {
         });
     }
 
+    /**
+     * Turn on the loading bar with a message
+     * @param loadingMessage message to display to user
+     */
     private void showMapLoadingBar(String loadingMessage) {
         mapLoadingLabel.setText(loadingMessage);
         mapLoadingBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
@@ -264,6 +254,9 @@ public class MapController extends ScreenController {
         mapLoadingOverlay.setManaged(true);
     }
 
+    /**
+     * Hide loading bar
+     */
     private void hideMapLoadingBar() {
         mapLoadingOverlay.setVisible(false);
         mapLoadingOverlay.setManaged(false);
@@ -278,10 +271,7 @@ public class MapController extends ScreenController {
             LOG.info(MessageFormat.format("Completed request for {0} trees.", trees.size()));
             removeTreeMarkers();
             for (TreeModel tree : trees) {
-                Food treeFood = findTreeFood(tree.getFood());
-                if (treeFood != null) {
-                    addTreeMarker(tree, treeFood);
-                }
+                addTreeMarker(tree);
             }
         }
         hideMapLoadingBar();
@@ -289,82 +279,87 @@ public class MapController extends ScreenController {
     }
 
     /**
-     * Method to find the food object and information for the food on a tree
-     * @param foodName name of food from the tree
-     * @return food
-     */
-    private Food findTreeFood(String foodName) {
-        for (Food food : foods) {
-            if (food.getName().equalsIgnoreCase(foodName)) {
-                return food;
-            }
-        }
-        return null;
-    }
-
-
-    /**
      * Formatting the string popup for tree data points on Leaflet
      * Each tree added as a marker will have a popup description
      */
-    private void addTreeMarker(TreeModel tree, Food food) {
+    private void addTreeMarker(TreeModel tree) {
         currentTrees.put(tree.getId(), tree);
-        String popup = buildMarkerHtml(tree, food);
 
         javaScriptConnector.call("addMarker",
                 tree.getId(),
-                popup,
+                new TreePopupBuilder.Builder(tree)
+                        .message("Loading nutrition...")
+                        .build(),
                 tree.getFood(),
                 tree.getYCoord(),
                 tree.getXCoord()
         );
     }
 
+    /**
+     * Loads nutrition for a particular tree asynchronously,
+     * using different HTML for different stages of the loading
+     * @param id tree to be loaded
+     */
+    private void loadNutritionForTree(int id) {
+        TreeModel tree = currentTrees.get(id);
 
-    private String buildMarkerHtml(TreeModel tree, Food food) {
-        String popup = String.format(
-                "<div class=\"tree-card\">"
-                        + "<div class=\"tree-card-body\">"
-                        + "<b>%s</b><br>" //food
-                        + "<span style=\"font-size: 0.8em; opacity: 0.7;\">Genus: %s</span>" //genus
-                        + "<select class=\"serving-select\" onchange=\"updateNutrition(this)\">"
-                        + buildServingOptions(food)
-                        + "</select>"
-                        + "<div class=\"nutrition-info\">"
-                        + "<div class=\"calories\">Calories: %f kcal </div>" //cal
-                        + "<div class=\"carbohydrates\">Carbohydrates: %f g</div>" //carb
-                        + "<div class=\"protein\">Protein: %f g</div>" //protein
-                        + "<div class=\"fat\">Fat: %f g </div>" // fat
-                        + "</div>"
-                        + "<button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>" // id
-                        + "</div></div>",
-                tree.getFood(),
-                tree.getGenus(),
-                food.getDefaultServing().getCalories(),
-                food.getDefaultServing().getCarbohydrates(),
-                food.getDefaultServing().getProtein(),
-                food.getDefaultServing().getFat(),
-                tree.getId()
-        );
-
-        return popup;
-    }
-
-    private String buildServingOptions(Food food) {
-        StringBuilder servingOptions = new StringBuilder();
-
-        for (FoodServing serving : food.getServings()) {
-            servingOptions.append(String.format(
-                    "<option data-calories=\"%f\" data-carbohydrates=\"%f\" data-protein=\"%f\" data-fat=\"%f\">%s</option>",
-                    serving.getCalories(),
-                    serving.getCarbohydrates(),
-                    serving.getProtein(),
-                    serving.getFat(),
-                    serving.getDescription()
-            ));
+        if (tree == null) {
+            return;
         }
 
-        return servingOptions.toString();
+        Task<Food> task = new Task<>() {
+            @Override
+            protected Food call() {
+                return foodService.getFood(tree.getFood());
+            }
+        };
+
+        task.setOnSucceeded(event -> updatePopupWithFood(id, task, tree));
+        task.setOnFailed(event -> updatePopupWithFailedFood(id, task, tree));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    /**
+     * Given getFood succeeds, update the popup using the correct html
+     * @param id marker being updated
+     * @param task task that succeeded
+     * @param tree tree the marker is for
+     */
+    private void updatePopupWithFood(int id, Task<Food> task, TreeModel tree) {
+        Food food = task.getValue();
+
+        String popupHtml;
+        if (food == null) {
+            popupHtml = new TreePopupBuilder.Builder(tree)
+                    .message("Nutrition info unavailable.")
+                    .build();
+        } else {
+            popupHtml = new TreePopupBuilder.Builder(tree)
+                    .food(food)
+                    .build();
+        }
+
+        javaScriptConnector.call(UPDATE_POPUP_MARKER, id, popupHtml);
+    }
+
+    /**
+     * Nutrition didn't load, so update marker with corresponding message
+     * @param id marker being updated
+     * @param task task that failed
+     * @param tree tree the marker is for
+     */
+    private void updatePopupWithFailedFood(int id, Task<Food> task, TreeModel tree) {
+        LOG.error("Failed to load nutrition for tree {}", id, task.getException());
+
+        String popupHtml = new TreePopupBuilder.Builder(tree)
+                .message("Nutrition info unavailable.")
+                .build();
+
+        javaScriptConnector.call(UPDATE_POPUP_MARKER, id, popupHtml);
     }
 
     /**
@@ -380,9 +375,9 @@ public class MapController extends ScreenController {
      */
     private void createFruitButtons() {
         filterBox.getChildren().clear();
-        for (Fruit fruit : Fruit.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(fruit);
-            filterButton.setOnAction(event -> filterButtonClicked(filterButton, fruit));
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterBox.getChildren().add(filterButton);
         }
     }
@@ -391,15 +386,15 @@ public class MapController extends ScreenController {
      * Toggles the fruit button being clicked, and updates the
      * map to show only the relevant fruit trees
      * @param button
-     * @param fruit
+     * @param filterCategory
      */
-    public void filterButtonClicked(Button button, Fruit fruit) {
+    public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(button);
 
         if (FruitFilterUtilities.isSelected(button)) {
-            mapService.addSelectedFruit(fruit);
+            mapService.addSelectedFruit(filterCategory);
         } else {
-            mapService.removeSelectedFruit(fruit);
+            mapService.removeSelectedFruit(filterCategory);
         }
         mapMoved(northBound, eastBound, southBound, westBound,
                 stateManager.getMapLatitude(),
@@ -416,8 +411,8 @@ public class MapController extends ScreenController {
             Button button = (Button) node;
             FruitFilterUtilities.toggleButtonStyle(button);
         }
-        for (Fruit fruit : Fruit.values()) {
-            mapService.addSelectedFruit(fruit);
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            mapService.addSelectedFruit(filterCategory);
         }
     }
 

@@ -23,7 +23,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.gui.utilities.RecipeFilterService;
-import seng202.team4.models.Fruit;
+import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
@@ -55,6 +55,7 @@ public class RecipesController extends ScreenController {
     private Text recipeDetailsText;
     @FXML
     private VBox filterList;
+    private final StateManager stateManager;
 
     private RecipeFilterService recipeFilterService;
 
@@ -73,6 +74,7 @@ public class RecipesController extends ScreenController {
      */
     public RecipesController(StateManager stateManager) {
         super(stateManager);
+        this.stateManager = stateManager;
     }
 
     public String getFxmlFile() {
@@ -90,7 +92,7 @@ public class RecipesController extends ScreenController {
     @FXML
     public void initialize() {
         recipeService = getStateManager().getRecipeService();
-        ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage();
+        ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage(stateManager.getWindowManager().getThemeService().isDarkMode());
         attributionPane.getChildren().add(attribution);
         createFruitButtons();
         this.recipeFilterService = new RecipeFilterService(recipeService);
@@ -274,8 +276,8 @@ public class RecipesController extends ScreenController {
     private void createFruitButtons() {
         filterList.getChildren().clear();
 
-        for (Fruit fruit : Fruit.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(fruit);
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
             filterButton.setOnAction(event -> filterButtonClicked(filterButton));
             filterList.getChildren().add(filterButton);
         }

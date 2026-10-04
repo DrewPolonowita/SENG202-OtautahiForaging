@@ -1,7 +1,5 @@
 package seng202.team4.gui.bridge;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team4.models.TreeModel;
 
 /**
@@ -13,10 +11,9 @@ import seng202.team4.models.TreeModel;
  */
 
 public class JavaScriptBridge {
-
-    private static final Logger LOG = LogManager.getLogger(JavaScriptBridge.class);
     private final AddTreeInterface addTreeInterface;
     private final AddToJournalInterface addToJournalInterface;
+    private final LoadNutritionInterface loadNutritionInterface;
 
     private final MapMovedInterface mapMovedInterface;
 
@@ -25,9 +22,10 @@ public class JavaScriptBridge {
      * @param addToJournalLambda add a note to the journal for the given tree id
      * @param addTreeLambda add tree lambda function to add tree to js map
      */
-    public JavaScriptBridge(AddToJournalInterface addToJournalLambda, AddTreeInterface addTreeLambda, MapMovedInterface mapMovedInterface) {
+    public JavaScriptBridge(AddToJournalInterface addToJournalLambda, AddTreeInterface addTreeLambda,  LoadNutritionInterface loadNutritionInterface, MapMovedInterface mapMovedInterface) {
         addToJournalInterface = addToJournalLambda;
         addTreeInterface = addTreeLambda;
+        this.loadNutritionInterface = loadNutritionInterface;
         this.mapMovedInterface = mapMovedInterface;
     }
 
@@ -37,6 +35,7 @@ public class JavaScriptBridge {
     public JavaScriptBridge() {
         addToJournalInterface = (int i) -> { };
         addTreeInterface = (TreeModel tree) -> { };
+        loadNutritionInterface = id -> { };
         mapMovedInterface = null;
     }
 
@@ -51,6 +50,11 @@ public class JavaScriptBridge {
      */
     public void addTreeToJournal(int id) {
         addToJournalInterface.operation(id);
+    }
+
+
+    public void loadTreeNutrition(int id) {
+        loadNutritionInterface.accept(id);
     }
 
 }

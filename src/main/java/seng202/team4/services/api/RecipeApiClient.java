@@ -2,6 +2,10 @@ package seng202.team4.services.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.screens.ExpandNoteController;
 import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
@@ -15,13 +19,14 @@ import java.util.Map;
  * Interface implementation to call the FatSecret api for the purpose of getting recipe information
  */
 public class RecipeApiClient implements RecipeClientInterface {
+    private static final Logger LOG = LogManager.getLogger(RecipeApiClient.class);
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
     static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
     static final String RECIPE_BY_SEARCH = BASE_URL + "/recipes/search/v3";
 
 
     private final ApiClientInterface apiClient;
-    private final OAuth1Signature oauth1Signature;
+    private OAuth1Signature oauth1Signature;
 
     /**
      * Constructor
@@ -29,10 +34,18 @@ public class RecipeApiClient implements RecipeClientInterface {
      */
     public RecipeApiClient(ApiClientInterface apiClient) {
         this.apiClient = apiClient;
-        Dotenv dotenv = Dotenv.configure().load();
-        String consumerKey = dotenv.get("CONSUMER_KEY");
-        String secretKey = dotenv.get("CONSUMER_SECRET");
-        this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
+        Dotenv dotenv;
+        String consumerKey;
+        String secretKey;
+        try {
+            dotenv = Dotenv.configure().load();
+            consumerKey = dotenv.get("CONSUMER_KEY");
+            secretKey = dotenv.get("CONSUMER_SECRET");
+            this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
+        } catch (DotenvException e) {
+            this.oauth1Signature = null;
+            LOG.error(e);
+        }
     }
 
     /**
