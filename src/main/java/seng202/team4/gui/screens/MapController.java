@@ -111,11 +111,10 @@ public class MapController extends ScreenController {
                 tree -> { },
                 this::mapMoved
         );
+        initMap();
         createFruitButtons();
         toggleAllFilterButtons();
 
-        createClusterGroups();
-        initMap();
         CompletableFuture
                 .supplyAsync(foodService::getFoods)
                 .thenAccept(loadedFoods -> Platform.runLater(() -> {
@@ -153,6 +152,7 @@ public class MapController extends ScreenController {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
+                        createClusterGroups();
                         if (targetTree == null) {
                             javaScriptConnector.call("initMap",
                                     stateManager.getMapLatitude(),
@@ -351,7 +351,7 @@ public class MapController extends ScreenController {
 
     private void createClusterGroups() {
         for (Fruit fruit : Fruit.values()) {
-            javaScriptConnector.call("createClusterGroup", fruit);
+            javaScriptConnector.call("createClusterGroups", fruit);
         }
     }
 
