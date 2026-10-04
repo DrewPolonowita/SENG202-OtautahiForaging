@@ -1,6 +1,7 @@
 package seng202.team4.gui.screens;
 
 import com.sun.javafx.webkit.WebConsoleListener;
+import javafx.animation.PauseTransition;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.scene.Node;
+import javafx.util.Duration;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +47,7 @@ import java.util.Objects;
  */
 public class MapController extends ScreenController {
 
+    private static final double LOADER_TIMER = 1;
     private static final Logger LOG = LogManager.getLogger(MapController.class);
     private static final String ICON_SELECTED = "icon-selected";
     private static final String UPDATE_POPUP_MARKER = "updateMarkerPopup";
@@ -87,6 +90,8 @@ public class MapController extends ScreenController {
     private final Map<Integer, TreeModel> currentTrees = new HashMap<>();
 
     private final TreeModel targetTree;
+
+    private final PauseTransition mapLoadingPause = new PauseTransition(Duration.seconds(LOADER_TIMER));
 
 
 
@@ -248,16 +253,24 @@ public class MapController extends ScreenController {
      * @param loadingMessage message to display to user
      */
     private void showMapLoadingBar(String loadingMessage) {
-        mapLoadingLabel.setText(loadingMessage);
-        mapLoadingBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-        mapLoadingOverlay.setVisible(true);
-        mapLoadingOverlay.setManaged(true);
+        mapLoadingPause.stop();
+
+        mapLoadingPause.setOnFinished(_ -> {
+            mapLoadingLabel.setText(loadingMessage);
+            mapLoadingBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+            mapLoadingOverlay.setVisible(true);
+            mapLoadingOverlay.setManaged(true);
+        });
+
+        mapLoadingPause.play();
     }
 
     /**
      * Hide loading bar
      */
     private void hideMapLoadingBar() {
+        mapLoadingPause.pause();
+
         mapLoadingOverlay.setVisible(false);
         mapLoadingOverlay.setManaged(false);
     }
