@@ -2,6 +2,7 @@ package seng202.team4.repository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DatabaseAccessException;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
 
@@ -72,8 +73,7 @@ public class NoteDAO implements NoteRepository {
                 throw new DuplicateEntryException("Note exists with id " + toAdd.getId()
                         + " with description " + toAdd.getDescription());
             }
-            LOG.error(sqlException);
-            return -1;
+            throw new DatabaseAccessException("Failed to save note", sqlException);
         }
     }
 
@@ -157,9 +157,11 @@ public class NoteDAO implements NoteRepository {
             ps.setInt(4, toUpdate.getTreeId());
             ps.setInt(5, toUpdate.getId());
 
-            ps.executeUpdate();
+            if (ps.executeUpdate() != 1) {
+                throw new DatabaseAccessException("The note to be updated could not be found", null);
+            }
         } catch (SQLException error) {
-            LOG.error(error);
+            throw new DatabaseAccessException("Failed to update note", error);
         }
     }
 

@@ -2,9 +2,7 @@ package seng202.team4.gui.screens;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -150,8 +148,9 @@ public class AddNoteController extends ScreenController {
             Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
             try {
                 getStateManager().getNoteService().add(note);
+                handleClose();
             } catch (DuplicateEntryException e) {
-                LOG.warn("Failed to add note for tree {}: duplicate entry", treeModel.getId(), e);
+                LOG.error("Failed to add note for tree {}: duplicate entry", treeModel.getId(), e);
             }
         }
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
@@ -173,9 +172,21 @@ public class AddNoteController extends ScreenController {
     }
 
     /**
-     * closes window
+     * Closes window
      */
     public void handleClose() {
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
+    }
+
+    /**
+     * Confirms whether to discard changes and close the editor
+     */
+    public void handleExit() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your unsaved changes will be lost.",
+                ButtonType.CANCEL, ButtonType.OK);
+        alert.initOwner(commonNameDisplay.getScene().getWindow());
+        alert.setTitle("Discard Changes");
+        alert.setHeaderText("Close without saving?");
+        alert.showAndWait().filter(button-> button == ButtonType.OK).ifPresent(button->handleClose());
     }
 }

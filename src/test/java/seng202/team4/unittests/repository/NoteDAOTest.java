@@ -2,6 +2,7 @@ package seng202.team4.unittests.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.team4.exceptions.DatabaseAccessException;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
@@ -159,8 +160,7 @@ class NoteDAOTest extends TestSuite {
         addTree(1298);
         Note invalid = new Note(0, null, null, 1298, null, null);
 
-        int result = noteDAO.add(invalid);
-        assertEquals(-1, result);
+        assertThrows(DatabaseAccessException.class, () -> noteDAO.add(invalid));
     }
 
     /**

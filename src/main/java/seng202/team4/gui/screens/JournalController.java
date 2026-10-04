@@ -132,9 +132,8 @@ public class JournalController extends ScreenController {
 
         emptyState.getChildren().addAll(icon, title, subtitle);
 
-        emptyState.setOnMouseClicked(event -> {
-            getStateManager().getWindowManager().launchMapScreen(getStateManager());
-        });
+        emptyState.setOnMouseClicked(event ->
+            getStateManager().getWindowManager().launchMapScreen(getStateManager()));
         return emptyState;
     }
 

@@ -11,7 +11,7 @@
     <HBox alignment="CENTER_LEFT">
         <Button text="←" fx:id="backButton" styleClass="close-button" onAction="#handleGoBack"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="✕" styleClass="close-button" onAction="#handleClose"/>
+        <Button text="✕" styleClass="close-button" onAction="#handleExit"/>
     </HBox>
 
     <VBox spacing="6" alignment="CENTER">
