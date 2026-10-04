@@ -147,7 +147,9 @@
         }).addTo(map)
         map.setMaxBounds(bounds);
         map.options.maxBoundsViscosity = 1.0;
-        map.addLayer(clusterGroups[food]);
+        Object.values(clusterGroups).forEach((foodClusterGroup) =>  {
+            map.addLayer(foodClusterGroup);
+        });
         map.on('moveend', function () {
             if (!revealingTree) {
                 createMapMarkers();
@@ -155,7 +157,6 @@
         });
 
         createMapMarkers();
-
     }
 
     /**
@@ -240,7 +241,7 @@
     */
     function removeMarkers() {
         clusterGroups.forEach((clusterGroup) => {
-        clusterGroup.clearLayers()
+            clusterGroup.clearLayers();
         });
         markers = [];
     }
@@ -259,6 +260,7 @@
         card.querySelector("." + className).textContent =
             label + ": " + formatNutrition(value, decimals) + " " + unit;
     }
+
     function formatNutrition(value, decimals) {
         const number = Number(value);
         return number.toFixed(decimals);
