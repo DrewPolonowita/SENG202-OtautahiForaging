@@ -150,6 +150,7 @@
         Object.values(clusterGroups).forEach((foodClusterGroup) =>  {
             map.addLayer(foodClusterGroup);
         });
+        console.log("clusters:", clusterGroups);
         map.on('moveend', function () {
             if (!revealingTree) {
                 createMapMarkers();
@@ -240,7 +241,7 @@
      * the stored marker array
     */
     function removeMarkers() {
-        clusterGroups.forEach((clusterGroup) => {
+        Object.values(clusterGroups).forEach((clusterGroup) => {
             clusterGroup.clearLayers();
         });
         markers = [];
