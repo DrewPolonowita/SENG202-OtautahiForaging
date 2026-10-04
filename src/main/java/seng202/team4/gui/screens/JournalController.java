@@ -146,6 +146,21 @@ public class JournalController extends ScreenController {
         getStateManager().getWindowManager().openExpandNote(note, getStateManager(), this);
     }
 
+    @FXML
+    private void handleSortAlphabetical(){
+
+    }
+
+    @FXML
+    private void handleSortNewest() {
+
+    }
+
+    @FXML
+    private void handleSortOldest() {
+
+    }
+
     /**
      * Returns the FXML file used to create the journal screen.
      * @return the journal screen FXML path file
