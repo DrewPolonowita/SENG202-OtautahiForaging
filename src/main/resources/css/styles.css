@@ -217,10 +217,6 @@
 }
 
 /* ---------- Expand-note dialog ---------- */
-.expand-note-root {
-    -fx-background-color: #112212;
-    -fx-background-radius: 20;
-}
 .expand-note-body {
     -fx-padding: 20 24 24 24;
 }
@@ -272,22 +268,23 @@
     -fx-background-color: -note-bg;
     -fx-background-radius: 20;
 }
-.expand-note-body {
-    -fx-padding: 20 24 24 24;
-}
-.expand-note-title {
-    -fx-text-fill: white;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-}
+
 .expand-note-meta {
     -fx-text-fill: rgba(255,255,255,0.75);
     -fx-font-size: 12px;
 }
-.expand-note-description {
-    -fx-text-fill: rgba(255,255,255,0.9);
-    -fx-font-size: 13px;
-    -fx-line-spacing: 4;
+
+.remove-photo-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b33a3a;
+    -fx-font-size: 12px;
+    -fx-padding: 5 12;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.remove-photo-button:hover {
+    -fx-background-color: rgba(179, 58, 58, 0.1);
 }
 
 /* ---------- Add-note dialog ---------- */

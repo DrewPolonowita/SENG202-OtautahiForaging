@@ -55,6 +55,102 @@ class NoteDAOTest extends TestSuite {
     }
 
     /**
+     * Verifies that updating the description of a note persists
+     * using a fresh database read to ensure persistence rather than just comparing.
+     */
+    @Test
+    void testUpdateDescPersists() throws DuplicateEntryException{
+        addTree(1298);
+        Note toAdd = new Note(0, "Epic tree", null, 1298, "original description", null);
+        int originalId = noteDAO.add(toAdd);
+        assertTrue(originalId>0);
+
+        Note retrieved = noteDAO.getOne(originalId);
+        assertNotNull(retrieved);
+
+        Note updatedNote = new Note(originalId, retrieved.getName(),
+                retrieved.getTimeCreated(), retrieved.getTreeId(),
+                "updated description", retrieved.getImagePath());
+
+        noteDAO.update(updatedNote);
+
+        Note afterUpdate = noteDAO.getOne(originalId);
+        assertNotNull(afterUpdate);
+        assertEquals("updated description", afterUpdate.getDescription());
+        assertEquals(retrieved.getTimeCreated(), afterUpdate.getTimeCreated());
+    }
+
+    /**
+     * Verifies that updating the image of a note persists,
+     * using a fresh database read to ensure persistence rather than just comparing.
+     */
+    @Test
+    void testUpdatePhotoPersists() throws DuplicateEntryException{
+        addTree(1298);
+        Note toAdd = new Note(0, "Epic tree", null, 1298, "description", "original-image.png");
+        int originalId = noteDAO.add(toAdd);
+        assertTrue(originalId>0);
+
+        Note retrieved = noteDAO.getOne(originalId);
+        assertNotNull(retrieved);
+
+        Note updatedNote = new Note(originalId, retrieved.getName(),
+                retrieved.getTimeCreated(), retrieved.getTreeId(),
+                retrieved.getDescription(), "updated-image.png");
+
+        noteDAO.update(updatedNote);
+
+        Note afterUpdate = noteDAO.getOne(originalId);
+        assertNotNull(afterUpdate);
+        assertEquals("updated-image.png", afterUpdate.getImagePath());
+    }
+
+    /**
+     * Verifies that updating one note doesn't involuntarily alter another note,
+     * catches an update possibly changing other rows in the database.
+     */
+    @Test
+    void testUpdateLeavesOtherNotesUnchanged() throws DuplicateEntryException {
+        addTree(1298);
+        int firstId = noteDAO.add(new Note(
+                0, "Epic tree", null, 1298, "first description", null));
+        int secondId = noteDAO.add(new Note(
+                0, "Epic tree", null, 1298, "second description", null));
+        assertTrue(firstId > 0);
+        assertTrue(secondId > 0);
+        Note first = noteDAO.getOne(firstId);
+        assertNotNull(first);
+        noteDAO.update(new Note(firstId, first.getName(), first.getTimeCreated(),
+                first.getTreeId(), "updated description", first.getImagePath()));
+        Note updated = noteDAO.getOne(firstId);
+        Note unchanged = noteDAO.getOne(secondId);
+        assertNotNull(updated);
+        assertNotNull(unchanged);
+        assertEquals("updated description", updated.getDescription());
+        assertEquals("second description", unchanged.getDescription());
+    }
+
+    /**
+     * Verifies that removing a note's photo persists a null image path
+     * while preserving its attributes like description.
+     */
+    @Test
+    void testRemovePhotoPersists() throws DuplicateEntryException {
+        addTree(1298);
+        int testId = noteDAO.add(new Note(
+                0, "cool tree", null, 1298, "description", "image.png"));
+        assertTrue(testId > 0);
+        Note test = noteDAO.getOne(testId);
+        assertNotNull(test);
+        assertEquals("image.png", test.getImagePath());
+        noteDAO.update(new Note(testId, test.getName(), test.getTimeCreated(), test.getTreeId(), test.getDescription(), null));
+        Note afterUpdate = noteDAO.getOne(testId);
+        assertNotNull(afterUpdate);
+        assertNull(afterUpdate.getImagePath());
+        assertEquals(test.getDescription(), afterUpdate.getDescription());
+    }
+
+    /**
      * Verifies that adding a note with invalid (null required-field) data fails gracefully,
      * returning -1 rather than throwing
      */
