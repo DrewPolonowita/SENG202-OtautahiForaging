@@ -150,6 +150,14 @@ public class AddNoteController extends ScreenController {
     }
 
     /**
+     * Handles when a user clicks remove photo from add note/edit note
+     */
+    public void handleDeletePhoto() {
+        selectedImagePath = null;
+        updateUploadZonePreview();
+    }
+
+    /**
      * closes window
      */
     public void handleClose() {

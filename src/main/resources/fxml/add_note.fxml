@@ -28,14 +28,15 @@
         <TextArea fx:id="fieldNotesArea" styleClass="text-area" promptText="Describe the tree you saw..."/>
     </VBox>
 
-    <VBox spacing="6" alignment="CENTER">
+    <VBox spacing="10" alignment="CENTER">
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>
         <Label text="PHOTOGRAPH" styleClass="note-card-subtitle"/>
-        <VBox fx:id="uploadZone" styleClass="upload-zone" alignment="CENTER" spacing="8" onMouseClicked="#handleSelectedPhoto">
-            <Label fx:id="uploadHint" text="Upload a photo" styleClass="text-area"/>
+        <VBox fx:id="uploadZone" styleClass="upload-zone" alignment="CENTER" spacing="8" minHeight="130" maxWidth="Infinity" onMouseClicked="#handleSelectedPhoto">
+            <Label fx:id="uploadHint" text="Click to upload a photo" styleClass="upload-hint"/>
         </VBox>
+        <Button text="Remove photo" styleClass="remove-photo-button" onAction="#handleDeletePhoto"/>
     </VBox>
 
     <Button fx:id="recordButton" text="Record Observation" styleClass="record-button" onAction="#handleRecord" maxWidth="Infinity">
