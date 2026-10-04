@@ -122,7 +122,7 @@ public class ExpandNoteController extends ScreenController {
     private void handleEdit() {
         handleClose();
         Platform.runLater(() -> {
-            getStateManager().getWindowManager().openAddNoteMenu(null, getStateManager(), note);
+            getStateManager().getWindowManager().openAddNoteMenu(null, getStateManager(), note, journalController);
             journalController.refreshNotes();
         });
     }

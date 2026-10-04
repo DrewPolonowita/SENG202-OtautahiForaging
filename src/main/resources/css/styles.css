@@ -198,6 +198,7 @@
     -fx-background-color: #112212;
     -fx-background-radius: 16;
     -fx-padding: 60 30;
+    -fx-cursor: hand;
 }
 .empty-state-icon {
     -fx-fit-width: 64px;

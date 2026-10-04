@@ -125,12 +125,16 @@ public class JournalController extends ScreenController {
         Label title = new Label("No notes yet");
         title.getStyleClass().add("empty-state-title");
 
-        Label subtitle = new Label("Click a tree on the map to add your first journal entry");
+        Label subtitle = new Label("Click here to navigate to the map");
         subtitle.getStyleClass().add("empty-state-subtitle");
         subtitle.setWrapText(true);
         subtitle.setTextAlignment(TextAlignment.CENTER);
 
         emptyState.getChildren().addAll(icon, title, subtitle);
+
+        emptyState.setOnMouseClicked(event -> {
+            getStateManager().getWindowManager().launchMapScreen(getStateManager());
+        });
         return emptyState;
     }
 

@@ -1,5 +1,6 @@
 package seng202.team4.gui.screens;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,19 +39,24 @@ public class AddNoteController extends ScreenController {
     private VBox uploadZone;
     @FXML
     private Button recordButton;
+    @FXML
+    private Button backButton;
 
     private String selectedImagePath;
     private Note existingNote;
+
+    private final JournalController journalController;
 
     /**
      * Constructor
      * @param stateManager stateManager
      * @param tree provided tree
      */
-    public AddNoteController(StateManager stateManager, TreeModel tree, Note existingNote) {
+    public AddNoteController(StateManager stateManager, TreeModel tree, Note existingNote, JournalController journalController) {
         super(stateManager);
         this.treeModel = tree;
         this.existingNote = existingNote;
+        this.journalController = journalController;
     }
 
     /**
@@ -77,12 +83,14 @@ public class AddNoteController extends ScreenController {
     @FXML
     private void initialize() {
         if (existingNote != null) {
+            backButton.setVisible(true);
             commonNameDisplay.setText("Editing " + existingNote.getName());
             fieldNotesArea.setText(existingNote.getDescription());
             recordButton.setText("Edit Note");
             selectedImagePath = existingNote.getImagePath();
             updateUploadZonePreview();
         } else {
+            backButton.setVisible(false);
             commonNameDisplay.setText(treeModel.getCommonName());
         }
     }
@@ -147,6 +155,13 @@ public class AddNoteController extends ScreenController {
             }
         }
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
+    }
+
+    public void handleGoBack() {
+        handleClose();
+        Platform.runLater(() ->
+            getStateManager().getWindowManager().openExpandNote(existingNote, getStateManager(), journalController)
+        );
     }
 
     /**
