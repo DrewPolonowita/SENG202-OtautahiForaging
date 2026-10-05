@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
+<?import java.lang.String?>
 
 <VBox styleClass="expand-note-root" prefWidth="800" xmlns="http://javafx.com/javafx/25.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -20,13 +21,24 @@
         <StackPane fx:id="photoContainer" styleClass="photo-container" prefHeight="370">
             <ImageView fx:id="photoView" />
         </StackPane>
+        <Button maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#handleClose" prefHeight="26" prefWidth="26" styleClass="sideBar-button" StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets top="10" right="10"/>
+            </StackPane.margin>
+            <graphic>
+                <Region>
+                    <styleClass>
+                        <String fx:value="icon-close" />
+                        <String fx:value="icon" />
+                    </styleClass>
+                </Region>
+            </graphic>
+        </Button>
     </StackPane>
 
     <VBox styleClass="expand-note-body" spacing="10">
         <HBox alignment="CENTER_LEFT">
             <Label fx:id="nameLabel" styleClass="expand-note-title" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Button text="✕" styleClass="close-button" onAction="#handleClose" />
         </HBox>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
@@ -37,9 +49,9 @@
 
         <Label fx:id="descriptionLabel" styleClass="expand-note-description" wrapText="true" />
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="View on Map" styleClass="edit-button" onAction="#handleViewMap" maxWidth="100" />
-            <Button text="Edit Note" styleClass="edit-button" onAction="#handleEdit" maxWidth="100" />
-            <Button text="Delete Note" styleClass="delete-button" onAction="#handleDelete" maxWidth="100" />
+            <Button text="View on Map" styleClass="edit-button" onAction="#handleViewMap" />
+            <Button text="Edit Note" styleClass="edit-button" onAction="#handleEdit" />
+            <Button text="Delete Note" styleClass="delete-button" onAction="#handleDelete" />
         </HBox>
     </VBox>
 
