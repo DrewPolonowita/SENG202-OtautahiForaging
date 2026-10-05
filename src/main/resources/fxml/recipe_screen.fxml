@@ -130,7 +130,7 @@
    <ProgressIndicator fx:id="progressIndicator" progress="-1" visible="false" StackPane.alignment="CENTER" />
    <StackPane fx:id="attributionPane" alignment="BOTTOM_RIGHT" mouseTransparent="false" pickOnBounds="false">
       <padding>
-         <Insets bottom="15" right="15" />
+         <Insets bottom="10.0" left="10.0" right="10.0" top="8.0" />
       </padding>
    </StackPane>
 </StackPane>

@@ -26,8 +26,6 @@
             </ProgressBar>
             <Label fx:id="mapLoadingLabel" text="Loading:..."/>
          </VBox>
-
-
          <Button fx:id="filterButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#filterClicked" styleClass="filters" StackPane.alignment="TOP_LEFT">
             <graphic>
                <Region>
@@ -41,21 +39,11 @@
                <Insets left="10.0" top="25.0" />
             </StackPane.margin>
          </Button>
-         <HBox fx:id="filterActions"
-               spacing="5.0"
-               visible="false"
-               managed="false"
-               StackPane.alignment="TOP_LEFT">
-
+         <HBox fx:id="filterActions" spacing="5.0" visible="false" managed="false" StackPane.alignment="TOP_LEFT">
             <StackPane.margin>
                <Insets left="47.0" top="25.0" />
             </StackPane.margin>
-
-            <Button fx:id="deselectAllButton"
-                    contentDisplay="CENTER"
-                    mnemonicParsing="false"
-                    onAction="#deselectAllFilters"
-                    styleClass="filters">
+            <Button fx:id="deselectAllButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#deselectAllFilters" styleClass="filters">
                <graphic>
                   <Region>
                      <styleClass>
@@ -65,12 +53,7 @@
                   </Region>
                </graphic>
             </Button>
-
-            <Button fx:id="selectAllButton"
-                    contentDisplay="CENTER"
-                    mnemonicParsing="false"
-                    onAction="#selectAllFilters"
-                    styleClass="filters">
+            <Button fx:id="selectAllButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#selectAllFilters" styleClass="filters">
                <graphic>
                   <Region>
                      <styleClass>
@@ -80,7 +63,6 @@
                   </Region>
                </graphic>
             </Button>
-
          </HBox>
          <VBox fx:id="filterBox" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="100.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
             <StackPane.margin>
