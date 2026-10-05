@@ -1,19 +1,17 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +66,14 @@ public class RecipesController extends ScreenController {
     private static final int TEXT_HEIGHT = 60;
     private static final int IMAGE_HEIGHT = CARD_HEIGHT - TEXT_HEIGHT;
 
+    @FXML private StackPane fullRecipeImageArea;
+    @FXML private Label fullRecipeTitle;
+    @FXML private Label fullRecipePreptime;
+    @FXML private Label fullRecipeCooktime;
+    @FXML private Label fullRecipeIngredientsText;
+    @FXML private Label fullRecipeNutritionText;
+    @FXML private Label fullRecipeMethodText;
+
     /**
      * Initialise the window
      *
@@ -109,7 +115,7 @@ public class RecipesController extends ScreenController {
         attributionPane.getChildren().add(attribution);
         createFruitButtons();
         this.recipeFilterService = new RecipeFilterService(recipeService);
-
+        fullRecipeImageArea.setClip(new Rectangle(200, 200));
         setUpEvents();
         setStartingFilters();
 
@@ -262,7 +268,7 @@ public class RecipesController extends ScreenController {
      * @param recipe recipe to show full view
      */
     private void showRecipe(Recipe recipe) {
-        recipeDetailsText.setText(displayText(recipe));
+        populateRecipeDetails(recipe);
         recipeListPane.setVisible(false);
         recipeListPane.setManaged(false);
         recipeHighlightPane.setVisible(true);
@@ -280,37 +286,33 @@ public class RecipesController extends ScreenController {
         recipeListPane.setManaged(true);
     }
 
-    /**
-     * Displays the text for the recipes
-     * @param recipe recipe that is being displayed
-     */
-    private String displayText(Recipe recipe) {
+    private void populateRecipeDetails(Recipe recipe) {
+        fullRecipeTitle.setText(recipe.getName());
+        fullRecipePreptime.setText("Prep time: " + recipe.getPreparationTime() + " min");
+        fullRecipeCooktime.setText("Cook time: " + recipe.getCookingTime() + " min");
+        fullRecipeIngredientsText.setText(buildIngredientsText(recipe));
+        fullRecipeNutritionText.setText(buildNutritionText(recipe));
+        fullRecipeMethodText.setText(recipe.getMethod() != null ? recipe.getMethod() : "");
+        fullRecipeImageArea.getChildren().setAll(getImageView(recipe));
+    }
+
+    private String buildNutritionText(Recipe recipe) {
         StringBuilder text = new StringBuilder();
-        text.append(recipe.getName()).append("\n\n");
-
-        if (recipe.getDescription() != null) {
-            text.append(recipe.getDescription()).append("\n\n");
-        }
-
-        text.append("Prep time: ").append(recipe.getPreparationTime()).append(" min\n");
-        text.append("Cook time: ").append(recipe.getCookingTime()).append(" min\n\n");
-
         text.append("Calories: ").append(recipe.getCalories()).append("\n");
         text.append("Carbohydrates: ").append(recipe.getCarbohydrates()).append("g\n");
         text.append("Protein: ").append(recipe.getProtein()).append("g\n");
-        text.append("Fat: ").append(recipe.getFat()).append("g\n\n");
+        text.append("Fat: ").append(recipe.getFat()).append("g");
+        return text.toString();
+    }
 
-        text.append("Ingredients:\n");
+    private String buildIngredientsText(Recipe recipe) {
+        StringBuilder text = new StringBuilder();
         if (recipe.getIngredients() != null) {
             for (String ingredient : recipe.getIngredients()) {
                 text.append("- ").append(ingredient).append("\n");
             }
         }
-        text.append("\n");
-
-        text.append("Method:\n").append(recipe.getMethod());
-
-        return text.toString();
+        return text.toString().stripTrailing();
     }
 
     /**

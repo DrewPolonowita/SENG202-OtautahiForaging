@@ -13,18 +13,11 @@
 <VBox styleClass="expand-note-root" prefWidth="800" xmlns="http://javafx.com/javafx/25.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="seng202.team4.gui.screens.ExpandNoteController">
-
-    <StackPane>
+    <HBox alignment="CENTER_RIGHT">
         <padding>
-            <Insets top="10" right="10" bottom="10" left="10"/>
+            <Insets top="10" right="10" bottom="0" left="10"/>
         </padding>
-        <StackPane fx:id="photoContainer" styleClass="photo-container" prefHeight="370">
-            <ImageView fx:id="photoView" />
-        </StackPane>
-        <Button maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#handleClose" prefHeight="26" prefWidth="26" styleClass="sideBar-button" StackPane.alignment="TOP_RIGHT">
-            <StackPane.margin>
-                <Insets top="10" right="10"/>
-            </StackPane.margin>
+        <Button maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#handleClose" prefHeight="26" prefWidth="26" styleClass="sideBar-button">
             <graphic>
                 <Region>
                     <styleClass>
@@ -34,6 +27,14 @@
                 </Region>
             </graphic>
         </Button>
+    </HBox>
+    <StackPane>
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <StackPane fx:id="photoContainer" styleClass="photo-container" prefHeight="370">
+            <ImageView fx:id="photoView" />
+        </StackPane>
     </StackPane>
 
     <VBox styleClass="expand-note-body" spacing="10">
