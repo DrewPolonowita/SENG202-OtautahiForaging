@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../css/map.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -84,6 +83,71 @@
         .journal-btn:active {
             background: #345940;
         }
+
+        .marker-cluster-apple {
+            background-color: #D31804;
+            border-radius: 50%;
+        }
+
+        .marker-cluster-apple div {
+            background-color: #FF7787;
+            margin-left: 5px;
+            margin-top: 5px;
+            text-align: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+
+        .marker-cluster-pear {
+            background-color: #86CA82;
+        }
+
+        .marker-cluster-pear div {
+            background-color: #658562;
+        }
+
+        .marker-cluster-peach {
+            background-color: #CA9582;
+        }
+
+        .marker-cluster-peach div {
+            background-color: #C97864;
+        }
+
+        .marker-cluster-apricot {
+            background-color: #DE834F;
+        }
+
+        .marker-cluster-apricot div {
+            background-color: #F2B36D;
+        }
+
+
+        .marker-cluster-walnut {
+            background-color: #CE9777;
+        }
+
+        .marker-cluster-walnut div {
+            background-color: #825845;
+        }
+
+        .marker-cluster-strawberry {
+            background-color: #AF5070;
+            border-radius: 50%;
+        }
+
+        .marker-cluster-strawberry div {
+            background-color: #A64C5C;
+            margin-left: 5px;
+            margin-top: 5px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -106,6 +170,7 @@
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     const iconCache = {};
     const clusterGroups = {};
+    let foodCluster = null;
     var southWest = L.latLng(SOUTH_BOUND, WEST_BOUND),
         northEast = L.latLng(NORTH_BOUND, EAST_BOUND),
         bounds = L.latLngBounds(southWest, northEast);
@@ -150,7 +215,6 @@
         Object.values(clusterGroups).forEach((foodClusterGroup) =>  {
             map.addLayer(foodClusterGroup);
         });
-        console.log("clusters:", clusterGroups);
         map.on('moveend', function () {
             if (!revealingTree) {
                 createMapMarkers();
@@ -201,7 +265,16 @@
     * Creates cluster groups
     */
     function createClusterGroups(food) {
-        clusterGroups[food] = L.markerClusterGroup();
+        foodCluster = food.toString();
+        console.log(foodCluster);
+        clusterGroups[food] = L.markerClusterGroup({
+            iconCreateFunction: function(cluster) {
+                return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>',
+                                   className: 'marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, ""),
+                                   iconSize: L.point(40, 40)
+                });
+            }
+        });
     }
 
     /**
