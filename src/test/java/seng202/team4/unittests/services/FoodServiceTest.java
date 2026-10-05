@@ -21,6 +21,7 @@ import seng202.team4.services.dataCentre.foodData.FoodService;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -102,11 +103,32 @@ class FoodServiceTest {
         // details up to date
         verify(testFoodRepository, never()).replaceFood(any(Food.class));
     }
+    @Test
+    void testGetFoodFoodIdExistsAndDetailsUpToDate() {
+
+        when(testFoodRepository.getFoodIdByFoodName("Apple"))
+                .thenReturn(expectedFood.getId());
+        when(testFoodRepository.foodDetailsUpToDateAndExist(expectedFood.getId()))
+                .thenReturn(true);
+        when(testFoodRepository.getOne(expectedFood.getId()))
+                .thenReturn(expectedFood);
+
+        Food food = testFoodService.getFood("Apple");
+
+        assertFoodEquals(expectedFood, food);
+
+        //database used
+        verify(testFoodRepository).getFoodIdByFoodName("Apple");
+        verify(testFoodRepository).foodDetailsUpToDateAndExist(expectedFood.getId());
+        verify(testFoodRepository).getOne(expectedFood.getId());
+
+
+        // details up to date
+        verify(testFoodRepository, never()).replaceFood(any(Food.class));
+    }
 
     @Test
     void testIdsExistsButDetailsNotUpToDate() {
-
-
         when(testFoodRepository.getFoodIdByFoodName("Apple"))
                 .thenReturn(foodRecord.foodId());
         when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
@@ -118,6 +140,27 @@ class FoodServiceTest {
 
 
         assertFoodEquals(expectedFood, foods.getFirst());
+
+        // api used just for details
+        verify(testFoodClient, never()).searchFood(anyString(), anyInt());
+        verify(testFoodClient, atLeastOnce()).getFoodById(foodRecord.foodId());
+
+        verify(testFoodRepository).replaceFood(any(Food.class));
+    }
+
+    @Test
+    void testGetFoodIdExistsButDetailsNotUpToDate() {
+        when(testFoodRepository.getFoodIdByFoodName("Apple"))
+                .thenReturn(foodRecord.foodId());
+        when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
+                .thenReturn(false);
+        when(testFoodClient.getFoodById(foodRecord.foodId()))
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodByIdResponse(), 200));
+
+        Food food = testFoodService.getFood("Apple");
+
+
+        assertFoodEquals(expectedFood, food);
 
         // api used just for details
         verify(testFoodClient, never()).searchFood(anyString(), anyInt());
@@ -147,8 +190,32 @@ class FoodServiceTest {
 
         //database used to store
         verify(testFoodRepository).replaceFood(any(Food.class));
-
     }
+
+    @Test
+    void testGetFoodIdDontExistAndApiReturnsIds() {
+
+        when(testFoodRepository.getFoodIdByFoodName("Apple"))
+                .thenReturn(null);
+        when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
+                .thenReturn(false);
+        when(testFoodClient.searchFood("Apple", 1))
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodSearchResponse(), 200));
+        when(testFoodClient.getFoodById(foodRecord.foodId()))
+                .thenReturn(new ApiResponseWrapper<>(createFakeFoodByIdResponse(), 200));
+
+        Food food = testFoodService.getFood("Apple");
+
+        assertFoodEquals(expectedFood, food);
+        //api used
+        verify(testFoodClient).searchFood("Apple", 1);
+        verify(testFoodClient).getFoodById(foodRecord.foodId());
+
+        //database used to store
+        verify(testFoodRepository).replaceFood(any(Food.class));
+    }
+
+
 
     @Test
     void testIdsDontExistButApiThrowsErrorsOnSearch() {
@@ -163,6 +230,28 @@ class FoodServiceTest {
         List<Food> foods = testFoodService.getFoods();
 
         assertTrue(foods.isEmpty());
+
+        //api used but doesnt call food by id
+        verify(testFoodClient).searchFood("Apple", 1);
+        verify(testFoodClient, never()).getFoodById(foodRecord.foodId());
+
+        //Database isnt used to store anything
+        verify(testFoodRepository, never()).replaceFood(any(Food.class));
+
+    }
+    @Test
+    void testGetFoodIdDontExistButApiThrowsErrorsOnSearch() {
+
+        when(testFoodRepository.getFoodIdByFoodName("Apple"))
+                .thenReturn(null);
+        when(testFoodRepository.foodDetailsUpToDateAndExist(foodRecord.foodId()))
+                .thenReturn(false);
+        when(testFoodClient.searchFood("Apple", 1))
+                .thenReturn(new ApiResponseWrapper<>(null, 500));
+
+        Food food = testFoodService.getFood("Apple");
+
+        assertNull(food);
 
         //api used but doesnt call food by id
         verify(testFoodClient).searchFood("Apple", 1);

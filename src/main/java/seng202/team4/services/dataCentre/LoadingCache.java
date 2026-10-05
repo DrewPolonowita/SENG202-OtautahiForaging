@@ -65,11 +65,17 @@ public class LoadingCache<K, V> {
         }
     }
 
-
+    /**
+     * Get access to repository vs api data
+     * @return CacheStats object with data
+     */
     public synchronized CacheStats stats() {
         return new CacheStats(hitCount, missCount, remoteLoadCount);
     }
 
+    /**
+     * Reset the cache stats count
+     */
     public synchronized void resetStats() {
         hitCount = 0;
         missCount = 0;
