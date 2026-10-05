@@ -18,6 +18,7 @@ import seng202.team4.services.StateManager;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -143,6 +144,45 @@ public class JournalController extends ScreenController {
      */
     private void handleNoteClicked(Note note) {
         getStateManager().getWindowManager().openExpandNote(note, getStateManager(), this);
+    }
+
+    /**
+     * Sorts journal menu's notes alphabetically
+     */
+    @FXML
+    private void handleSortAlphabetical(){
+        List<Note> notes = getStateManager().getNoteService().getAll();
+        notes.sort(Comparator.comparing(Note::getName));
+        notesFlowPane.getChildren().clear();
+        for (Note note : notes) {
+            notesFlowPane.getChildren().add(buildNoteCard(note));
+        }
+    }
+
+    /**
+     * Sorts journal menu's notes by newest first
+     */
+    @FXML
+    private void handleSortNewest() {
+        List<Note> notes = getStateManager().getNoteService().getAll();
+        notes.sort(Comparator.comparing(Note::getTimeCreated).reversed());
+        notesFlowPane.getChildren().clear();
+        for (Note note: notes) {
+            notesFlowPane.getChildren().add(buildNoteCard(note));
+        }
+    }
+
+    /**
+     * Sorts journal menu's notes by oldest first
+     */
+    @FXML
+    private void handleSortOldest() {
+        List<Note> notes = getStateManager().getNoteService().getAll();
+        notes.sort(Comparator.comparing(Note::getTimeCreated));
+        notesFlowPane.getChildren().clear();
+        for (Note note: notes) {
+            notesFlowPane.getChildren().add(buildNoteCard(note));
+        }
     }
 
     /**
