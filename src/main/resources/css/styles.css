@@ -53,7 +53,7 @@
 .switch-track {
     -fx-background-color: -primary-bg-color;
     -fx-background-radius: 20;
-    -fx-min-width:46;
+    -fx-min-width: 46;
     -fx-max-width: 46;
     -fx-min-height: 24;
     -fx-max-height: 24;
@@ -147,6 +147,14 @@
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
+.close-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+}
+.expand-note-close {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+}
 
 .note-card {
     -fx-background-color: -primary-bg-color;
@@ -203,20 +211,6 @@
 }
 
 .edit-button,
-/* ---------- Expand-note dialog ---------- */
-.expand-note-body {
-    -fx-padding: 20 24 24 24;
-}
-.expand-note-title {
-    -fx-text-fill: white;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-}
-.expand-note-description {
-    -fx-text-fill: rgba(255,255,255,0.9);
-    -fx-font-size: 13px;
-    -fx-line-spacing: 4;
-}
 .delete-button {
     -fx-background-color: -medium-background-color;
     -fx-background-radius: 8;
@@ -242,6 +236,17 @@
     -fx-background-radius: 20 20 0 0;
     -fx-alignment: center;
 }
+.remove-photo-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -primary-error-color;
+    -fx-font-size: 12px;
+    -fx-padding: 5 12;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+.remove-photo-button:hover {
+    -fx-background-color: rgba(179, 58, 58, 0.1);
+}
 
 .expand-note-root {
     -fx-background-color: -primary-bg-color;
@@ -255,23 +260,10 @@
     -fx-font-size: 22px;
     -fx-font-weight: bold;
 }
-
 .expand-note-meta {
     -fx-text-fill: -primary-color;
     -fx-font-size: 14px;
 }
-
-.remove-photo-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #b33a3a;
-    -fx-font-size: 12px;
-    -fx-padding: 5 12;
-    -fx-cursor: hand;
-    -fx-background-radius: 6;
-}
-
-.remove-photo-button:hover {
-    -fx-background-color: rgba(179, 58, 58, 0.1);
 .expand-note-description {
     -fx-text-fill: -primary-color;
     -fx-font-size: 12px;
@@ -305,6 +297,7 @@
     -fx-max-height: 120;
     -fx-alignment: center;
 }
+.text-field,
 .text-area {
     -fx-control-inner-background: -secondary-bg-color;
     -fx-background-color: -secondary-bg-color;
@@ -339,12 +332,10 @@
     -fx-text-fill: -text-color;
     -fx-border-width: 0;
 }
-
 .recipeCardBase {
     -fx-background-color: -primary-bg-color;
     -fx-cursor: hand;
 }
-
 .recipeCardBase:hover {
     -fx-background-color: derive(-primary-bg-color, -5%);
 }

@@ -12,6 +12,16 @@
         <padding>
             <Insets top="10" right="10" bottom="0" left="10"/>
         </padding>
+        <Button maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" fx:id="backButton" mnemonicParsing="false" onAction="#handleGoBack" prefHeight="26" prefWidth="26" styleClass="sideBar-button">
+            <graphic>
+                <Region>
+                    <styleClass>
+                        <String fx:value="icon-back" />
+                        <String fx:value="icon" />
+                    </styleClass>
+                </Region>
+            </graphic>
+        </Button>
         <Button maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#handleClose" prefHeight="26" prefWidth="26" styleClass="sideBar-button">
             <graphic>
                 <Region>
