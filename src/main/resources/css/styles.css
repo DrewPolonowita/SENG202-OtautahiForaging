@@ -1,23 +1,18 @@
 .root {
     -primary-color: #67AF76; /* defined in ThemeService */
     -primary-color-highlight: #7cbf82; /* defined in ThemeService */
+    -primary-color-dark: #6b8a75; /* defined in ThemeService */
     -primary-bg-color: #ffffff;
     -secondary-bg-color: #dcdcdc;
+    -medium-background-color: #eaeaea;
+    -primary-error-color: #c25b5b;
+    -primary-error-darken-color: #a85c5c;
     -text-color: #1a1a1a;
+
     -fx-background-color: -secondary-bg-color;
     -fx-text-fill: -text-color;
-
-    /* Journal / note dialog */
-    -note-bg: #112212;
-    -note-dark: #1a2e21;
-    -note-accent: #3f6b4a;
-    -note-accent-hover: #4a7c59;
-    -note-accent-pressed: #345940;
-    -note-border: #3a5a44;
-
 }
 
-/* ---------- Title bar ---------- */
 .titleBarText {
     -fx-text-fill: -primary-color;
     -fx-font-size: 32px;
@@ -25,14 +20,13 @@
     -fx-alignment: CENTER_LEFT;
 }
 
-/* ---------- Sidebar ---------- */
 .sideBar {
     -fx-background-color: -primary-bg-color;
     -fx-border-width: 0 1 0 0;
 }
 
 .sideBar-button {
-    -fx-background-color: -primary-bg-color;
+    -fx-background-color: transparent;
     -fx-text-fill: -primary-color;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -43,15 +37,14 @@
     -fx-text-fill: -primary-bg-color;
 }
 .sideBar-button:hover .icon {
-     -fx-background-color: -primary-bg-color;
- }
+    -fx-background-color: -primary-bg-color;
+}
 
 .sideBar-button-selected {
     -fx-background-color: -primary-color;
     -fx-text-fill: -primary-bg-color;
 }
 
-/* ---------- Toggle switch ---------- */
 .switch {
     -fx-background-color: transparent;
     -fx-padding: 0;
@@ -60,7 +53,7 @@
 .switch-track {
     -fx-background-color: -primary-bg-color;
     -fx-background-radius: 20;
-    -fx-min-width:46;
+    -fx-min-width: 46;
     -fx-max-width: 46;
     -fx-min-height: 24;
     -fx-max-height: 24;
@@ -82,7 +75,6 @@
     -fx-fill: -primary-color;
 }
 
-/* ---------- Settings / generic text ---------- */
 .settings-text {
     -fx-text-fill: -primary-color;
     -fx-font-size: 16px;
@@ -99,7 +91,6 @@
     -fx-font-weight: bold;
 }
 
-/* ---------- Filters / color picker ---------- */
 .filters {
     -fx-background-color: -primary-bg-color;
     -fx-min-width: 32px;
@@ -144,7 +135,6 @@
     -fx-background-color: -primary-color;
 }
 
-/* ---------- Close buttons ---------- */
 .icon-button {
     -fx-background-radius: 50%;
     -fx-background-insets: 0;
@@ -158,44 +148,45 @@
     -fx-faint-focus-color: transparent;
 }
 .close-button {
-    -fx-background-color: -note-accent;
-    -fx-text-fill: white;
+    -fx-background-color: -primary-color;
 }
 .expand-note-close {
-    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-color: -primary-color;
 }
 
-/* ---------- Journal note cards ---------- */
 .note-card {
-    -fx-background-color: #112212;
-    -fx-background-radius: 12;
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 20;
     -fx-padding: 0 0 12 0;
 }
 .note-card-title {
     -fx-text-fill: -primary-color;
     -fx-font-weight: bold;
-    -fx-font-size: 40px;
-    -fx-padding: 10 14 0 14;
-}
-.note-card-subtitle {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
     -fx-font-size: 15px;
     -fx-padding: 10 14 0 14;
 }
 .note-card-date {
-    -fx-text-fill: #6b8a75;
-    -fx-font-size: 11px;
+    -fx-text-fill: -primary-color-dark;
+    -fx-font-size: 10px;
     -fx-padding: 4 14 0 14;
+}
+.note-card-subtitle {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.note-card-edited-title {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
+    -fx-padding: 10 14 0 14;
 }
 .journalCardBaseArea {
     -fx-background-color: -secondary-bg-color;
-    -fx-border-color: -primary-bg-color;
-    -fx-text-fill: -text-color;
-    -fx-border-width: 0;
+    -fx-text-fill: -primary-color;
 }
 .empty-state {
-    -fx-background-color: #112212;
+    -fx-background-color: -primary-bg-color;
     -fx-background-radius: 16;
     -fx-padding: 60 30;
     -fx-cursor: hand;
@@ -206,89 +197,80 @@
     -fx-preserve-ratio: true;
 }
 .empty-state-title {
-    -fx-text-fill: white;
+    -fx-text-fill: -primary-color;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-padding: 8 0 0 0;
 }
 .empty-state-subtitle {
-    -fx-text-fill: #6b8a75;
+    -fx-text-fill: -primary-color-dark;
     -fx-font-size: 13px;
     -fx-padding: 0 0 0 0;
 }
 
-/* ---------- Expand-note dialog ---------- */
-.expand-note-body {
-    -fx-padding: 20 24 24 24;
-}
-.expand-note-title {
-    -fx-text-fill: white;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-}
-.expand-note-description {
-    -fx-text-fill: rgba(255,255,255,0.9);
-    -fx-font-size: 13px;
-    -fx-line-spacing: 4;
-}
+.edit-button,
 .delete-button {
-    -fx-background-color: transparent;
-    -fx-border-color: #a85c5c;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-text-fill: #d98787;
-    -fx-padding: 6 12;
-    -fx-font-size: 0.85em;
-    -fx-cursor: hand;
-}
-.delete-button:hover {
-    -fx-background-color: rgba(168, 92, 92, 0.15);
-}
-.edit-button {
-    -fx-background-color: transparent;
-    -fx-border-color: -primary-color;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
+    -fx-background-color: -medium-background-color;
+    -fx-background-radius: 8;
     -fx-text-fill: -primary-color;
-    -fx-padding: 6 12;
-    -fx-font-size: 0.85em;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
     -fx-cursor: hand;
 }
 .edit-button:hover {
-    -fx-background-color: rgba(168, 92, 92, 0.15);
+    -fx-background-color: -primary-color-highlight;
+    -fx-text-fill: -primary-bg-color;
+}
+.delete-button {
+    -fx-text-fill: -primary-error-color;
+}
+.delete-button:hover {
+    -fx-background-color: -primary-error-darken-color;
+    -fx-text-fill: -primary-background-color;
 }
 .photo-container {
-    -fx-background-color: #0a1a0d;
+    -fx-background-color: -medium-background-color;
     -fx-background-radius: 20 20 0 0;
     -fx-alignment: center;
 }
 
+.remove-photo-button {
+    -fx-background-color: -medium-background-color;
+    -fx-background-radius: 8;
+    -fx-text-fill: -primary-error-color;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+.remove-photo-button:hover {
+    -fx-background-color: -primary-error-darken-color;
+    -fx-text-fill: -primary-bg-color;
+}
 
-/* ---------- Add-note dialog ---------- */
 .expand-note-root {
-    -fx-background-color: -note-bg;
+    -fx-background-color: -primary-bg-color;
     -fx-background-radius: 20;
 }
-
+.expand-note-body {
+    -fx-padding: 20 24 24 24;
+}
+.expand-note-title {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
 .expand-note-meta {
-    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 14px;
+}
+.expand-note-description {
+    -fx-text-fill: -primary-color;
     -fx-font-size: 12px;
+    -fx-line-spacing: 4;
 }
 
-.remove-photo-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #b33a3a;
-    -fx-font-size: 12px;
-    -fx-padding: 5 12;
-    -fx-cursor: hand;
-    -fx-background-radius: 6;
-}
-
-.remove-photo-button:hover {
-    -fx-background-color: rgba(179, 58, 58, 0.1);
-}
-
-/* ---------- Add-note dialog ---------- */
 .dialog-title {
     -fx-text-fill: #c7e0c5;
     -fx-font-size: 22px;
@@ -296,19 +278,19 @@
     -fx-font-weight: bold;
 }
 .field-label {
-    -fx-text-fill: #546255;
+    -fx-text-fill: -primary-color-dark;
     -fx-font-size: 11px;
 }
 .upload-hint {
-    -fx-text-fill: #415844;
+    -fx-text-fill: -primary-color-dark;
     -fx-font-size: 12px;
 }
 .upload-zone {
-    -fx-border-color: -note-border;
+    -fx-border-color: -primary-color-dark;
     -fx-border-width: 2;
     -fx-border-style: dashed;
     -fx-border-radius: 8;
-    -fx-background-color: -note-dark;
+    -fx-background-color: -secondary-bg-color;
     -fx-background-radius: 8;
     -fx-min-width: 300;
     -fx-max-width: 300;
@@ -316,20 +298,22 @@
     -fx-max-height: 120;
     -fx-alignment: center;
 }
-.text-field, .text-area {
-    -fx-background-color: -note-dark;
+.text-field,
+.text-area {
+    -fx-control-inner-background: -secondary-bg-color;
+    -fx-background-color: -secondary-bg-color;
     -fx-background-radius: 8;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: rgba(255,255,255,0.65);
+    -fx-text-fill: -primary-color;
+    -fx-prompt-text-fill: derive(-primary-color, -10%);
     -fx-padding: 8 12;
     -fx-font-size: 13px;
 }
 .text-area .content {
-    -fx-background-color: -note-dark;
+    -fx-background-color: -secondary-bg-color;
 }
 .record-button {
-    -fx-background-color: -note-accent;
-    -fx-text-fill: white;
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -primary-bg-color;
     -fx-background-radius: 8;
     -fx-padding: 6 12;
     -fx-font-size: 0.85em;
@@ -337,12 +321,11 @@
     -fx-cursor: hand;
 }
 .record-button:hover {
-    -fx-background-color: -note-accent-hover;
+    -fx-background-color: -primary-color-dark;
 }
 .record-button:pressed {
-    -fx-background-color: -note-accent-pressed;
+    -fx-background-color: -primary-color-highlight;
 }
-/* ---------- Recipes ---------- */
 
 .recipeCardBaseArea {
     -fx-background-color: -secondary-bg-color;
@@ -350,12 +333,10 @@
     -fx-text-fill: -text-color;
     -fx-border-width: 0;
 }
-
 .recipeCardBase {
     -fx-background-color: -primary-bg-color;
     -fx-cursor: hand;
 }
-
 .recipeCardBase:hover {
     -fx-background-color: derive(-primary-bg-color, -5%);
 }
@@ -373,4 +354,26 @@
 }
 .generic-background {
     -fx-background-color: -primary-bg-color;
+}
+
+.recipeFullScreenBase {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.recipeFullscreenTitleText {
+    -fx-font-size: 32px;
+}
+
+.recipeFullScreenTimeText {
+    -fx-font-size: 16px;
+}
+
+.recipeFullScreenHeadings {
+    -fx-font-size: 24px;
+}
+
+.recipeFullScreenText {
+    -fx-font-size: 16px;
 }

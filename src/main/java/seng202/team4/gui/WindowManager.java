@@ -73,6 +73,7 @@ public class WindowManager {
         // Scaling minimum sizes
         stage.setMinWidth(600);
         stage.setMinHeight(360);
+        stage.setTitle("Ōtautahi Foraging");
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
 
@@ -213,7 +214,7 @@ public class WindowManager {
         try {
             Parent setupParent = loadScreen(controller);
             pane.setCenter(setupParent);
-            stage.setTitle(controller.getTitle());
+            //stage.setTitle(controller.getTitle());
         } catch (IOException e) {
             LOG.error(e);
         }
@@ -229,6 +230,7 @@ public class WindowManager {
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
+        themeService.applyTo(scene);
         return scene;
     }
 

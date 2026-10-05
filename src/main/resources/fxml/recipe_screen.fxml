@@ -3,14 +3,16 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
 <StackPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.RecipesController">
    <BorderPane fx:id="recipeListPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea">
@@ -47,44 +49,74 @@
    </Button>
 
    <VBox fx:id="filterList" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
-
       <StackPane.margin>
          <Insets left="10.0" top="65.0" />
       </StackPane.margin>
-
       <padding>
          <Insets bottom="10.0" left="10.0" right="10.0" top="8.0" />
       </padding>
    </VBox>
+
    <BorderPane fx:id="recipeHighlightPane" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea" visible="false">
       <padding>
          <Insets bottom="10" left="10" right="10" top="10" />
       </padding>
-      <top>
-         <Button fx:id="closeButton" maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#closeRecipe" prefHeight="26" prefWidth="26" styleClass="sideBar-button" BorderPane.alignment="TOP_RIGHT">
-            <graphic>
-               <Region>
-                  <styleClass>
-                     <String fx:value="icon-close" />
-                     <String fx:value="icon" />
-                  </styleClass>
-               </Region>
-            </graphic>
-         </Button>
-      </top>
       <center>
-         <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="recipeScrollPane">
-            <content>
-               <VBox styleClass="recipeDetailsContent">
-                  <Text fx:id="recipeDetailsText" strokeType="OUTSIDE" strokeWidth="0" styleClass="genericfill-text" />
-                  <padding>
-                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                  </padding>
-               </VBox>
-            </content>
-         </ScrollPane>
+         <StackPane>
+            <ScrollPane fitToWidth="true" styleClass="recipeScrollPane">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <HBox spacing="15">
+                        <padding>
+                           <Insets right="40.0" />
+                        </padding>
+                        <StackPane fx:id="fullRecipeImageArea" minHeight="200" minWidth="200" prefHeight="200" prefWidth="200" maxHeight="200" maxWidth="200" />
+                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                           <Label fx:id="fullRecipeTitle" wrapText="true" styleClass="recipeFullScreenBase, recipeFullscreenTitleText" />
+                           <HBox spacing="20">
+                              <Label fx:id="fullRecipePreptime" styleClass="recipeFullScreenBase, recipeFullScreenTimeText" />
+                              <Label fx:id="fullRecipeCooktime" styleClass="recipeFullScreenBase, recipeFullScreenTimeText" />
+                           </HBox>
+                        </VBox>
+                     </HBox>
+                     <FlowPane hgap="20" vgap="15">
+                        <VBox spacing="6" prefWidth="300" minWidth="250">
+                           <Label text="Ingredients" styleClass="recipeFullScreenBase, recipeFullScreenHeadings" />
+                           <Label fx:id="fullRecipeIngredientsText" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
+                        </VBox>
+                        <VBox spacing="6" prefWidth="300" minWidth="250">
+                           <Label text="Nutritional Info" styleClass="recipeFullScreenBase, recipeFullScreenHeadings" />
+                           <Label fx:id="fullRecipeNutritionText" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
+                        </VBox>
+                     </FlowPane>
+                     <VBox spacing="6">
+                        <Label text="Method" styleClass="recipeFullScreenBase, recipeFullScreenHeadings" />
+                        <Label fx:id="fullRecipeMethodText" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
+                     </VBox>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <Button fx:id="closeButton" maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#closeRecipe" prefHeight="26" prefWidth="26" styleClass="sideBar-button" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets top="10.0" right="20.0" />
+               </StackPane.margin>
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-close" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+            </Button>
+         </StackPane>
       </center>
    </BorderPane>
+
    <ProgressIndicator fx:id="progressIndicator" progress="-1" visible="false" StackPane.alignment="CENTER" />
    <StackPane fx:id="attributionPane" alignment="BOTTOM_RIGHT" mouseTransparent="false" pickOnBounds="false">
       <padding>

@@ -1,8 +1,7 @@
 .root {
-    -primary-color: #86CA82;
-    -primary-color-highlight: #7cbf82;
     -primary-bg-color: #2b2b2b;
     -secondary-bg-color: #1e1e1e;
+    -medium-background-color: #242424;
     -text-color: #dcdcdc;
 }
 .custom-color-dialog .label,
@@ -14,6 +13,6 @@
 }
 
 .custom-color-dialog .toggle-button:selected {
-    -fx-background-color: #86CA82;
+    -fx-background-color: -primary-color;
     -fx-text-fill: #ffffff;
 }

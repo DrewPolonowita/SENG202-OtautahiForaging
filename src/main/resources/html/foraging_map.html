@@ -19,22 +19,22 @@
             width: 150px !important;
         }
         .tree-popup .leaflet-popup-close-button {
-            color: white !important;
+            color: var(--primary-color) !important;
         }
         .tree-popup .leaflet-popup-close-button:hover {
-            color: #cccccc !important;
+            color: var(--primary-color-highlight) !important;
         }
         .tree-card {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
-            color: white;
+            color: var(--text-color);
             border-radius: 16px;
             overflow: hidden;
         }
         .tree-card-body {
-            background: #1a2e21;
+            background: var(--primary-bg-color);
             padding: 10px 14px;
             display: flex;
             flex-direction: column;
@@ -43,8 +43,8 @@
         }
 
         .serving-select {
-            background-color: #3f6b4a;
-            color: white;
+            background-color: var(--primary-color) !important;
+            color: var(--primary-bg-color);
 
             border: none;
             border-radius: 8px;
@@ -67,9 +67,12 @@
             margin: 2px 0;
         }
 
+        .tree-card-body b {
+            color: var(--primary-color);
+        }
         .journal-btn {
-            background: #3f6b4a;
-            color: white;
+            background: var(--primary-color);
+            color: var(--primary-bg-color);
             border: none;
             border-radius: 8px;
             padding: 6px 12px;
@@ -79,14 +82,14 @@
             margin-top: 6px;
         }
         .journal-btn:hover {
-            background: #4a7c59;
+            background: var(--primary-color-highlight);
         }
         .journal-btn:active {
-            background: #345940;
+            background: var(--primary-color-dark);
         }
         .recipe-btn {
-            background: #3f6b4a;
-            color: white;
+            background: var(--primary-color);
+            color: var(--primary-bg-color);
             border: none;
             border-radius: 8px;
             padding: 6px 12px;
@@ -96,10 +99,10 @@
             margin-top: 6px;
         }
         .recipe-btn:hover {
-            background: #4a7c59;
+            background: var(--primary-color-highlight);
         }
         .recipe-btn:active {
-            background: #345940;
+            background: var(--primary-color-dark);
         }
     </style>
 </head>

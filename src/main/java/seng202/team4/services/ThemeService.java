@@ -50,21 +50,37 @@ public class ThemeService {
     }
 
     /**
+     * Builds the inline style that defines the primary colour variables for a scene root.
+     *
+     * @param color the primary colour
+     * @return a style string such as "-primary-color: #67af76; ..."
+     */
+    private static String primaryStyleFor(Color color) {
+        String hex = CssUtilities.toHex(color);
+        String highlightHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.85, 1));
+        String darkHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.45, 1));
+        return String.format("-primary-color: %s; -primary-color-highlight: %s; -primary-color-dark: %s;", hex, highlightHex, darkHex);
+    }
+
+    /**
      * Method used to change the primary scene colour
      */
     public void setPrimaryColor(Color color) {
         primaryColor = color;
         String hex = CssUtilities.toHex(color);
-        String highlightHex = CssUtilities.toHex(color.deriveColor(20, 1, 0.85, 1));
-        sceneRoot.setStyle(String.format("-primary-color: %s; -primary-color-highlight: %s;", hex, highlightHex));
+        String highlightHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.85, 1));
+        String darkHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.45, 1));
+        sceneRoot.setStyle(primaryStyleFor(color));
         CssUtilities.refreshStylesheets(scene);
 
         if (webEngine != null) {
             webEngine.executeScript(String.format(
                     "document.documentElement.style.setProperty('--primary-color', '%s');"
-                            + "document.documentElement.style.setProperty('--primary-color-highlight', '%s');",
+                            + "document.documentElement.style.setProperty('--primary-color-highlight', '%s');"
+                            + "document.documentElement.style.setProperty('--primary-color-dark', '%s');",
                     hex,
-                    highlightHex
+                    highlightHex,
+                    darkHex
             ));
         }
     }
@@ -90,6 +106,25 @@ public class ThemeService {
                     "document.documentElement.classList.%s('dark-theme');",
                     darkMode ? "add" : "remove"
             ));
+        }
+    }
+
+    /**
+     * Applies the current theme (primary colour and dark mode) to a separate Scene, such as a dialog.
+     * Call this after the scene's base stylesheets have been added so dark-theme.css is loaded last.
+     *
+     * @param target the scene to theme; its root must already be set
+     */
+    public void applyTo(Scene target) {
+        target.getRoot().setStyle(primaryStyleFor(primaryColor));
+        String darkCss = getClass().getResource(DARK_THEME_PATH).toExternalForm();
+        var stylesheets = target.getStylesheets();
+        if (darkMode) {
+            if (!stylesheets.contains(darkCss)) {
+                stylesheets.add(darkCss);
+            }
+        } else {
+            stylesheets.remove(darkCss);
         }
     }
 }
