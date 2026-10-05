@@ -139,6 +139,10 @@ public class MapController extends ScreenController {
 
     }
 
+    /**
+     * Handles when the user presses add to journal on the map marker
+     * @param id tree id the note is being made about
+     */
     private void handleAddJournalInput(int id) {
         TreeModel tree = currentTrees.get(id);
         if (tree != null) {

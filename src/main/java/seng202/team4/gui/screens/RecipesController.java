@@ -168,6 +168,10 @@ public class RecipesController extends ScreenController {
         recipeTilePane.getChildren().add(card);
     }
 
+    /**
+     * First row is the image, second is the title
+     * @param card recipe card being set up
+     */
     private void setRecipeCardRows(GridPane card) {
         RowConstraints textRow = new RowConstraints();
         textRow.setPrefHeight(TEXT_HEIGHT);
@@ -175,6 +179,11 @@ public class RecipesController extends ScreenController {
         card.getRowConstraints().addAll(new RowConstraints(IMAGE_HEIGHT), textRow);
     }
 
+    /**
+     * Creates the label for the recipe card title
+     * @param recipe recipe title is for
+     * @return label object with title
+     */
     private @NotNull Label createRecipeTitle(Recipe recipe) {
         Label title = new Label(recipe.getName());
         title.getStyleClass().add("recipeCardTitle");
@@ -182,6 +191,11 @@ public class RecipesController extends ScreenController {
         return title;
     }
 
+    /**
+     * Create the image view for the recipe's image
+     * @param recipe recipe the image is for
+     * @return image view ready for recipe image
+     */
     private @NotNull ImageView getImageView(Recipe recipe) {
         ImageView imageView = new ImageView();
         String imagePath = recipe.getImage();
@@ -191,12 +205,17 @@ public class RecipesController extends ScreenController {
         return imageView;
     }
 
+    /**
+     * Loads the recipe image into the image view
+     * Remote images are loaded in the background
+     * @param imagePath the remote URL or local path of image
+     * @param imageView image view that displays the loaded image
+     */
     private void loadImageIntoView(String imagePath, ImageView imageView) {
         if (imagePath.startsWith("https://")) {
             Image image = new Image(imagePath, true);
-            image.progressProperty().addListener((obs, oldProgress, progress) -> {
-                setRecipeImageScaled(progress, image, imageView);
-            });
+            image.progressProperty().addListener((obs, oldProgress, progress)
+                    -> setRecipeImageScaled(progress, image, imageView));
         } else {
             var resource = getClass().getResource(imagePath);
             if (resource != null) {
@@ -211,6 +230,12 @@ public class RecipesController extends ScreenController {
         }
     }
 
+    /**
+     * Sets the recipe image once its loaded and scales it into card
+     * @param progress loading progress of image
+     * @param image image to display
+     * @param imageView image view that will have scaled imge
+     */
     private static void setRecipeImageScaled(Number progress, Image image, ImageView imageView) {
         if (progress.doubleValue() >= 1.0 && !image.isError()) {
             imageView.setImage(image);
@@ -220,6 +245,10 @@ public class RecipesController extends ScreenController {
         }
     }
 
+    /**
+     * Creates the container used for recipe card image
+     * @return stack pane sized to image area
+     */
     private StackPane createImageArea() {
         StackPane imageArea = new StackPane();
         imageArea.setPrefSize(CARD_WIDTH, IMAGE_HEIGHT);
@@ -362,6 +391,9 @@ public class RecipesController extends ScreenController {
         }
     }
 
+    /**
+     * Set the filters to start with
+     */
     private void setStartingFilters() {
         if (startingSelectedFoods.isEmpty()) {
             return;

@@ -163,6 +163,12 @@ public class WindowManager {
         launchScreen(controller, rootPane);
     }
 
+    /**
+     * Launches the recipe screen with initial foods loaded
+     *
+     * @param stateManager the state manager for the application
+     * @param selectedFoods foods to be loaded on launch
+     */
     public void launchRecipesScreen(StateManager stateManager, List<String> selectedFoods) {
         ScreenController controller = new RecipesController(stateManager, selectedFoods);
         launchScreen(controller, rootPane);
