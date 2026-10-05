@@ -1,6 +1,7 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -313,6 +315,7 @@ public class RecipesController extends ScreenController {
         if (selectedFoods.isEmpty()) {
             recipeFilterService.cancel();
             progressIndicator.setVisible(false);
+            recipeTilePane.getChildren().add(buildEmptyState());
             return;
         }
         recipeFilterService.restartFor(selectedFoods);
@@ -350,6 +353,32 @@ public class RecipesController extends ScreenController {
             displayedRecipeIds.add(recipe.getId());
             createRecipeCard(recipe);
         }
+    }
+
+    /**
+     * Builds the empty state display shown when the Recipe screen displays no recipes.
+     * The display contains an icon, title, and explanatory message.
+     * @return a VBox containing the empty state display
+     */
+    private VBox buildEmptyState() {
+        VBox emptyState = new VBox(8);
+        emptyState.getStyleClass().add("empty-state");
+        emptyState.setPrefWidth(300);
+        emptyState.setAlignment(Pos.CENTER);
+
+        ImageView icon = new ImageView(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
+        icon.getStyleClass().add("empty-state-icon");
+
+        Label title = new Label("No filters selected yet");
+        title.getStyleClass().add("empty-state-title");
+
+        Label subtitle = new Label("Toggle filters to view recipes");
+        subtitle.getStyleClass().add("empty-state-subtitle");
+        subtitle.setWrapText(true);
+        subtitle.setTextAlignment(TextAlignment.CENTER);
+
+        emptyState.getChildren().addAll(icon, title, subtitle);
+        return emptyState;
     }
 
 
