@@ -24,23 +24,6 @@ public class FilterManager {
     }
 
     /**
-     * Selects filter from FilterCategory
-     * @param filterCategory
-     */
-    public void selectFilters(FilterCategory filterCategory) {
-        selectedFilters.add(filterCategory);
-    }
-
-    /**
-     * Deselects filter from FilterCategory
-     * @param filterCategory
-     */
-    public void deselectFilters(FilterCategory filterCategory) {
-        selectedFilters.remove(filterCategory);
-
-    }
-
-    /**
      * Selects all filters from filterCategory
      */
     public void selectAllFilters() {
@@ -65,7 +48,7 @@ public class FilterManager {
     /**
      * returns selected filters from the FilterCategory
      * @param filterCategory
-     * @return
+     *
      */
     public boolean isSelected(FilterCategory filterCategory) {
         return selectedFilters.contains(filterCategory);
