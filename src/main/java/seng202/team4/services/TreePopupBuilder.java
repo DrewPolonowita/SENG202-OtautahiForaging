@@ -72,11 +72,13 @@ public class TreePopupBuilder {
                         + "<span style=\"font-size: 0.8em; opacity: 0.7;\">Genus: %s</span>"
                         + "%s"
                         + "<button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
+                        + "<button class=\"recipe-btn\" onclick=\"javaScriptBridge.goToRecipes('%s')\">Go to recipes</button>"
                         + "</div></div>",
                 tree.getFood(),
                 tree.getGenus(),
                 buildNutritionSection(),
-                tree.getId()
+                tree.getId(),
+                tree.getFood()
         );
         return popup;
     }

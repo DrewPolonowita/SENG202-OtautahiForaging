@@ -132,6 +132,9 @@ public class MapController extends ScreenController {
                         LOG.warn("Add to Journal clicked for unknown tree id {}", id);
                     }
                 },
+                foodName -> {
+                    stateManager.getWindowManager().launchRecipesScreen(stateManager);
+                },
                 tree -> { },
                 this::loadNutritionForTree,
                 this::mapMoved
