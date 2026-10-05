@@ -73,7 +73,7 @@ public class WindowManager {
         // Scaling minimum sizes
         stage.setMinWidth(600);
         stage.setMinHeight(360);
-        stage.setTitle("Otautahi Foraging");
+        stage.setTitle("Ōtautahi Foraging");
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
 
