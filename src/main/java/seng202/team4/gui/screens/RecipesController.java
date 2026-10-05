@@ -23,6 +23,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.gui.utilities.RecipeFilterService;
+import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
@@ -59,6 +60,8 @@ public class RecipesController extends ScreenController {
 
     private RecipeFilterService recipeFilterService;
 
+    private final FilterManager filterManager;
+
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
     private final Set<Integer> displayedRecipeIds = new HashSet<>();
@@ -66,7 +69,6 @@ public class RecipesController extends ScreenController {
     private static final int CARD_HEIGHT = 260;
     private static final int TEXT_HEIGHT = 60;
     private static final int IMAGE_HEIGHT = CARD_HEIGHT - TEXT_HEIGHT;
-
     /**
      * Initialise the window
      *
@@ -75,6 +77,7 @@ public class RecipesController extends ScreenController {
     public RecipesController(StateManager stateManager) {
         super(stateManager);
         this.stateManager = stateManager;
+        this.filterManager = stateManager.getFilterManager();
     }
 
     public String getFxmlFile() {
@@ -98,7 +101,7 @@ public class RecipesController extends ScreenController {
         this.recipeFilterService = new RecipeFilterService(recipeService);
 
         setUpEvents();
-
+        refreshRecipesForSelectedFilters();
     }
 
     /**
@@ -278,7 +281,10 @@ public class RecipesController extends ScreenController {
 
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
-            filterButton.setOnAction(event -> filterButtonClicked(filterButton));
+            if (filterManager.isSelected(filterCategory)) {
+                FruitFilterUtilities.toggleButtonStyle(filterButton);
+            }
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterList.getChildren().add(filterButton);
         }
     }
@@ -289,9 +295,9 @@ public class RecipesController extends ScreenController {
      * map to show only the relevant fruit trees
      * @param buttons filter buttons
      */
-    public void filterButtonClicked(Button buttons) {
+    public void filterButtonClicked(Button buttons, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(buttons);
-
+        filterManager.toggleFilters(filterCategory);
         refreshRecipesForSelectedFilters();
     }
 
@@ -319,13 +325,11 @@ public class RecipesController extends ScreenController {
     private List<String> getSelectedFoods() {
         List<String> selectedFoods = new ArrayList<>();
 
-        for (Node node : filterList.getChildren()) {
-            Button button = (Button) node;
 
-            if (FruitFilterUtilities.isSelected(button)) {
-                selectedFoods.add(button.getText().trim());
-            }
+        for (FilterCategory filterCategory : filterManager.getSelectedFilters()) {
+            selectedFoods.add(FruitFilterUtilities.formatFruitName(filterCategory));
         }
+
 
         return selectedFoods;
     }

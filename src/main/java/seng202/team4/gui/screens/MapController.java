@@ -22,7 +22,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
-
+import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Food;
 import seng202.team4.models.TreeModel;
@@ -50,7 +50,7 @@ public class MapController extends ScreenController {
     private static final String UPDATE_POPUP_MARKER = "updateMarkerPopup";
     private static final double MAX_HEIGHT_FOR_DISPLAYING = 1;
     private final MapService mapService;
-
+    private final FilterManager filterManager;
     private final FoodDataManager foodService;
 
     private double northBound;
@@ -104,6 +104,7 @@ public class MapController extends ScreenController {
         this.themeService = themeService;
         this.targetTree = targetTree;
         this.foodService = stateManager.getFoodService();
+        this.filterManager = stateManager.getFilterManager();
     }
 
     /**
@@ -132,8 +133,7 @@ public class MapController extends ScreenController {
                 this::mapMoved
         );
         createFruitButtons();
-        toggleAllFilterButtons();
-
+//        toggleAllFilterButtons();
         initMap();
 
     }
@@ -377,6 +377,10 @@ public class MapController extends ScreenController {
         filterBox.getChildren().clear();
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            if (filterManager.isSelected(filterCategory)) {
+                FruitFilterUtilities.toggleButtonStyle(filterButton);
+                mapService.addSelectedFruit(filterCategory);
+            }
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterBox.getChildren().add(filterButton);
         }
@@ -390,8 +394,9 @@ public class MapController extends ScreenController {
      */
     public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(button);
+        filterManager.toggleFilters(filterCategory);
 
-        if (FruitFilterUtilities.isSelected(button)) {
+        if (filterManager.isSelected(filterCategory)) {
             mapService.addSelectedFruit(filterCategory);
         } else {
             mapService.removeSelectedFruit(filterCategory);
@@ -402,18 +407,5 @@ public class MapController extends ScreenController {
                 stateManager.getMapZoom());
     }
 
-    /**
-     * Toggles on all the fruits which are displayed on the map by default
-     * when the application is first run
-     */
-    public void toggleAllFilterButtons() {
-        for (Node node : filterBox.getChildren()) {
-            Button button = (Button) node;
-            FruitFilterUtilities.toggleButtonStyle(button);
-        }
-        for (FilterCategory filterCategory : FilterCategory.values()) {
-            mapService.addSelectedFruit(filterCategory);
-        }
-    }
 
 }
