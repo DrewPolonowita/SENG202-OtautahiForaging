@@ -27,6 +27,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.ThemeService;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Handles requests from GUI controllers to change scenes
@@ -160,6 +161,13 @@ public class WindowManager {
     public void launchRecipesScreen(StateManager stateManager) {
         ScreenController controller = new RecipesController(stateManager);
         launchScreen(controller, rootPane);
+    }
+
+    public void launchRecipesScreen(StateManager stateManager, List<String> selectedFoods) {
+        ScreenController controller = new RecipesController(stateManager, selectedFoods);
+        launchScreen(controller, rootPane);
+
+        navController.setRecipeButton();
     }
 
     /**

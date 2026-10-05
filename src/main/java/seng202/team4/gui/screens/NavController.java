@@ -167,4 +167,8 @@ public class NavController extends ScreenController {
         newSelection.getGraphic().getStyleClass().add("icon-selected");
         selectedButton = newSelection;
     }
+
+    public void setRecipeButton() {
+        setSelectedButton(recipesButton);
+    }
 }

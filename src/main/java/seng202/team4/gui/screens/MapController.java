@@ -133,7 +133,7 @@ public class MapController extends ScreenController {
                     }
                 },
                 foodName -> {
-                    stateManager.getWindowManager().launchRecipesScreen(stateManager);
+                    stateManager.getWindowManager().launchRecipesScreen(stateManager, List.of(foodName));
                 },
                 tree -> { },
                 this::loadNutritionForTree,

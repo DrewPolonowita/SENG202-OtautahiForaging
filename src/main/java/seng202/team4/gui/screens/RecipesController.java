@@ -56,6 +56,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private VBox filterList;
     private final StateManager stateManager;
+    private final List<String> startingSelectedFoods;
 
     private RecipeFilterService recipeFilterService;
 
@@ -75,6 +76,18 @@ public class RecipesController extends ScreenController {
     public RecipesController(StateManager stateManager) {
         super(stateManager);
         this.stateManager = stateManager;
+        this.startingSelectedFoods = List.of();
+    }
+
+    /**
+     * Constructor for going to recipes from map
+     * @param stateManager Reference for window manager
+     * @param startingSelectedFoods List of foods selected, realistically will be just one
+     */
+    public RecipesController(StateManager stateManager, List<String> startingSelectedFoods) {
+        super(stateManager);
+        this.stateManager = stateManager;
+        this.startingSelectedFoods = startingSelectedFoods;
     }
 
     public String getFxmlFile() {
@@ -98,6 +111,7 @@ public class RecipesController extends ScreenController {
         this.recipeFilterService = new RecipeFilterService(recipeService);
 
         setUpEvents();
+        setStartingFilters();
 
     }
 
@@ -346,6 +360,24 @@ public class RecipesController extends ScreenController {
             displayedRecipeIds.add(recipe.getId());
             createRecipeCard(recipe);
         }
+    }
+
+    private void setStartingFilters() {
+        if (startingSelectedFoods.isEmpty()) {
+            return;
+        }
+
+        for (Node node : filterList.getChildren()) {
+            Button button = (Button) node;
+            String foodName = button.getText().trim();
+
+            if (startingSelectedFoods.contains(foodName)
+                    && !FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+
+        refreshRecipesForSelectedFilters();
     }
 
 
