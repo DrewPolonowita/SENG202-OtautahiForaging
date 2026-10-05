@@ -19,6 +19,7 @@ public class MapViewStepDefs {
 
         bridge = new JavaScriptBridge(
                 id -> {},
+                foodname -> { },
                 tree -> {},
                 id -> {},
                 (north, east, south, west, latitude, longitude, zoom) -> {

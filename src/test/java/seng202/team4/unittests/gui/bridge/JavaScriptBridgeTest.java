@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import seng202.team4.gui.bridge.AddToJournalInterface;
 import seng202.team4.gui.bridge.AddTreeInterface;
+import seng202.team4.gui.bridge.GoToRecipesInterface;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,8 +19,10 @@ class JavaScriptBridgeTest {
         AtomicInteger receivedId = new AtomicInteger(-1);
         AddToJournalInterface journalCallback = receivedId::set;
         AddTreeInterface addCallback = tree -> {};
+        GoToRecipesInterface recipeCallback = foodname -> { };
 
-        JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, addCallback, id->{}, null);
+
+        JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, recipeCallback, addCallback, id->{}, null);
         testBridge.addTreeToJournal(testId);
         assertEquals(testId, receivedId.get());
     }
@@ -29,6 +32,7 @@ class JavaScriptBridgeTest {
         double[] receivedValues = new double[7];
         JavaScriptBridge testBridge = new JavaScriptBridge(
                 id -> { },
+                foodname -> { },
                 tree -> { },
                 id -> {},
                 ((north, east, south, west, latitude, longitude, zoom) -> {
