@@ -14,7 +14,7 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 import seng202.team4.models.FilterCategory;
-
+import javafx.scene.layout.HBox;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +37,8 @@ public class TableViewController extends ScreenController {
     @FXML
     private VBox filterList;
 
+    @FXML
+    private HBox filterActions;
 
     /**
      * Initialise the window
@@ -110,11 +112,8 @@ public class TableViewController extends ScreenController {
      */
     @FXML
     private void onFilterClicked() {
-        if (filterList.isVisible()) {
-            hideFilterList();
-        } else {
-            showFilterList();
-        }
+        filterList.setVisible(!filterList.isVisible());
+        filterActions.setVisible(filterList.isVisible());
     }
 
     /**
@@ -138,7 +137,6 @@ public class TableViewController extends ScreenController {
      */
     private void createFruitButtons() {
         filterList.getChildren().clear();
-
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
             if (filterManager.isSelected(filterCategory)) {
@@ -184,5 +182,39 @@ public class TableViewController extends ScreenController {
         treeTableView.setItems(
                 FXCollections.observableArrayList(
                         filteredTrees));
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons selected
+     * and deselect all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void deselectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        reloadTable();
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons unselected
+     * and select all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void selectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (!FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        reloadTable();
     }
 }

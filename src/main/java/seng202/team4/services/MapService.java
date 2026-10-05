@@ -106,11 +106,6 @@ public class MapService {
             throw new NullPointerException("fruit parameter is null");
         }
 
-        if (selectedFilterCategories.contains(filterCategory)) {
-            String message = "Fruit: " + filterCategory.toString() + " is already selected";
-            throw new IllegalArgumentException(message);
-        }
-
         selectedFilterCategories.add(filterCategory);
     }
 
@@ -121,11 +116,6 @@ public class MapService {
     public void removeSelectedFruit(FilterCategory filterCategory) {
         if (filterCategory == null) {
             throw new NullPointerException("fruit parameter is null");
-        }
-
-        if (!selectedFilterCategories.contains(filterCategory)) {
-            String message = "Fruit: " + filterCategory.toString() + " is not currently selected";
-            throw new IllegalArgumentException(message);
         }
 
         selectedFilterCategories.remove(filterCategory);

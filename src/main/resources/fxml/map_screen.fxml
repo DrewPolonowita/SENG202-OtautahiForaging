@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.BorderPane?>
@@ -40,6 +41,47 @@
                <Insets left="10.0" top="25.0" />
             </StackPane.margin>
          </Button>
+         <HBox fx:id="filterActions"
+               spacing="5.0"
+               visible="false"
+               managed="false"
+               StackPane.alignment="TOP_LEFT">
+
+            <StackPane.margin>
+               <Insets left="47.0" top="25.0" />
+            </StackPane.margin>
+
+            <Button fx:id="deselectAllButton"
+                    contentDisplay="CENTER"
+                    mnemonicParsing="false"
+                    onAction="#deselectAllFilters"
+                    styleClass="filters">
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-deselect-all" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+            </Button>
+
+            <Button fx:id="selectAllButton"
+                    contentDisplay="CENTER"
+                    mnemonicParsing="false"
+                    onAction="#selectAllFilters"
+                    styleClass="filters">
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-select-all" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+            </Button>
+
+         </HBox>
          <VBox fx:id="filterBox" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="100.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
             <StackPane.margin>
                <Insets left="10.0" top="65.0" />

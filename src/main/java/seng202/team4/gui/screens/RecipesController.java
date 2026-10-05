@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.VBox;
-import javafx.scene.Node;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -55,9 +55,12 @@ public class RecipesController extends ScreenController {
     private BorderPane recipeHighlightPane;
 
     @FXML
+    private HBox filterActions;
+    @FXML
     private Text recipeDetailsText;
     @FXML
     private VBox filterList;
+
     private final StateManager stateManager;
 
     private RecipeFilterService recipeFilterService;
@@ -131,6 +134,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private void onFilterClicked() {
         filterList.setVisible(!filterList.isVisible());
+        filterActions.setVisible(filterList.isVisible());
     }
 
     /**
@@ -379,6 +383,40 @@ public class RecipesController extends ScreenController {
 
         emptyState.getChildren().addAll(icon, title, subtitle);
         return emptyState;
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons selected
+     * and deselect all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void deselectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        refreshRecipesForSelectedFilters();
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons unselected
+     * and select all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void selectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (!FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        refreshRecipesForSelectedFilters();
     }
 
 
