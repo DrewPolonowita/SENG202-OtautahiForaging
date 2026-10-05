@@ -83,6 +83,7 @@ public class RecipesController extends ScreenController {
         super(stateManager);
         this.stateManager = stateManager;
         this.filterManager = stateManager.getFilterManager();
+
     }
 
     public String getFxmlFile() {
@@ -242,8 +243,8 @@ public class RecipesController extends ScreenController {
     private void closeRecipe() {
         recipeHighlightPane.setVisible(false);
         recipeHighlightPane.setManaged(false);
-        recipeListPane.setVisible(true);
-        recipeListPane.setManaged(true);
+        recipeListPane.setVisible(false);
+        recipeListPane.setManaged(false);
     }
 
     /**
