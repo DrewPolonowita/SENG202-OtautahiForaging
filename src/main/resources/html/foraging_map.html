@@ -269,6 +269,8 @@
         console.log(foodCluster);
         clusterGroups[food] = L.markerClusterGroup({
             iconCreateFunction: function(cluster) {
+                foodCluster = food.toString();
+                console.log(foodCluster);
                 return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>',
                                    className: 'marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, ""),
                                    iconSize: L.point(40, 40)
