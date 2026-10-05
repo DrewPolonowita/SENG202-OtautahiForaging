@@ -26,7 +26,7 @@
 }
 
 .sideBar-button {
-    -fx-background-color: -primary-bg-color;
+    -fx-background-color: transparent;
     -fx-text-fill: -primary-color;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -149,11 +149,9 @@
 }
 .close-button {
     -fx-background-color: -primary-color;
-    -fx-text-fill: white;
 }
 .expand-note-close {
     -fx-background-color: -primary-color;
-    -fx-text-fill: white;
 }
 
 .note-card {
@@ -229,7 +227,7 @@
 }
 .delete-button:hover {
     -fx-background-color: -primary-error-darken-color;
-    -fx-text-fill: white;
+    -fx-text-fill: -primary-background-color;
 }
 .photo-container {
     -fx-background-color: -medium-background-color;
@@ -248,7 +246,7 @@
 }
 .remove-photo-button:hover {
     -fx-background-color: -primary-error-darken-color;
-    -fx-text-fill: white;
+    -fx-text-fill: -primary-bg-color;
 }
 
 .expand-note-root {
@@ -315,7 +313,7 @@
 }
 .record-button {
     -fx-background-color: -primary-color;
-    -fx-text-fill: white;
+    -fx-text-fill: -primary-bg-color;
     -fx-background-radius: 8;
     -fx-padding: 6 12;
     -fx-font-size: 0.85em;
@@ -356,4 +354,26 @@
 }
 .generic-background {
     -fx-background-color: -primary-bg-color;
+}
+
+.recipeFullScreenBase {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.recipeFullscreenTitleText {
+    -fx-font-size: 32px;
+}
+
+.recipeFullScreenTimeText {
+    -fx-font-size: 16px;
+}
+
+.recipeFullScreenHeadings {
+    -fx-font-size: 24px;
+}
+
+.recipeFullScreenText {
+    -fx-font-size: 16px;
 }
