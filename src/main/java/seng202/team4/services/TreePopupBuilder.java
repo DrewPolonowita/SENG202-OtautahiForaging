@@ -99,40 +99,36 @@ public class TreePopupBuilder {
     }
 
     private String buildNutritionHtml() {
-        FoodServing defaultServing = food.getDefaultServing();
+        FoodServing baseline = food.getServings().stream()
+                .filter(serving -> "100 g".equalsIgnoreCase(serving.getDescription()))
+                .findFirst()
+                .orElse(null);
+
+        if (baseline == null) {
+            return "a";
+        }
 
         return String.format(
-                "<select class=\"serving-select\" onchange=\"updateNutrition(this)\">"
-                        + "%s"
-                        + "</select>"
+                "<label \">Enter grams:</label>"
+                        + "<input class=\"serving-select\" type=\"text\" value=\"100\" "
+                        + "data-calories=\"%f\" data-carbohydrates=\"%f\" "
+                        + "data-protein=\"%f\" data-fat=\"%f\" "
+                        + "oninput=\"this.value = this.value.replace(/[^0-9]/g, ''); "
+                        + "updateNutrition(this)\">"
                         + "<div class=\"nutrition-info\">"
                         + "<div class=\"calories\">Calories: %f kcal</div>"
                         + "<div class=\"carbohydrates\">Carbohydrates: %f g</div>"
                         + "<div class=\"protein\">Protein: %f g</div>"
                         + "<div class=\"fat\">Fat: %f g</div>"
                         + "</div>",
-                buildServingOptions(),
-                defaultServing.getCalories(),
-                defaultServing.getCarbohydrates(),
-                defaultServing.getProtein(),
-                defaultServing.getFat()
+                baseline.getCalories(),
+                baseline.getCarbohydrates(),
+                baseline.getProtein(),
+                baseline.getFat(),
+                baseline.getCalories(),
+                baseline.getCarbohydrates(),
+                baseline.getProtein(),
+                baseline.getFat()
         );
-    }
-
-    private String buildServingOptions() {
-        StringBuilder servingOptions = new StringBuilder();
-
-        for (FoodServing serving : food.getServings()) {
-            servingOptions.append(String.format(
-                    "<option data-calories=\"%f\" data-carbohydrates=\"%f\" data-protein=\"%f\" data-fat=\"%f\">%s</option>",
-                    serving.getCalories(),
-                    serving.getCarbohydrates(),
-                    serving.getProtein(),
-                    serving.getFat(),
-                    serving.getDescription()
-            ));
-        }
-
-        return servingOptions.toString();
     }
 }
