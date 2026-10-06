@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A service class for the Map to handle getting trees and filtering the map
+ *
+ * Simulates a stack of
  */
 public class MapService {
     private static final Logger LOG = LogManager.getLogger(MapService.class);
@@ -27,12 +29,15 @@ public class MapService {
         thread.setDaemon(true);
         return thread;
     });
-    private final AtomicInteger currentRequestCounter = new AtomicInteger(0);
 
+    // Used to track what request is the most recent by how many requests have been made and what the most recent was
+    private final AtomicInteger currentRequestCounter = new AtomicInteger(0);
     private boolean isRequestRunning = false;
     private PendingRequest pendingRequest = null;
 
-    // Inner class to act as our stored function pointer + future
+    /**
+     * An object to store coordinates and a concurrent request used only within this class
+     */
     private class PendingRequest {
         double n;
         double e;
@@ -63,13 +68,15 @@ public class MapService {
      * Returns all the trees in a given region which are selected using the filter gets all the trees
      * from the api/database on different threads then gives all of them using a Future
      *
+     * Acts as a wrapper around the getAllTreesByRegion async method to make these requests happen one after another
+     *
      * @param north the north-bound
      * @param east the east-bound
      * @param south the south-bound
      * @param west the west-bound
      * @return a future of all the trees in a given region which are selected using the filter
      */
-    public CompletableFuture<List<TreeModel>> actualBackendCall(
+    public CompletableFuture<List<TreeModel>> backendCall(
             double north, double east, double south, double west
     ) {
         int thisRequest = currentRequestCounter.incrementAndGet();
@@ -124,6 +131,16 @@ public class MapService {
         selectedFilterCategories.remove(filterCategory);
     }
 
+    /**
+     * Returns the promise of the most recent request completed without running multiple database requests asynchronously
+     * to avoid concurrent database requests which causes inconsistencies in what is stored and when things were updated
+     *
+     * @param north the north-bound
+     * @param east the east-bound
+     * @param south the south-bound
+     * @param west the west-bound
+     * @return an async promise that returns a list of trees to display on a map or a table
+     */
     public synchronized CompletableFuture<List<TreeModel>> getAllTreesInRegion(double north, double east, double south, double west) {
         CompletableFuture<List<TreeModel>> resultFuture = new CompletableFuture<>();
 
@@ -133,16 +150,25 @@ public class MapService {
             }
             pendingRequest = new PendingRequest(north, east, south, west, resultFuture);
         } else {
-            executeNetworkCall(north, east, south, west, resultFuture);
+            executeCall(north, east, south, west, resultFuture);
         }
 
         return resultFuture;
     }
 
-    private void executeNetworkCall(double n, double e, double s, double w, CompletableFuture<List<TreeModel>> futureToComplete) {
+    /**
+     * Runs the getAllTreesByRegion wrapper method then handles the request and updates the status on the completableFuture
+     *
+     * @param north the north-bound
+     * @param east the east-bound
+     * @param south the south-bound
+     * @param west the west-bound
+     * @param futureToComplete the current request being handled
+     */
+    private void executeCall(double north, double east, double south, double west, CompletableFuture<List<TreeModel>> futureToComplete) {
         isRequestRunning = true;
 
-        actualBackendCall(n, e, s, w)
+        backendCall(north, east, south, west)
                 .thenAccept(trees -> {
                     futureToComplete.complete(trees);
                     checkQueue();
@@ -154,11 +180,14 @@ public class MapService {
                 });
     }
 
+    /**
+     * Runs the next request in the queue. If it doesn't exist sets isRequestRunning to false
+     */
     private synchronized void checkQueue() {
         if (pendingRequest != null) {
             PendingRequest next = pendingRequest;
             pendingRequest = null;
-            executeNetworkCall(next.n, next.e, next.s, next.w, next.future);
+            executeCall(next.n, next.e, next.s, next.w, next.future);
         } else {
             isRequestRunning = false;
         }
