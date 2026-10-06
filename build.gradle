@@ -179,6 +179,14 @@ jacocoTestReport {
                 }
             }
 
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/gui/**',              // Excludes a whole gui package
+            ])
+        }))
+    }
+
     // Provide the FileTree lazily to the executionData property
     executionData.setFrom(execTrees)
 
