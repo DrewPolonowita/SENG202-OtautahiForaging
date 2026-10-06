@@ -38,7 +38,8 @@
         <padding>
             <Insets top="0" right="10" bottom="0" left="10"/>
         </padding>
-        <Label fx:id="commonNameDisplay" styleClass="note-card-title"/>
+        <Label text="NOTE TITLE" styleClass="note-card-subtitle" />
+        <TextField fx:id="commonNameDisplay" styleClass="note-card-title"/>
     </VBox>
 
     <VBox spacing="6" alignment="CENTER">
