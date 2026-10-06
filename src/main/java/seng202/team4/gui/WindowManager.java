@@ -159,8 +159,8 @@ public class WindowManager {
      *
      * @param stateManager the state manager for the application
      */
-    public void launchRecipesScreen(StateManager stateManager) {
-        ScreenController controller = new RecipesController(stateManager);
+    public void launchRecipesScreen(StateManager stateManager, FilterManager filterManager) {
+        ScreenController controller = new RecipesController(stateManager, filterManager);
         launchScreen(controller, rootPane);
     }
 
@@ -170,8 +170,8 @@ public class WindowManager {
      * @param stateManager the state manager for the application
      * @param selectedFoods foods to be loaded on launch
      */
-    public void launchRecipesScreen(StateManager stateManager, List<String> selectedFoods) {
-        ScreenController controller = new RecipesController(stateManager, selectedFoods);
+    public void launchRecipesScreen(StateManager stateManager, FilterManager filterManager, List<String> selectedFoods) {
+        ScreenController controller = new RecipesController(stateManager, filterManager, selectedFoods);
         launchScreen(controller, rootPane);
 
         navController.setRecipeButton();

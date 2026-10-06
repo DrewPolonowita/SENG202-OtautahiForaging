@@ -114,6 +114,7 @@ public class TableViewController extends ScreenController {
     private void onFilterClicked() {
         filterList.setVisible(!filterList.isVisible());
         filterActions.setVisible(filterList.isVisible());
+        filterActions.setManaged(filterList.isVisible());
     }
 
     /**
@@ -208,7 +209,7 @@ public class TableViewController extends ScreenController {
      */
     @FXML
     private void selectAllFilters() {
-        filterManager.deselectAllFilters();
+        filterManager.selectAllFilters();
         for (int i = 0; i < filterList.getChildren().size(); i++) {
             Button button = (Button) filterList.getChildren().get(i);
             if (!FruitFilterUtilities.isSelected(button)) {

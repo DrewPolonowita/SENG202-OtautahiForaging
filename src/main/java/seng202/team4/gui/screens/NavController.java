@@ -128,7 +128,7 @@ public class NavController extends ScreenController {
     @FXML
     public void onRecipesButtonClicked() {
         StateManager stateManager = getStateManager();
-        stateManager.getWindowManager().launchRecipesScreen(stateManager);
+        stateManager.getWindowManager().launchRecipesScreen(stateManager, getStateManager().getFilterManager());
         setSelectedButton(recipesButton);
     }
 

@@ -1,14 +1,14 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
+
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.TilePane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -89,10 +91,10 @@ public class RecipesController extends ScreenController {
      *
      * @param stateManager Reference for window manager
      */
-    public RecipesController(StateManager stateManager) {
+    public RecipesController(StateManager stateManager, FilterManager filterManager) {
         super(stateManager);
         this.stateManager = stateManager;
-        this.filterManager = stateManager.getFilterManager();
+        this.filterManager = filterManager;
         this.startingSelectedFoods = List.of();
     }
 
@@ -101,9 +103,10 @@ public class RecipesController extends ScreenController {
      * @param stateManager Reference for window manager
      * @param startingSelectedFoods List of foods selected, realistically will be just one
      */
-    public RecipesController(StateManager stateManager, List<String> startingSelectedFoods) {
+    public RecipesController(StateManager stateManager, FilterManager filterManager, List<String> startingSelectedFoods) {
         super(stateManager);
         this.stateManager = stateManager;
+        this.filterManager = filterManager;
         this.startingSelectedFoods = startingSelectedFoods;
     }
 
@@ -159,6 +162,7 @@ public class RecipesController extends ScreenController {
     private void onFilterClicked() {
         filterList.setVisible(!filterList.isVisible());
         filterActions.setVisible(filterList.isVisible());
+        filterActions.setManaged(filterList.isVisible());
     }
 
     /**
@@ -458,7 +462,7 @@ public class RecipesController extends ScreenController {
      */
     @FXML
     private void selectAllFilters() {
-        filterManager.deselectAllFilters();
+        filterManager.selectAllFilters();
         for (int i = 0; i < filterList.getChildren().size(); i++) {
             Button button = (Button) filterList.getChildren().get(i);
             if (!FruitFilterUtilities.isSelected(button)) {

@@ -18,7 +18,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.scene.Node;
 import javafx.util.Duration;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
@@ -168,7 +167,7 @@ public class MapController extends ScreenController {
                 .filter(button-> button == ButtonType.OK)
                 .ifPresent(button-> {
                     stateManager.getWindowManager()
-                            .launchRecipesScreen(stateManager, List.of(foodName));
+                            .launchRecipesScreen(stateManager, filterManager, List.of(foodName));
                 });
     }
 
