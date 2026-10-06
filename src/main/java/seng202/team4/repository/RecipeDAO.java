@@ -247,34 +247,6 @@ public class RecipeDAO implements RecipeRepository {
         throw new NotImplementedException();
     }
 
-
-    /**
-     * Retrieve all recipes with a specified ingredient
-     * @param food the name of the ingredient specified
-     * @return all recipes with the food specified as an ingredient
-     */
-    public List<Integer> getRecipeIdsByFoodName(String food) {
-        List<Integer> recipeIds = new ArrayList<>();
-        String sql = "SELECT recipe_id FROM recipe_uses_food WHERE common_name=?";
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-            ps.setString(1, food);
-
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    recipeIds.add(rs.getInt(RECIPE_ID_REFERENCE));
-                }
-            }
-            return recipeIds;
-        } catch (SQLException sqlException) {
-            LOG.error(sqlException);
-            return new ArrayList<>();
-        }
-    }
-
-
     /**
      * Retrieves timestamp of when data was last retrieved from recipe API
      * and converts it to a LocalDateTime

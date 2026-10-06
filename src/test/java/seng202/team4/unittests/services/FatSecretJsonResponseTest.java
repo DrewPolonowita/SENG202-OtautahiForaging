@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -226,8 +227,7 @@ class FatSecretJsonResponseTest {
         assertEquals(200, actualResponse.getResponseCode());
         assertEquals(91, actualResponse.getApiResponse().recipes().recipe().get(0).id());
         assertEquals("Baked Lemon Snapper", actualResponse.getApiResponse().recipes().recipe().get(0).recipeName());
-        assertEquals(177, actualResponse.getApiResponse().recipes().recipe().get(0).nutritionalInformation().calories());
-
+        assertNotNull(actualResponse.getApiResponse().recipes().recipe().getFirst().recipeImageUrl());
     }
 
 

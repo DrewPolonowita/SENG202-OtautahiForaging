@@ -13,14 +13,6 @@ import java.util.Map;
  */
 public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
 
-
-    /**
-     * Retrieve all recipe ids with a specified ingredient
-     * @param food the name of the ingredient specified
-     * @return all ids for recipes with the food specified as an ingredient
-     */
-    List<Integer> getRecipeIdsByFoodName(String food);
-
     /**
      * Adds recipeIngredient object information to the database
      *
