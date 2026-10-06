@@ -1,4 +1,4 @@
-package seng202.team4.services;
+package seng202.team4.gui;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -11,8 +11,7 @@ import seng202.team4.gui.utilities.CssUtilities;
  * @author Team 4
  */
 public class ThemeService {
-    private final String STARTINGPRIMARY = "#67AF76";
-
+    private static final String STARTINGPRIMARY = "#67AF76";
     private static final String DARK_THEME_PATH = "/css/dark-theme.css";
 
     private final Scene scene;

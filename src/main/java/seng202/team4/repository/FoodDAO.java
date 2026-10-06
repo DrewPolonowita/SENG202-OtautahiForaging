@@ -28,6 +28,12 @@ public class FoodDAO implements FoodRepository {
     private static final String FOOD_ID_REFERENCE = "food_id";
     private static final String FOOD_TYPE_REFERENCE = "food_type";
     private static final String FOOD_COMMON_NAME_REFERENCE = "common_name";
+    public static final String SERVING_ID_REFERENCE = "serving_id";
+    public static final String SERVING_DESCRIPTION_REFERENCE = "serving_description";
+    public static final String CALORIES_REFERENCE = "calories";
+    public static final String CARBOHYDRATES_REFERENCE = "carbohydrates";
+    public static final String PROTEIN_REFERENCE = "protein";
+    public static final String FAT_REFERENCE = "fat";
 
 
     private final DatabaseManager databaseManager;
@@ -55,7 +61,7 @@ public class FoodDAO implements FoodRepository {
                 ResultSet rs = stmt.executeQuery(sql)
         ) {
             while (rs.next()) {
-                food.add(createFoodFromResultSet(rs));
+                food.add(createFoodFromResultSet(rs, conn));
             }
             return food;
         } catch (SQLException sqlException) {
@@ -67,7 +73,7 @@ public class FoodDAO implements FoodRepository {
     /**
      * Add a food object to the database
      * @param toAdd food object to add
-     * @return unique food id of food if success, -1 if failed
+     * @return unique food id of food if success, otherwise DatabaseAccessException
      */
     @Override
     public int add(Food toAdd) throws DuplicateEntryException {
@@ -86,12 +92,12 @@ public class FoodDAO implements FoodRepository {
             ps.setString(3, toAdd.getType());
 
             ps.executeUpdate();
-            addServings(toAdd);
+            addServings(toAdd, conn);
             return toAdd.getId();
         } catch (SQLException sqlException) {
             if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
                 throw new DuplicateEntryException("Food exists with id " + toAdd.getId()
-                        + " and name " + toAdd.getName());
+                        + " and name " + toAdd.getName(), sqlException);
             }
             throw new DatabaseAccessException("Failed to add food " + toAdd.getName(), sqlException);
         }
@@ -129,7 +135,7 @@ public class FoodDAO implements FoodRepository {
             ps.setString(1, type);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    foods.add(createFoodFromResultSet(rs)
+                    foods.add(createFoodFromResultSet(rs, conn)
                     );
                 }
             }
@@ -148,14 +154,14 @@ public class FoodDAO implements FoodRepository {
     @Override
     public Food getFoodbyTreeId(int treeId) {
         Food food = null;
-        String sql = "SELECT * FROM food where common_name =(SELECT food FROM trees where id=?)";
+        String sql = "SELECT * FROM food WHERE common_name =(SELECT food FROM trees WHERE id=?)";
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, treeId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    food = createFoodFromResultSet(rs);
+                    food = createFoodFromResultSet(rs, conn);
                 }
             }
             return food;
@@ -182,7 +188,7 @@ public class FoodDAO implements FoodRepository {
             ps.setInt(1, foodId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    food = createFoodFromResultSet(rs);
+                    food = createFoodFromResultSet(rs, conn);
                 }
             }
             return food;
@@ -288,7 +294,7 @@ public class FoodDAO implements FoodRepository {
                     deletePs.setInt(1, food.getId());
                     deletePs.executeUpdate();
                 }
-                addServings(food);
+                addServings(food, conn);
             }
         } catch (SQLException sqlException) {
             throw new DatabaseAccessException("Failed to replace food " + food.getName(), sqlException);
@@ -312,7 +318,7 @@ public class FoodDAO implements FoodRepository {
     }
 
 
-    private void addServings(Food food) throws SQLException {
+    private void addServings(Food food, Connection conn) throws SQLException {
         String sql = """
                 INSERT OR IGNORE INTO food_serving (
                     food_id,
@@ -324,8 +330,9 @@ public class FoodDAO implements FoodRepository {
                     fat
                 ) VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
             for (FoodServing serving : food.getServings()) {
                 ps.setInt(1, food.getId());
                 ps.setInt(2, serving.getServingId());
@@ -336,13 +343,17 @@ public class FoodDAO implements FoodRepository {
                 ps.setDouble(7, serving.getFat());
                 ps.addBatch();
             }
-
             ps.executeBatch();
+        } catch (SQLException sqlException) {
+            LOG.error("Failed to add servings", sqlException);
+            throw sqlException;
         }
+
+
     }
 
 
-    private List<FoodServing> getServings(int foodId) throws SQLException {
+    private List<FoodServing> getServings(int foodId, Connection conn) throws SQLException {
         String sql = """
                 SELECT serving_id,
                        serving_description,
@@ -356,19 +367,19 @@ public class FoodDAO implements FoodRepository {
                 """;
 
         List<FoodServing> servings = new ArrayList<>();
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, foodId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     servings.add(FoodFactory.createServing(
-                            rs.getInt("serving_id"),
-                            rs.getString("serving_description"),
-                            rs.getDouble("calories"),
-                            rs.getDouble("carbohydrates"),
-                            rs.getDouble("protein"),
-                            rs.getDouble("fat")
+                            rs.getInt(SERVING_ID_REFERENCE),
+                            rs.getString(SERVING_DESCRIPTION_REFERENCE),
+                            rs.getDouble(CALORIES_REFERENCE),
+                            rs.getDouble(CARBOHYDRATES_REFERENCE),
+                            rs.getDouble(PROTEIN_REFERENCE),
+                            rs.getDouble(FAT_REFERENCE)
                     ));
                 }
             }
@@ -378,13 +389,14 @@ public class FoodDAO implements FoodRepository {
     }
 
 
-    private Food createFoodFromResultSet(ResultSet rs) throws SQLException {
+    private Food createFoodFromResultSet(ResultSet rs, Connection conn) throws SQLException {
         int foodId = rs.getInt(FOOD_ID_REFERENCE);
+
         return FoodFactory.create(
                 foodId,
                 rs.getString(FOOD_COMMON_NAME_REFERENCE),
                 rs.getString(FOOD_TYPE_REFERENCE),
-                getServings(foodId)
+                getServings(foodId, conn)
         );
     }
 

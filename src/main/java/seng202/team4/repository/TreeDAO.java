@@ -136,7 +136,7 @@ public class TreeDAO implements TreeRepository {
         } catch (SQLException sqlException) {
             if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
                 throw new DuplicateEntryException("Tree exists with id " + toAdd.getId()
-                        + " with food " + toAdd.getFood());
+                        + " with food " + toAdd.getFood(), sqlException);
             }
             LOG.error(sqlException);
             return -1;

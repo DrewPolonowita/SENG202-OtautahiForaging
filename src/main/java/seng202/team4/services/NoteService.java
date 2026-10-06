@@ -54,6 +54,9 @@ public class NoteService {
      * @param note the specified id of the note.
      */
     public void delete(Note note) {
+        if (note == null) {
+            return;
+        }
         noteRepository.delete(note.getId());
     }
 

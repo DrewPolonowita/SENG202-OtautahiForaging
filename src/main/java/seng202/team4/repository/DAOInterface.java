@@ -1,5 +1,6 @@
 package seng202.team4.repository;
 
+import seng202.team4.exceptions.DatabaseAccessException;
 import seng202.team4.exceptions.DuplicateEntryException;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface DAOInterface<T, I> {
      * @param primaryKey the primary key of object to get
      * @return Object of type T that has the primary key given
      */
-    T getOne(I primaryKey);
+    T getOne(I primaryKey) throws DatabaseAccessException;
 
     /**
      * Adds a single object of type T to database

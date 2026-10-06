@@ -32,7 +32,7 @@ import seng202.team4.models.Food;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.MapService;
 import seng202.team4.services.StateManager;
-import seng202.team4.services.ThemeService;
+import seng202.team4.gui.ThemeService;
 import seng202.team4.services.TreePopupBuilder;
 import seng202.team4.services.dataCentre.foodData.FoodDataManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;

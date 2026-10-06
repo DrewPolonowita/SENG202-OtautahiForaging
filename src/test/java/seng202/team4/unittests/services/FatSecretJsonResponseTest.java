@@ -86,7 +86,7 @@ class FatSecretJsonResponseTest {
         ApiResponseWrapper<FoodByIdResponse> fakeApiResponseWrapper1 = new ApiResponseWrapper<>(foodByIdResponse1, 200);
 
 
-        when(apiClient.getOauth(
+        when(apiClient.get(
                 eq("https://platform.fatsecret.com/rest/food/v5?food_id=1641&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
@@ -118,7 +118,7 @@ class FatSecretJsonResponseTest {
         ApiResponseWrapper<RecipeByIdResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(recipeByIdResponse, 200);
 
 
-        when(apiClient.getOauth(
+        when(apiClient.get(
                 eq("https://platform.fatsecret.com/rest/recipe/v2?recipe_id=91&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
@@ -147,7 +147,7 @@ class FatSecretJsonResponseTest {
         );
 
         ApiResponseWrapper<FoodByIdResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(foodByIdResponse, 200);
-        when(apiClient.getOauth(
+        when(apiClient.get(
                 eq("https://platform.fatsecret.com/rest/food/v5?food_id=50953&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
@@ -172,7 +172,7 @@ class FatSecretJsonResponseTest {
                 }
         );
         ApiResponseWrapper<FoodSearchResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(foodSearchResponse, 200);
-        when(apiClient.getOauth(
+        when(apiClient.get(
                 eq("https://platform.fatsecret.com/rest/foods/search/v1?search_expression=Cheeseburger&max_results=1&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
@@ -192,7 +192,7 @@ class FatSecretJsonResponseTest {
                 FoodByIdResponse.class
         );
         ApiResponseWrapper<FoodByIdResponse> fakeApiResponseWrapper = new ApiResponseWrapper<>(foodByIdResponse, 200);
-        when(apiClient.getOauth(
+        when(apiClient.get(
                 eq("https://platform.fatsecret.com/rest/food/v5?food_id=50953&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")
@@ -215,7 +215,7 @@ class FatSecretJsonResponseTest {
         );
         ApiResponseWrapper<RecipeSearchResponse>
                 fakeApiResponseWrapper = new ApiResponseWrapper<>(recipeSearchResponse, 200);
-        when(apiClient.getOauth(
+        when(apiClient.get(
                 eq("https://platform.fatsecret.com/rest/recipes/search/v3?search_expression=Baked%20Lemon%20Snapper&must_have_images=false&max_results=1&format=json"),
                 any(TypeReference.class),
                 eq("OAuth test")

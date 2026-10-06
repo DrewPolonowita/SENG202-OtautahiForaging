@@ -44,7 +44,7 @@ public class FoodApiHandler {
     private boolean validateFoodSearchResponse(ApiResponseWrapper<FoodSearchResponse> response, String searchExpression) {
         int responseCode = response.getResponseCode();
         if (responseCode != 200) {
-            LOG.error("Error: getFoodBySearchFromApi doesn't return response, code: {}", responseCode);
+            LOG.error("Error: getFoodBySearchFromApi returns non-200 HTTP status, code: {}", responseCode);
             return false;
         }
 

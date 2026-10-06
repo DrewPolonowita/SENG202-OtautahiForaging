@@ -117,7 +117,7 @@ public class RegionDAO implements RegionRepository {
                                 + region.getNorthBound() + ", "
                                 + region.getEastBound() + ", "
                                 + region.getSouthBound() + ", "
-                                + region.getWestBound()
+                                + region.getWestBound(), sqlException
                 );
             }
 

@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class RecipeApiHandler {
     private static final Logger LOG = LogManager.getLogger(RecipeApiHandler.class);
+    public static final int HTTP_OK = 200;
     private final RecipeClientInterface recipeApiClient;
 
     /**
@@ -74,7 +75,7 @@ public class RecipeApiHandler {
      */
     private boolean validateApiResponse(ApiResponseWrapper<RecipeSearchResponse> response, String searchExpression) {
         int responseCode = response.getResponseCode();
-        if (responseCode != 200) {
+        if (responseCode != HTTP_OK) {
             LOG.error("Error: getRecipesByIngredientFromApi doesn't return response, code: {}", responseCode);
             return false;
         }
@@ -105,7 +106,7 @@ public class RecipeApiHandler {
      */
     private boolean validateApiResponse(ApiResponseWrapper<RecipeByIdResponse> response, int id) {
         int responseCode = response.getResponseCode();
-        if (responseCode != 200) {
+        if (responseCode != HTTP_OK) {
             LOG.error("Error: getRecipeById doesn't return response, code: {}", responseCode);
             return false;
         }

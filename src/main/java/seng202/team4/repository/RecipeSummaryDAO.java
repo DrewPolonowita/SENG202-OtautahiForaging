@@ -60,7 +60,7 @@ public class RecipeSummaryDAO implements RecipeSummaryRepository {
             return summary.getRecipeId();
         } catch (SQLException e) {
             if (e.getMessage().contains("UNIQUE constraint failed")) {
-                throw new DuplicateEntryException("Recipe summary exists with id " + summary.getRecipeId());
+                throw new DuplicateEntryException("Recipe summary exists with id " + summary.getRecipeId(), e);
             }
             LOG.error(e);
             return -1;

@@ -25,7 +25,7 @@ import seng202.team4.gui.screens.TableViewController;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
-import seng202.team4.services.ThemeService;
+
 import java.io.IOException;
 import java.util.List;
 

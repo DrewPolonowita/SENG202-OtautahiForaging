@@ -9,9 +9,8 @@ import seng202.team4.models.api.Food.SearchFood.FoodSearchResponse;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
 /**
  * Class to interact with the api for the purpose of getting food information from the FatSecret API
  */
@@ -33,6 +32,9 @@ public class FoodApiClient implements FoodClientInterface {
         Dotenv dotenv = Dotenv.configure().load();
         String consumerKey = dotenv.get("CONSUMER_KEY");
         String secretKey = dotenv.get("CONSUMER_SECRET");
+        if (consumerKey == null || secretKey == null) {
+            throw new IllegalStateException("FatSecret API credentials are missing");
+        }
         this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
     }
 
@@ -47,26 +49,25 @@ public class FoodApiClient implements FoodClientInterface {
     }
 
     /**
-     * Building the parameters for food search URL
-     * @param searchExpression expression for use in database
-     * @param maxResults maximum results
-     * @return url extension
+     * Encode the parameters into url query string
+     * @param params parameters to encode
+     * @return encoded query string
      */
-    private String encodeFoodSearchParams(String searchExpression, int maxResults) {
-        return "?search_expression=" + URLEncoder
-                .encode(searchExpression == null ? "" : searchExpression, StandardCharsets.UTF_8)
-                .replace("+", "%20")
-                + "&max_results=" + maxResults
-                + "&format=json";
-    }
+    private String encodeParams(Map<String, String> params) {
+        StringBuilder result = new StringBuilder("?");
 
-    /**
-     * Building the parameters for gettign food by id URL
-     * @param foodId id to search for
-     * @return url extension
-     */
-    private String encodeGetFoodByIdParams(int foodId) {
-        return "?food_id=" + foodId + "&format=json";
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (result.length() > 1) {
+                result.append("&");
+            }
+            result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8)
+                    .replace("+", "%20"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8)
+                    .replace("+", "%20"));
+        }
+
+        return result.toString();
     }
 
     /**
@@ -77,16 +78,35 @@ public class FoodApiClient implements FoodClientInterface {
      */
     @Override
     public ApiResponseWrapper<FoodSearchResponse> searchFood(String searchExpression, int maxResults) {
-        Map<String, String> params = new HashMap<>();
+        authenticateSearchFood(searchExpression, maxResults);
+
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("search_expression", searchExpression);
         params.put("max_results", String.valueOf(maxResults));
         params.put("format", "json");
+
         String authenticatedString = oauth1Signature.createSignature("GET", FOOD_BY_SEARCH, params);
-        String url = FOOD_BY_SEARCH + encodeFoodSearchParams(searchExpression, maxResults);
-        return apiClient.getOauth(url, new TypeReference<FoodSearchResponse>() {
+        String url = FOOD_BY_SEARCH + encodeParams(params);
+
+
+        return apiClient.get(url, new TypeReference<FoodSearchResponse>() {
         }, authenticatedString);
     }
 
+    /**
+     * Authenticate params for search food
+     * @param searchExpression expression to not be empty
+     * @param maxResults max results to be greater than 0
+     */
+    private static void authenticateSearchFood(String searchExpression, int maxResults) {
+        if (searchExpression == null || searchExpression.isBlank()) {
+            throw new IllegalArgumentException("Search Expression can't be empty");
+        }
+
+        if (maxResults <= 0) {
+            throw new IllegalArgumentException("maxResults must be greater than 0");
+        }
+    }
     /**
      * Method to get the request object specifically for the get food by id function with data from the api
      * @param foodId id of the specific food object being requested
@@ -95,12 +115,13 @@ public class FoodApiClient implements FoodClientInterface {
     @Override
     public ApiResponseWrapper<FoodByIdResponse> getFoodById(int foodId) {
 
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("food_id", String.valueOf(foodId));
         params.put("format", "json");
         String authenticatedString = oauth1Signature.createSignature("GET", FOOD_BY_ID, params);
-        String url = FOOD_BY_ID + encodeGetFoodByIdParams(foodId);
-        return apiClient.getOauth(url, new TypeReference<FoodByIdResponse>() {
+
+        String url = FOOD_BY_ID + encodeParams(params);
+        return apiClient.get(url, new TypeReference<FoodByIdResponse>() {
         }, authenticatedString);
     }
 

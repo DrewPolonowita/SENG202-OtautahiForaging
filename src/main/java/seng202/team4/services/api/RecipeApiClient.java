@@ -3,30 +3,26 @@ package seng202.team4.services.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.github.cdimascio.dotenv.DotenvException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.ExpandNoteController;
 import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Interface implementation to call the FatSecret api for the purpose of getting recipe information
  */
 public class RecipeApiClient implements RecipeClientInterface {
-    private static final Logger LOG = LogManager.getLogger(RecipeApiClient.class);
     static final String BASE_URL = "https://platform.fatsecret.com/rest";
     static final String RECIPE_BY_ID = BASE_URL + "/recipe/v2";
     static final String RECIPE_BY_SEARCH = BASE_URL + "/recipes/search/v3";
 
 
     private final ApiClientInterface apiClient;
-    private OAuth1Signature oauth1Signature;
+    private final OAuth1Signature oauth1Signature;
 
     /**
      * Constructor
@@ -41,11 +37,14 @@ public class RecipeApiClient implements RecipeClientInterface {
             dotenv = Dotenv.configure().load();
             consumerKey = dotenv.get("CONSUMER_KEY");
             secretKey = dotenv.get("CONSUMER_SECRET");
-            this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
+            if (consumerKey == null || secretKey == null) {
+                throw new IllegalStateException("FatSecret API credentials are missing");
+            }
         } catch (DotenvException e) {
-            this.oauth1Signature = null;
-            LOG.error(e);
+            throw new IllegalStateException("Failed to load FatSecret API credentials", e);
         }
+        this.oauth1Signature = new OAuth1Signature(consumerKey, secretKey);
+
     }
 
     /**
@@ -59,28 +58,25 @@ public class RecipeApiClient implements RecipeClientInterface {
     }
 
     /**
-     * Url building for recipe search
-     * @param searchExpression search expression to get recipes from FatSecret
-     * @param mustHaveImages should the response be guaranteed to provide images
-     * @param maxResults max search results
-     * @return url search parameter string
+     * Encode the parameters into url query string
+     * @param params parameters to encode
+     * @return encoded query string
      */
-    private String encodeRecipeSearchParams(String searchExpression, boolean mustHaveImages, int maxResults) {
-        return "?search_expression=" + URLEncoder
-                .encode(searchExpression == null ? "" : searchExpression, StandardCharsets.UTF_8)
-                .replace("+", "%20")
-                + "&must_have_images=" + mustHaveImages
-                + "&max_results=" + maxResults
-                + "&format=json";
-    }
+    private String encodeParams(Map<String, String> params) {
+        StringBuilder result = new StringBuilder("?");
 
-    /**
-     * Url building for getting recipe by id
-     * @param recipeId recipe id for fatsecret to return
-     * @return url search parameter string
-     */
-    private String encodeRecipeByIdParams(int recipeId) {
-        return "?recipe_id=" + recipeId + "&format=json";
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (result.length() > 1) {
+                result.append("&");
+            }
+            result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8)
+                    .replace("+", "%20"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8)
+                    .replace("+", "%20"));
+        }
+
+        return result.toString();
     }
 
     /**
@@ -90,12 +86,12 @@ public class RecipeApiClient implements RecipeClientInterface {
      */
     @Override
     public ApiResponseWrapper<RecipeByIdResponse> getRecipeById(int recipeId) {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("recipe_id", String.valueOf(recipeId));
         params.put("format", "json");
         String authenticatedString = oauth1Signature.createSignature("GET", RECIPE_BY_ID, params);
-        String url = RECIPE_BY_ID + encodeRecipeByIdParams(recipeId);
-        return apiClient.getOauth(url, new TypeReference<RecipeByIdResponse>() {
+        String url = RECIPE_BY_ID + encodeParams(params);
+        return apiClient.get(url, new TypeReference<RecipeByIdResponse>() {
         }, authenticatedString);
     }
 
@@ -108,16 +104,36 @@ public class RecipeApiClient implements RecipeClientInterface {
      */
     @Override
     public ApiResponseWrapper<RecipeSearchResponse> searchRecipe(String searchExpression, boolean mustHaveImages, int maxResults) {
-        Map<String, String> params = new HashMap<>();
+        validateSearchRecipe(searchExpression, maxResults);
+
+
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("search_expression", searchExpression);
         params.put("must_have_images", String.valueOf(mustHaveImages));
         params.put("max_results", String.valueOf(maxResults));
         params.put("format", "json");
+
         String authenticatedString = oauth1Signature.createSignature("GET", RECIPE_BY_SEARCH, params);
-        String url = RECIPE_BY_SEARCH + encodeRecipeSearchParams(searchExpression, mustHaveImages, maxResults);
-        return apiClient.getOauth(url, new TypeReference<RecipeSearchResponse>() {
+        String url = RECIPE_BY_SEARCH + encodeParams(params);
+        return apiClient.get(url, new TypeReference<RecipeSearchResponse>() {
         }, authenticatedString);
 
+    }
+
+    /**
+     * Validate parameters when searching recipes
+     * @param searchExpression recipe search expression
+     * @param maxResults max num results
+     * @throws IllegalArgumentException if search expression is empty or results not greater than 0
+     */
+    private static void validateSearchRecipe(String searchExpression, int maxResults) throws IllegalArgumentException {
+        if (searchExpression == null || searchExpression.isBlank()) {
+            throw new IllegalArgumentException("Search expression cannot be empty");
+        }
+
+        if (maxResults <= 0) {
+            throw new IllegalArgumentException("maxResults must be greater than 0");
+        }
     }
 
 }

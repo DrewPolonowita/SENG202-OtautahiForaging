@@ -1,7 +1,5 @@
 package seng202.team4.gui;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team4.services.StateManager;
 
 /**
@@ -10,13 +8,12 @@ import seng202.team4.services.StateManager;
  */
 public abstract class ScreenController {
 
-    protected static final Logger LOG = LogManager.getLogger(ScreenController.class);
 
     private final StateManager stateManager;
 
     /**
      * Creates an instance of a ScreenController with the given {@link StateManager}
-     * @param stateManager The game manager for this screen
+     * @param stateManager The state manager for this screen
      */
     protected ScreenController(final StateManager stateManager) {
         this.stateManager = stateManager;

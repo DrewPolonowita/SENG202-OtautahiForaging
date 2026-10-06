@@ -213,7 +213,7 @@ public class RecipeDAO implements RecipeRepository {
         } catch (SQLException sqlException) {
             if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
                 throw new DuplicateEntryException("Recipe exists with id " + toAdd.getId()
-                        + " and name " + toAdd.getName());
+                        + " and name " + toAdd.getName(), sqlException);
             }
             LOG.error(sqlException);
             return -1;

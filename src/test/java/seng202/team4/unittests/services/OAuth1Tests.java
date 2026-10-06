@@ -8,9 +8,10 @@ import seng202.team4.services.api.OAuth1Signature;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class Oauth1Tests {
+class OAuth1Tests {
 
     OAuth1Signature oAuth1Signature;
     String authHeader;
@@ -33,11 +34,13 @@ class Oauth1Tests {
 
     @Test
     void createSignatureIncludesOAuthParams() {
-        assertTrue(authHeader.contains("oauth_consumer_key"));
-        assertTrue(authHeader.contains("oauth_signature_method"));
-        assertTrue(authHeader.contains("oauth_timestamp"));
-        assertTrue(authHeader.contains("oauth_nonce"));
-        assertTrue(authHeader.contains("oauth_version"));
+        assertAll(
+                () -> assertTrue(authHeader.contains("oauth_consumer_key")),
+                () -> assertTrue(authHeader.contains("oauth_signature_method")),
+                () -> assertTrue(authHeader.contains("oauth_timestamp")),
+                () -> assertTrue(authHeader.contains("oauth_nonce")),
+                () -> assertTrue(authHeader.contains("oauth_version"))
+        );
     }
 
     @Test

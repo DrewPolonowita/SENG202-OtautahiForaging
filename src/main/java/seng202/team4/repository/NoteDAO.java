@@ -71,7 +71,7 @@ public class NoteDAO implements NoteRepository {
         } catch (SQLException sqlException) {
             if (sqlException.getMessage().contains("UNIQUE constraint failed")) {
                 throw new DuplicateEntryException("Note exists with id " + toAdd.getId()
-                        + " with description " + toAdd.getDescription());
+                        + " with description " + toAdd.getDescription(), sqlException);
             }
             throw new DatabaseAccessException("Failed to save note", sqlException);
         }

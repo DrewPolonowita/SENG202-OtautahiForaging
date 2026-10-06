@@ -10,7 +10,7 @@ import java.util.function.Function;
  * https://medium.com/@alxkm/concurrenthashmap-for-caching-05c48d1d6bf0
  * https://github.com/alxkm/evictor/tree/master/src/main/java/org/cache
  * Adapted for use with an external database instead of storing the data itself in the concurrent map
- * Class to handle UI concurrency issues. This helps stop spam requests for API/Database data
+ * Class to handle data concurrency issues. This helps stop spam requests for API/Database data
  * run into race conditions.
  * @param <K> This is the key for the data being looked for
  * @param <V> This is the data to be returned
@@ -52,16 +52,19 @@ public class LoadingCache<K, V> {
         }
 
         Object lock = locks.computeIfAbsent(key, ignored -> new Object());
-
-        synchronized (lock) {
-            cached = localLoad.apply(key);
-            if (cached != null) {
-                recordHit();
-                return cached;
+        try {
+            synchronized (lock) {
+                cached = localLoad.apply(key);
+                if (cached != null) {
+                    recordHit();
+                    return cached;
+                }
+                recordMiss();
+                recordRemoteLoad();
+                return remoteLoad.apply(key);
             }
-            recordMiss();
-            recordRemoteLoad();
-            return remoteLoad.apply(key);
+        } finally {
+            locks.remove(key, lock);
         }
     }
 

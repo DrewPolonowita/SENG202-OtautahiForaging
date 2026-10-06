@@ -105,15 +105,11 @@ public class RecipeService implements RecipeDataManager {
      * @return ids from api
      */
     private List<RecipeSummary> getRecipeSummariesForFoodByApi(String food) {
-        List<RecipeSummary> summaries =
-                recipeApiHandler.getRecipeSummariesByFoodFromApi(food);
+        List<RecipeSummary> summaries = recipeApiHandler.getRecipeSummariesByFoodFromApi(food);
 
         for (RecipeSummary summary : summaries) {
             saveRecipeSummary(summary);
-            recipeSummaryDAO.addRecipeUseFood(
-                    food,
-                    summary.getRecipeId()
-            );
+            recipeSummaryDAO.addRecipeUseFood(food, summary.getRecipeId());
         }
 
         return summaries;
@@ -182,7 +178,7 @@ public class RecipeService implements RecipeDataManager {
      * Populates the ingredients in recipe table in the database
      * @param ingredients a list of ingredients as RecipeIngredient objects
      */
-    public void populateIngredientInRecipeTable(List<RecipeIngredient> ingredients, Recipe recipe) {
+    private void populateIngredientInRecipeTable(List<RecipeIngredient> ingredients, Recipe recipe) {
         for (RecipeIngredient ingredient : ingredients) {
             recipeDAO.addIngredientsByRecipe(ingredient, recipe);
         }
