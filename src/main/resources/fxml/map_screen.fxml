@@ -3,23 +3,51 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane styleClass="recipeCardBaseArea" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.MapController">
+<BorderPane styleClass="recipeCardBaseArea" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.MapController">
    <center>
       <StackPane styleClass="recipeCardBaseArea" BorderPane.alignment="CENTER">
 
-         <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" styleClass="f" />
 
-         <VBox fx:id="mapLoadingOverlay" mouseTransparent="true" alignment="TOP_CENTER" spacing="10.0" visible="false" managed="false" StackPane.alignment="TOP_CENTER">
+         <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" styleClass="f" />
+         <HBox fx:id="filterActions" managed="false" maxHeight="20.0" maxWidth="50.0" spacing="5.0" visible="false" StackPane.alignment="TOP_LEFT">
+            <StackPane.margin>
+               <Insets left="47.0" top="25.0" />
+            </StackPane.margin>
+
+            <Button fx:id="deselectAllButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#deselectAllFilters" styleClass="filters">
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-deselect-all" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+            </Button>
+
+            <Button fx:id="selectAllButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#selectAllFilters" styleClass="filters">
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-select-all" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+            </Button>
+
+         </HBox>
+         <VBox fx:id="mapLoadingOverlay" alignment="TOP_CENTER" managed="false" mouseTransparent="true" spacing="10.0" visible="false" StackPane.alignment="TOP_CENTER">
             <ProgressBar fx:id="mapLoadingBar" prefWidth="200.0">
                <VBox.margin>
                   <Insets top="25.0" />
@@ -42,49 +70,7 @@
             </StackPane.margin>
          </Button>
 
-         <HBox fx:id="filterActions"
-               spacing="5.0"
-               visible="false"
-               managed="false"
-               StackPane.alignment="TOP_LEFT"
-               mouseTransparent="true">
 
-
-            <StackPane.margin>
-               <Insets left="47.0" top="25.0" />
-            </StackPane.margin>
-
-            <Button fx:id="deselectAllButton"
-                    contentDisplay="CENTER"
-                    mnemonicParsing="false"
-                    onAction="#deselectAllFilters"
-                    styleClass="filters">
-               <graphic>
-                  <Region>
-                     <styleClass>
-                        <String fx:value="icon-deselect-all" />
-                        <String fx:value="icon" />
-                     </styleClass>
-                  </Region>
-               </graphic>
-            </Button>
-
-            <Button fx:id="selectAllButton"
-                    contentDisplay="CENTER"
-                    mnemonicParsing="false"
-                    onAction="#selectAllFilters"
-                    styleClass="filters">
-               <graphic>
-                  <Region>
-                     <styleClass>
-                        <String fx:value="icon-select-all" />
-                        <String fx:value="icon" />
-                     </styleClass>
-                  </Region>
-               </graphic>
-            </Button>
-
-         </HBox>
          <VBox fx:id="filterBox" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="100.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
             <StackPane.margin>
                <Insets left="10.0" top="65.0" />

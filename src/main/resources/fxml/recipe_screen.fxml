@@ -52,8 +52,9 @@
          spacing="5.0"
          visible="false"
          managed="false"
-         StackPane.alignment="TOP_LEFT"
-         mouseTransparent="true">
+         maxWidth="50.0"
+         maxHeight="20.0"
+         StackPane.alignment="TOP_LEFT">
 
       <StackPane.margin>
          <Insets left="47.0" top="25.0" />
@@ -90,7 +91,6 @@
       </Button>
 
    </HBox>
-
    <VBox fx:id="filterList" maxHeight="-Infinity" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" styleClass="filterTab" stylesheets="@../css/icons.css" visible="false" StackPane.alignment="TOP_LEFT">
       <StackPane.margin>
          <Insets left="10.0" top="65.0" />
