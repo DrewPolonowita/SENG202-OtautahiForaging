@@ -117,6 +117,25 @@
     -fx-background-radius: 8;
 }
 
+.guidelines-button {
+     -fx-background-color: -primary-bg-color;
+     -fx-text-fill: -primary-color;
+     -fx-font-size: 16px;
+     -fx-font-weight: bold;
+}
+
+.guidelines-box {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 20;
+    -fx-padding: 0 5 0 5;
+    -fx-alignment: center;
+}
+
+.guidelines-textbox {
+    -fx-alignment: center;
+    -fx-padding: 0 12 0 12;
+}
+
 .color-picker {
     -fx-background-color: -primary-bg-color;
     -fx-border-color: -secondary-bg-color;

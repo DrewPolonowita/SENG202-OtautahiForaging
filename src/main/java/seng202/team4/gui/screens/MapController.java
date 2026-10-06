@@ -2,6 +2,7 @@ package seng202.team4.gui.screens;
 
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -138,7 +139,7 @@ public class MapController extends ScreenController {
         );
         createFruitButtons();
         initMap();
-
+        openGuidelinesPopup();
     }
 
     /**
@@ -508,5 +509,20 @@ public class MapController extends ScreenController {
                 stateManager.getMapZoom());
     }
 
+    /**
+     * Opens foraging guidelines popup
+     */
+    private void openGuidelinesPopup() {
+        Platform.runLater(() -> {
+            getStateManager().getWindowManager().openGuidelines(stateManager);
+        });
+    }
 
+    /**
+     * Opens the guidelines pop up when the button is clicked
+     */
+    @FXML
+    private void guidelinesButtonClicked() {
+        openGuidelinesPopup();
+    }
 }
