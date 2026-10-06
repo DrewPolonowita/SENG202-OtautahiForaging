@@ -15,7 +15,7 @@
         }
         .tree-popup .leaflet-popup-content {
             margin: 0;
-            width: 150px !important;
+            width: 180px !important;
         }
         .tree-popup .leaflet-popup-close-button {
             color: var(--primary-color) !important;
@@ -55,15 +55,33 @@
             width: 100%;
         }
 
-        .nutrition-info {
+        .nutrition-heading {
             width: 100%;
-            margin-top: 8px;
-            font-size: 0.85em;
-            text-align: left;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
         }
 
-        .nutrition-info div {
-            margin: 2px 0;
+        .nutrition-info {
+            width: 100%;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+
+        .nutrition-info > div {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 3px 0;
+        }
+
+        .nutrition-info > div > span:last-child {
+            font-weight: 600;
+            white-space: nowrap;
         }
 
         .tree-card-body b {
@@ -385,14 +403,16 @@
         markersById = {};
     }
 
-    function updateNutrition(select) {
-        const selected = select.selectedOptions[0];
-        const card = select.closest(".tree-card");
+    function updateNutrition(input) {
+        const grams = input.value;
 
-        updateNutritionText(card, "calories", "Calories", "kcal", selected.dataset.calories, 0);
-        updateNutritionText(card, "carbohydrates", "Carbohydrates", "g", selected.dataset.carbohydrates, 1);
-        updateNutritionText(card, "protein", "Protein", "g", selected.dataset.protein, 1);
-        updateNutritionText(card, "fat", "Fat", "g", selected.dataset.fat, 1);
+        const card = input.closest(".tree-card");
+        const factor = grams/100.0;
+
+        updateNutritionText(card, "calories", "Calories", "kcal", input.dataset.calories * factor, 0);
+        updateNutritionText(card, "carbohydrates", "Carbohydrates", "g", input.dataset.carbohydrates * factor, 1);
+        updateNutritionText(card, "protein", "Protein", "g", input.dataset.protein * factor, 1);
+        updateNutritionText(card, "fat", "Fat", "g", input.dataset.fat * factor, 1);
     }
 
     function updateNutritionText(card, className, label, unit, value, decimals) {

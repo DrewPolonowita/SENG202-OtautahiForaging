@@ -68,14 +68,12 @@ public class TreePopupBuilder {
         String popup = String.format(
                 "<div class=\"tree-card\">"
                         + "<div class=\"tree-card-body\">"
-                        + "<b>%s</b><br>"
-                        + "<span style=\"font-size: 0.8em; opacity: 0.7;\">Genus: %s</span>"
+                        + "<b>%s</b>"
                         + "%s"
                         + "<button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
                         + "<button class=\"recipe-btn\" onclick=\"javaScriptBridge.goToRecipes('%s')\">Go to recipes</button>"
                         + "</div></div>",
                 tree.getFood(),
-                tree.getGenus(),
                 buildNutritionSection(),
                 tree.getId(),
                 tree.getFood()
@@ -99,40 +97,27 @@ public class TreePopupBuilder {
     }
 
     private String buildNutritionHtml() {
-        FoodServing defaultServing = food.getDefaultServing();
+        FoodServing baseline = food.getServings().stream()
+                .filter(serving -> "100 g".equalsIgnoreCase(serving.getDescription()))
+                .findFirst()
+                .orElse(null);
 
-        return String.format(
-                "<select class=\"serving-select\" onchange=\"updateNutrition(this)\">"
-                        + "%s"
-                        + "</select>"
-                        + "<div class=\"nutrition-info\">"
-                        + "<div class=\"calories\">Calories: %f kcal</div>"
-                        + "<div class=\"carbohydrates\">Carbohydrates: %f g</div>"
-                        + "<div class=\"protein\">Protein: %f g</div>"
-                        + "<div class=\"fat\">Fat: %f g</div>"
-                        + "</div>",
-                buildServingOptions(),
-                defaultServing.getCalories(),
-                defaultServing.getCarbohydrates(),
-                defaultServing.getProtein(),
-                defaultServing.getFat()
-        );
-    }
-
-    private String buildServingOptions() {
-        StringBuilder servingOptions = new StringBuilder();
-
-        for (FoodServing serving : food.getServings()) {
-            servingOptions.append(String.format(
-                    "<option data-calories=\"%f\" data-carbohydrates=\"%f\" data-protein=\"%f\" data-fat=\"%f\">%s</option>",
-                    serving.getCalories(),
-                    serving.getCarbohydrates(),
-                    serving.getProtein(),
-                    serving.getFat(),
-                    serving.getDescription()
-            ));
+        if (baseline == null) {
+            return "a";
         }
 
-        return servingOptions.toString();
+        return String.format(
+                "<div class=\"nutrition-heading\">Nutrition per 100 g</div>"
+                        + "<div class=\"nutrition-info\">"
+                        + "<div><span>Calories</span><span>%.1f kcal</span></div>"
+                        + "<div><span>Carbs</span><span>%.1f g</span></div>"
+                        + "<div><span>Protein</span><span>%.1f g</span></div>"
+                        + "<div><span>Fat</span><span>%.1f g</span></div>"
+                        + "</div>",
+                baseline.getCalories(),
+                baseline.getCarbohydrates(),
+                baseline.getProtein(),
+                baseline.getFat()
+        );
     }
 }
