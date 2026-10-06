@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -30,7 +31,7 @@ public class AddNoteController extends ScreenController {
 
     private final TreeModel treeModel;
     @FXML
-    private Label commonNameDisplay;
+    private TextField commonNameDisplay;
     @FXML
     private TextArea fieldNotesArea;
     @FXML
@@ -82,7 +83,7 @@ public class AddNoteController extends ScreenController {
     private void initialize() {
         if (existingNote != null) {
             backButton.setVisible(true);
-            commonNameDisplay.setText("Editing " + existingNote.getName());
+            commonNameDisplay.setText(existingNote.getName());
             fieldNotesArea.setText(existingNote.getDescription());
             recordButton.setText("Edit Note");
             selectedImagePath = existingNote.getImagePath();
@@ -141,11 +142,15 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void handleRecord() {
+        if (commonNameDisplay.getText().trim().isEmpty()) {
+            emptyNameAlert();
+            return;
+        }
         if (existingNote != null) {
-            Note updated = new Note(existingNote.getId(), existingNote.getName(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath);
+            Note updated = new Note(existingNote.getId(), commonNameDisplay.getText().trim(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath);
             getStateManager().getNoteService().update(updated);
         } else {
-            Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
+            Note note = new Note(0, commonNameDisplay.getText().trim(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
             try {
                 getStateManager().getNoteService().add(note);
                 handleClose();
@@ -156,11 +161,29 @@ public class AddNoteController extends ScreenController {
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
     }
 
+    /**
+     * Throws an alert if the user inputs no note name
+     */
+    public void emptyNameAlert() {
+        Alert emptyAlert = new Alert(Alert.AlertType.WARNING);
+        emptyAlert.initOwner(commonNameDisplay.getScene().getWindow());
+        emptyAlert.setTitle("Missing name");
+        emptyAlert.setHeaderText(null);
+        emptyAlert.setContentText("Please enter a note name.");
+        emptyAlert.showAndWait();
+    }
+
+    /**
+     * Returns to expanded note after confirming unsaved changes.
+     */
     public void handleGoBack() {
+        if (!checkDiscardChanges()) {
+            return;
+        }
         handleClose();
         Platform.runLater(() ->
-            getStateManager().getWindowManager().openExpandNote(existingNote, getStateManager(), journalController)
-        );
+                getStateManager().getWindowManager()
+                        .openExpandNote(existingNote, getStateManager(), journalController));
     }
 
     /**
@@ -179,14 +202,37 @@ public class AddNoteController extends ScreenController {
     }
 
     /**
-     * Confirms whether to discard changes and close the editor
+     * Closes after confirming unsaved changes can be discarded
      */
     public void handleExit() {
+        if (checkDiscardChanges()) {
+            handleClose();
+        }
+    }
+
+    /**
+     * Checks for unsaved changes when adding/editing note
+     * @return true if no changes, or user confirms discarding them
+     * false if the user cancels or dismisses confirmation.
+     */
+    public boolean checkDiscardChanges() {
+        String originalName = existingNote != null ? existingNote.getName() : treeModel.getCommonName();
+        String originalDescription = existingNote != null ? existingNote.getDescription() : "";
+        String originalPhoto = existingNote != null ? existingNote.getImagePath() : null;
+
+        boolean checkNoteModified =
+                !Objects.equals(originalName, commonNameDisplay.getText().trim())
+                        || !Objects.equals(originalDescription, fieldNotesArea.getText())
+                        || !Objects.equals(originalPhoto, selectedImagePath);
+        if (!checkNoteModified) {
+            return true;
+        }
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your unsaved changes will be lost.",
                 ButtonType.CANCEL, ButtonType.OK);
         alert.initOwner(commonNameDisplay.getScene().getWindow());
         alert.setTitle("Discard Changes");
         alert.setHeaderText("Close without saving?");
-        alert.showAndWait().filter(button-> button == ButtonType.OK).ifPresent(button->handleClose());
+        return alert.showAndWait().filter(button-> button == ButtonType.OK).isPresent();
     }
 }
