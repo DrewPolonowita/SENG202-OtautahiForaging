@@ -2,11 +2,13 @@ package seng202.team4.services.dataCentre.recipeData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Recipe;
 import seng202.team4.models.RecipeSummary;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.RecipeRepository;
+import seng202.team4.repository.RecipeSummaryRepository;
 import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.LoadingCache;
 
@@ -23,6 +25,7 @@ import static seng202.team4.services.RecipeFactory.createRecipeObjectById;
 public class RecipeService implements RecipeDataManager {
     private static final Logger log = LogManager.getLogger(RecipeService.class);
     private final RecipeRepository recipeDAO;
+    private final RecipeSummaryRepository recipeSummaryDAO;
     private final RecipeApiHandler recipeApiHandler;
     private final LoadingCache<Integer, Recipe> recipeCache;
     private final LoadingCache<String, List<RecipeSummary>> recipeSummariesByFoodCache;
@@ -30,8 +33,9 @@ public class RecipeService implements RecipeDataManager {
     /**
      * Constructor
      */
-    public RecipeService(RecipeRepository recipeRepository, RecipeClientInterface recipeClientInterface) {
+    public RecipeService(RecipeRepository recipeRepository, RecipeSummaryRepository recipeSummaryDAO, RecipeClientInterface recipeClientInterface) {
         this.recipeDAO = recipeRepository;
+        this.recipeSummaryDAO = recipeSummaryDAO;
         this.recipeApiHandler = new RecipeApiHandler(recipeClientInterface);
         this.recipeCache = new LoadingCache<>(
                 this::getRecipeFromDatabase,
@@ -86,7 +90,7 @@ public class RecipeService implements RecipeDataManager {
     @SuppressWarnings("squid:S1168") // null is used to trigger the api
     private List<RecipeSummary> getRecipeSummariesByFoodFromDatabase(String food) {
         List<RecipeSummary> summaries =
-                recipeDAO.getRecipeSummariesByFoodName(food);
+                recipeSummaryDAO.getRecipeSummariesByFoodName(food);
 
         if (summaries.isEmpty()) {
             return null;
@@ -105,12 +109,23 @@ public class RecipeService implements RecipeDataManager {
                 recipeApiHandler.getRecipeSummariesByFoodFromApi(food);
 
         for (RecipeSummary summary : summaries) {
-            recipeDAO.addRecipeSummary(summary);
-            recipeDAO.addRecipeUseFood(food, summary.getRecipeId());
+            saveRecipeSummary(summary);
+            recipeSummaryDAO.addRecipeUseFood(
+                    food,
+                    summary.getRecipeId()
+            );
         }
 
         return summaries;
 
+    }
+
+    private void saveRecipeSummary(RecipeSummary summary) {
+        try {
+            recipeSummaryDAO.add(summary);
+        } catch (DuplicateEntryException _) {
+            recipeSummaryDAO.update(summary);
+        }
     }
 
     /**

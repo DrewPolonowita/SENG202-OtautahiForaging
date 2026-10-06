@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Recipe;
-import seng202.team4.models.RecipeSummary;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.services.RecipeFactory;
 
@@ -390,37 +389,6 @@ public class RecipeDAO implements RecipeRepository {
         }
     }
 
-
-    /**
-     * Adds data about recipes using a specific food to the database table recipe uses food
-     * @param food food to add
-     * @param recipeId recipe id with the food in it
-     */
-    @Override
-    public void addRecipeUseFood(String food, int recipeId) {
-        String sql = """
-            INSERT INTO recipe_uses_food (
-                common_name,
-                recipe_id,
-                retrieval_time
-            )
-            VALUES (?, ?, CURRENT_TIMESTAMP)
-            ON CONFLICT(common_name, recipe_id) DO UPDATE SET
-                retrieval_time = CURRENT_TIMESTAMP;
-            """;
-
-        try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, food);
-            ps.setInt(2, recipeId);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            LOG.error(e);
-        }
-    }
-
     /**
      * Replaces recipes data that exists in the database but have to be updated to comply with FatSecret API data storage time requirements
      * @param recipe recipe needing to be replaced
@@ -465,71 +433,6 @@ public class RecipeDAO implements RecipeRepository {
             LOG.error(e);
         }
     }
-
-    @Override
-    public List<RecipeSummary> getRecipeSummariesByFoodName(String food) {
-        List<RecipeSummary> summaries = new ArrayList<>();
-
-        String sql = """
-            SELECT rs.recipe_id,
-                   rs.recipe_name,
-                   rs.recipe_image
-            FROM recipe_summary rs
-            JOIN recipe_uses_food rf ON rs.recipe_id = rf.recipe_id
-            WHERE rf.common_name = ?
-              AND rf.retrieval_time >= DATETIME('now', '-24 hours')
-            """;
-
-        try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, food);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    summaries.add(new RecipeSummary(
-                            rs.getInt(RECIPE_ID_REFERENCE),
-                            rs.getString(RECIPE_NAME_REFERENCE),
-                            rs.getString(RECIPE_IMAGE_REFERENCE)
-                    ));
-                }
-            }
-
-        } catch (SQLException e) {
-            LOG.error(e);
-        }
-
-        return summaries;
-    }
-
-    @Override
-    public void addRecipeSummary(RecipeSummary summary) {
-        String sql = """
-            INSERT INTO recipe_summary (
-                recipe_id,
-                recipe_name,
-                recipe_image
-            )
-            VALUES (?, ?, ?)
-            ON CONFLICT(recipe_id) DO UPDATE SET
-                recipe_name = excluded.recipe_name,
-                recipe_image = excluded.recipe_image;
-            """;
-
-        try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, summary.getRecipeId());
-            ps.setString(2, summary.getRecipeName());
-            ps.setString(3, summary.getRecipeImageUrl());
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            LOG.error(e);
-        }
-    }
-
     private void tryAddRecipe(Recipe recipe) {
         try {
             add(recipe);
