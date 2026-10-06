@@ -68,14 +68,12 @@ public class TreePopupBuilder {
         String popup = String.format(
                 "<div class=\"tree-card\">"
                         + "<div class=\"tree-card-body\">"
-                        + "<b>%s</b><br>"
-                        + "<span style=\"font-size: 0.8em; opacity: 0.7;\">Genus: %s</span>"
+                        + "<b>%s</b>"
                         + "%s"
                         + "<button class=\"journal-btn\" onclick=\"javaScriptBridge.addTreeToJournal(%d)\">Add to Journal</button>"
                         + "<button class=\"recipe-btn\" onclick=\"javaScriptBridge.goToRecipes('%s')\">Go to recipes</button>"
                         + "</div></div>",
                 tree.getFood(),
-                tree.getGenus(),
                 buildNutritionSection(),
                 tree.getId(),
                 tree.getFood()
@@ -109,22 +107,13 @@ public class TreePopupBuilder {
         }
 
         return String.format(
-                "<label \">Enter grams:</label>"
-                        + "<input class=\"serving-select\" type=\"text\" value=\"100\" "
-                        + "data-calories=\"%f\" data-carbohydrates=\"%f\" "
-                        + "data-protein=\"%f\" data-fat=\"%f\" "
-                        + "oninput=\"this.value = this.value.replace(/[^0-9]/g, ''); "
-                        + "updateNutrition(this)\">"
+                "<div class=\"nutrition-heading\">Nutrition per 100 g</div>"
                         + "<div class=\"nutrition-info\">"
-                        + "<div class=\"calories\">Calories: %f kcal</div>"
-                        + "<div class=\"carbohydrates\">Carbohydrates: %f g</div>"
-                        + "<div class=\"protein\">Protein: %f g</div>"
-                        + "<div class=\"fat\">Fat: %f g</div>"
+                        + "<div><span>Calories</span><span>%.1f kcal</span></div>"
+                        + "<div><span>Carbs</span><span>%.1f g</span></div>"
+                        + "<div><span>Protein</span><span>%.1f g</span></div>"
+                        + "<div><span>Fat</span><span>%.1f g</span></div>"
                         + "</div>",
-                baseline.getCalories(),
-                baseline.getCarbohydrates(),
-                baseline.getProtein(),
-                baseline.getFat(),
                 baseline.getCalories(),
                 baseline.getCarbohydrates(),
                 baseline.getProtein(),
