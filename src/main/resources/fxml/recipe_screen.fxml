@@ -75,9 +75,7 @@
          </graphic>
       </Button>
 
-      <Button fx:id="selectAllButton"
-              contentDisplay="CENTER"
-              mnemonicParsing="false"
+      <Button fx:id="selectAllButton" contentDisplay="CENTER" mnemonicParsing="false"
               onAction="#selectAllFilters"
               styleClass="filters">
          <graphic>
