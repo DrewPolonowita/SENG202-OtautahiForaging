@@ -10,7 +10,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -503,17 +502,16 @@ public class RecipesController extends ScreenController {
             return;
         }
 
-        for (Node node : filterList.getChildren()) {
-            Button button = (Button) node;
-            String foodName = button.getText().trim();
+        filterManager.deselectAllFilters();
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            String foodName = FruitFilterUtilities.formatFruitName(filterCategory);
 
-            if (startingSelectedFoods.contains(foodName)
-                    && !FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
+            if (startingSelectedFoods.contains(foodName)) {
+                filterManager.toggleFilters(filterCategory);
             }
         }
 
-        refreshRecipesForSelectedFilters();
+        createFruitButtons();
     }
 
 

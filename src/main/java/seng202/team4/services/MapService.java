@@ -7,7 +7,9 @@ import seng202.team4.models.TreeModel;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MapService {
     private static final Logger LOG = LogManager.getLogger(MapService.class);
     private final TreeDataManager treeDataManager;
-    private final ArrayList<FilterCategory> selectedFilterCategories;
+    private final Set<FilterCategory> selectedFilterCategories;
     private final ExecutorService executor = Executors.newFixedThreadPool(8, runnable -> {
         Thread thread = new Thread(runnable, "map-service-worker");
         thread.setDaemon(true);
@@ -53,7 +55,8 @@ public class MapService {
      */
     public MapService(TreeDataManager treeDataManager) {
         this.treeDataManager = treeDataManager;
-        this.selectedFilterCategories = new ArrayList<>();
+        this.selectedFilterCategories =
+                EnumSet.noneOf(FilterCategory.class);
     }
 
     /**
