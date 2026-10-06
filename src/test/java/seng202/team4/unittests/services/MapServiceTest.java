@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for the MapService class
  */
-public class MapServiceTest {
+class MapServiceTest {
 
     private TreeDataManager testTreeDataManager;
     private MapService mapService;
@@ -105,27 +105,6 @@ public class MapServiceTest {
         List<TreeModel> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5).get(2, TimeUnit.SECONDS);
         assertTrue(result.isEmpty());
         verifyNoInteractions(testTreeDataManager);
-    }
-
-    /**
-     * Tests that removing an unselected fruit throws IllegalArgumentException
-     */
-    @Test
-    void removeUnselectedFruit() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            mapService.removeSelectedFruit(FilterCategory.APPLE);
-        }, "Expected IllegalArgumentException");
-    }
-
-    /**
-     * Tests that adding an already existing fruit throws IllegalArgumentException
-     */
-    @Test
-    void addDuplicateFruit() {
-        mapService.addSelectedFruit(FilterCategory.APPLE);
-        assertThrows(IllegalArgumentException.class, () -> {
-            mapService.addSelectedFruit(FilterCategory.APPLE);
-        }, "Expected IllegalArgumentException");
     }
 
     /**

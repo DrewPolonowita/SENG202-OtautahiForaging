@@ -52,7 +52,8 @@
          spacing="5.0"
          visible="false"
          managed="false"
-         StackPane.alignment="TOP_LEFT">
+         StackPane.alignment="TOP_LEFT"
+         mouseTransparent="true">
 
       <StackPane.margin>
          <Insets left="47.0" top="25.0" />

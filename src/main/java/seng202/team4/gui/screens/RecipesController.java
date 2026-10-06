@@ -386,7 +386,7 @@ public class RecipesController extends ScreenController {
         List<String> selectedFoods = new ArrayList<>();
 
 
-        for (FilterCategory filterCategory : filterManager.getSelectedFilters()) {
+        for (FilterCategory filterCategory : filterManager.getPossibleFilters()) {
             selectedFoods.add(FruitFilterUtilities.formatFruitName(filterCategory));
         }
 

@@ -176,7 +176,7 @@ public class TableViewController extends ScreenController {
     private void reloadTable() {
         List<TreeModel> filteredTrees = new ArrayList<>();
 
-        for (FilterCategory filterCategory : filterManager.getSelectedFilters()) {
+        for (FilterCategory filterCategory : filterManager.getPossibleFilters()) {
             String fruitName = FruitFilterUtilities.formatFruitName(filterCategory);
             filteredTrees.addAll(treeService.getTreesByFood(fruitName));
         }

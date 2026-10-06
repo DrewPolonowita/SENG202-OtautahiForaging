@@ -12,36 +12,36 @@ import java.util.EnumSet;
  */
 
 public class FilterManager {
-    private final Set<FilterCategory> selectedFilters =
+    private final Set<FilterCategory> possibleFilters =
             EnumSet.allOf(FilterCategory.class);
 
     /**
      * Gets the EnumSet of currently selected filters
      * @return the selected filters
      */
-    public Set<FilterCategory> getSelectedFilters() {
-        return selectedFilters;
+    public Set<FilterCategory> getPossibleFilters() {
+        return possibleFilters;
     }
 
     /**
      * Selects all filters from filterCategory
      */
     public void selectAllFilters() {
-        selectedFilters.addAll(EnumSet.allOf(FilterCategory.class));
+        possibleFilters.addAll(EnumSet.allOf(FilterCategory.class));
     }
 
     /**
      * Deselects all filters from filterCategory.
      */
     public void deselectAllFilters() {
-        selectedFilters.clear();
+        possibleFilters.clear();
     }
     /**
      * Toggles the selection state of a filter to change it accordingly
      */
     public void toggleFilters(FilterCategory filterCategory) {
-        if (!selectedFilters.remove(filterCategory)) {
-            selectedFilters.add(filterCategory);
+        if (!possibleFilters.remove(filterCategory)) {
+            possibleFilters.add(filterCategory);
         }
     }
 
@@ -51,7 +51,7 @@ public class FilterManager {
      *
      */
     public boolean isSelected(FilterCategory filterCategory) {
-        return selectedFilters.contains(filterCategory);
+        return possibleFilters.contains(filterCategory);
     }
 
 
