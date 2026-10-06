@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -26,7 +27,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
-
+import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Food;
 import seng202.team4.models.TreeModel;
@@ -55,7 +56,7 @@ public class MapController extends ScreenController {
     private static final String UPDATE_POPUP_MARKER = "updateMarkerPopup";
     private static final double MAX_HEIGHT_FOR_DISPLAYING = 1;
     private final MapService mapService;
-
+    private final FilterManager filterManager;
     private final FoodDataManager foodService;
 
     private double northBound;
@@ -80,6 +81,9 @@ public class MapController extends ScreenController {
 
     @FXML
     private StackPane attributionPane;
+
+    @FXML
+    private HBox filterActions;
 
     private WebEngine webEngine;
     private JavaScriptBridge javaScriptBridge;
@@ -111,6 +115,7 @@ public class MapController extends ScreenController {
         this.themeService = themeService;
         this.targetTree = targetTree;
         this.foodService = stateManager.getFoodService();
+        this.filterManager = stateManager.getFilterManager();
     }
 
     /**
@@ -133,8 +138,6 @@ public class MapController extends ScreenController {
                 this::mapMoved
         );
         createFruitButtons();
-        toggleAllFilterButtons();
-
         initMap();
 
     }
@@ -211,15 +214,67 @@ public class MapController extends ScreenController {
     public void filterClicked() {
         if (filterOpened) {
             filterBox.setVisible(false);
+            filterActions.setVisible(false);
+            filterActions.setManaged(false);
             filterOpened = false;
             filterButton.getStyleClass().remove("filters-selected");
             filterButton.getGraphic().getStyleClass().remove(ICON_SELECTED);
         } else {
             filterBox.setVisible(true);
+            filterActions.setVisible(true);
+            filterActions.setManaged(true);
             filterOpened = true;
             filterButton.getStyleClass().add("filters-selected");
             filterButton.getGraphic().getStyleClass().add(ICON_SELECTED);
+
         }
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons not selected
+     * and select all.
+     * Update the map accordingly to the filters.
+     */
+    @FXML
+    private void selectAllFilters() {
+        filterManager.selectAllFilters();
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            mapService.addSelectedFruit(filterCategory);
+        }
+        for (int i = 0; i < filterBox.getChildren().size(); i++) {
+            Button button = (Button) filterBox.getChildren().get(i);
+            if (!FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+
+        mapMoved(northBound, eastBound, southBound, westBound,
+                stateManager.getMapLatitude(),
+                stateManager.getMapLongitude(),
+                stateManager.getMapZoom());
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons selected
+     * and deselect all.
+     * Update the map accordingly to the filters.
+     */
+    @FXML
+    private void deselectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            mapService.removeSelectedFruit(filterCategory);
+        }
+        for (int i = 0; i < filterBox.getChildren().size(); i++) {
+            Button button = (Button) filterBox.getChildren().get(i);
+            if (FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        mapMoved(northBound, eastBound, southBound, westBound,
+                stateManager.getMapLatitude(),
+                stateManager.getMapLongitude(),
+                stateManager.getMapZoom());
     }
 
     private void setCurrentBounds(double north, double east, double south, double west) {
@@ -415,6 +470,10 @@ public class MapController extends ScreenController {
         filterBox.getChildren().clear();
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            if (filterManager.isSelected(filterCategory)) {
+                FruitFilterUtilities.toggleButtonStyle(filterButton);
+                mapService.addSelectedFruit(filterCategory);
+            }
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterBox.getChildren().add(filterButton);
         }
@@ -428,8 +487,9 @@ public class MapController extends ScreenController {
      */
     public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(button);
+        filterManager.toggleFilters(filterCategory);
 
-        if (FruitFilterUtilities.isSelected(button)) {
+        if (filterManager.isSelected(filterCategory)) {
             mapService.addSelectedFruit(filterCategory);
         } else {
             mapService.removeSelectedFruit(filterCategory);
@@ -440,18 +500,5 @@ public class MapController extends ScreenController {
                 stateManager.getMapZoom());
     }
 
-    /**
-     * Toggles on all the fruits which are displayed on the map by default
-     * when the application is first run
-     */
-    public void toggleAllFilterButtons() {
-        for (Node node : filterBox.getChildren()) {
-            Button button = (Button) node;
-            FruitFilterUtilities.toggleButtonStyle(button);
-        }
-        for (FilterCategory filterCategory : FilterCategory.values()) {
-            mapService.addSelectedFruit(filterCategory);
-        }
-    }
 
 }

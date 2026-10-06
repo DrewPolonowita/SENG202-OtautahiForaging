@@ -8,12 +8,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
 import seng202.team4.models.FilterCategory;
-
+import javafx.scene.layout.HBox;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class TableViewController extends ScreenController {
 
     private final TreeDataManager treeService;
 
+    private final FilterManager filterManager;
+
     private List<TreeModel> filteredTrees = new ArrayList<>();
 
     @FXML
@@ -34,6 +37,8 @@ public class TableViewController extends ScreenController {
     @FXML
     private VBox filterList;
 
+    @FXML
+    private HBox filterActions;
 
     /**
      * Initialise the window
@@ -43,6 +48,7 @@ public class TableViewController extends ScreenController {
     public TableViewController(StateManager stateManager) {
         super(stateManager);
         treeService = stateManager.getTreeService();
+        filterManager = stateManager.getFilterManager();
 
     }
 
@@ -98,11 +104,7 @@ public class TableViewController extends ScreenController {
         treeTableView.getColumns().add(nameCol);
         List<TreeModel> trees = treeService.getAllTrees();
 
-        treeTableView.setItems(
-                FXCollections.observableArrayList(
-                        trees
-                )
-        );
+        reloadTable();
     }
 
     /**
@@ -110,11 +112,8 @@ public class TableViewController extends ScreenController {
      */
     @FXML
     private void onFilterClicked() {
-        if (filterList.isVisible()) {
-            hideFilterList();
-        } else {
-            showFilterList();
-        }
+        filterList.setVisible(!filterList.isVisible());
+        filterActions.setVisible(filterList.isVisible());
     }
 
     /**
@@ -134,13 +133,15 @@ public class TableViewController extends ScreenController {
     }
 
     /**
-     *For each fruit name in the enum FRUIT, a filter button is creaated
+     *For each fruit name in the enum FilterCategory, a filter button is created
      */
     private void createFruitButtons() {
         filterList.getChildren().clear();
-
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            if (filterManager.isSelected(filterCategory)) {
+                FruitFilterUtilities.toggleButtonStyle(filterButton);
+            }
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterList.getChildren().add(filterButton);
         }
@@ -162,6 +163,8 @@ public class TableViewController extends ScreenController {
         } else {
             filteredTrees.removeAll(treeService.getTreesByFood(fruitName));
         }
+
+        filterManager.toggleFilters(filterCategory);
         reloadTable();
     }
 
@@ -170,17 +173,48 @@ public class TableViewController extends ScreenController {
      * When no filter is applied defaults back to showing all trees
      */
     private void reloadTable() {
-        if (filteredTrees.isEmpty()) {
-            List<TreeModel> trees = treeService.getAllTrees();
-            treeTableView.setItems(
-                    FXCollections.observableArrayList(
-                            trees
-                    ));
-        } else {
-            treeTableView.setItems(
-                    FXCollections.observableArrayList(
-                            filteredTrees
-                    ));
+        List<TreeModel> filteredTrees = new ArrayList<>();
+
+        for (FilterCategory filterCategory : filterManager.getSelectedFilters()) {
+            String fruitName = FruitFilterUtilities.formatFruitName(filterCategory);
+            filteredTrees.addAll(treeService.getTreesByFood(fruitName));
         }
+        treeTableView.setItems(
+                FXCollections.observableArrayList(
+                        filteredTrees));
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons selected
+     * and deselect all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void deselectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        reloadTable();
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons unselected
+     * and select all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void selectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (!FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        reloadTable();
     }
 }

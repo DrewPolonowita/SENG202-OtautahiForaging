@@ -1,5 +1,6 @@
 package seng202.team4.services;
 
+import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
 import seng202.team4.repository.FoodDAO;
@@ -38,6 +39,7 @@ public class StateManager {
     private final FoodService foodService;
     private final RecipeDataManager recipeService;
     private final FoodMapper foodMapper;
+    private final FilterManager filterManager = new FilterManager();
 
     private double mapLatitude = -43.53;
     private double mapLongitude = 172.63;
@@ -133,6 +135,7 @@ public class StateManager {
         return mapZoom;
     }
 
+    public FilterManager getFilterManager() { return filterManager; }
 
     public void setMapView(double latitude, double longitude, double zoom) {
         mapLatitude = latitude;

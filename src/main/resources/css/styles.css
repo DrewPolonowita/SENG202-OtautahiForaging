@@ -43,6 +43,8 @@
 .sideBar-button-selected {
     -fx-background-color: -primary-color;
     -fx-text-fill: -primary-bg-color;
+    -fx-border-color: black;
+    -fx-border-width: 0.5px;
 }
 
 .switch {

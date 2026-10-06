@@ -1,9 +1,12 @@
 package seng202.team4.gui.screens;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.Node;
@@ -14,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +25,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.gui.utilities.RecipeFilterService;
+import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Recipe;
 import seng202.team4.services.StateManager;
@@ -50,13 +55,18 @@ public class RecipesController extends ScreenController {
     private BorderPane recipeHighlightPane;
 
     @FXML
+    private HBox filterActions;
+    @FXML
     private Text recipeDetailsText;
     @FXML
     private VBox filterList;
+
     private final StateManager stateManager;
     private final List<String> startingSelectedFoods;
 
     private RecipeFilterService recipeFilterService;
+
+    private final FilterManager filterManager;
 
     private static final Logger LOG = LogManager.getLogger(RecipesController.class);
 
@@ -82,6 +92,7 @@ public class RecipesController extends ScreenController {
     public RecipesController(StateManager stateManager) {
         super(stateManager);
         this.stateManager = stateManager;
+        this.filterManager = stateManager.getFilterManager();
         this.startingSelectedFoods = List.of();
     }
 
@@ -119,6 +130,7 @@ public class RecipesController extends ScreenController {
         setUpEvents();
         setStartingFilters();
 
+        refreshRecipesForSelectedFilters();
     }
 
     /**
@@ -146,6 +158,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private void onFilterClicked() {
         filterList.setVisible(!filterList.isVisible());
+        filterActions.setVisible(filterList.isVisible());
     }
 
     /**
@@ -323,7 +336,10 @@ public class RecipesController extends ScreenController {
 
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
-            filterButton.setOnAction(event -> filterButtonClicked(filterButton));
+            if (filterManager.isSelected(filterCategory)) {
+                FruitFilterUtilities.toggleButtonStyle(filterButton);
+            }
+            filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterList.getChildren().add(filterButton);
         }
     }
@@ -334,9 +350,9 @@ public class RecipesController extends ScreenController {
      * map to show only the relevant fruit trees
      * @param buttons filter buttons
      */
-    public void filterButtonClicked(Button buttons) {
+    public void filterButtonClicked(Button buttons, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(buttons);
-
+        filterManager.toggleFilters(filterCategory);
         refreshRecipesForSelectedFilters();
     }
 
@@ -352,6 +368,7 @@ public class RecipesController extends ScreenController {
         if (selectedFoods.isEmpty()) {
             recipeFilterService.cancel();
             progressIndicator.setVisible(false);
+            recipeTilePane.getChildren().add(buildEmptyState());
             return;
         }
         recipeFilterService.restartFor(selectedFoods);
@@ -364,13 +381,11 @@ public class RecipesController extends ScreenController {
     private List<String> getSelectedFoods() {
         List<String> selectedFoods = new ArrayList<>();
 
-        for (Node node : filterList.getChildren()) {
-            Button button = (Button) node;
 
-            if (FruitFilterUtilities.isSelected(button)) {
-                selectedFoods.add(button.getText().trim());
-            }
+        for (FilterCategory filterCategory : filterManager.getSelectedFilters()) {
+            selectedFoods.add(FruitFilterUtilities.formatFruitName(filterCategory));
         }
+
 
         return selectedFoods;
     }
@@ -391,6 +406,66 @@ public class RecipesController extends ScreenController {
             displayedRecipeIds.add(recipe.getId());
             createRecipeCard(recipe);
         }
+    }
+
+    /**
+     * Builds the empty state display shown when the Recipe screen displays no recipes.
+     * The display contains an icon, title, and explanatory message.
+     * @return a VBox containing the empty state display
+     */
+    private VBox buildEmptyState() {
+        VBox emptyState = new VBox(8);
+        emptyState.getStyleClass().add("empty-state");
+        emptyState.setPrefWidth(300);
+        emptyState.setAlignment(Pos.CENTER);
+
+        ImageView icon = new ImageView(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
+        icon.getStyleClass().add("empty-state-icon");
+
+        Label title = new Label("No filters selected yet");
+        title.getStyleClass().add("empty-state-title");
+
+        Label subtitle = new Label("Toggle filters to view recipes");
+        subtitle.getStyleClass().add("empty-state-subtitle");
+        subtitle.setWrapText(true);
+        subtitle.setTextAlignment(TextAlignment.CENTER);
+
+        emptyState.getChildren().addAll(icon, title, subtitle);
+        return emptyState;
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons selected
+     * and deselect all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void deselectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        refreshRecipesForSelectedFilters();
+    }
+
+    /**
+     * For all buttons in FilterCategory, loop through to find buttons unselected
+     * and select all.
+     * Update the recipes accordingly to the filters.
+     */
+    @FXML
+    private void selectAllFilters() {
+        filterManager.deselectAllFilters();
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (!FruitFilterUtilities.isSelected(button)) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+        refreshRecipesForSelectedFilters();
     }
 
     /**
