@@ -171,7 +171,6 @@ public class MapController extends ScreenController {
                 });
     }
 
-
     /**
      * Loads the Leaflet map HTML into the WebView and wires up the JS bridge
      */
@@ -189,6 +188,7 @@ public class MapController extends ScreenController {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
+                        createClusterGroups();
                         if (targetTree == null) {
                             javaScriptConnector.call("initMap",
                                     stateManager.getMapLatitude(),
@@ -477,6 +477,15 @@ public class MapController extends ScreenController {
             filterBox.getChildren().add(filterButton);
         }
     }
+
+    private void createClusterGroups() {
+        for (FilterCategory food : FilterCategory.values()) {
+            javaScriptConnector.call("createClusterGroups", food);
+        }
+    }
+
+
+
 
     /**
      * Toggles the fruit button being clicked, and updates the

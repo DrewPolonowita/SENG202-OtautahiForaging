@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../css/map.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -104,6 +103,71 @@
         .recipe-btn:active {
             background: var(--primary-color-dark);
         }
+
+        .marker-cluster-apple {
+            background-color: #D31804;
+            border-radius: 50%;
+        }
+
+        .marker-cluster-apple div {
+            background-color: #FF7787;
+            margin-left: 5px;
+            margin-top: 5px;
+            text-align: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+
+        .marker-cluster-pear {
+            background-color: #86CA82;
+        }
+
+        .marker-cluster-pear div {
+            background-color: #658562;
+        }
+
+        .marker-cluster-peach {
+            background-color: #CA9582;
+        }
+
+        .marker-cluster-peach div {
+            background-color: #C97864;
+        }
+
+        .marker-cluster-apricot {
+            background-color: #DE834F;
+        }
+
+        .marker-cluster-apricot div {
+            background-color: #F2B36D;
+        }
+
+
+        .marker-cluster-walnut {
+            background-color: #CE9777;
+        }
+
+        .marker-cluster-walnut div {
+            background-color: #825845;
+        }
+
+        .marker-cluster-strawberry {
+            background-color: #AF5070;
+            border-radius: 50%;
+        }
+
+        .marker-cluster-strawberry div {
+            background-color: #A64C5C;
+            margin-left: 5px;
+            margin-top: 5px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -127,6 +191,8 @@
     let pendingTreeId = null; // specific tree from journal.
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     const iconCache = {};
+    const clusterGroups = {};
+    let foodCluster = null;
     var southWest = L.latLng(SOUTH_BOUND, WEST_BOUND),
         northEast = L.latLng(NORTH_BOUND, EAST_BOUND),
         bounds = L.latLngBounds(southWest, northEast);
@@ -138,7 +204,8 @@
         addMarker: addMarker,
         removeMarkers: removeMarkers,
         initMap: initMap,
-        updateMarkerPopup: updateMarkerPopup
+        updateMarkerPopup: updateMarkerPopup,
+        createClusterGroups: createClusterGroups
     };
 
     /**
@@ -168,21 +235,16 @@
         }).addTo(map)
         map.setMaxBounds(bounds);
         map.options.maxBoundsViscosity = 1.0;
-        markerClusterGroup = L.markerClusterGroup();
-        map.addLayer(markerClusterGroup);
+        Object.values(clusterGroups).forEach((foodClusterGroup) =>  {
+            map.addLayer(foodClusterGroup);
+        });
         map.on('moveend', function () {
             if (!revealingTree) {
                 createMapMarkers();
             }
         });
 
-        map.whenReady(function () {
-            setTimeout(function () {
-                map.invalidateSize();
-                createMapMarkers();
-            }, 0);
-        });
-
+        createMapMarkers();
     }
 
     /**
@@ -221,6 +283,25 @@
         }
         return iconCache[pinFileName];
     }
+
+    /**
+    * Creates cluster groups
+    */
+    function createClusterGroups(food) {
+        foodCluster = food.toString();
+        console.log(foodCluster);
+        clusterGroups[food] = L.markerClusterGroup({
+            iconCreateFunction: function(cluster) {
+                foodCluster = food.toString();
+                console.log(foodCluster);
+                return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>',
+                                   className: 'marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, ""),
+                                   iconSize: L.point(40, 40)
+                });
+            }
+        });
+    }
+
     /**
      * Adds a marker to the cluster group and binds its popup.
      * If a tree matches the journal target, it reveals it and opens its popup.
@@ -248,15 +329,14 @@
             }
         });
 
-
-        markerClusterGroup.addLayer(marker);
+        clusterGroups[food].addLayer(marker);
         markers.push(marker);
         markersById[id] = marker;
 
         if (id == pendingTreeId && pendingTreeId != null) {
             pendingTreeId = null;
             revealingTree = true;
-            markerClusterGroup.zoomToShowLayer(marker, function () {
+            clusterGroups[food].zoomToShowLayer(marker, function () {
                 marker.openPopup();
                 revealingTree = false;
             });
@@ -268,7 +348,9 @@
      * the stored marker array
     */
     function removeMarkers() {
-        markerClusterGroup.clearLayers();
+        Object.values(clusterGroups).forEach((clusterGroup) => {
+            clusterGroup.clearLayers();
+        });
         markers = [];
         markersById = {};
     }
@@ -287,6 +369,7 @@
         card.querySelector("." + className).textContent =
             label + ": " + formatNutrition(value, decimals) + " " + unit;
     }
+
     function formatNutrition(value, decimals) {
         const number = Number(value);
         return number.toFixed(decimals);
