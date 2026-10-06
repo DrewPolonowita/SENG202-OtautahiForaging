@@ -2,8 +2,8 @@ package seng202.team4.services.dataCentre.recipeData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.models.Recipe;
+import seng202.team4.models.RecipeSummary;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.repository.RecipeRepository;
@@ -11,7 +11,6 @@ import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.LoadingCache;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static seng202.team4.services.RecipeFactory.createRecipeObjectById;
@@ -26,7 +25,7 @@ public class RecipeService implements RecipeDataManager {
     private final RecipeRepository recipeDAO;
     private final RecipeApiHandler recipeApiHandler;
     private final LoadingCache<Integer, Recipe> recipeCache;
-    private final LoadingCache<String, List<Integer>> recipeIdsByFoodCache;
+    private final LoadingCache<String, List<RecipeSummary>> recipeSummariesByFoodCache;
 
     /**
      * Constructor
@@ -37,9 +36,9 @@ public class RecipeService implements RecipeDataManager {
         this.recipeCache = new LoadingCache<>(
                 this::getRecipeFromDatabase,
                 this::getRecipeFromApi);
-        this.recipeIdsByFoodCache = new LoadingCache<>(
-                this::getRecipeIdsForFoodFromDatabase,
-                this::getRecipeIdsForFoodFromApi
+        this.recipeSummariesByFoodCache = new LoadingCache<>(
+                this::getRecipeSummariesByFoodFromDatabase,
+                this::getRecipeSummariesForFoodByApi
         );
     }
 
@@ -70,7 +69,7 @@ public class RecipeService implements RecipeDataManager {
         }
 
         Recipe recipe = createRecipeObjectById(recipeRecord);
-        recipeDAO.replaceRecipe(recipe);
+        recipeDAO.saveRecipe(recipe);
 
         List<RecipeIngredient> ingredients = getRecipeIngredients(recipeRecord);
         populateIngredientTable(ingredients);
@@ -85,12 +84,15 @@ public class RecipeService implements RecipeDataManager {
      * @return ids from database, or null if we don't have any
      */
     @SuppressWarnings("squid:S1168") // null is used to trigger the api
-    private List<Integer> getRecipeIdsForFoodFromDatabase(String food) {
-        List<Integer> recipeIds = recipeDAO.getRecipeIdsByFoodName(food);
-        if (recipeIds.isEmpty()) {
+    private List<RecipeSummary> getRecipeSummariesByFoodFromDatabase(String food) {
+        List<RecipeSummary> summaries =
+                recipeDAO.getRecipeSummariesByFoodName(food);
+
+        if (summaries.isEmpty()) {
             return null;
         }
-        return recipeIds;
+
+        return summaries;
     }
 
     /**
@@ -98,17 +100,17 @@ public class RecipeService implements RecipeDataManager {
      * @param food the food type to query
      * @return ids from api
      */
-    private List<Integer> getRecipeIdsForFoodFromApi(String food) {
-        List<Integer> recipeIds = recipeApiHandler.getRecipeIdsByFoodFromApi(food);
-        log.info("Loaded {} recipes from api", recipeIds.size());
+    private List<RecipeSummary> getRecipeSummariesForFoodByApi(String food) {
+        List<RecipeSummary> summaries =
+                recipeApiHandler.getRecipeSummariesByFoodFromApi(food);
 
-        for (int id : recipeIds) {
-            Recipe recipe = getRecipeById(id);
-            if (recipe != null) {
-                recipeDAO.addRecipeUseFood(food, id);
-            }
+        for (RecipeSummary summary : summaries) {
+            recipeDAO.addRecipeSummary(summary);
+            recipeDAO.addRecipeUseFood(food, summary.getRecipeId());
         }
-        return recipeIds;
+
+        return summaries;
+
     }
 
     /**
@@ -135,21 +137,8 @@ public class RecipeService implements RecipeDataManager {
      * @return list of recipes
      */
     @Override
-    public List<Recipe> getRecipesForFood(String food) {
-        List<Integer> recipeIds = recipeIdsByFoodCache.get(food);
-        List<Recipe> recipes = new ArrayList<>();
-
-        if (recipeIds == null) {
-            return recipes;
-        }
-
-        for (int id : recipeIds) {
-            Recipe recipe = getRecipeById(id);
-            if (recipe != null) {
-                recipes.add(recipe);
-            }
-        }
-        return recipes;
+    public List<RecipeSummary> getRecipeSummariesByFood(String food) {
+        return recipeSummariesByFoodCache.get(food);
     }
 
     /**
@@ -158,34 +147,9 @@ public class RecipeService implements RecipeDataManager {
      * @param id id of the recipe we are looking for
      * @return Recipe we get from the database or api
      */
-    private Recipe getRecipeById(int id) {
+    @Override
+    public Recipe getRecipeById(int id) {
         return recipeCache.get(id);
-    }
-
-
-    /**
-     * Method to return all recipes from API
-     * @return List of all recipes from API
-     */
-    public List<Recipe> getAllRecipesFromApi() {
-        List<Recipe> allRecipes = new ArrayList<>();
-        allRecipes.addAll(getRecipesFromApiByFood("Apple"));
-        allRecipes.addAll(getRecipesFromApiByFood("Pear"));
-        allRecipes.addAll(getRecipesFromApiByFood("Cherry"));
-        allRecipes.addAll(getRecipesFromApiByFood("Peach"));
-        allRecipes.addAll(getRecipesFromApiByFood("Apricot"));
-
-
-        return allRecipes;
-    }
-
-    /**
-     * Method for requesting recipes with a certain food ingredient from API
-     * @param food ingredient specified in requested recipes
-     * @return List of recipe models containing specified ingredient
-     */
-    private List<Recipe> getRecipesFromApiByFood(String food) {
-        return getRecipesForFood(food);
     }
 
     /**
@@ -207,35 +171,6 @@ public class RecipeService implements RecipeDataManager {
         for (RecipeIngredient ingredient : ingredients) {
             recipeDAO.addIngredientsByRecipe(ingredient, recipe);
         }
-    }
-
-
-    /**
-     * Return all the recipes in the database if the database is populated
-     * otherwise populate it
-     * @return return all recipes in database
-     */
-    public List<Recipe> getAllRecipes() {
-        List<Recipe> databaseRecipes = recipeDAO.getAll();
-
-
-        if (!databaseRecipes.isEmpty()) {
-            log.info("Loaded {} recipes from database", databaseRecipes.size());
-            return databaseRecipes;
-        }
-
-
-        List<Recipe> apiRecipes = getAllRecipesFromApi();
-        log.info("Loaded {} recipes from api", apiRecipes.size());
-        for (Recipe recipe: apiRecipes) {
-            try {
-                recipeDAO.add(recipe);
-            } catch (DuplicateEntryException _) {
-                log.warn("(All Recipes) Skip duplicate id: {}", recipe.getId());
-            }
-        }
-        databaseRecipes = recipeDAO.getAll();
-        return databaseRecipes;
     }
 }
 

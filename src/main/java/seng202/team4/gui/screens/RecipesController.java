@@ -1,10 +1,8 @@
 package seng202.team4.gui.screens;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -23,6 +21,7 @@ import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.gui.utilities.RecipeFilterService;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Recipe;
+import seng202.team4.models.RecipeSummary;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
 
@@ -153,24 +152,24 @@ public class RecipesController extends ScreenController {
      * Searches for recipes with ingredients that are toggled on and returns
      * relevant information on the cards.
      */
-    private void createRecipeCard(Recipe recipe) {
+    private void createRecipeCard(RecipeSummary recipeSummary) {
         GridPane card = new GridPane();
         card.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
         card.getStyleClass().add("recipeCardBase");
 
         StackPane imageArea = createImageArea();
-        ImageView imageView = getImageView(recipe);
+        ImageView imageView = getImageView(recipeSummary.getRecipeImageUrl());
 
         Rectangle clip = new Rectangle(CARD_WIDTH, IMAGE_HEIGHT);
         imageArea.setClip(clip);
         imageArea.getChildren().add(imageView);
 
-        Label title = createRecipeTitle(recipe);
+        Label title = createRecipeTitle(recipeSummary);
         setRecipeCardRows(card);
 
         card.add(imageArea, 0, 0);
         card.add(title, 0, 1);
-        card.setOnMouseClicked(event -> showRecipe(recipe));
+        card.setOnMouseClicked(event -> showRecipe(recipeSummary));
         recipeTilePane.getChildren().add(card);
     }
 
@@ -187,11 +186,11 @@ public class RecipesController extends ScreenController {
 
     /**
      * Creates the label for the recipe card title
-     * @param recipe recipe title is for
+     * @param recipeSummary recipe title is for
      * @return label object with title
      */
-    private @NotNull Label createRecipeTitle(Recipe recipe) {
-        Label title = new Label(recipe.getName());
+    private @NotNull Label createRecipeTitle(RecipeSummary recipeSummary) {
+        Label title = new Label(recipeSummary.getRecipeName());
         title.getStyleClass().add("recipeCardTitle");
         title.setWrapText(true);
         return title;
@@ -199,14 +198,14 @@ public class RecipesController extends ScreenController {
 
     /**
      * Create the image view for the recipe's image
-     * @param recipe recipe the image is for
+     * @param recipeUrl recipe the image is for
      * @return image view ready for recipe image
      */
-    private @NotNull ImageView getImageView(Recipe recipe) {
+    private @NotNull ImageView getImageView(String recipeUrl) {
         ImageView imageView = new ImageView();
-        String imagePath = recipe.getImage();
-        if (imagePath != null) {
-            loadImageIntoView(imagePath, imageView);
+
+        if (recipeUrl != null) {
+            loadImageIntoView(recipeUrl, imageView);
         }
         return imageView;
     }
@@ -265,14 +264,35 @@ public class RecipesController extends ScreenController {
 
     /**
      * Full screens the recipe the user clicked
-     * @param recipe recipe to show full view
+     * @param recipeSummary recipe to show full view
      */
-    private void showRecipe(Recipe recipe) {
-        populateRecipeDetails(recipe);
-        recipeListPane.setVisible(false);
-        recipeListPane.setManaged(false);
-        recipeHighlightPane.setVisible(true);
-        recipeHighlightPane.setManaged(true);
+    private void showRecipe(RecipeSummary recipeSummary) {
+        progressIndicator.setVisible(true);
+        Task<Recipe> task = new Task<>() {
+            @Override
+            protected Recipe call() {
+                return recipeService.getRecipeById(recipeSummary.getRecipeId());
+            }
+        };
+        task.setOnSucceeded(event -> {
+            progressIndicator.setVisible(false);
+
+            Recipe recipe = task.getValue();
+            populateRecipeDetails(recipe);
+
+            recipeListPane.setVisible(false);
+            recipeListPane.setManaged(false);
+            recipeHighlightPane.setVisible(true);
+            recipeHighlightPane.setManaged(true);
+        });
+
+        task.setOnFailed(event -> {
+            progressIndicator.setVisible(false);
+            LOG.error("Failed to load recipe", task.getException());
+        });
+
+        new Thread(task).start();
+
     }
 
     /**
@@ -293,7 +313,7 @@ public class RecipesController extends ScreenController {
         fullRecipeIngredientsText.setText(buildIngredientsText(recipe));
         fullRecipeNutritionText.setText(buildNutritionText(recipe));
         fullRecipeMethodText.setText(recipe.getMethod() != null ? recipe.getMethod() : "");
-        fullRecipeImageArea.getChildren().setAll(getImageView(recipe));
+        fullRecipeImageArea.getChildren().setAll(getImageView(recipe.getImage()));
     }
 
     private String buildNutritionText(Recipe recipe) {
@@ -377,19 +397,19 @@ public class RecipesController extends ScreenController {
 
     /**
      * Create the recipe cards to display
-     * @param recipes
+     * @param recipeSummaryList
      */
-    private void displayRecipes(List<Recipe> recipes) {
+    private void displayRecipes(List<RecipeSummary> recipeSummaryList) {
         recipeTilePane.getChildren().clear();
         displayedRecipeIds.clear();
 
-        for (Recipe recipe : recipes) {
-            if (recipe == null || displayedRecipeIds.contains(recipe.getId())) {
+        for (RecipeSummary recipeSummary : recipeSummaryList) {
+            if (recipeSummary == null || displayedRecipeIds.contains(recipeSummary.getRecipeId())) {
                 continue;
             }
 
-            displayedRecipeIds.add(recipe.getId());
-            createRecipeCard(recipe);
+            displayedRecipeIds.add(recipeSummary.getRecipeId());
+            createRecipeCard(recipeSummary);
         }
     }
 

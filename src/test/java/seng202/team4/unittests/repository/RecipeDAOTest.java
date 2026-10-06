@@ -63,10 +63,10 @@ class RecipeDAOTest extends TestSuite {
     }
 
     @Test
-    void replaceRecipeUpdatesRecipe() throws DuplicateEntryException {
+    void saveRecipeUpdatesRecipe() throws DuplicateEntryException {
         Recipe original = TestRecipeData.createRecipeModels().getFirst();
         addRecipeWithIngredient(original);
-        recipeDAO.replaceRecipe(TestRecipeData.createUpdatedRecipe(original));
+        recipeDAO.saveRecipe(TestRecipeData.createUpdatedRecipe(original));
         Recipe result = recipeDAO.getOne(original.getId());
 
         assertNotNull(result);
@@ -77,10 +77,10 @@ class RecipeDAOTest extends TestSuite {
     }
 
     @Test
-    void replaceRecipeAddsRecipeWhenRecipeDoesNotExist() {
+    void saveRecipeAddsRecipeWhenRecipeDoesNotExist() {
         Recipe newRecipe = TestRecipeData.createNewRecipe();
 
-        recipeDAO.replaceRecipe(newRecipe);
+        recipeDAO.saveRecipe(newRecipe);
         RecipeIngredient ingredient = TestRecipeData.createFakeRecipeIngredient().getFirst();
         recipeDAO.addIngredient(ingredient);
         recipeDAO.addIngredientsByRecipe(ingredient, newRecipe);
@@ -150,7 +150,7 @@ class RecipeDAOTest extends TestSuite {
     }
 
     @Test
-    void replaceRecipeUpdatesBasedOnTime() throws Exception {
+    void saveRecipeUpdatesBasedOnTime() throws Exception {
         Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
         addRecipeWithIngredient(recipe);
 
@@ -168,7 +168,7 @@ class RecipeDAOTest extends TestSuite {
 
         assertFalse(recipeDAO.recipeDetailsUpToDateAndExist(recipe.getId()));
 
-        recipeDAO.replaceRecipe(recipe);
+        recipeDAO.saveRecipe(recipe);
 
         assertTrue(recipeDAO.recipeDetailsUpToDateAndExist(recipe.getId()));
     }

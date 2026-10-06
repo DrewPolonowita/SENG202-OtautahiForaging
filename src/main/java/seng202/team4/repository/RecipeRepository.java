@@ -3,7 +3,7 @@ package seng202.team4.repository;
 
 import seng202.team4.models.Recipe;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
-
+import seng202.team4.models.RecipeSummary;
 
 import java.util.List;
 import java.util.Map;
@@ -53,9 +53,13 @@ public interface RecipeRepository extends DAOInterface<Recipe, Integer> {
     void addRecipeUseFood(String food, int recipeId);
 
     /**
-     * Method to replace a recipe in the database if it's out of date
-     * @param recipe recipe needing tot be replaced
+     * Method to save a recipe in the database
+     * @param recipe recipe to be saved
      */
-    void replaceRecipe(Recipe recipe);
+    void saveRecipe(Recipe recipe);
+
+    List<RecipeSummary> getRecipeSummariesByFoodName(String food);
+
+    void addRecipeSummary(RecipeSummary recipeSummary);
 
 }

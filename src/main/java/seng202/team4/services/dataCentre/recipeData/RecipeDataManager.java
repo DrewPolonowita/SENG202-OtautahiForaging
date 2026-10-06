@@ -1,6 +1,7 @@
 package seng202.team4.services.dataCentre.recipeData;
 
 import seng202.team4.models.Recipe;
+import seng202.team4.models.RecipeSummary;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface RecipeDataManager {
      * @param food Must be a key from {@link seng202.team4.services.FoodMapper} e.g "Apple" or "Walnut"
      * @return List of recipes
      */
-    List<Recipe> getRecipesForFood(String food);
+    List<RecipeSummary> getRecipeSummariesByFood(String food);
+
+    Recipe getRecipeById(int id);
 }

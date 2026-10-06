@@ -66,7 +66,7 @@ class RecipeServiceTest extends TestSuite {
         when(testRecipeRepository.getOne(recipe.getId()))
                 .thenReturn(recipe);
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        List<Recipe> recipes = testRecipeService.getRecipeSummariesByFood("Apple");
 
         assertEquals(List.of(recipe), recipes);
 
@@ -76,7 +76,7 @@ class RecipeServiceTest extends TestSuite {
         verify(testRecipeRepository).getOne(recipe.getId());
 
         // details up to date
-        verify(testRecipeRepository, never()).replaceRecipe(any(Recipe.class));
+        verify(testRecipeRepository, never()).saveRecipe(any(Recipe.class));
     }
 
     @Test
@@ -90,7 +90,7 @@ class RecipeServiceTest extends TestSuite {
         when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
                 .thenReturn(new ApiResponseWrapper<>(recipeByIdResponse(recipeRecord), 200));
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        List<Recipe> recipes = testRecipeService.getRecipeSummariesByFood("Apple");
 
 
         assertEquals(recipeRecord.recipeId(), recipes.getFirst().getId());
@@ -103,7 +103,7 @@ class RecipeServiceTest extends TestSuite {
         verify(testRecipeClient).getRecipeById(recipeRecord.recipeId());
 
         // details are not up to date
-        verify(testRecipeRepository).replaceRecipe(any(Recipe.class));
+        verify(testRecipeRepository).saveRecipe(any(Recipe.class));
     }
 
     @Test
@@ -122,7 +122,7 @@ class RecipeServiceTest extends TestSuite {
         when(testRecipeRepository.getOne(recipeRecord.recipeId()))
                 .thenReturn(expectedRecipe);
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        List<Recipe> recipes = testRecipeService.getRecipeSummariesByFood("Apple");
 
         assertEquals(recipeRecord.recipeId(), recipes.getFirst().getId());
 
@@ -132,7 +132,7 @@ class RecipeServiceTest extends TestSuite {
 
         //database used to store
         verify(testRecipeRepository).addRecipeUseFood("Apple", recipeRecord.recipeId());
-        verify(testRecipeRepository).replaceRecipe(any(Recipe.class));
+        verify(testRecipeRepository).saveRecipe(any(Recipe.class));
     }
 
     @Test
@@ -146,7 +146,7 @@ class RecipeServiceTest extends TestSuite {
         when(testRecipeClient.searchRecipe("Apple", true, 20))
                 .thenReturn(new ApiResponseWrapper<>(null, 500));
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        List<Recipe> recipes = testRecipeService.getRecipeSummariesByFood("Apple");
 
         assertTrue(recipes.isEmpty());
 
@@ -156,7 +156,7 @@ class RecipeServiceTest extends TestSuite {
 
 
         //Database isnt used to store anything
-        verify(testRecipeRepository, never()).replaceRecipe(any(Recipe.class));
+        verify(testRecipeRepository, never()).saveRecipe(any(Recipe.class));
         verify(testRecipeRepository, never()).addRecipeUseFood(anyString(), anyInt());
 
 
@@ -175,7 +175,7 @@ class RecipeServiceTest extends TestSuite {
         when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
                 .thenReturn(new ApiResponseWrapper<>(null, 500));
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        List<Recipe> recipes = testRecipeService.getRecipeSummariesByFood("Apple");
 
         assertTrue(recipes.isEmpty());
 
@@ -185,7 +185,7 @@ class RecipeServiceTest extends TestSuite {
         verify(testRecipeClient, atLeastOnce()).getRecipeById(recipeRecord.recipeId());
 
         // Database is not used to store incomplete data
-        verify(testRecipeRepository, never()).replaceRecipe(any(Recipe.class));
+        verify(testRecipeRepository, never()).saveRecipe(any(Recipe.class));
         verify(testRecipeRepository, never()).addRecipeUseFood(anyString(), anyInt());
 
 

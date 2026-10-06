@@ -4,7 +4,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.models.Recipe;
+import seng202.team4.models.RecipeSummary;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
  * Service for showing recipes, which helps us cancel the tasks if the filters are spammed.
  * This prevents multiple threads trying to access and change the same data at once
  */
-public class RecipeFilterService extends Service<List<Recipe>> {
+public class RecipeFilterService extends Service<List<RecipeSummary>> {
     private static final Logger LOG = LogManager.getLogger(RecipeFilterService.class);
     private final RecipeDataManager recipeService;
     private List<String> selectedFoods = List.of();
@@ -43,22 +43,22 @@ public class RecipeFilterService extends Service<List<Recipe>> {
      * @return Recipes to display
      */
     @Override
-    protected Task<List<Recipe>> createTask() {
+    protected Task<List<RecipeSummary>> createTask() {
         return new Task<>() {
             // Task state should be immutable/encapsulated
             private final List<String> selectedFoodsCopy = selectedFoods;
 
             @Override
-            protected List<Recipe> call() {
-                List<Recipe> recipes = new ArrayList<>();
+            protected List<RecipeSummary> call() {
+                List<RecipeSummary> recipeSummaries = new ArrayList<>();
                 for (String food : selectedFoodsCopy) {
                     if (isCancelled()) {
                         return List.of();
                     }
-                    recipes.addAll(recipeService.getRecipesForFood(food));
+                    recipeSummaries.addAll(recipeService.getRecipeSummariesByFood(food));
                 }
 
-                return recipes;
+                return recipeSummaries;
             }
             @Override
             protected void succeeded() {
