@@ -2,10 +2,12 @@ package seng202.team4.services;
 
 import org.jetbrains.annotations.Nullable;
 import seng202.team4.models.Recipe;
+import seng202.team4.models.RecipeSummary;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeDirection;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeIngredient;
 import seng202.team4.models.api.Recipe.RecipeNutrition;
+import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchRecord;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -93,6 +95,14 @@ public final class RecipeFactory {
                 imageUrl,
                 cookingTime,
                 preparationTime
+        );
+    }
+
+    public static RecipeSummary createRecipeSummaryFromSearch(RecipeSearchRecord record) {
+        return new RecipeSummary(
+                record.id(),
+                record.recipeName(),
+                record.recipeImageUrl()
         );
     }
 

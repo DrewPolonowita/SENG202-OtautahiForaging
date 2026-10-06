@@ -7,6 +7,7 @@ import seng202.team4.repository.FoodDAO;
 import seng202.team4.repository.NoteDAO;
 import seng202.team4.repository.NoteRepository;
 import seng202.team4.repository.RecipeDAO;
+import seng202.team4.repository.RecipeSummaryDAO;
 import seng202.team4.repository.RegionDAO;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
@@ -60,7 +61,7 @@ public class StateManager {
         this.foodService = new FoodService(new FoodDAO(databaseManager), new FoodApiClient(apiClient), foodMapper);
         this.treeRepository = new TreeDAO(databaseManager);
         this.treeService = new TreeService(treeRepository, apiClient, new RegionService(new RegionDAO(databaseManager)), foodMapper);
-        this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeApiClient(apiClient));
+        this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeSummaryDAO(databaseManager), new RecipeApiClient(apiClient));
         this.noteRepository = new NoteDAO(databaseManager);
         this.noteService = new NoteService(noteRepository);
         this.windowManager.launchMapScreen(this);

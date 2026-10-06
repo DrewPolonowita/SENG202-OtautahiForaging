@@ -30,6 +30,8 @@ import java.util.Map;
 public class RecipeDAO implements RecipeRepository {
     private static final Logger LOG = LogManager.getLogger(RecipeDAO.class);
     private static final String RECIPE_ID_REFERENCE = "recipe_id";
+    private static final String RECIPE_IMAGE_REFERENCE = "recipe_image";
+    private static final String RECIPE_NAME_REFERENCE = "recipe_name";
 
     private final DatabaseManager databaseManager;
 
@@ -82,7 +84,7 @@ public class RecipeDAO implements RecipeRepository {
 
                 recipes.add(RecipeFactory.create(
                         rs.getInt(RECIPE_ID_REFERENCE),
-                        rs.getString("recipe_name"),
+                        rs.getString(RECIPE_NAME_REFERENCE),
                         rs.getString("recipe_method"),
                         ingredients,
                         rs.getDouble("carbohydrates"),
@@ -91,7 +93,7 @@ public class RecipeDAO implements RecipeRepository {
                         rs.getDouble("fat"),
                         rs.getString("recipe_description"),
                         retrievalTime,
-                        rs.getString("recipe_image"),
+                        rs.getString(RECIPE_IMAGE_REFERENCE),
                         rs.getInt("cooking_time_min"),
                         rs.getInt("preparation_time_min")
                 ));
@@ -144,7 +146,7 @@ public class RecipeDAO implements RecipeRepository {
 
                     recipe = RecipeFactory.create(
                             rs.getInt(RECIPE_ID_REFERENCE),
-                            rs.getString("recipe_name"),
+                            rs.getString(RECIPE_NAME_REFERENCE),
                             rs.getString("recipe_method"),
                             ingredients,
                             rs.getDouble("carbohydrates"),
@@ -153,7 +155,7 @@ public class RecipeDAO implements RecipeRepository {
                             rs.getDouble("fat"),
                             rs.getString("recipe_description"),
                             retrievalTime,
-                            rs.getString("recipe_image"),
+                            rs.getString(RECIPE_IMAGE_REFERENCE),
                             rs.getInt("cooking_time_min"),
                             rs.getInt("preparation_time_min")
                     );
@@ -244,34 +246,6 @@ public class RecipeDAO implements RecipeRepository {
     public void update(Recipe toUpdate) {
         throw new NotImplementedException();
     }
-
-
-    /**
-     * Retrieve all recipes with a specified ingredient
-     * @param food the name of the ingredient specified
-     * @return all recipes with the food specified as an ingredient
-     */
-    public List<Integer> getRecipeIdsByFoodName(String food) {
-        List<Integer> recipeIds = new ArrayList<>();
-        String sql = "SELECT recipe_id FROM recipe_uses_food WHERE common_name=?";
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-            ps.setString(1, food);
-
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    recipeIds.add(rs.getInt(RECIPE_ID_REFERENCE));
-                }
-            }
-            return recipeIds;
-        } catch (SQLException sqlException) {
-            LOG.error(sqlException);
-            return new ArrayList<>();
-        }
-    }
-
 
     /**
      * Retrieves timestamp of when data was last retrieved from recipe API
@@ -387,40 +361,12 @@ public class RecipeDAO implements RecipeRepository {
         }
     }
 
-
-    /**
-     * Adds data about recipes using a specific food to the database table recipe uses food
-     * @param food food to add
-     * @param recipeId recipe id with the food in it
-     */
-    @Override
-    public void addRecipeUseFood(String food, int recipeId) {
-        String sql = """
-                INSERT OR IGNORE INTO recipe_uses_food (
-                   common_name,
-                   recipe_id
-                   ) VALUES (?,?);
-                """;
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, food);
-            ps.setInt(2, recipeId);
-
-
-            ps.executeUpdate();
-
-        } catch (SQLException sqlException) {
-            LOG.error(sqlException);
-        }
-    }
-
     /**
      * Replaces recipes data that exists in the database but have to be updated to comply with FatSecret API data storage time requirements
      * @param recipe recipe needing to be replaced
      */
     @Override
-    public void replaceRecipe(Recipe recipe) {
+    public void saveRecipe(Recipe recipe) {
         String sql = """
                 UPDATE recipes
                 SET recipe_name = ?,
@@ -459,7 +405,6 @@ public class RecipeDAO implements RecipeRepository {
             LOG.error(e);
         }
     }
-
     private void tryAddRecipe(Recipe recipe) {
         try {
             add(recipe);
@@ -467,6 +412,7 @@ public class RecipeDAO implements RecipeRepository {
             LOG.error(e);
         }
     }
+
 }
 
 

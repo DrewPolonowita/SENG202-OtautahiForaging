@@ -158,6 +158,26 @@ class FoodDAOTest extends TestSuite {
 
     }
 
+    @Test
+    void testFoodDetailsUpToDateAndExistReturnsFalseCorrectly() throws Exception {
+        Food food = TestFoodData.createFood(90000, "Apple", "Fruit");
+
+        foodDAO.add(food);
+
+        String sql = """
+            UPDATE food
+            SET retrieval_time = DATETIME('now', '-25 hours')
+            WHERE food_id = ?
+            """;
+
+        try (Connection conn = databaseManager.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, food.getId());
+            ps.executeUpdate();
+        }
+        assertFalse(foodDAO.foodDetailsUpToDateAndExist(food.getId()));
+    }
+
 
 
 }

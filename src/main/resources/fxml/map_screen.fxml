@@ -18,7 +18,7 @@
       <StackPane styleClass="recipeCardBaseArea" BorderPane.alignment="CENTER">
 
 
-         <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" styleClass="f" />
+         <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" />
          <HBox fx:id="filterActions" managed="false" maxHeight="20.0" maxWidth="50.0" spacing="5.0" visible="false" StackPane.alignment="TOP_LEFT">
             <StackPane.margin>
                <Insets left="47.0" top="25.0" />

@@ -1,4 +1,26 @@
+DROP TABLE IF EXISTS recipe_uses_food;
+--SPLIT
+DROP TABLE IF EXISTS ingredients_in_recipe;
+--SPLIT
+DROP TABLE IF EXISTS note;
+--SPLIT
+DROP TABLE IF EXISTS food_serving;
+--SPLIT
+DROP TABLE IF EXISTS from_api;
+--SPLIT
+DROP TABLE IF EXISTS from_user;
+--SPLIT
+DROP TABLE IF EXISTS recipe_summary;
+--SPLIT
+DROP TABLE IF EXISTS recipes;
+--SPLIT
+DROP TABLE IF EXISTS ingredient;
+--SPLIT
+DROP TABLE IF EXISTS food;
+--SPLIT
 DROP TABLE IF EXISTS trees;
+--SPLIT
+DROP TABLE IF EXISTS regions;
 --SPLIT
 CREATE TABLE IF NOT EXISTS trees (
     id INTEGER PRIMARY KEY,
@@ -11,9 +33,8 @@ CREATE TABLE IF NOT EXISTS trees (
     last_modified DATETIME,
     service_status TEXT
 );
-DROP TABLE IF EXISTS regions;
 --SPLIT
-CREATE TABLE regions (
+CREATE TABLE IF NOT EXISTS regions (
     north REAL NOT NULL,
     east REAL NOT NULL,
     south REAL NOT NULL,
@@ -23,23 +44,17 @@ CREATE TABLE regions (
     PRIMARY KEY (type, north, east, south, west)
 );
 --SPLIT
-DROP TABLE IF EXISTS from_api;
---SPLIT
 CREATE TABLE IF NOT EXISTS from_api (
     tree_id INTEGER PRIMARY KEY,
     date_retrieved DATETIME NOT NULL,
     FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
 --SPLIT
-DROP TABLE IF EXISTS from_user;
---SPLIT
 CREATE TABLE IF NOT EXISTS from_user (
     tree_id INTEGER PRIMARY KEY,
     when_created DATETIME NOT NULL,
     FOREIGN KEY (tree_id) REFERENCES trees(id)
 );
---SPLIT
-DROP TABLE IF EXISTS ingredient;
 --SPLIT
 CREATE TABLE IF NOT EXISTS ingredient (
     ingredient_id int NOT NULL,
@@ -51,8 +66,6 @@ CREATE TABLE IF NOT EXISTS ingredient (
     PRIMARY KEY (serving_id, ingredient_id)
 );
 --SPLIT
-DROP TABLE IF EXISTS recipes;
---SPLIT
 CREATE TABLE IF NOT EXISTS recipes (
      recipe_id INTEGER PRIMARY KEY,
      recipe_name TEXT NOT NULL,
@@ -63,12 +76,16 @@ CREATE TABLE IF NOT EXISTS recipes (
      fat DOUBLE,
      recipe_description TEXT NOT NULL,
      retrieval_time DATETIME NOT NULL,
-     recipe_image TEXT NOT NULL,
+     recipe_image TEXT,
      cooking_time_min int NOT NULL,
      preparation_time_min int NOT NULL
 );
 --SPLIT
-DROP TABLE IF EXISTS ingredients_in_recipe;
+CREATE TABLE IF NOT EXISTS recipe_summary (
+    recipe_id INTEGER PRIMARY KEY,
+    recipe_name TEXT NOT NULL,
+    recipe_image TEXT
+);
 --SPLIT
 CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
     recipe_id INTEGER NOT NULL,
@@ -81,8 +98,6 @@ CREATE TABLE IF NOT EXISTS ingredients_in_recipe (
     FOREIGN KEY (serving_id, ingredient_id) REFERENCES ingredient(serving_id, ingredient_id)
 );
 --SPLIT
-DROP TABLE IF EXISTS note;
---SPLIT
 CREATE TABLE IF NOT EXISTS note (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_created DATETIME NOT NULL,
@@ -94,12 +109,6 @@ CREATE TABLE IF NOT EXISTS note (
     FOREIGN KEY (tree_id) REFERENCES trees(id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
---SPLIT
-DROP TABLE IF EXISTS recipe_uses_food;
---SPLIT
-DROP TABLE IF EXISTS food_serving;
---SPLIT
-DROP TABLE IF EXISTS food;
 --SPLIT
 CREATE TABLE IF NOT EXISTS food (
     food_id INTEGER PRIMARY KEY,
@@ -123,7 +132,10 @@ CREATE TABLE IF NOT EXISTS food_serving (
 CREATE TABLE IF NOT EXISTS recipe_uses_food (
     common_name TEXT NOT NULL,
     recipe_id INTEGER NOT NULL,
-    PRIMARY KEY (common_name, recipe_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
+    retrieval_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (common_name, recipe_id),
+    FOREIGN KEY (recipe_id)
+        REFERENCES recipe_summary(recipe_id)
+        ON DELETE CASCADE
 );
 

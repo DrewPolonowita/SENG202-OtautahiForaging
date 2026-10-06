@@ -2,8 +2,10 @@ package seng202.team4.unittests.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.team4.exceptions.DuplicateEntryException;
 import seng202.team4.helpers.TestRecipeData;
 import seng202.team4.models.Recipe;
+import seng202.team4.models.RecipeSummary;
 import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
@@ -11,6 +13,7 @@ import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchDetails;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchRecord;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
 import seng202.team4.repository.RecipeRepository;
+import seng202.team4.repository.RecipeSummaryRepository;
 import seng202.team4.services.RecipeFactory;
 import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.recipeData.RecipeService;
@@ -22,7 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -41,185 +43,178 @@ import java.util.List;
  */
 class RecipeServiceTest extends TestSuite {
 
-    RecipeRepository testRecipeRepository;
-    RecipeClientInterface testRecipeClient;
+    RecipeRepository mockRecipeRepository;
+    RecipeSummaryRepository mockRecipeSummaryRepository;
+    RecipeClientInterface mockRecipeClient;
     RecipeService testRecipeService;
-
-
 
     @BeforeEach
     void setUpTest() {
-        testRecipeRepository = mock(RecipeRepository.class);
-        testRecipeClient = mock(RecipeClientInterface.class);
-        testRecipeService = new RecipeService(testRecipeRepository, testRecipeClient);
+        mockRecipeRepository = mock(RecipeRepository.class);
+        mockRecipeSummaryRepository = mock(RecipeSummaryRepository.class);
+        mockRecipeClient = mock(RecipeClientInterface.class);
+
+        testRecipeService = new RecipeService(mockRecipeRepository, mockRecipeSummaryRepository, mockRecipeClient);
     }
 
 
     @Test
-    void testIdsExistsAndDetailsUpToDate() {
+    void getRecipeSummariesUseDatabaseWhenTheyExist() {
+        List<RecipeSummary> testSummaries = TestRecipeData.createRecipeSummaries();
+
+        when(mockRecipeSummaryRepository.getRecipeSummariesByFoodName("Apple"))
+                .thenReturn(testSummaries);
+
+        List<RecipeSummary> result = testRecipeService.getRecipeSummariesByFood("Apple");
+
+        assertEquals(testSummaries, result);
+
+        // database used
+        verify(mockRecipeSummaryRepository).getRecipeSummariesByFoodName("Apple");
+
+        // dont search api
+        verify(mockRecipeClient, never()).searchRecipe(anyString(), anyBoolean(), anyInt());
+    }
+
+    @Test
+    void getRecipeSummariesByFoodUsesApiWhenDatabaseIsEmpty() throws DuplicateEntryException {
+
+        RecipeSearchRecord searchRecord = TestRecipeData.createRecipeSearchRecords().getFirst();
+
+        when(mockRecipeSummaryRepository.getRecipeSummariesByFoodName("Apple"))
+                .thenReturn(List.of());
+        when(mockRecipeClient.searchRecipe("Apple", true, 20))
+                .thenReturn(new ApiResponseWrapper<>(new RecipeSearchResponse(
+                        new RecipeSearchDetails(1, List.of(searchRecord)), null), 200));
+
+        List<RecipeSummary> result = testRecipeService.getRecipeSummariesByFood("Apple");
+
+        assertEquals(1, result.size());
+        assertEquals(searchRecord.id(), result.getFirst().getRecipeId());
+
+        verify(mockRecipeClient).searchRecipe("Apple", true, 20);
+        verify(mockRecipeSummaryRepository).add(any(RecipeSummary.class));
+        verify(mockRecipeSummaryRepository).addRecipeUseFood("Apple", searchRecord.id());
+
+        // test change to architecture, not getting recipe details
+        verify(mockRecipeClient, never()).getRecipeById(anyInt());
+    }
+
+
+    @Test
+    void getRecipeSummariesReturnsEmptyWhenApiSearchFails() {
+        when(mockRecipeSummaryRepository.getRecipeSummariesByFoodName("Apple"))
+                .thenReturn(List.of());
+        when(mockRecipeClient.searchRecipe("Apple", true, 20))
+
+                .thenReturn(new ApiResponseWrapper<>(null, 500));
+        List<RecipeSummary> result =
+                testRecipeService.getRecipeSummariesByFood("Apple");
+
+        assertTrue(result.isEmpty());
+
+        verify(mockRecipeClient).searchRecipe("Apple", true, 20);
+        verify(mockRecipeClient, never()).getRecipeById(anyInt());
+
+        verify(mockRecipeSummaryRepository, never()).addRecipeUseFood(anyString(), anyInt());
+    }
+
+    @Test
+    void getRecipeByIdUsesDatabaseWhenDetailsUpToDate() {
         Recipe recipe = TestRecipeData.createRecipeModels().getFirst();
 
-        when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
-                .thenReturn(List.of(recipe.getId()));
-        when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipe.getId()))
+        when(mockRecipeRepository.recipeDetailsUpToDateAndExist(recipe.getId()))
                 .thenReturn(true);
-        when(testRecipeRepository.getOne(recipe.getId()))
+        when(mockRecipeRepository.getOne(recipe.getId()))
                 .thenReturn(recipe);
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        Recipe result = testRecipeService.getRecipeById(recipe.getId());
 
-        assertEquals(List.of(recipe), recipes);
+        assertEquals(recipe, result);
+        //doesnt call api
+        verify(mockRecipeClient, never()).getRecipeById(anyInt());
 
-        // database used
-        verify(testRecipeRepository).getRecipeIdsByFoodName("Apple");
-        verify(testRecipeRepository).recipeDetailsUpToDateAndExist(recipe.getId());
-        verify(testRecipeRepository).getOne(recipe.getId());
-
-        // details up to date
-        verify(testRecipeRepository, never()).replaceRecipe(any(Recipe.class));
+        //uses the database
+        verify(mockRecipeRepository).recipeDetailsUpToDateAndExist(recipe.getId());
+        verify(mockRecipeRepository).getOne(recipe.getId());
     }
 
     @Test
-    void testIdsExistsButDetailsNotUpToDate() {
+    void testRecipeByIdUsesApiDetailsNotUpToDate() {
         RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
 
-        when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
-                .thenReturn(List.of(recipeRecord.recipeId()));
-        when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
+        when(mockRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
                 .thenReturn(false);
-        when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
-                .thenReturn(new ApiResponseWrapper<>(recipeByIdResponse(recipeRecord), 200));
+        when(mockRecipeClient.getRecipeById(recipeRecord.recipeId()))
+                .thenReturn(new ApiResponseWrapper<>(new RecipeByIdResponse(recipeRecord), 200));
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        Recipe result = testRecipeService.getRecipeById(recipeRecord.recipeId());
 
-
-        assertEquals(recipeRecord.recipeId(), recipes.getFirst().getId());
-
-        // database used
-        verify(testRecipeRepository).getRecipeIdsByFoodName("Apple");
+        assertEquals(recipeRecord.recipeId(), result.getId());
 
         // api used just for details
-        verify(testRecipeClient, never()).searchRecipe(anyString(), anyBoolean(), anyInt());
-        verify(testRecipeClient).getRecipeById(recipeRecord.recipeId());
+        verify(mockRecipeClient, never()).searchRecipe(anyString(), anyBoolean(), anyInt());
+        verify(mockRecipeClient).getRecipeById(recipeRecord.recipeId());
 
         // details are not up to date
-        verify(testRecipeRepository).replaceRecipe(any(Recipe.class));
+        verify(mockRecipeRepository).saveRecipe(any(Recipe.class));
     }
 
     @Test
-    void testIdsDontExistAndApiReturnsIds() {
-        RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
-        Recipe expectedRecipe = RecipeFactory.createRecipeObjectById(recipeRecord);
+    void getRecipeByIdReturnsNullWhenApiFails() {
+        int recipeId = 123;
 
-        when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
-                .thenReturn(List.of());
-        when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
-                .thenReturn(false, false, true);
-        when(testRecipeClient.searchRecipe("Apple", true, 20))
-                .thenReturn(new ApiResponseWrapper<>(searchResponseWithRecipeId(recipeRecord.recipeId()), 200));
-        when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
-                .thenReturn(new ApiResponseWrapper<>(recipeByIdResponse(recipeRecord), 200));
-        when(testRecipeRepository.getOne(recipeRecord.recipeId()))
-                .thenReturn(expectedRecipe);
-
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
-
-        assertEquals(recipeRecord.recipeId(), recipes.getFirst().getId());
-
-        //api used
-        verify(testRecipeClient).searchRecipe("Apple", true, 20);
-        verify(testRecipeClient).getRecipeById(recipeRecord.recipeId());
-
-        //database used to store
-        verify(testRecipeRepository).addRecipeUseFood("Apple", recipeRecord.recipeId());
-        verify(testRecipeRepository).replaceRecipe(any(Recipe.class));
-    }
-
-    @Test
-    void testIdsDontExistButApiThrowsErrorsOnSearch() {
-        RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
-
-        when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
-                .thenReturn(List.of());
-        when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
+        when(mockRecipeRepository.recipeDetailsUpToDateAndExist(recipeId))
                 .thenReturn(false);
-        when(testRecipeClient.searchRecipe("Apple", true, 20))
+        when(mockRecipeClient.getRecipeById(recipeId))
                 .thenReturn(new ApiResponseWrapper<>(null, 500));
 
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
+        Recipe result = testRecipeService.getRecipeById(recipeId);
 
-        assertTrue(recipes.isEmpty());
+        assertEquals(null, result);
 
-        //Api is searched, but can't call recipe by id
-        verify(testRecipeClient).searchRecipe("Apple", true, 20);
-        verify(testRecipeClient, never()).getRecipeById(anyInt());
-
-
-        //Database isnt used to store anything
-        verify(testRecipeRepository, never()).replaceRecipe(any(Recipe.class));
-        verify(testRecipeRepository, never()).addRecipeUseFood(anyString(), anyInt());
-
-
+        verify(mockRecipeRepository, never()).saveRecipe(any(Recipe.class));
     }
 
-    @Test
-    void testIdsAreFoundAtApiButApiThrowsErrorWhenLookingForMoreDetail() {
-        RecipeByIdRecord recipeRecord = TestRecipeData.createFakeRecipeByIdRecord();
-
-        when(testRecipeRepository.getRecipeIdsByFoodName("Apple"))
-                .thenReturn(List.of());
-        when(testRecipeRepository.recipeDetailsUpToDateAndExist(recipeRecord.recipeId()))
-                .thenReturn(false);
-        when(testRecipeClient.searchRecipe("Apple", true, 20))
-                .thenReturn(new ApiResponseWrapper<>(searchResponseWithRecipeId(recipeRecord.recipeId()), 200));
-        when(testRecipeClient.getRecipeById(recipeRecord.recipeId()))
-                .thenReturn(new ApiResponseWrapper<>(null, 500));
-
-        List<Recipe> recipes = testRecipeService.getRecipesForFood("Apple");
-
-        assertTrue(recipes.isEmpty());
-
-        // Api is searched and ids are found
-        verify(testRecipeClient).searchRecipe("Apple", true, 20);
-        // Details about ids are searched but error
-        verify(testRecipeClient, atLeastOnce()).getRecipeById(recipeRecord.recipeId());
-
-        // Database is not used to store incomplete data
-        verify(testRecipeRepository, never()).replaceRecipe(any(Recipe.class));
-        verify(testRecipeRepository, never()).addRecipeUseFood(anyString(), anyInt());
-
-
-    }
-
-
-
-
-    private RecipeSearchResponse searchResponseWithRecipeId(int recipeId) {
-        RecipeSearchRecord recipeSearchRecord = new RecipeSearchRecord(
-                recipeId,
-                "Recipe Name",
-                "Description",
-                null,
-                null
-        );
-
-        return new RecipeSearchResponse(
-                new RecipeSearchDetails(1, List.of(recipeSearchRecord)),
-                null
-        );
-    }
-
-    private RecipeByIdResponse recipeByIdResponse(RecipeByIdRecord recipeRecord) {
-        return new RecipeByIdResponse(recipeRecord);
-    }
 
     @Test
     void testCreateRecipeObjectById() {
         RecipeByIdRecord testByIdRecord = TestRecipeData.createFakeRecipeByIdRecord();
-        Recipe testRecipeRecord = RecipeFactory.createRecipeObjectById(testByIdRecord);
-        List<String> testIngredients = List.of("1 Apple");
-        Recipe expectedRecord  = new Recipe(123, "Recipe Name", "1: Direction step 1\n2: Direction step 2", testIngredients, 345, 123,567, 789, "Description", null, "Image URL", 10, 10);
-        assertEquals(expectedRecord, testRecipeRecord);
+        Recipe actual = RecipeFactory.createRecipeObjectById(testByIdRecord);
+        Recipe expected = RecipeFactory.create(
+                123,
+                "Recipe Name",
+                "1: Direction step 1\n2: Direction step 2\n",
+                List.of("1 Apple"),
+                345,
+                123,
+                567,
+                789,
+                "Description",
+                null,
+                "Image URL",
+                10,
+                10
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void existingRecipeSummaryIsUpdatedWhenAddThrowsDuplicateEntryException() throws DuplicateEntryException {
+        RecipeSearchRecord searchRecord = TestRecipeData.createRecipeSearchRecords().getFirst();
+
+        when(mockRecipeSummaryRepository.getRecipeSummariesByFoodName("Apple"))
+                .thenReturn(List.of());
+        when(mockRecipeClient.searchRecipe("Apple", true, 20))
+                .thenReturn(new ApiResponseWrapper<>(new RecipeSearchResponse(
+                                new RecipeSearchDetails(1, List.of(searchRecord)), null), 200));
+        when(mockRecipeSummaryRepository.add(any(RecipeSummary.class)))
+                .thenThrow(new DuplicateEntryException("Already exists"));
+
+        testRecipeService.getRecipeSummariesByFood("Apple");
+
+        verify(mockRecipeSummaryRepository).update(any(RecipeSummary.class));
+        verify(mockRecipeSummaryRepository).addRecipeUseFood("Apple", searchRecord.id());
     }
 
 }

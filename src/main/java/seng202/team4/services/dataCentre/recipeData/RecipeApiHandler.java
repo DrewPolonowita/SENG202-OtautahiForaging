@@ -2,12 +2,14 @@ package seng202.team4.services.dataCentre.recipeData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.models.RecipeSummary;
 import seng202.team4.models.api.ApiResponseWrapper;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdRecord;
 import seng202.team4.models.api.Recipe.RecipeByID.RecipeByIdResponse;
 
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchRecord;
 import seng202.team4.models.api.Recipe.SearchRecipe.RecipeSearchResponse;
+import seng202.team4.services.RecipeFactory;
 import seng202.team4.services.api.RecipeClientInterface;
 import seng202.team4.services.dataCentre.foodData.FoodService;
 
@@ -34,19 +36,20 @@ public class RecipeApiHandler {
      * @param searchExpression input one of the food from the food map in {@link FoodService}
      * @return list of ids to use in calling the FatSecret api for specific recipes
      */
-    public List<Integer> getRecipeIdsByFoodFromApi(String searchExpression) {
+    public List<RecipeSummary> getRecipeSummariesByFoodFromApi(String searchExpression) {
         ApiResponseWrapper<RecipeSearchResponse> response = recipeApiClient.searchRecipe(searchExpression, true, 20);
 
         if (!validateApiResponse(response, searchExpression)) {
             return List.of();
         }
 
-        List<Integer> recipeIds = new ArrayList<>();
-        for (RecipeSearchRecord recipe : response.getApiResponse().recipes().recipe()) {
-            recipeIds.add(recipe.id());
+        List<RecipeSummary> recipeSummaries = new ArrayList<>();
+        for (RecipeSearchRecord recipe :
+                response.getApiResponse().recipes().recipe()) {
+            recipeSummaries.add(RecipeFactory.createRecipeSummaryFromSearch(recipe));
         }
 
-        return recipeIds;
+        return recipeSummaries;
 
     }
 
