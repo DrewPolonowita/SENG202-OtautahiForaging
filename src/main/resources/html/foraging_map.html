@@ -104,27 +104,22 @@
             background: var(--primary-color-dark);
         }
 
+    /* --------------  Marker Clusters -------------- */
+
         .marker-cluster-apple {
             background-color: #D31804;
-            border-radius: 50%;
         }
 
-        .marker-cluster-apple div {
+       .marker-cluster-apple div {
             background-color: #FF7787;
-            margin-left: 5px;
-            margin-top: 5px;
-            text-align: center;
-            justify-content: center;
-            border-radius: 15px;
         }
-
 
         .marker-cluster-pear {
-            background-color: #86CA82;
+            background-color: #708E6E;
         }
 
         .marker-cluster-pear div {
-            background-color: #658562;
+            background-color: #86CA82;
         }
 
         .marker-cluster-peach {
@@ -132,41 +127,69 @@
         }
 
         .marker-cluster-peach div {
-            background-color: #C97864;
+            background-color: #DE834F;
         }
 
         .marker-cluster-apricot {
-            background-color: #DE834F;
+            background-color: #8C663E;
         }
 
         .marker-cluster-apricot div {
             background-color: #F2B36D;
         }
 
-
         .marker-cluster-walnut {
-            background-color: #CE9777;
-        }
-
-        .marker-cluster-walnut div {
             background-color: #825845;
         }
 
+        .marker-cluster-walnut div {
+            background-color: #CE9777;
+        }
+
         .marker-cluster-strawberry {
-            background-color: #AF5070;
-            border-radius: 50%;
+            background-color: #A64C5C;
         }
 
         .marker-cluster-strawberry div {
-            background-color: #A64C5C;
+            background-color: #AF5070;
+        }
+
+        .marker-cluster {
+            background-clip: padding-box;
+            border-radius: 20px;
+            border: 1px solid white;
+        }
+
+        .marker-cluster div {
+            width: 30px;
+            height: 30px;
             margin-left: 5px;
             margin-top: 5px;
             text-align: center;
-            justify-content: center;
-            align-items: center;
             border-radius: 15px;
+            font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+            opacity: 60%;
         }
 
+        .marker-cluster div:hover {
+            opacity: 100%;
+        }
+
+        .marker-cluster span {
+	        line-height: 30px;
+	    }
+
+        .marker-cluster-small {
+            scale: 90%;
+        }
+
+       .marker-cluster-medium {
+            scale: 100%;
+        }
+
+       .marker-cluster-large {
+           scale: 110%;
+        }
 
     </style>
 </head>
@@ -289,13 +312,20 @@
     */
     function createClusterGroups(food) {
         foodCluster = food.toString();
-        console.log(foodCluster);
         clusterGroups[food] = L.markerClusterGroup({
             iconCreateFunction: function(cluster) {
                 foodCluster = food.toString();
-                console.log(foodCluster);
-                return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>',
-                                   className: 'marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, ""),
+                let childCount = cluster.getChildCount();
+                let clusterSize = 'medium';
+                if (childCount < 5) {
+                    clusterSize = 'small';
+                } else if (clusterSize < 10) {
+                    clusterSize = 'medium';
+                } else {
+                    clusterSize = 'large';
+                }
+                return L.divIcon({ html: '<div><span><b>' + childCount + '</b></span></div>',
+                                   className: 'marker-cluster marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, "") + ' marker-cluster-' + clusterSize,
                                    iconSize: L.point(40, 40)
                 });
             }
