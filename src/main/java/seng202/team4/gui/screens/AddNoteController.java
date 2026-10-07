@@ -39,6 +39,8 @@ public class AddNoteController extends ScreenController {
     private Button recordButton;
     @FXML
     private Button backButton;
+    @FXML
+    private TextField weightForaged;
 
     private String selectedImagePath;
     private Note existingNote;
@@ -80,7 +82,10 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void initialize() {
+        handleWeightInput();
         if (existingNote != null) {
+            Integer weight = existingNote.getWeightGrams();
+            weightForaged.setText(weight == null || weight == 0 ? "" : weight.toString());
             backButton.setVisible(true);
             commonNameDisplay.setText("Editing " + existingNote.getName());
             fieldNotesArea.setText(existingNote.getDescription());
@@ -141,11 +146,13 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void handleRecord() {
+        String input = weightForaged.getText();
+        int weightGrams = input.isEmpty() ? 0 : Integer.parseInt(input);
         if (existingNote != null) {
-            Note updated = new Note(existingNote.getId(), existingNote.getName(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath);
+            Note updated = new Note(existingNote.getId(), existingNote.getName(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath, weightGrams);
             getStateManager().getNoteService().update(updated);
         } else {
-            Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
+            Note note = new Note(0, treeModel.getCommonName(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath, weightGrams);
             try {
                 getStateManager().getNoteService().add(note);
                 handleClose();
@@ -156,10 +163,22 @@ public class AddNoteController extends ScreenController {
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
     }
 
+    /**
+     * Limits user input to positive integers for weight
+     * Also sets max input to 6 characters to avoid integer overflow lol
+     */
+    public void handleWeightInput() {
+        weightForaged.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().matches("[0-9]{0,6}") ? change : null));
+    }
+
+    /**
+     * Closes add/edit note prompt and returns to previous expanded note popup
+     */
     public void handleGoBack() {
         handleClose();
         Platform.runLater(() ->
-            getStateManager().getWindowManager().openExpandNote(existingNote, getStateManager(), journalController)
+                getStateManager().getWindowManager().openExpandNote(existingNote, getStateManager(), journalController)
         );
     }
 
@@ -187,6 +206,6 @@ public class AddNoteController extends ScreenController {
         alert.initOwner(commonNameDisplay.getScene().getWindow());
         alert.setTitle("Discard Changes");
         alert.setHeaderText("Close without saving?");
-        alert.showAndWait().filter(button-> button == ButtonType.OK).ifPresent(button->handleClose());
+        alert.showAndWait().filter(button -> button == ButtonType.OK).ifPresent(button -> handleClose());
     }
 }

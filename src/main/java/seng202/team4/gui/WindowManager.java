@@ -4,10 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -91,12 +88,15 @@ public class WindowManager {
         gridPane.add(rootPane, 1, 0);
         // Setup Row and Column constraints to stretch content correctly
         ColumnConstraints navigationColumn = new ColumnConstraints();
+        RowConstraints navigationRow = new RowConstraints();
         navigationColumn.setHgrow(Priority.NEVER);
+        navigationRow.setVgrow(Priority.ALWAYS);
 
         ColumnConstraints contentColumn = new ColumnConstraints();
         contentColumn.setHgrow(Priority.ALWAYS);
 
         gridPane.getColumnConstraints().addAll(navigationColumn, contentColumn);
+        gridPane.getRowConstraints().add(navigationRow);
     }
 
     public void show() {

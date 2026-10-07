@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS note (
     image_path TEXT,
     tree_id INTEGER,
     recipe_id INTEGER,
+    weight_grams INTEGER,
     FOREIGN KEY (tree_id) REFERENCES trees(id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
