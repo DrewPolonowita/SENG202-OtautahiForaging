@@ -440,3 +440,27 @@
     -fx-background-color: -primary-color-highlight;
     -fx-text-fill: -primary-bg-color;
 }
+.table-view {
+    -fx-control-inner-background: -primary-bg-color;
+    -fx-control-inner-background-alt: -medium-background-color;
+    -fx-background-color: -primary-bg-color;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header-background,
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: -secondary-bg-color;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+}
+.tablescenebackground {
+    -fx-background-color: -secondary-bg-color;
+}
+
+.table-cell {
+    -fx-text-fill: -text-color;
+}
