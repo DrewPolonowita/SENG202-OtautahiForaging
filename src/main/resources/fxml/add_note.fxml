@@ -53,7 +53,7 @@
             <Insets bottom="0" left="10" right="10" top="0" />
         </padding>
         <Label text="FIELD NOTES" styleClass="note-card-subtitle" />
-        <TextArea fx:id="fieldNotesArea" styleClass="text-area" promptText="Describe the tree you saw..."/>
+        <TextArea fx:id="fieldNotesArea" styleClass="text-area" promptText="Describe the tree you saw..." wrapText="true"/>
         <Label text="AMOUNT FORAGED (grams)" styleClass="note-card-subtitle" />
         <TextField fx:id="weightForaged" styleClass="text-field" promptText="e.g 100"/>
     </VBox>
