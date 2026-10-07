@@ -10,12 +10,12 @@
 <?import javafx.scene.layout.Region?>
 <?import java.lang.String?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.TableViewController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.TableViewController">
    <center>
-      <TableView fx:id="treeTableView" prefHeight="200.0" prefWidth="518.0" style="-fx-text-background-color: black;" styleClass="filterTab" BorderPane.alignment="CENTER" />
+      <TableView fx:id="treeTableView" prefHeight="200.0" prefWidth="518.0" styleClass="filterTab" BorderPane.alignment="CENTER" />
    </center>
    <left>
-      <StackPane prefHeight="400.0" prefWidth="62.0" styleClass="sideBar">
+      <StackPane prefHeight="400.0" prefWidth="62.0" styleClass="tablescenebackground">
          <Button fx:id="filterButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onFilterClicked" styleClass="filters" StackPane.alignment="TOP_LEFT">
             <graphic>
                <Region>

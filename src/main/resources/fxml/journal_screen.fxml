@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<BorderPane styleClass="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
    <top>
       <MenuButton text="Sort by" fx:id="sortMenu" styleClass = "sort-journal">
+         <BorderPane.margin>
+            <Insets left="20.0" top="20.0"/>
+         </BorderPane.margin>
          <items>
             <MenuItem text="Newest first" onAction="#handleSortNewest"/>
             <MenuItem text="Oldest first" onAction="#handleSortOldest"/>
@@ -17,12 +24,26 @@
       </MenuButton>
    </top>
    <center>
-      <ScrollPane fitToWidth="true" fitToHeight="true" BorderPane.alignment="CENTER" styleClass="journalCardBaseArea">
-         <FlowPane fx:id="notesFlowPane" hgap="16" vgap="16" prefWrapLength="800" prefWidth="Infinity" prefHeight="Infinity" styleClass="journalCardBaseArea">
+      <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="journalCardBaseArea" BorderPane.alignment="CENTER">
+         <FlowPane fx:id="notesFlowPane" hgap="16" prefHeight="Infinity" prefWidth="Infinity" prefWrapLength="800" styleClass="journalCardBaseArea" vgap="16">
             <padding>
-               <Insets top="20" right="20" bottom="20" left="20" />
+               <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
          </FlowPane>
       </ScrollPane>
    </center>
+   <right>
+      <VBox maxHeight="20.0" maxWidth="30.0" prefHeight="20.0" prefWidth="30.0" BorderPane.alignment="TOP_CENTER">
+         <children>
+            <HBox alignment="CENTER_RIGHT" maxHeight="20.0" maxWidth="30.0">
+               <children>
+                  <Button fx:id="HelpButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#helpButtonClicked" styleClass="guidelines-button" text="?" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </VBox>
+   </right>
 </BorderPane>

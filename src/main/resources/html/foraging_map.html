@@ -94,9 +94,9 @@
             border-radius: 8px;
             padding: 6px 12px;
             font-size: 0.85em;
-            font-weight: 500;
             cursor: pointer;
             margin-top: 6px;
+            font-weight: bold;
         }
         .journal-btn:hover {
             background: var(--primary-color-highlight);
@@ -111,9 +111,9 @@
             border-radius: 8px;
             padding: 6px 12px;
             font-size: 0.85em;
-            font-weight: 500;
             cursor: pointer;
             margin-top: 6px;
+            font-weight: bold;
         }
         .recipe-btn:hover {
             background: var(--primary-color-highlight);
@@ -185,7 +185,6 @@
             margin-top: 5px;
             text-align: center;
             border-radius: 15px;
-            font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
             opacity: 60%;
         }
 
@@ -364,7 +363,7 @@
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
         marker.nutritionLoaded = false;
 
-        marker.bindPopup(html, { className: 'tree-popup', closeButton: true });
+        marker.bindPopup(html, { className: 'tree-popup', closeButton: true, autoPan: true, closeOnClick: false});
 
         marker.on("popupopen", function (event) {
             if (!marker.nutritionLoaded) {

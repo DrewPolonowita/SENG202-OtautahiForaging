@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.RecipesController">
+<StackPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.RecipesController">
    <BorderPane fx:id="recipeListPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="recipeCardBaseArea">
       <center>
          <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="961.0" prefWidth="1177.0" styleClass="recipeScrollPane">
@@ -34,6 +34,23 @@
       <padding>
          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
+      <right>
+         <VBox maxHeight="20.0" maxWidth="30.0" prefHeight="20.0" prefWidth="30.0" BorderPane.alignment="TOP_RIGHT">
+            <children>
+               <HBox alignment="CENTER_RIGHT" maxHeight="20.0" maxWidth="30.0">
+                  <children>
+                     <Button fx:id="HelpButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#helpButtonClicked" styleClass="guidelines-button" text="?" />
+                  </children>
+               </HBox>
+            </children>
+            <padding>
+               <Insets right="10.0" />
+            </padding>
+            <BorderPane.margin>
+               <Insets top="10.0" />
+            </BorderPane.margin>
+         </VBox>
+      </right>
    </BorderPane>
    <Button mnemonicParsing="false" onAction="#onFilterClicked" styleClass="filters" StackPane.alignment="TOP_LEFT">
       <graphic>

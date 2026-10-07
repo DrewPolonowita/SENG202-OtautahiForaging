@@ -121,6 +121,47 @@
     -fx-background-radius: 8;
 }
 
+.guidelines-button {
+     -fx-background-color: -primary-bg-color;
+     -fx-text-fill: -primary-color;
+     -fx-font-size: 16px;
+     -fx-font-weight: bold;
+}
+
+.guidelines-button:hover {
+     -fx-background-color: -primary-color-highlight;
+     -fx-text-fill: -primary-bg-color;
+     -fx-font-size: 16px;
+     -fx-font-weight: bold;
+}
+
+.guidelines-box {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 20;
+    -fx-padding: 0 5 0 5;
+    -fx-alignment: center;
+}
+
+.guidelines-textbox {
+    -fx-alignment: center;
+    -fx-padding: 0 12 0 12;
+}
+
+.help-box {
+    -fx-background-color: -primary-bg-color;
+}
+
+.help-text {
+    -fx-text-fill: -text-color;
+    -fx-font-size: 12px;
+    -fx-line-height: 1.5;
+}
+
+.help-scrollpane {
+    -fx-track-background: -primary-bg-color;
+    -fx-thumb-color: -primary-color-highlight;
+}
+
 .color-picker {
     -fx-background-color: -primary-bg-color;
     -fx-border-color: -secondary-bg-color;
@@ -233,7 +274,7 @@
 }
 .delete-button:hover {
     -fx-background-color: -primary-error-darken-color;
-    -fx-text-fill: -primary-background-color;
+    -fx-text-fill: -primary-bg-color;
 }
 .photo-container {
     -fx-background-color: -medium-background-color;
@@ -353,10 +394,13 @@
     -fx-translate-x: 10px;
 }
 .recipeScrollPane {
-    -fx-background-color: transparent;
+    -fx-background-color: -secondary-bg-color;
     -fx-border-color: transparent;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+.recipeScrollPane > .viewport {
+    -fx-background-color: -primary-bg-color;
 }
 .generic-background {
     -fx-background-color: -primary-bg-color;
@@ -395,4 +439,28 @@
 .sort-journal:hover {
     -fx-background-color: -primary-color-highlight;
     -fx-text-fill: -primary-bg-color;
+}
+.table-view {
+    -fx-control-inner-background: -primary-bg-color;
+    -fx-control-inner-background-alt: -medium-background-color;
+    -fx-background-color: -primary-bg-color;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header-background,
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: -secondary-bg-color;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+}
+.tablescenebackground {
+    -fx-background-color: -secondary-bg-color;
+}
+
+.table-cell {
+    -fx-text-fill: -text-color;
 }
