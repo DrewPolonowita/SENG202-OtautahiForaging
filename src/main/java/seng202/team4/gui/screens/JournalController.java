@@ -32,6 +32,8 @@ public class JournalController extends ScreenController {
     @FXML
     private FlowPane notesFlowPane;
 
+    private Comparator<Note> selectedSort;
+
     /**
      * Constructs a JournalController with the given state manager.
      * @param stateManager Reference for window manager
@@ -53,12 +55,15 @@ public class JournalController extends ScreenController {
     }
 
     /**
-     * Refresh the notes.
-     * called on init and when a note is deleted.
+     * Refreshes the notes.
+     * Called on init and when a note is edited or deleted.
      */
     public void refreshNotes() {
         notesFlowPane.getChildren().clear();
         List<Note> notes = getStateManager().getNoteService().getAll();
+        if (selectedSort != null) {
+            notes.sort(selectedSort);
+        }
         if (notes.isEmpty()) {
             notesFlowPane.getChildren().add(buildEmptyState());
         } else {
@@ -134,7 +139,7 @@ public class JournalController extends ScreenController {
         emptyState.getChildren().addAll(icon, title, subtitle);
 
         emptyState.setOnMouseClicked(event ->
-            getStateManager().getWindowManager().launchMapScreen(getStateManager()));
+                getStateManager().getWindowManager().launchMapScreen(getStateManager()));
         return emptyState;
     }
 
@@ -151,12 +156,8 @@ public class JournalController extends ScreenController {
      */
     @FXML
     private void handleSortAlphabetical() {
-        List<Note> notes = getStateManager().getNoteService().getAll();
-        notes.sort(Comparator.comparing(Note::getName));
-        notesFlowPane.getChildren().clear();
-        for (Note note : notes) {
-            notesFlowPane.getChildren().add(buildNoteCard(note));
-        }
+        selectedSort = Comparator.comparing(Note::getName);
+        refreshNotes();
     }
 
     /**
@@ -164,12 +165,8 @@ public class JournalController extends ScreenController {
      */
     @FXML
     private void handleSortNewest() {
-        List<Note> notes = getStateManager().getNoteService().getAll();
-        notes.sort(Comparator.comparing(Note::getTimeCreated).reversed());
-        notesFlowPane.getChildren().clear();
-        for (Note note: notes) {
-            notesFlowPane.getChildren().add(buildNoteCard(note));
-        }
+        selectedSort = Comparator.comparing(Note::getTimeCreated).reversed();
+        refreshNotes();
     }
 
     /**
@@ -177,12 +174,8 @@ public class JournalController extends ScreenController {
      */
     @FXML
     private void handleSortOldest() {
-        List<Note> notes = getStateManager().getNoteService().getAll();
-        notes.sort(Comparator.comparing(Note::getTimeCreated));
-        notesFlowPane.getChildren().clear();
-        for (Note note: notes) {
-            notesFlowPane.getChildren().add(buildNoteCard(note));
-        }
+        selectedSort = Comparator.comparing(Note::getTimeCreated);
+        refreshNotes();
     }
 
     /**
