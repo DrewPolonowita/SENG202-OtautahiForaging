@@ -1,10 +1,13 @@
 package seng202.team4.exceptions;
 
+import java.io.Serial;
+
 /**
  * Runtime exception for when a database operation doesn't work
  */
 public class DatabaseAccessException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

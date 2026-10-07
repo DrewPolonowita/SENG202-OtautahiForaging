@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Controller for the map_screen.fxml window which controls the map
+ * Controller for the recipe_screen.fxml window which controls the recipe screen
  * @author Team 4
  */
 public class RecipesController extends ScreenController {
