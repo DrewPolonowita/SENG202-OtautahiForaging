@@ -258,6 +258,28 @@ public class WindowManager {
     }
 
     /**
+     * Launches the help pop up
+     */
+    public void openMapHelpPopup(StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new HelpPopupController(stateManager, "Map")));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Launches the help pop up
+     */
+    public void openJournalHelpPopup(StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new HelpPopupController(stateManager, "Journal")));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
      * Launches the add note menu centered on application. Blocking input from other applications while open.
      * @param tree the select tree to be converted to note
      * @param stateManager the provided state manager for the application

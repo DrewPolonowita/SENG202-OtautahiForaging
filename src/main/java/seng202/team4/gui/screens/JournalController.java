@@ -186,6 +186,14 @@ public class JournalController extends ScreenController {
     }
 
     /**
+     * Opens the help pop up
+     */
+    @FXML
+    private void helpButtonClicked() {
+        getStateManager().getWindowManager().openJournalHelpPopup(getStateManager());
+    }
+
+    /**
      * Returns the FXML file used to create the journal screen.
      * @return the journal screen FXML path file
      */

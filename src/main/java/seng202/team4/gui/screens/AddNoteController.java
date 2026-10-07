@@ -156,6 +156,9 @@ public class AddNoteController extends ScreenController {
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
     }
 
+    /**
+     * Handles when a user clicks go back
+     */
     public void handleGoBack() {
         handleClose();
         Platform.runLater(() ->

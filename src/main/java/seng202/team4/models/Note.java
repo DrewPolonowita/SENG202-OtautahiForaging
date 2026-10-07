@@ -75,7 +75,4 @@ public class Note {
         return imagePath;
     }
 
-
-
-
 }

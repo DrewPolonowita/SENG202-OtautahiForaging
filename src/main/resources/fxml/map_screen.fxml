@@ -27,6 +27,14 @@
                <Insets right="10.0" top="25.0" />
             </StackPane.margin>
          </HBox>
+         <HBox alignment="CENTER_RIGHT" maxHeight="20.0" maxWidth="30.0" StackPane.alignment="TOP_RIGHT">
+            <children>
+               <Button fx:id="HelpButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#helpButtonClicked" styleClass="guidelines-button" text="?" />
+            </children>
+            <StackPane.margin>
+               <Insets right="10.0" top="70.0" />
+            </StackPane.margin>
+         </HBox>
          <HBox fx:id="filterActions" managed="false" maxHeight="20.0" maxWidth="50.0" spacing="5.0" visible="false" StackPane.alignment="TOP_LEFT">
             <StackPane.margin>
                <Insets left="47.0" top="25.0" />

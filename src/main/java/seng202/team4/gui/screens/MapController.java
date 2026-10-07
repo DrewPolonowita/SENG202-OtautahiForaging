@@ -519,6 +519,14 @@ public class MapController extends ScreenController {
     }
 
     /**
+     * Opens the help pop up
+     */
+    @FXML
+    private void helpButtonClicked() {
+        getStateManager().getWindowManager().openMapHelpPopup(stateManager);
+    }
+
+    /**
      * Opens the guidelines pop up when the button is clicked
      */
     @FXML
