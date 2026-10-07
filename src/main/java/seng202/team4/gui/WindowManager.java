@@ -11,14 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.AddNoteController;
-import seng202.team4.gui.screens.ExpandNoteController;
-import seng202.team4.gui.screens.JournalController;
-import seng202.team4.gui.screens.MapController;
-import seng202.team4.gui.screens.NavController;
-import seng202.team4.gui.screens.RecipesController;
-import seng202.team4.gui.screens.SettingsController;
-import seng202.team4.gui.screens.TableViewController;
+import seng202.team4.gui.screens.*;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
@@ -251,6 +244,50 @@ public class WindowManager {
             dialogStage.setY(centerY - dialogStage.getHeight() / 2);
         });
         dialogStage.showAndWait();
+    }
+
+    /**
+     * Launches the guidelines for foraging pop up
+     */
+    public void openGuidelines(StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new GuidelinePopupController(stateManager)));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Launches the help pop up
+     */
+    public void openMapHelpPopup(StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new HelpPopupController(stateManager, "Map")));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Launches the help pop up
+     */
+    public void openJournalHelpPopup(StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new HelpPopupController(stateManager, "Journal")));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Launches the help pop up
+     */
+    public void openRecipeHelpPopup(StateManager stateManager) {
+        try {
+            showCenteredDialog(loadScreen(new HelpPopupController(stateManager, "Recipe")));
+        } catch (IOException e) {
+            LOG.error(e);
+        }
     }
 
     /**
