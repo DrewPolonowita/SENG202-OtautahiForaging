@@ -6,9 +6,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -155,20 +153,11 @@ public class MapController extends ScreenController {
     }
 
     /**
-     * With an alert, handles when the user presses the go to recipes button
+     * handles when the user presses the go to recipes button
      * @param foodName food name of the type of tree the user is on
      */
     private void handleGoToRecipeInput(String foodName) {
-        Alert recipePageAlert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to leave the map?",
-                ButtonType.CANCEL, ButtonType.OK);
-        recipePageAlert.setTitle("Leave Map");
-        recipePageAlert.setHeaderText("Open recipes?");
-        recipePageAlert.showAndWait()
-                .filter(button-> button == ButtonType.OK)
-                .ifPresent(button-> {
-                    stateManager.getWindowManager()
-                            .launchRecipesScreen(stateManager, filterManager, List.of(foodName));
-                });
+        stateManager.getWindowManager().launchRecipesScreen(stateManager, filterManager, List.of(foodName));
     }
 
     /**

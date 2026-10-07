@@ -160,7 +160,7 @@ public class Recipe {
     }
 
     /**
-     * Equals operator rewrite so 2 recipes with the same attributes can be evaluated as the same
+     * Compares recipes by their id
      * @param o object to compare
      * @return returns boolean, true if this equals o
      */

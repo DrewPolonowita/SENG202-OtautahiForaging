@@ -62,7 +62,7 @@ public class RecipeService implements RecipeDataManager {
     /**
      * method to get recipe from api, and store it, for use with loading cache
      * @param id recipe being looked for
-     * @return recipe returned from database
+     * @return recipe returned from api or null if can't be found
      */
     private Recipe getRecipeFromApi(int id) {
         RecipeByIdRecord recipeRecord = recipeApiHandler.getRecipeById(id);
@@ -83,9 +83,9 @@ public class RecipeService implements RecipeDataManager {
     }
 
     /**
-     * method to get recipe ids from the database for use with loading cache
+     * method to get recipe summaries from the database for use with loading cache
      * @param food the food type to query
-     * @return ids from database, or null if we don't have any
+     * @return summaries from database, or null if we don't have any
      */
     @SuppressWarnings("squid:S1168") // null is used to trigger the api
     private List<RecipeSummary> getRecipeSummariesByFoodFromDatabase(String food) {
@@ -100,9 +100,9 @@ public class RecipeService implements RecipeDataManager {
     }
 
     /**
-     * method to get ids from the api for use with loading cache
+     * method to get list of {@link RecipeSummary} from the api for use with loading cache
      * @param food the food type to query
-     * @return ids from api
+     * @return summaries from api
      */
     private List<RecipeSummary> getRecipeSummariesForFoodByApi(String food) {
         List<RecipeSummary> summaries = recipeApiHandler.getRecipeSummariesByFoodFromApi(food);
@@ -116,6 +116,10 @@ public class RecipeService implements RecipeDataManager {
 
     }
 
+    /**
+     * Saves the recipe summary in the database with up to date or new details
+     * @param summary summary
+     */
     private void saveRecipeSummary(RecipeSummary summary) {
         try {
             recipeSummaryDAO.add(summary);
@@ -138,14 +142,11 @@ public class RecipeService implements RecipeDataManager {
     }
 
     /**
-     * Method to get recipes for a particular food.
-     * First we check for if we are storing id's that are mapped to that food, if not
-     * Call the api using the recipe search function.
-     * Then check if the details for those ids are up-to-date
-     * if not call the api using get recipe by id function.
-     * This functionality is effectively handled by loading cache now
+     * Method to get list of {@link RecipeSummary} for a particular food.
+     * A recipe summary has just recipe name, id, and image
+     * We try and use the stored summaries, if they aren't available or out of date we use api
      * @param food A food specifically from the food groups we map
-     * @return list of recipes
+     * @return list of recipes summaries
      */
     @Override
     public List<RecipeSummary> getRecipeSummariesByFood(String food) {
@@ -166,7 +167,6 @@ public class RecipeService implements RecipeDataManager {
     /**
      * Populates the ingredients table in the database
      * @param ingredients a list of ingredients as RecipeIngredient objects
-
      */
     public void populateIngredientTable(List<RecipeIngredient> ingredients) {
         for (RecipeIngredient ingredient : ingredients) {
@@ -177,6 +177,7 @@ public class RecipeService implements RecipeDataManager {
     /**
      * Populates the ingredients in recipe table in the database
      * @param ingredients a list of ingredients as RecipeIngredient objects
+     * @param recipe the recipe with the ingredients
      */
     private void populateIngredientInRecipeTable(List<RecipeIngredient> ingredients, Recipe recipe) {
         for (RecipeIngredient ingredient : ingredients) {

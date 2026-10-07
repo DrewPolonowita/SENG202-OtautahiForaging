@@ -54,8 +54,4 @@ public class Food {
         return servings;
     }
 
-    public FoodServing getDefaultServing() {
-        return servings.getFirst();
-    }
-
 }

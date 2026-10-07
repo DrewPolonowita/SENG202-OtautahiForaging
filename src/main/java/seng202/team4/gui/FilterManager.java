@@ -1,6 +1,6 @@
 package seng202.team4.gui;
-import seng202.team4.models.FilterCategory;
 
+import seng202.team4.models.FilterCategory;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.EnumSet;

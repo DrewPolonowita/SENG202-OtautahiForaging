@@ -1,5 +1,8 @@
 package seng202.team4.models;
 
+/**
+ * Represents a serving of food from the database
+ */
 public class FoodServing {
     private int servingId;
     private String description;
@@ -8,6 +11,15 @@ public class FoodServing {
     private double protein;
     private double fat;
 
+    /**
+     * Constructor
+     * @param servingId serving id
+     * @param description description (e.g 100 g)
+     * @param calories calories in kcal
+     * @param carbohydrates carbohydrates in grams
+     * @param protein protein in grams
+     * @param fat fat in grams
+     */
     public FoodServing(int servingId, String description, double calories,
                        double carbohydrates, double protein, double fat) {
         this.servingId = servingId;
