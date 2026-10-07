@@ -1,5 +1,6 @@
 package seng202.team4.services;
 
+import javafx.application.Platform;
 import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
@@ -65,6 +66,9 @@ public class StateManager {
         this.noteService = new NoteService(noteRepository);
         this.windowManager.launchMapScreen(this);
         this.windowManager.launchNavScreen(this);
+        Platform.runLater(() -> {
+            this.windowManager.openGuidelines(this);
+        });
     }
 
     /**

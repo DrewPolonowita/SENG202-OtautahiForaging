@@ -153,6 +153,11 @@
     -fx-line-height: 1.5;
 }
 
+.help-scrollpane {
+    -fx-track-background: -primary-bg-color;
+    -fx-thumb-color: -primary-color-highlight;
+}
+
 .color-picker {
     -fx-background-color: -primary-bg-color;
     -fx-border-color: -secondary-bg-color;

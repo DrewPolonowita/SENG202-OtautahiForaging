@@ -24,6 +24,8 @@ public class HelpPopupController extends ScreenController {
     private Label pageTextBox;
     @FXML
     private ScrollPane journalPageScrollPane;
+    @FXML
+    private ScrollPane recipePageScrollPane;
 
     /**
     * Initialises the window
@@ -52,6 +54,8 @@ public class HelpPopupController extends ScreenController {
         mapPageScrollPane.setManaged(false);
         journalPageScrollPane.setVisible(false);
         journalPageScrollPane.setManaged(false);
+        recipePageScrollPane.setVisible(false);
+        recipePageScrollPane.setManaged(false);
     }
 
     /**
@@ -64,6 +68,9 @@ public class HelpPopupController extends ScreenController {
         }
         if (page.equals("Journal")) {
             setPageJournal();
+        }
+        if (page.equals("Recipe")) {
+            setPageRecipe();
         }
     }
 
@@ -79,6 +86,13 @@ public class HelpPopupController extends ScreenController {
         pageTextBox.setText("The Journal Page");
         journalPageScrollPane.setManaged(true);
         journalPageScrollPane.setVisible(true);
+    }
+
+    @FXML
+    private void setPageRecipe() {
+        pageTextBox.setText("The Recipe Page");
+        recipePageScrollPane.setVisible(true);
+        recipePageScrollPane.setManaged(true);
     }
 
     @FXML

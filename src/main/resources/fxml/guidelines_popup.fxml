@@ -36,7 +36,7 @@
       <Label styleClass="settings-text" text="Keep foraging fun, safe, and sustainable by following these guidelines" wrapText="true" />
       <HBox alignment="CENTER" prefHeight="206.0" prefWidth="500.0" spacing="20" styleClass="guidelines-textbox">
          <children>
-            <Label alignment="CENTER" lineSpacing="10.0" prefHeight="206.0" prefWidth="575.0" styleClass="generic-text" text="• Carefully identify fruit BEFORE you eat anything. Make sure that all foraged food is safe to consume!&#10;• Take care of yourself and others! Do not risk injury for the sake of getting a fruit or nut that's hard to get to&#10;• Do not tresspass. If you are unsure if fruit is on private property, leave it. If in doubt, stick to the trees on the map&#10;• Do not damage any tress or property while foraging&#10;• Be considerate to other foragers. Don't take more than you need.&#10;&#10;" wrapText="true" />
+            <Label alignment="CENTER" lineSpacing="10.0" prefHeight="206.0" prefWidth="575.0" styleClass="generic-text" text="• Carefully identify fruit BEFORE you eat anything. Make sure that all foraged food is safe to consume!&#10;• Take care of yourself and others! Do not risk injury for the sake of getting a fruit or nut that's hard to get to&#10;• Don't tresspass. If you are unsure if fruit is on private property, leave it. If in doubt, stick to the trees on the map&#10;• Don't damage any tress or property while foraging&#10;• Be considerate to other foragers. Don't take more than you need.&#10;&#10;" wrapText="true" />
          </children>
       </HBox>
    </children>

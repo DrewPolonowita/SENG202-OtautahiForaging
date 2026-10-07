@@ -139,7 +139,6 @@ public class MapController extends ScreenController {
         );
         createFruitButtons();
         initMap();
-        openGuidelinesPopup();
     }
 
     /**
@@ -513,9 +512,7 @@ public class MapController extends ScreenController {
      * Opens foraging guidelines popup
      */
     private void openGuidelinesPopup() {
-        Platform.runLater(() -> {
-            getStateManager().getWindowManager().openGuidelines(stateManager);
-        });
+        getStateManager().getWindowManager().openGuidelines(stateManager);
     }
 
     /**

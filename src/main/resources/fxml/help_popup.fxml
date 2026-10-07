@@ -37,13 +37,13 @@
             <Label fx:id="pageTextBox" alignment="CENTER_RIGHT" styleClass="settings-text" text="The Map Page" wrapText="true" />
          </children>
       </HBox>
-      <ScrollPane fx:id="mapPageScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="270.0" style="-: transparent;" visible="false">
+      <ScrollPane fx:id="mapPageScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="270.0" styleClass="help-scrollpane" visible="false">
          <content>
             <VBox prefWidth="600.0" styleClass="help-box">
                <children>
                   <HBox maxWidth="600.0" minHeight="35.0" prefHeight="50.0" prefWidth="600.0">
                      <children>
-                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="45.0" prefHeight="50.0" prefWidth="600.0" styleClass="help-text" text="Use the map to locate trees based on the type of food grown on them.  Trees can be filtered using the filter button at the left of the screen. The following icons refer to filter, select all, and deselect all respectively." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="45.0" prefHeight="50.0" prefWidth="600.0" styleClass="help-text" text="Use the map to locate trees based on the type of food grown on them.  Trees can be filtered using the filter button at the left of the screen. The following icons refer to filter, select all, and deselect all respectively. Buttons are highlighted with the theme colour when clicked." wrapText="true" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="28.0" prefHeight="32.0" prefWidth="32.0">
@@ -175,6 +175,19 @@
                   <HBox maxWidth="600.0" minHeight="35.0" prefHeight="50.0" prefWidth="600.0">
                      <children>
                         <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="45.0" prefHeight="50.0" prefWidth="600.0" styleClass="help-text" text="Journals are made through the map page by clicking on a marker and then using the add to journal button. Saved notes are stored here. To have the option to view, edit, delete a note or view the associated tree on the map, click on the relevant note. Notes can be filtered using the sort by button at the top left." wrapText="true" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="recipePageScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="270.0" style="-fx-border-color: transparent;">
+         <content>
+            <VBox prefHeight="338.0" prefWidth="622.0" styleClass="help-box">
+               <children>
+                  <HBox maxWidth="600.0" minHeight="35.0" prefHeight="50.0" prefWidth="600.0">
+                     <children>
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="70.0" prefHeight="50.0" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and it's associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." wrapText="true" />
                      </children>
                   </HBox>
                </children>
