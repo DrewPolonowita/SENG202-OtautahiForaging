@@ -43,7 +43,11 @@
 .sideBar-button-selected {
     -fx-background-color: -primary-color;
     -fx-text-fill: -primary-bg-color;
-    -fx-border-color: black;
+}
+.filter-buttons-selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -primary-bg-color;
+    -fx-border-color: -text-color;
     -fx-border-width: 0.5px;
 }
 
@@ -378,4 +382,17 @@
 
 .recipeFullScreenText {
     -fx-font-size: 16px;
+}
+.sort-journal {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 8;
+    -fx-text-fill: -primary-color;
+    -fx-fill: -primary-color;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.sort-journal:hover {
+    -fx-background-color: -primary-color-highlight;
+    -fx-text-fill: -primary-bg-color;
 }

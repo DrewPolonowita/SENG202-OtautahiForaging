@@ -7,7 +7,7 @@ import seng202.team4.models.FilterCategory;
 
 public class FruitFilterUtilities {
     private static final String SIDEBAR_BUTTON = "sideBar-button";
-    private static final String SIDEBAR_BUTTON_SELECTED = "sideBar-button-selected";
+    private static final String SIDEBAR_BUTTON_SELECTED = "filter-buttons-selected";
     private static final String ICON = "icon";
     private static final String ICON_SELECTED = "icon-selected";
 

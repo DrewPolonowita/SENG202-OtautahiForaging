@@ -293,7 +293,7 @@ public class MapController extends ScreenController {
         }
 
         setCurrentBounds(north, east, south, west);
-        showMapLoadingBar("Loading nearby trees...");
+        showMapLoadingBar("Loading map markers...");
 
 
         mapService.getAllTreesInRegion(
