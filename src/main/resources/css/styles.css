@@ -233,7 +233,7 @@
 }
 .delete-button:hover {
     -fx-background-color: -primary-error-darken-color;
-    -fx-text-fill: -primary-background-color;
+    -fx-text-fill: -primary-bg-color;
 }
 .photo-container {
     -fx-background-color: -medium-background-color;
@@ -353,10 +353,13 @@
     -fx-translate-x: 10px;
 }
 .recipeScrollPane {
-    -fx-background-color: transparent;
+    -fx-background-color: -secondary-bg-color;
     -fx-border-color: transparent;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+.recipeScrollPane > .viewport {
+    -fx-background-color: -primary-bg-color;
 }
 .generic-background {
     -fx-background-color: -primary-bg-color;
