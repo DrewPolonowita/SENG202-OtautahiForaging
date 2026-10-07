@@ -81,7 +81,8 @@ public class AddNoteToJournalStepDefs {
                 null,
                 treeId,
                 description,
-                photoPath
+                photoPath,
+                0
         );
 
         int noteId = noteService.add(note);

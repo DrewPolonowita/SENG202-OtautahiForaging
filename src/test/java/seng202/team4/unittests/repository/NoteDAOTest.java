@@ -43,7 +43,7 @@ class NoteDAOTest extends TestSuite {
     @Test
     void testAddNote() throws DuplicateEntryException {
         addTree(1298);
-        Note toAdd = new Note(0, "Test Tree", null, 1298, "yo morgan", null);
+        Note toAdd = new Note(0, "Test Tree", null, 1298, "yo morgan", null, 0);
 
         int newId = noteDAO.add(toAdd);
         assertTrue(newId > 0);
@@ -62,7 +62,7 @@ class NoteDAOTest extends TestSuite {
     @Test
     void testUpdateDescPersists() throws DuplicateEntryException{
         addTree(1298);
-        Note toAdd = new Note(0, "Epic tree", null, 1298, "original description", null);
+        Note toAdd = new Note(0, "Epic tree", null, 1298, "original description", null, 0);
         int originalId = noteDAO.add(toAdd);
         assertTrue(originalId>0);
 
@@ -71,7 +71,7 @@ class NoteDAOTest extends TestSuite {
 
         Note updatedNote = new Note(originalId, retrieved.getName(),
                 retrieved.getTimeCreated(), retrieved.getTreeId(),
-                "updated description", retrieved.getImagePath());
+                "updated description", retrieved.getImagePath(), retrieved.getWeightGrams());
 
         noteDAO.update(updatedNote);
 
@@ -88,7 +88,7 @@ class NoteDAOTest extends TestSuite {
     @Test
     void testUpdatePhotoPersists() throws DuplicateEntryException{
         addTree(1298);
-        Note toAdd = new Note(0, "Epic tree", null, 1298, "description", "original-image.png");
+        Note toAdd = new Note(0, "Epic tree", null, 1298, "description", "original-image.png", 0);
         int originalId = noteDAO.add(toAdd);
         assertTrue(originalId>0);
 
@@ -97,7 +97,7 @@ class NoteDAOTest extends TestSuite {
 
         Note updatedNote = new Note(originalId, retrieved.getName(),
                 retrieved.getTimeCreated(), retrieved.getTreeId(),
-                retrieved.getDescription(), "updated-image.png");
+                retrieved.getDescription(), "updated-image.png", retrieved.getWeightGrams());
 
         noteDAO.update(updatedNote);
 
@@ -114,15 +114,15 @@ class NoteDAOTest extends TestSuite {
     void testUpdateLeavesOtherNotesUnchanged() throws DuplicateEntryException {
         addTree(1298);
         int firstId = noteDAO.add(new Note(
-                0, "Epic tree", null, 1298, "first description", null));
+                0, "Epic tree", null, 1298, "first description", null, 0));
         int secondId = noteDAO.add(new Note(
-                0, "Epic tree", null, 1298, "second description", null));
+                0, "Epic tree", null, 1298, "second description", null, 0));
         assertTrue(firstId > 0);
         assertTrue(secondId > 0);
         Note first = noteDAO.getOne(firstId);
         assertNotNull(first);
         noteDAO.update(new Note(firstId, first.getName(), first.getTimeCreated(),
-                first.getTreeId(), "updated description", first.getImagePath()));
+                first.getTreeId(), "updated description", first.getImagePath(), 0));
         Note updated = noteDAO.getOne(firstId);
         Note unchanged = noteDAO.getOne(secondId);
         assertNotNull(updated);
@@ -139,12 +139,12 @@ class NoteDAOTest extends TestSuite {
     void testRemovePhotoPersists() throws DuplicateEntryException {
         addTree(1298);
         int testId = noteDAO.add(new Note(
-                0, "cool tree", null, 1298, "description", "image.png"));
+                0, "cool tree", null, 1298, "description", "image.png", 0));
         assertTrue(testId > 0);
         Note test = noteDAO.getOne(testId);
         assertNotNull(test);
         assertEquals("image.png", test.getImagePath());
-        noteDAO.update(new Note(testId, test.getName(), test.getTimeCreated(), test.getTreeId(), test.getDescription(), null));
+        noteDAO.update(new Note(testId, test.getName(), test.getTimeCreated(), test.getTreeId(), test.getDescription(), null, 0));
         Note afterUpdate = noteDAO.getOne(testId);
         assertNotNull(afterUpdate);
         assertNull(afterUpdate.getImagePath());
@@ -158,7 +158,7 @@ class NoteDAOTest extends TestSuite {
     @Test
     void testFailsBadInput() throws DuplicateEntryException{
         addTree(1298);
-        Note invalid = new Note(0, null, null, 1298, null, null);
+        Note invalid = new Note(0, null, null, 1298, null, null, 0);
 
         assertThrows(DatabaseAccessException.class, () -> noteDAO.add(invalid));
     }
@@ -169,7 +169,7 @@ class NoteDAOTest extends TestSuite {
     @Test
     void testDeleteNote() throws DuplicateEntryException {
         addTree(5678);
-        Note toAdd = new Note(0, "doomed Tree", null, 5678, null, null);
+        Note toAdd = new Note(0, "doomed Tree", null, 5678, null, null, 0);
         int newId = noteDAO.add(toAdd);
         assertTrue(newId > 0);
 
@@ -189,8 +189,8 @@ class NoteDAOTest extends TestSuite {
 
         addTree(1);
         addTree(2);
-        int id1 = noteDAO.add(new Note(0, "Tree A", null, 1, null, null));
-        int id2 = noteDAO.add(new Note(0, "Tree B", null, 2, null, null));
+        int id1 = noteDAO.add(new Note(0, "Tree A", null, 1, null, null, 0));
+        int id2 = noteDAO.add(new Note(0, "Tree B", null, 2, null, null, 0));
         assertEquals(2, noteDAO.getAll().size());
 
         noteDAO.delete(id1);
@@ -212,7 +212,7 @@ class NoteDAOTest extends TestSuite {
         treeDAO.add(tree1);
         treeDAO.add(tree2);
 
-        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null));
+        int noteId = noteDAO.add(new Note(0, "Pear", null, 202, "wow i really like pears", null, 0));
         assertTrue(noteId > 0); // saved successful
 
         Note savedNote = noteDAO.getOne(noteId);
@@ -234,7 +234,7 @@ class NoteDAOTest extends TestSuite {
         TreeModel tree = new TreeModel(202,List.of(172.60f, -43.55f),
                 "Council", "Pyrus", "Pear", "Pear", null, "serviced");
         treeDAO.add(tree);
-        int noteId = noteDAO.add(new Note(0, "Pear", null, tree.getId(), "wow i really like pears", null));
+        int noteId = noteDAO.add(new Note(0, "Pear", null, tree.getId(), "wow i really like pears", null, 0));
         assertTrue(noteId > 0);
         treeDAO.delete(tree.getId());
         Note savedNote = noteDAO.getOne(noteId);
