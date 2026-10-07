@@ -495,6 +495,14 @@ public class RecipesController extends ScreenController {
     }
 
     /**
+     * Opens the help pop up
+     */
+    @FXML
+    private void helpButtonClicked() {
+        getStateManager().getWindowManager().openRecipeHelpPopup(getStateManager());
+    }
+
+    /**
      * Set the filters to start with
      */
     private void setStartingFilters() {
