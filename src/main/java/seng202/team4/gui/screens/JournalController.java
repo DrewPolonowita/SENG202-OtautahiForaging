@@ -150,7 +150,7 @@ public class JournalController extends ScreenController {
      * Sorts journal menu's notes alphabetically
      */
     @FXML
-    private void handleSortAlphabetical(){
+    private void handleSortAlphabetical() {
         List<Note> notes = getStateManager().getNoteService().getAll();
         notes.sort(Comparator.comparing(Note::getName));
         notesFlowPane.getChildren().clear();

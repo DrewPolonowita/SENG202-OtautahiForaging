@@ -364,7 +364,7 @@
         const marker = new L.Marker([lat, lng], { icon: getIcon(food) });
         marker.nutritionLoaded = false;
 
-        marker.bindPopup(html, { className: 'tree-popup', closeButton: true });
+        marker.bindPopup(html, { className: 'tree-popup', closeButton: true, autoPan: true, closeOnClick: false});
 
         marker.on("popupopen", function (event) {
             if (!marker.nutritionLoaded) {

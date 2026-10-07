@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
@@ -245,10 +246,7 @@ public class RecipesController extends ScreenController {
             if (resource != null) {
                 Image image = new Image(resource.toExternalForm());
                 if (!image.isError()) {
-                    imageView.setImage(image);
-                    double scale = Math.max(CARD_WIDTH / image.getWidth(), IMAGE_HEIGHT / image.getHeight());
-                    imageView.setFitWidth(image.getWidth() * scale);
-                    imageView.setFitHeight(image.getHeight() * scale);
+                    scaleRecipeImage(image, imageView);
                 }
             }
         }
@@ -262,11 +260,20 @@ public class RecipesController extends ScreenController {
      */
     private static void setRecipeImageScaled(Number progress, Image image, ImageView imageView) {
         if (progress.doubleValue() >= 1.0 && !image.isError()) {
-            imageView.setImage(image);
-            double scale = Math.max(CARD_WIDTH / image.getWidth(), IMAGE_HEIGHT / image.getHeight());
-            imageView.setFitWidth(image.getWidth() * scale);
-            imageView.setFitHeight(image.getHeight() * scale);
+            scaleRecipeImage(image, imageView);
         }
+    }
+
+    /**
+     * Sets the image of the recipe and scales it to fill the card while preserving its aspect ratio.
+     * @param image the recipes image
+     * @param imageView the housing of the image
+     */
+    private static void scaleRecipeImage(Image image, ImageView imageView) {
+        imageView.setImage(image);
+        double scale = Math.max(CARD_WIDTH / image.getWidth(), IMAGE_HEIGHT / image.getHeight());
+        imageView.setFitWidth(image.getWidth() * scale);
+        imageView.setFitHeight(image.getHeight() * scale);
     }
 
     /**
@@ -295,34 +302,54 @@ public class RecipesController extends ScreenController {
         };
         task.setOnSucceeded(event -> {
             progressIndicator.setVisible(false);
-
             Recipe recipe = task.getValue();
+            if (recipe == null) {
+                recipeFailureAlert();
+                return;
+            }
             populateRecipeDetails(recipe);
-
-            recipeListPane.setVisible(false);
-            recipeListPane.setManaged(false);
-            recipeHighlightPane.setVisible(true);
-            recipeHighlightPane.setManaged(true);
+            setRecipeDetailsVisible(true);
         });
 
         task.setOnFailed(event -> {
             progressIndicator.setVisible(false);
             LOG.error("Failed to load recipe", task.getException());
+            recipeFailureAlert();
         });
 
         new Thread(task).start();
-
     }
+
+    /**
+     * Shows an alert when a recipe cannot be loaded.
+     */
+    private void recipeFailureAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(recipeListPane.getScene().getWindow());
+        alert.setTitle("Recipe unavailable");
+        alert.setHeaderText(null);
+        alert.setContentText("Couldn't load this recipe. Please try again!");
+        alert.showAndWait();
+    }
+
 
     /**
      * Closes fullscreen recipe back to recipes screen
      */
     @FXML
     private void closeRecipe() {
-        recipeHighlightPane.setVisible(false);
-        recipeHighlightPane.setManaged(false);
-        recipeListPane.setVisible(true);
-        recipeListPane.setManaged(true);
+        setRecipeDetailsVisible(false);
+    }
+
+    /**
+     * Switches between the recipe details and the recipe list
+     * @param visible true to show recipe details, false to show the list
+     */
+    private void setRecipeDetailsVisible(boolean visible) {
+        recipeHighlightPane.setVisible(visible);
+        recipeHighlightPane.setManaged(visible);
+        recipeListPane.setVisible(!visible);
+        recipeListPane.setManaged(!visible);
     }
 
     private void populateRecipeDetails(Recipe recipe) {
@@ -461,6 +488,19 @@ public class RecipesController extends ScreenController {
     }
 
     /**
+     * Updates all filter buttons to match the given selection state.
+     * @param selected true to select the buttons, false to deselect them.
+     */
+    private void updateFilterStyles(boolean selected) {
+        for (int i = 0; i < filterList.getChildren().size(); i++) {
+            Button button = (Button) filterList.getChildren().get(i);
+            if (FruitFilterUtilities.isSelected(button) != selected) {
+                FruitFilterUtilities.toggleButtonStyle(button);
+            }
+        }
+    }
+
+    /**
      * For all buttons in FilterCategory, loop through to find buttons selected
      * and deselect all.
      * Update the recipes accordingly to the filters.
@@ -468,12 +508,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private void deselectAllFilters() {
         filterManager.deselectAllFilters();
-        for (int i = 0; i < filterList.getChildren().size(); i++) {
-            Button button = (Button) filterList.getChildren().get(i);
-            if (FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
-            }
-        }
+        updateFilterStyles(true);
         refreshRecipesForSelectedFilters();
     }
 
@@ -485,12 +520,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private void selectAllFilters() {
         filterManager.selectAllFilters();
-        for (int i = 0; i < filterList.getChildren().size(); i++) {
-            Button button = (Button) filterList.getChildren().get(i);
-            if (!FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
-            }
-        }
+        updateFilterStyles(false);
         refreshRecipesForSelectedFilters();
     }
 

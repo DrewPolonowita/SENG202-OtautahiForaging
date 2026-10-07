@@ -150,8 +150,7 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void handleRecord() {
-        String input = weightForaged.getText();
-        int weightGrams = input.isEmpty() ? 0 : Integer.parseInt(input);
+        int weightGrams = getWeightGrams();
         if (commonNameDisplay.getText().trim().isEmpty()) {
             emptyNameAlert();
             return;
@@ -168,7 +167,7 @@ public class AddNoteController extends ScreenController {
                 return;
             }
         }
-        ((Stage) commonNameDisplay.getScene().getWindow()).close();
+        handleClose();
     }
 
     /**
@@ -178,6 +177,15 @@ public class AddNoteController extends ScreenController {
     public void handleWeightInput() {
         weightForaged.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().matches("[0-9]{0,6}") ? change : null));
+    }
+
+    /**
+     * Gets the entered weight in grams, treating an empty field as zero.
+     * @return the entered weight, or zero if empty
+     */
+    private int getWeightGrams() {
+        String input = weightForaged.getText();
+        return input.isEmpty() ? 0 : Integer.parseInt(input);
     }
 
     /**
@@ -230,6 +238,19 @@ public class AddNoteController extends ScreenController {
     }
 
     /**
+     * Asks the user to confirm discarding unsaved changes.
+     * @return true if the user clicks OK, false if they cancel or dismiss the alert.
+     */
+    private boolean discardAlert() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your unsaved changes will be lost.",
+                ButtonType.CANCEL, ButtonType.OK);
+        alert.initOwner(commonNameDisplay.getScene().getWindow());
+        alert.setTitle("Discard Changes");
+        alert.setHeaderText("Close without saving?");
+        return alert.showAndWait().filter(button -> button == ButtonType.OK).isPresent();
+    }
+
+    /**
      * Checks for unsaved changes when adding/editing note
      * @return true if no changes, or user confirms discarding them
      * false if the user cancels or dismisses confirmation.
@@ -238,8 +259,7 @@ public class AddNoteController extends ScreenController {
         String originalName = existingNote != null ? existingNote.getName() : treeModel.getCommonName();
         String originalDescription = existingNote != null ? existingNote.getDescription() : "";
         String originalPhoto = existingNote != null ? existingNote.getImagePath() : null;
-        String input = weightForaged.getText();
-        int currentWeight = input.isEmpty() ? 0 : Integer.parseInt(input);
+        int currentWeight = getWeightGrams();
         int originalWeight = existingNote == null || existingNote.getWeightGrams() == null ? 0 : existingNote.getWeightGrams();
 
         boolean checkNoteModified =
@@ -250,12 +270,6 @@ public class AddNoteController extends ScreenController {
         if (!checkNoteModified) {
             return true;
         }
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your unsaved changes will be lost.",
-                ButtonType.CANCEL, ButtonType.OK);
-        alert.initOwner(commonNameDisplay.getScene().getWindow());
-        alert.setTitle("Discard Changes");
-        alert.setHeaderText("Close without saving?");
-        return alert.showAndWait().filter(button -> button == ButtonType.OK).isPresent();
+        return discardAlert();
     }
 }
