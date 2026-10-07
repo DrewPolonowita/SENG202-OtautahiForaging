@@ -9,7 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.utilities.FruitFilterUtilities;
+import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
@@ -145,8 +148,24 @@ public class ExpandNoteController extends ScreenController {
         if (tree == null) {
             LOG.error("The tree linked to this note could not be found.");
         } else {
+            addTypeOfTreeToFilters(tree);
             handleClose();
             getStateManager().getWindowManager().launchMapScreen(getStateManager(), tree);
+        }
+    }
+
+    /**
+     * Method to add the type of tree to filters, so when viewing on map it's there
+     * @param tree tree to add
+     */
+    private void addTypeOfTreeToFilters(TreeModel tree) {
+        FilterManager filterManager = getStateManager().getFilterManager();
+
+        for (FilterCategory filterCategory : FilterCategory.values()) {
+            if (FruitFilterUtilities.formatFruitName(filterCategory).equalsIgnoreCase(tree.getFood())) {
+                filterManager.selectFilter(filterCategory);
+                break;
+            }
         }
     }
 }

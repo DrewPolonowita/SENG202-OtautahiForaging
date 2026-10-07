@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class RecipeApiHandler {
     private static final Logger LOG = LogManager.getLogger(RecipeApiHandler.class);
-    public static final int HTTP_OK = 200;
+    private static final int HTTP_OK = 200;
     private final RecipeClientInterface recipeApiClient;
 
     /**

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OAuth1Tests {
@@ -57,5 +58,14 @@ class OAuth1Tests {
         assertTrue(authHeader.contains(fakeConsumerKey));
     }
 
-
+    @Test
+    void createSignatureButNoKey() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new OAuth1Signature(null, null));
+    }
+    @Test
+    void createSignatureButEmptyKey() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new OAuth1Signature("", ""));
+    }
 }

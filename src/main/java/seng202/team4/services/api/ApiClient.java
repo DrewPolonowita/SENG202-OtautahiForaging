@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class ApiClient implements ApiClientInterface {
 
     private static final Logger log = LogManager.getLogger(ApiClient.class);
-    public static final int ERROR = -1;
+    private static final int ERROR = -1;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**

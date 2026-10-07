@@ -4,12 +4,12 @@ package seng202.team4.models;
  * Represents a serving of food from the database
  */
 public class FoodServing {
-    private int servingId;
-    private String description;
-    private double calories;
-    private double carbohydrates;
-    private double protein;
-    private double fat;
+    private final int servingId;
+    private final String description;
+    private final double calories;
+    private final double carbohydrates;
+    private final double protein;
+    private final double fat;
 
     /**
      * Constructor

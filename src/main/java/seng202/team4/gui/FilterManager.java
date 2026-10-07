@@ -56,6 +56,13 @@ public class FilterManager {
         return possibleFilters.contains(filterCategory);
     }
 
+    /**
+     * adds one filter to selection
+     * @param filterCategory filter selected
+     */
+    public void selectFilter(FilterCategory filterCategory) {
+        possibleFilters.add(filterCategory);
+    }
 
 }
 

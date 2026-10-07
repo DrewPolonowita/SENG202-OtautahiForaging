@@ -28,12 +28,12 @@ public class FoodDAO implements FoodRepository {
     private static final String FOOD_ID_REFERENCE = "food_id";
     private static final String FOOD_TYPE_REFERENCE = "food_type";
     private static final String FOOD_COMMON_NAME_REFERENCE = "common_name";
-    public static final String SERVING_ID_REFERENCE = "serving_id";
-    public static final String SERVING_DESCRIPTION_REFERENCE = "serving_description";
-    public static final String CALORIES_REFERENCE = "calories";
-    public static final String CARBOHYDRATES_REFERENCE = "carbohydrates";
-    public static final String PROTEIN_REFERENCE = "protein";
-    public static final String FAT_REFERENCE = "fat";
+    private static final String SERVING_ID_REFERENCE = "serving_id";
+    private static final String SERVING_DESCRIPTION_REFERENCE = "serving_description";
+    private static final String CALORIES_REFERENCE = "calories";
+    private static final String CARBOHYDRATES_REFERENCE = "carbohydrates";
+    private static final String PROTEIN_REFERENCE = "protein";
+    private static final String FAT_REFERENCE = "fat";
 
 
     private final DatabaseManager databaseManager;
@@ -118,60 +118,6 @@ public class FoodDAO implements FoodRepository {
             throw new DatabaseAccessException("Failed to delete food with id " + foodId, sqlException);
         }
     }
-
-
-    /**
-     * Method to get a list of food models of one shared type
-     * @param type type of the object to get
-     * @return food models of the specific type
-     */
-    @Override
-    public List<Food> getFoodByType(String type) {
-        List<Food> foods = new ArrayList<>();
-        String sql = "SELECT * FROM food WHERE food_type=?";
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-            ps.setString(1, type);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    foods.add(createFoodFromResultSet(rs, conn)
-                    );
-                }
-            }
-            return foods;
-        } catch (SQLException sqlException) {
-            throw new DatabaseAccessException("Failed to get foods of type " + type, sqlException);
-        }
-    }
-
-
-    /**
-     * Gets a food model matching the food grown on a particular tree
-     * @param treeId the id of the specified tree
-     * @return the food model corresponding to the food grown on the tree, or null if none exist
-     */
-    @Override
-    public Food getFoodbyTreeId(int treeId) {
-        Food food = null;
-        String sql = "SELECT * FROM food WHERE common_name =(SELECT food FROM trees WHERE id=?)";
-        try (Connection conn = databaseManager.connect();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, treeId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    food = createFoodFromResultSet(rs, conn);
-                }
-            }
-            return food;
-        } catch (SQLException sqlException) {
-            throw new DatabaseAccessException("Failed to get food with tree id " + treeId, sqlException);
-        }
-    }
-
-
-
 
     /**
      * Gets a single food model from the database by its common name
