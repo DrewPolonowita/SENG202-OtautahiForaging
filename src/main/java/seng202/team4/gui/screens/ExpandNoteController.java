@@ -1,11 +1,12 @@
 package seng202.team4.gui.screens;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,8 @@ import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FruitFilterUtilities;
 import seng202.team4.models.FilterCategory;
+import seng202.team4.models.Food;
+import seng202.team4.models.FoodServing;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
@@ -27,29 +30,31 @@ import java.time.format.DateTimeFormatter;
  */
 public class ExpandNoteController extends ScreenController {
 
+    private static final String GRAMS_FORMAT = "%.1f g";
+
     private static final Logger LOG = LogManager.getLogger(ExpandNoteController.class);
 
     private final Note note;
     private final JournalController journalController;
 
-    @FXML
-    private ImageView photoView;
-    @FXML
-    private Label nameLabel;
-    @FXML
-    private Label dateLabel;
-    @FXML
-    private Label timeLabel;
-    @FXML
-    private Label descriptionLabel;
-    @FXML
-    private Button deleteLabel;
+    @FXML private ImageView photoView;
+    @FXML private Label nameLabel;
+    @FXML private Label dateLabel;
+    @FXML private Label timeLabel;
+    @FXML private Label descriptionLabel;
+    @FXML private Label nutritionLabel;
+    @FXML private Label caloriesLabel;
+    @FXML private Label carbsLabel;
+    @FXML private Label proteinLabel;
+    @FXML private Label fatLabel;
+    @FXML private VBox nutritionVBox;
 
 
     /**
      * Constructs an ExpandNoteController for the given note.
      * @param stateManager reference to the application's state manager
      * @param note the journal note to display
+     * @param journalController the journal controller to use
      */
     public ExpandNoteController(StateManager stateManager, Note note, JournalController journalController) {
         super(stateManager);
@@ -86,6 +91,7 @@ public class ExpandNoteController extends ScreenController {
         timeLabel.setText(note.getTimeCreated().format(DateTimeFormatter.ofPattern("h:mm a")));
         descriptionLabel.setText(note.getDescription());
         setNoteImage();
+        loadNutrition();
     }
 
     /**
@@ -152,6 +158,71 @@ public class ExpandNoteController extends ScreenController {
             handleClose();
             getStateManager().getWindowManager().launchMapScreen(getStateManager(), tree);
         }
+    }
+
+    /**
+     * Loads the notes food nutrition in a background task
+     */
+    private void loadNutrition() {
+        if (note.getWeightGrams() == null || note.getWeightGrams() == 0) {
+            nutritionVBox.setVisible(false);
+            nutritionVBox.setManaged(false);
+            return;
+        }
+        Task<Food> task = new Task<>() {
+            @Override
+            protected Food call() {
+                TreeModel tree = getStateManager().getTreeRepository().getOne(note.getTreeId());
+                if (tree == null || tree.getFood() == null) {
+                    return null;
+                }
+                return getStateManager().getFoodService().getFood(tree.getFood());
+            }
+        };
+        task.setOnSucceeded(event -> displayNutrition(task.getValue()));
+        task.setOnFailed(event -> {
+            LOG.error("Failed to load note nutrition", task.getException());
+            nutritionLabel.setText("Failed to get nutritional information");
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    /**
+     * Scales the foods nutrition per 100 grams to the recorded weight and displays the totals.
+     * @param food the loaded food, or null if unavailable
+     */
+    private void displayNutrition(Food food) {
+        if (food == null || note.getWeightGrams() == null) {
+            nutritionVBox.setVisible(false);
+            nutritionVBox.setManaged(false);
+            return;
+        }
+        FoodServing baseWeight = food.getServings().stream()
+                .filter(serving -> "100 g".equalsIgnoreCase(serving.getDescription()))
+                .findFirst()
+                .orElse(null);
+
+        if (baseWeight == null) {
+            nutritionVBox.setVisible(false);
+            nutritionVBox.setManaged(false);
+            return;
+        }
+        double factor = note.getWeightGrams() / 100.0;
+        double calories = baseWeight.getCalories() * factor;
+        double carbs = baseWeight.getCarbohydrates() * factor;
+        double protein = baseWeight.getProtein() * factor;
+        double fat = baseWeight.getFat() * factor;
+
+        nutritionLabel.setText("Nutrition per " + note.getWeightGrams() + " g");
+
+        caloriesLabel.setText(String.format("%.1f kcal", calories));
+        carbsLabel.setText(String.format(GRAMS_FORMAT, carbs));
+        proteinLabel.setText(String.format(GRAMS_FORMAT, protein));
+        fatLabel.setText(String.format(GRAMS_FORMAT, fat));
+        ((Stage) nutritionLabel.getScene().getWindow()).sizeToScene();
     }
 
     /**

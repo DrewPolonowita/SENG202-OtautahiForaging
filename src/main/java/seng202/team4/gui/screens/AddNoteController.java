@@ -43,6 +43,8 @@ public class AddNoteController extends ScreenController {
     private Button recordButton;
     @FXML
     private Button backButton;
+    @FXML
+    private TextField weightForaged;
 
     private String selectedImagePath;
     private Note existingNote;
@@ -84,7 +86,10 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void initialize() {
+        handleWeightInput();
         if (existingNote != null) {
+            Integer weight = existingNote.getWeightGrams();
+            weightForaged.setText(weight == null || weight == 0 ? "" : weight.toString());
             backButton.setVisible(true);
             commonNameDisplay.setText(existingNote.getName());
             fieldNotesArea.setText(existingNote.getDescription());
@@ -145,23 +150,34 @@ public class AddNoteController extends ScreenController {
      */
     @FXML
     private void handleRecord() {
+        String input = weightForaged.getText();
+        int weightGrams = input.isEmpty() ? 0 : Integer.parseInt(input);
         if (commonNameDisplay.getText().trim().isEmpty()) {
             emptyNameAlert();
             return;
         }
         if (existingNote != null) {
-            Note updated = new Note(existingNote.getId(), commonNameDisplay.getText().trim(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath);
+            Note updated = new Note(existingNote.getId(), commonNameDisplay.getText().trim(), existingNote.getTimeCreated(), existingNote.getTreeId(), fieldNotesArea.getText(), selectedImagePath, weightGrams);
             getStateManager().getNoteService().update(updated);
         } else {
-            Note note = new Note(0, commonNameDisplay.getText().trim(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath);
+            Note note = new Note(0, commonNameDisplay.getText().trim(), null, treeModel.getId(), fieldNotesArea.getText(), selectedImagePath, weightGrams);
             try {
                 getStateManager().getNoteService().add(note);
-                handleClose();
             } catch (DuplicateEntryException e) {
                 LOG.error("Failed to add note for tree {}: duplicate entry", treeModel.getId(), e);
+                return;
             }
         }
         ((Stage) commonNameDisplay.getScene().getWindow()).close();
+    }
+
+    /**
+     * Limits user input to positive integers for weight
+     * Also sets max input to 6 characters to avoid integer overflow lol
+     */
+    public void handleWeightInput() {
+        weightForaged.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().matches("[0-9]{0,6}") ? change : null));
     }
 
     /**
@@ -185,8 +201,8 @@ public class AddNoteController extends ScreenController {
         }
         handleClose();
         Platform.runLater(() ->
-                getStateManager().getWindowManager()
-                        .openExpandNote(existingNote, getStateManager(), journalController));
+                getStateManager().getWindowManager().openExpandNote(existingNote, getStateManager(), journalController)
+        );
     }
 
     /**
@@ -222,11 +238,15 @@ public class AddNoteController extends ScreenController {
         String originalName = existingNote != null ? existingNote.getName() : treeModel.getCommonName();
         String originalDescription = existingNote != null ? existingNote.getDescription() : "";
         String originalPhoto = existingNote != null ? existingNote.getImagePath() : null;
+        String input = weightForaged.getText();
+        int currentWeight = input.isEmpty() ? 0 : Integer.parseInt(input);
+        int originalWeight = existingNote == null || existingNote.getWeightGrams() == null ? 0 : existingNote.getWeightGrams();
 
         boolean checkNoteModified =
                 !Objects.equals(originalName, commonNameDisplay.getText().trim())
                         || !Objects.equals(originalDescription, fieldNotesArea.getText())
-                        || !Objects.equals(originalPhoto, selectedImagePath);
+                        || !Objects.equals(originalPhoto, selectedImagePath)
+                        || originalWeight != currentWeight;
         if (!checkNoteModified) {
             return true;
         }
@@ -236,6 +256,6 @@ public class AddNoteController extends ScreenController {
         alert.initOwner(commonNameDisplay.getScene().getWindow());
         alert.setTitle("Discard Changes");
         alert.setHeaderText("Close without saving?");
-        return alert.showAndWait().filter(button-> button == ButtonType.OK).isPresent();
+        return alert.showAndWait().filter(button -> button == ButtonType.OK).isPresent();
     }
 }

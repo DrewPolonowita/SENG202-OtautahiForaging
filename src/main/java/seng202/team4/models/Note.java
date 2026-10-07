@@ -14,17 +14,19 @@ public class Note {
     private int treeId;
     private String description;
     private String imagePath;
+    private Integer weightGrams;
 
     /**
      * Constructor
      */
-    public Note(int id, String name, LocalDateTime timeCreated, int treeId, String description, String imagePath) {
+    public Note(int id, String name, LocalDateTime timeCreated, int treeId, String description, String imagePath, Integer weightGrams) {
         this.id = id;
         this.name = name;
         this.timeCreated = timeCreated;
         this.treeId = treeId;
         this.description = description;
         this.imagePath = imagePath;
+        this.weightGrams = weightGrams;
     }
 
     /**
@@ -73,6 +75,14 @@ public class Note {
      */
     public String getImagePath() {
         return imagePath;
+    }
+
+    /**
+     * Getter for fruit weight
+     * @return the weight of x fruit in grams
+     */
+    public Integer getWeightGrams() {
+        return weightGrams;
     }
 
 

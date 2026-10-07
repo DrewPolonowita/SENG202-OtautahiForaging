@@ -40,7 +40,8 @@ public class NoteDAO implements NoteRepository {
                 timeCreated,
                 rs.getInt("tree_id"),
                 rs.getString("description"),
-                rs.getString("image_path")
+                rs.getString("image_path"),
+                rs.getInt("weight_grams")
         );
     }
 
@@ -51,8 +52,8 @@ public class NoteDAO implements NoteRepository {
      */
     public int add(Note toAdd) throws DuplicateEntryException {
         String sql = """
-                INSERT INTO note (time_created, name, tree_id, description, image_path)
-                VALUES (datetime('now', 'localtime'), ?, ?, ?, ?);
+                INSERT INTO note (time_created, name, tree_id, description, image_path, weight_grams)
+                VALUES (datetime('now', 'localtime'), ?, ?, ?, ?, ?);
                 """;
         try (Connection conn = databaseManager.connect();
                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -60,6 +61,7 @@ public class NoteDAO implements NoteRepository {
             ps.setInt(2, toAdd.getTreeId());
             ps.setString(3, toAdd.getDescription());
             ps.setString(4, toAdd.getImagePath());
+            ps.setInt(5, toAdd.getWeightGrams());
 
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
@@ -146,7 +148,7 @@ public class NoteDAO implements NoteRepository {
     public void update(Note toUpdate) {
         String sql = """
                 UPDATE note
-                SET name = ?, description = ?, image_path = ?, tree_id = ?
+                SET name = ?, description = ?, image_path = ?, tree_id = ?, weight_grams = ?
                 WHERE id = ?;
                 """;
         try (Connection conn = databaseManager.connect();
@@ -155,7 +157,8 @@ public class NoteDAO implements NoteRepository {
             ps.setString(2, toUpdate.getDescription());
             ps.setString(3, toUpdate.getImagePath());
             ps.setInt(4, toUpdate.getTreeId());
-            ps.setInt(5, toUpdate.getId());
+            ps.setInt(5, toUpdate.getWeightGrams());
+            ps.setInt(6, toUpdate.getId());
 
             if (ps.executeUpdate() != 1) {
                 throw new DatabaseAccessException("The note to be updated could not be found", null);
