@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="guidelinesPopup" prefHeight="378.0" prefWidth="621.0" spacing="10" styleClass="guidelines-box" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.GuidelinePopupController">
+   <children>
+      <HBox alignment="TOP_RIGHT">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+         <children>
+            <Button fx:id="exitPopupButton" maxHeight="26" maxWidth="26" minHeight="26" minWidth="26" mnemonicParsing="false" onAction="#exitPopUp" prefHeight="26" prefWidth="26" styleClass="sideBar-button">
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-close" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" styleClass="titleBarText" text="Foraging Guidelines and Etiquette" wrapText="true" />
+         </children>
+      </HBox>
+      <Label styleClass="settings-text" text="Keep foraging fun, safe, and sustainable by following these guidelines" wrapText="true" />
+      <HBox alignment="CENTER" prefHeight="206.0" prefWidth="500.0" spacing="20" styleClass="guidelines-textbox">
+         <children>
+            <Label alignment="CENTER" lineSpacing="10.0" prefHeight="206.0" prefWidth="575.0" styleClass="generic-text" text="• Carefully identify fruit BEFORE you eat anything. Make sure that all foraged food is safe to consume!&#10;• Take care of yourself and others! Do not risk injury for the sake of getting a fruit or nut that's hard to get to&#10;• Don't tresspass. If you are unsure if fruit is on private property, leave it. If in doubt, stick to the trees on the map&#10;• Don't damage any tress or property while foraging&#10;• Be considerate to other foragers. Don't take more than you need.&#10;&#10;" wrapText="true" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

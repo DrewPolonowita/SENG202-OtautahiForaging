@@ -121,6 +121,47 @@
     -fx-background-radius: 8;
 }
 
+.guidelines-button {
+     -fx-background-color: -primary-bg-color;
+     -fx-text-fill: -primary-color;
+     -fx-font-size: 16px;
+     -fx-font-weight: bold;
+}
+
+.guidelines-button:hover {
+     -fx-background-color: -primary-color-highlight;
+     -fx-text-fill: -primary-bg-color;
+     -fx-font-size: 16px;
+     -fx-font-weight: bold;
+}
+
+.guidelines-box {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 20;
+    -fx-padding: 0 5 0 5;
+    -fx-alignment: center;
+}
+
+.guidelines-textbox {
+    -fx-alignment: center;
+    -fx-padding: 0 12 0 12;
+}
+
+.help-box {
+    -fx-background-color: -primary-bg-color;
+}
+
+.help-text {
+    -fx-text-fill: -text-color;
+    -fx-font-size: 12px;
+    -fx-line-height: 1.5;
+}
+
+.help-scrollpane {
+    -fx-track-background: -primary-bg-color;
+    -fx-thumb-color: -primary-color-highlight;
+}
+
 .color-picker {
     -fx-background-color: -primary-bg-color;
     -fx-border-color: -secondary-bg-color;
