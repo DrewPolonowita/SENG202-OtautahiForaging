@@ -3,7 +3,12 @@
 A JavaFX desktop application for discovering forageable trees around Christchurch.
 
 ## Authors
-- Team 4
+- Drew Polonowita
+- Adina Nasir
+- George Mounce
+- Daniel Warner
+- Oliver Taunt
+- Bridget Candy
 
 ## Prerequisites
 - JDK >= 21
@@ -22,6 +27,11 @@ and browse saved notes in a dedicated journal screen.
 ## Running the app
 To run the application through Gradle:
 Include .env file found on Mattermost in Team 4 Teaching comms in the root directory.
+
+Example .env:
+CONSUMER_SECRET=consumer_secret_key
+CONSUMER_KEY=consumer_key
+
 ```bash
 ./gradlew run
 ```
