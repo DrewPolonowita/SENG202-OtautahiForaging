@@ -48,6 +48,9 @@ public class FoodFilterUtilities {
         }
     }
 
+    /**
+     * Returns true or false based off of the buttons styling
+     */
     public static boolean isSelected(Button button) {
         return button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED);
     }
@@ -55,7 +58,7 @@ public class FoodFilterUtilities {
     /**
      * Formats the enum FilterCategory values to a string format
      * which will be shown to the user when filter button is clicked
-     *
+     * @param filterCategory category to be managed
      */
     public static String formatFilterName(FilterCategory filterCategory) {
         String name = filterCategory.name().toLowerCase();

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Represents an element of the returned list of recipes
  * @param id recipes id from the API
  * @param recipeName recipes name from the API
+ * @param recipeImageUrl recipes image from the API
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeSearchRecord(

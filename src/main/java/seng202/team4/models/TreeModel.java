@@ -30,6 +30,9 @@ public class TreeModel {
      * @param ownership Who owns the tree
      * @param genus Genus of tree
      * @param food Food type of a tree
+     * @param commonName commonName a tree
+     * @param lastUpdated time of last update
+     * @param serviceStatus service
      */
     public TreeModel(int id, List<Float> coordinates, String ownership, String genus,
                      String food, String commonName, LocalDateTime lastUpdated, String serviceStatus) {

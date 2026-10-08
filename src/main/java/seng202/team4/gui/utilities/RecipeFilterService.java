@@ -60,6 +60,7 @@ public class RecipeFilterService extends Service<List<RecipeSummary>> {
 
                 return recipeSummaries;
             }
+
             @Override
             protected void succeeded() {
                 LOG.info("Task finished");

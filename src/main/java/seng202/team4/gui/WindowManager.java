@@ -4,14 +4,27 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team4.gui.screens.*;
+import seng202.team4.gui.screens.AddNoteController;
+import seng202.team4.gui.screens.ExpandNoteController;
+import seng202.team4.gui.screens.GuidelinePopupController;
+import seng202.team4.gui.screens.HelpPopupController;
+import seng202.team4.gui.screens.JournalController;
+import seng202.team4.gui.screens.MapController;
+import seng202.team4.gui.screens.NavController;
+import seng202.team4.gui.screens.RecipesController;
+import seng202.team4.gui.screens.SettingsController;
+import seng202.team4.gui.screens.TableViewController;
 import seng202.team4.models.Note;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
@@ -56,8 +69,7 @@ public class WindowManager {
         themeService = new ThemeService(stage.getScene(), gridPane);
     }
 
-    private void configureStage()
-    {
+    private void configureStage() {
         stage.setResizable(true);
         stage.setScene(new Scene(gridPane));
         // Scaling minimum sizes
@@ -92,6 +104,9 @@ public class WindowManager {
         gridPane.getRowConstraints().add(navigationRow);
     }
 
+    /**
+     * Shows main window
+     */
     public void show() {
         stage.show();
     }

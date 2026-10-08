@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Manages methods for accessing the database for recipe summaries
+ */
 public class RecipeSummaryDAO implements RecipeSummaryRepository {
     private static final Logger LOG = LogManager.getLogger(RecipeSummaryDAO.class);
     private static final String RECIPE_ID_REFERENCE = "recipe_id";
@@ -43,16 +45,16 @@ public class RecipeSummaryDAO implements RecipeSummaryRepository {
     @Override
     public int add(RecipeSummary summary) throws DuplicateEntryException {
         String sql = """
-                INSERT INTO recipe_summary (
-                    recipe_id,
-                    recipe_name,
-                    recipe_image
-                )
-                VALUES (?, ?, ?);
-                """;
+                    INSERT INTO recipe_summary (
+                        recipe_id,
+                        recipe_name,
+                        recipe_image
+                    )
+                    VALUES (?, ?, ?);
+                    """;
 
         try (Connection conn = databaseManager.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+            PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, summary.getRecipeId());
             ps.setString(2, summary.getRecipeName());
             ps.setString(3, summary.getRecipeImageUrl());
@@ -95,14 +97,14 @@ public class RecipeSummaryDAO implements RecipeSummaryRepository {
     public List<RecipeSummary> getRecipeSummariesByFoodName(String food) {
         List<RecipeSummary> summaries = new ArrayList<>();
         String sql = """
-            SELECT rs.recipe_id,
-                   rs.recipe_name,
-                   rs.recipe_image
-            FROM recipe_summary rs
-            JOIN recipe_uses_food rf ON rs.recipe_id = rf.recipe_id
-            WHERE rf.common_name = ?
-              AND rf.retrieval_time >= DATETIME('now', '-24 hours')
-            """;
+        SELECT rs.recipe_id,
+               rs.recipe_name,
+               rs.recipe_image
+        FROM recipe_summary rs
+        JOIN recipe_uses_food rf ON rs.recipe_id = rf.recipe_id
+        WHERE rf.common_name = ?
+          AND rf.retrieval_time >= DATETIME('now', '-24 hours')
+        """;
         try (Connection conn = databaseManager.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, food);

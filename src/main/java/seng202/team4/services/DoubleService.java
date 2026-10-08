@@ -4,7 +4,7 @@ package seng202.team4.services;
  * A class to create equality and strict gt and lt functions using tolerances
  */
 public class DoubleService {
-    final static double EPSILON = 0.00001;
+    final double EPSILON = 0.00001;
 
     /**
      * Returns true if a and b are within some tolerance

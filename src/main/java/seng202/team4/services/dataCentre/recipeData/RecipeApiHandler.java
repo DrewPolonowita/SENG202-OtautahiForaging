@@ -27,6 +27,7 @@ public class RecipeApiHandler {
 
     /**
      * Constructor for the RecipeApiHandler
+     * @param recipeApiClient access to api methods
      */
     public RecipeApiHandler(RecipeClientInterface recipeApiClient) {
         this.recipeApiClient = recipeApiClient;
@@ -45,8 +46,7 @@ public class RecipeApiHandler {
         }
 
         List<RecipeSummary> recipeSummaries = new ArrayList<>();
-        for (RecipeSearchRecord recipe :
-                response.getApiResponse().recipes().recipe()) {
+        for (RecipeSearchRecord recipe : response.getApiResponse().recipes().recipe()) {
             recipeSummaries.add(RecipeFactory.createRecipeSummaryFromSearch(recipe));
         }
 

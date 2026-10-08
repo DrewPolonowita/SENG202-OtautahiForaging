@@ -20,7 +20,7 @@ import java.util.List;
  * Handles retrieving cached trees and minimizing api usage for trees
  */
 public class TreeService implements TreeDataManager {
-    private static final Logger log = LogManager.getLogger(TreeDataManager.class);
+    private static final Logger log = LogManager.getLogger(TreeService.class);
     private final TreeApiHandler treeApiHandler;
     private final TreeRepository treeRepository;
     private final RegionService regionService;
@@ -87,7 +87,7 @@ public class TreeService implements TreeDataManager {
             for (TreeModel tree: trees) {
                 try {
                     treeRepository.add(tree);
-                } catch (DuplicateEntryException e) {
+                } catch (DuplicateEntryException _) {
                     treeRepository.update(tree);
                 }
             }
@@ -120,32 +120,6 @@ public class TreeService implements TreeDataManager {
     }
 
     /**
-     * Returns a list of trees all trees from the api
-     * TODO: Make this choose between using API and database instead of always using database
-     */
-    public List<TreeModel> getAllTrees() {
-        List<TreeModel> databaseTrees = treeRepository.getAll();
-
-        if (!databaseTrees.isEmpty()) {
-            log.info("Loaded {} trees from database", databaseTrees.size());
-            return databaseTrees;
-        }
-
-        List<TreeModel> apiTrees = treeApiHandler.getAllTreesFromApi();
-        log.info("Loaded {} trees from api", apiTrees.size());
-        for (TreeModel tree: apiTrees) {
-            try {
-                treeRepository.add(tree);
-            } catch (DuplicateEntryException e) {
-                log.warn("(All Trees) Skip duplicate id: {}", tree.getId());
-            }
-        }
-        databaseTrees = treeRepository.getAll();
-
-        return databaseTrees;
-    }
-
-    /**
      * Returns true if all intersecting regions have been updated within the buffer time
      *
      * @param type the commonName of the tree being requested
@@ -175,7 +149,7 @@ public class TreeService implements TreeDataManager {
         for (TreeModel tree : apiTreesByType) {
             try {
                 treeRepository.add(tree);
-            } catch (DuplicateEntryException e) {
+            } catch (DuplicateEntryException _) {
                 log.warn("(Tree by food: {}) Skip duplicate id: {}", tree.getFood(), tree.getId());
             }
         }

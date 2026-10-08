@@ -27,8 +27,7 @@ public class OAuth1Signature {
      * @param secretKey secret key
      */
     public OAuth1Signature(String consumerKey, String secretKey) {
-        if (consumerKey == null || secretKey == null
-        || consumerKey.isEmpty() || secretKey.isEmpty()) {
+        if (consumerKey == null || secretKey == null || consumerKey.isEmpty() || secretKey.isEmpty()) {
             throw new IllegalArgumentException("Consumer and/or secret keys not present");
         }
         this.consumerKey = consumerKey;

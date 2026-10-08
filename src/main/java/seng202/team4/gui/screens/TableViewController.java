@@ -29,7 +29,7 @@ public class TableViewController extends ScreenController {
 
     private final FilterManager filterManager;
 
-    private List<TreeModel> filteredTrees = new ArrayList<>();
+    private final List<TreeModel> filteredTrees = new ArrayList<>();
 
     @FXML
     private TableView<TreeModel> treeTableView;
@@ -102,8 +102,6 @@ public class TableViewController extends ScreenController {
         treeTableView.getColumns().add(genusCol);
         treeTableView.getColumns().add(foodCol);
         treeTableView.getColumns().add(nameCol);
-        List<TreeModel> trees = treeService.getAllTrees();
-
         reloadTable();
     }
 
@@ -151,8 +149,8 @@ public class TableViewController extends ScreenController {
     /**
      * Toggles the filter button being clicked, and updates the
      * table contents to show only the relevant trees
-     * @param button
-     * @param filterCategory
+     * @param button fxml button
+     * @param filterCategory filters
      */
     public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FoodFilterUtilities.toggleButtonStyle(button);

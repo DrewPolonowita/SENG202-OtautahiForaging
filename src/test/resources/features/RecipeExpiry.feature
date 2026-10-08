@@ -1,4 +1,4 @@
-Feature: FatSecret recipe data expiry, AT_23 TODO: UPDATE THIS AT_X
+Feature: FatSecret recipe data expiry, AT_28 TODO: UPDATE THIS AT_X
 
 Scenario: Get a recipe with fresh data
     Given recipe 1234 has database data less than 24 hours old

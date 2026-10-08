@@ -29,6 +29,10 @@ public class TreePopupBuilder {
         private Food food;
         private String message;
 
+        /**
+         * Constructor
+         * @param tree tree with popup being built
+         */
         public Builder(TreeModel tree) {
             this.tree = tree;
         }
@@ -62,7 +66,7 @@ public class TreePopupBuilder {
 
     /**
      * Gives the HTML for our marker popup
-     * @return
+     * @return returns
      */
     private String buildHtml() {
         String popup = String.format(

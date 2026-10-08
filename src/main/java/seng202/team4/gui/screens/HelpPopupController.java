@@ -126,5 +126,7 @@ public class HelpPopupController extends ScreenController {
      * @return the title of the window.
      */
     @Override
-    public String getTitle() { return "Help"; }
+    public String getTitle() {
+        return "Help";
+    }
 }

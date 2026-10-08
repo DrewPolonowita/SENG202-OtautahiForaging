@@ -57,7 +57,7 @@ public class ThemeService {
     private static String primaryStyleFor(Color color) {
         String hex = CssUtilities.toHex(color);
         String highlightHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.85, 1));
-        String darkHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.45, 1));
+        String darkHex = CssUtilities.toHex(color.deriveColor(10, 1, 0.65, 1));
         return String.format("-primary-color: %s; -primary-color-highlight: %s; -primary-color-dark: %s;", hex, highlightHex, darkHex);
     }
 
@@ -127,8 +127,10 @@ public class ThemeService {
         }
     }
 
+    /**
+     * Returns the color to the default
+     */
     public void setDefaultColor() {
-        System.out.println("Setting");
         setPrimaryColor(Color.web(STARTINGPRIMARY));
     }
 }
