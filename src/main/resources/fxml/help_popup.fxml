@@ -41,9 +41,9 @@
          <content>
             <VBox prefWidth="600.0" styleClass="help-box">
                <children>
-                  <HBox maxWidth="600.0" prefWidth="600.0">
+                  <HBox alignment="CENTER" maxWidth="600.0" prefWidth="600.0">
                      <children>
-                        <Label minHeight="-Infinity" alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" prefWidth="600.0" styleClass="help-text" text="Use the map to locate trees based on the type of food grown on them.  Trees can be filtered using the filter button at the left of the screen. The following icons refer to filter, select all, and deselect all respectively. Buttons are highlighted with the theme colour when clicked." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Use the map to locate trees based on the type of food grown on them.  Trees can be filtered using the filter button at the left of the screen. The following icons refer to filter, deselect all, and select all respectively. " textAlignment="CENTER" wrapText="true" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="28.0" prefHeight="32.0" prefWidth="32.0">
@@ -62,7 +62,7 @@
                         </Region>
                         <Region>
                            <styleClass>
-                              <String fx:value="icon-select-all" />
+                              <String fx:value="icon-deselect-all" />
                               <String fx:value="icon" />
                            </styleClass>
                            <HBox.margin>
@@ -74,21 +74,21 @@
                         </Region>
                         <Region>
                            <styleClass>
-                              <String fx:value="icon-deselect-all" />
+                              <String fx:value="icon-select-all" />
                               <String fx:value="icon" />
                            </styleClass>
-                           <HBox.margin>
-                              <Insets left="25.0" />
-                           </HBox.margin>
                            <padding>
                               <Insets bottom="5.0" top="5.0" />
                            </padding>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
                         </Region>
                      </children>
                   </HBox>
-                  <HBox maxWidth="-Infinity" minWidth="550.0" prefWidth="590.0">
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="77.0" maxWidth="-Infinity" minWidth="550.0" prefWidth="590.0">
                      <children>
-                        <Label minHeight="-Infinity" alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" prefWidth="600.0" styleClass="help-text" text="Clusters of trees are grouped together based on what kind of food is grown on them. The colour of the cluster matches the main colours on the marker for a given food and the number corresponds with the number of trees. Click on a cluster to see the markers inside." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Filter buttons are highlighted with the theme colour when toggled on. Filter options are saved across pages for your convenience. If you can no longer see markers on the map for a food you were looking for, check to see if the correct filters are toggled. Clusters of trees are grouped together based on what kind of food is grown on them. The colour of the cluster matches the main colours on the marker for a given food and the number corresponds with the number of trees. Click on a cluster to see the markers inside." textAlignment="CENTER" wrapText="true" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0">
@@ -159,14 +159,27 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox maxWidth="-Infinity" minWidth="550.0" prefWidth="590.0">
+                  <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="550.0" prefWidth="590.0">
                      <children>
-                        <Label minHeight="-Infinity" alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" prefWidth="600.0" styleClass="help-text" text="Click on a marker for more information on a tree or to add a note to it. Notes can be found in the journal page." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Click on a marker for more information on a tree or to add a note to it. Notes can be found in the journal page. To reopen the foraging guidelines click the following icon on the top right of the screen." textAlignment="CENTER" wrapText="true" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="32.0" prefWidth="32.0">
+                     <children>
+                        <Region>
+                           <styleClass>
+                              <String fx:value="icon-guidelines" />
+                              <String fx:value="icon" />
+                           </styleClass>
+                        </Region>
                      </children>
                   </HBox>
                </children>
             </VBox>
          </content>
+         <padding>
+            <Insets left="3.0" right="3.0" />
+         </padding>
       </ScrollPane>
       <ScrollPane fx:id="journalPageScrollPane" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="270.0" style="-fx-border-color: transparent;">
          <content>
@@ -174,7 +187,7 @@
                <children>
                   <HBox maxWidth="600.0" prefWidth="600.0">
                      <children>
-                        <Label minHeight="-Infinity" alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" prefWidth="600.0" styleClass="help-text" text="Journals are made through the map page by clicking on a marker and then using the add to journal button. Saved notes are stored here. To have the option to view, edit, delete a note or view the associated tree on the map, click on the relevant note. Notes can be filtered using the sort by button at the top left." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Journals are made through the map page by clicking on a marker and then using the add to journal button. Saved notes are stored here. To have the option to view, edit, delete a note or view the associated tree on the map, click on the relevant note. Notes can be filtered using the sort by button at the top left." wrapText="true" />
                      </children>
                   </HBox>
                </children>
@@ -187,7 +200,7 @@
                <children>
                   <HBox maxWidth="600.0" prefWidth="600.0">
                      <children>
-                        <Label minHeight="-Infinity" alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and it's associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and it's associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." wrapText="true" />
                      </children>
                   </HBox>
                </children>
