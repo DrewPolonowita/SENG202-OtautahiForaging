@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
@@ -202,6 +203,8 @@ public class RecipesController extends ScreenController {
         textRow.setPrefHeight(TEXT_HEIGHT);
         textRow.setValignment(VPos.CENTER);
         card.getRowConstraints().addAll(new RowConstraints(IMAGE_HEIGHT), textRow);
+        // pin the column to the card width so long titles wrap instead of running off the card
+        card.getColumnConstraints().add(new ColumnConstraints(CARD_WIDTH));
     }
 
     /**
@@ -213,6 +216,8 @@ public class RecipesController extends ScreenController {
         Label title = new Label(recipeSummary.getRecipeName());
         title.getStyleClass().add("recipeCardTitle");
         title.setWrapText(true);
+        title.setMaxWidth(CARD_WIDTH);
+        title.setMaxHeight(TEXT_HEIGHT);
         return title;
     }
 
@@ -551,6 +556,4 @@ public class RecipesController extends ScreenController {
 
         createFruitButtons();
     }
-
-
 }

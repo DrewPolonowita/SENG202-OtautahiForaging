@@ -146,7 +146,7 @@
                         </padding>
                         <StackPane fx:id="fullRecipeImageArea" minHeight="200" minWidth="200" prefHeight="200" prefWidth="200" maxHeight="200" maxWidth="200" />
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
-                           <Label fx:id="fullRecipeTitle" wrapText="true" styleClass="recipeFullScreenBase, recipeFullscreenTitleText" />
+                           <Label fx:id="fullRecipeTitle" minHeight="-Infinity" wrapText="true" styleClass="recipeFullScreenBase, recipeFullscreenTitleText" />
                            <HBox spacing="20">
                               <Label fx:id="fullRecipePreptime" styleClass="recipeFullScreenBase, recipeFullScreenTimeText" />
                               <Label fx:id="fullRecipeCooktime" styleClass="recipeFullScreenBase, recipeFullScreenTimeText" />
@@ -156,16 +156,16 @@
                      <FlowPane hgap="20" vgap="15">
                         <VBox spacing="6" prefWidth="300" minWidth="250">
                            <Label text="Ingredients" styleClass="recipeFullScreenBase, recipeFullScreenHeadings" />
-                           <Label fx:id="fullRecipeIngredientsText" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
+                           <Label fx:id="fullRecipeIngredientsText" minHeight="-Infinity" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
                         </VBox>
                         <VBox spacing="6" prefWidth="300" minWidth="250">
                            <Label text="Nutritional Info" styleClass="recipeFullScreenBase, recipeFullScreenHeadings" />
-                           <Label fx:id="fullRecipeNutritionText" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
+                           <Label fx:id="fullRecipeNutritionText" minHeight="-Infinity" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
                         </VBox>
                      </FlowPane>
                      <VBox spacing="6">
                         <Label text="Method" styleClass="recipeFullScreenBase, recipeFullScreenHeadings" />
-                        <Label fx:id="fullRecipeMethodText" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
+                        <Label fx:id="fullRecipeMethodText" minHeight="-Infinity" wrapText="true" styleClass="recipeFullScreenBase, recipeFullScreenText" />
                      </VBox>
                   </VBox>
                </content>

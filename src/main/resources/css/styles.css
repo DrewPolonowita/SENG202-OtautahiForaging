@@ -389,9 +389,9 @@
 }
 .recipeCardTitle {
     -fx-text-fill: -primary-color;
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-translate-x: 10px;
+    -fx-padding: 0 10 0 10;
 }
 .recipeScrollPane {
     -fx-background-color: -secondary-bg-color;
