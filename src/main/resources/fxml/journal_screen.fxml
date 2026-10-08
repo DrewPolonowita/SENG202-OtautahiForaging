@@ -9,22 +9,41 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
    <top>
-      <MenuButton fx:id="sortMenu" styleClass="sort-journal" text="Sort by" BorderPane.alignment="TOP_LEFT">
-         <BorderPane.margin>
-            <Insets left="20.0" top="10.0" />
-         </BorderPane.margin>
-         <items>
-            <MenuItem onAction="#handleSortNewest" text="Newest first" />
-            <MenuItem onAction="#handleSortOldest" text="Oldest first" />
-            <MenuItem onAction="#handleSortAlphabetical" text="Alphabetical A-Z" />
-         </items>
-      </MenuButton>
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <MenuButton fx:id="sortMenu" styleClass="sort-journal" text="Sort by" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="20.0" top="10.0" />
+               </StackPane.margin>
+               <items>
+                  <MenuItem onAction="#handleSortNewest" text="Newest first" />
+                  <MenuItem onAction="#handleSortOldest" text="Oldest first" />
+                  <MenuItem onAction="#handleSortAlphabetical" text="Alphabetical A-Z" />
+               </items>
+            </MenuButton>
+            <Button fx:id="HelpButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#helpButtonClicked" styleClass="filters" StackPane.alignment="CENTER_RIGHT">
+               <StackPane.margin>
+                  <Insets right="10.0" top="10.0" />
+               </StackPane.margin>
+               <graphic>
+                  <Region>
+                     <styleClass>
+                        <String fx:value="icon-help" />
+                        <String fx:value="icon" />
+                     </styleClass>
+                  </Region>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Help" />
+               </tooltip>
+            </Button>
+         </children>
+      </StackPane>
    </top>
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="journalCardBaseArea" BorderPane.alignment="CENTER">
@@ -38,35 +57,6 @@
          </BorderPane.margin>
       </ScrollPane>
    </center>
-   <right>
-      <VBox maxHeight="32.0" maxWidth="32.0" prefHeight="32.0" prefWidth="32.0" BorderPane.alignment="TOP_CENTER">
-         <children>
-            <HBox alignment="CENTER_RIGHT" maxHeight="32.0" maxWidth="32.0">
-               <children>
-                  <Button fx:id="HelpButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#helpButtonClicked" styleClass="filters">
-                     <graphic>
-                        <Region>
-                           <styleClass>
-                              <String fx:value="icon-help" />
-                              <String fx:value="icon" />
-                           </styleClass>
-                        </Region>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Help" />
-                     </tooltip>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets right="10.0" />
-         </padding>
-         <BorderPane.margin>
-            <Insets top="-30.0" />
-         </BorderPane.margin>
-      </VBox>
-   </right>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
