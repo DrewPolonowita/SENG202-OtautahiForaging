@@ -83,8 +83,8 @@ public class MapService {
         LOG.info(selectedFilterCategories);
 
         List<CompletableFuture<List<TreeModel>>> futures = selectedFilterCategories.stream()
-                .map(fruit -> CompletableFuture.supplyAsync(() ->
-                                treeDataManager.getTreesByRegion(fruit.toString(), north, east, south, west),
+                .map(food -> CompletableFuture.supplyAsync(() ->
+                                treeDataManager.getTreesByRegion(food.toString(), north, east, south, west),
                         executor
                 ))
                 .toList();
@@ -107,24 +107,24 @@ public class MapService {
     }
 
     /**
-     * Adds a selected fruit to the filter
-     * @param filterCategory the fruit to add to the filter
+     * Adds a selected food to the filter
+     * @param filterCategory the food to add to the filter
      */
-    public void addSelectedFruit(FilterCategory filterCategory) {
+    public void addSelectedFood(FilterCategory filterCategory) {
         if (filterCategory == null) {
-            throw new NullPointerException("fruit parameter is null");
+            throw new NullPointerException("food parameter is null");
         }
 
         selectedFilterCategories.add(filterCategory);
     }
 
     /**
-     * Removes a fruit from the filter
-     * @param filterCategory the friut to be unselected
+     * Removes a food from the filter
+     * @param filterCategory the food to be unselected
      */
-    public void removeSelectedFruit(FilterCategory filterCategory) {
+    public void removeSelectedFood(FilterCategory filterCategory) {
         if (filterCategory == null) {
-            throw new NullPointerException("fruit parameter is null");
+            throw new NullPointerException("food parameter is null");
         }
 
         selectedFilterCategories.remove(filterCategory);

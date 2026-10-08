@@ -112,7 +112,7 @@ public class Region {
                     && doubleService.equalityTolerance(this.getEastBound(), region.getEastBound())
                     && doubleService.equalityTolerance(this.getSouthBound(), region.getSouthBound())
                     && doubleService.equalityTolerance(this.getWestBound(), region.getWestBound())
-                    && (this.getType().equals( region.getType())
+                    && (this.getType() == region.getType()
                     || this.getType().equals(region.getType()))
                     && (this.getLastUpdated() == region.getLastUpdated()
                     || this.getLastUpdated().equals(region.getLastUpdated()));

@@ -78,8 +78,8 @@ public class Note {
     }
 
     /**
-     * Getter for fruit weight
-     * @return the weight of x fruit in grams
+     * Getter for food weight
+     * @return the weight of x food in grams
      */
     public Integer getWeightGrams() {
         return weightGrams;

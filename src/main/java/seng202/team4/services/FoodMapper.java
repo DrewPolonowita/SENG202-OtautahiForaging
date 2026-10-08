@@ -37,13 +37,6 @@ public class FoodMapper {
      */
     private void createFoodMap() {
         foodMap.put("Apple", List.of(
-//                "Chinese Crab Apple",
-//                "Midget Crab Apple",
-//                "Pillar Crab Apple",
-//                "Siberian Crab",
-//                "Southern crabapple",
-//                "Hall's Crab Apple",
-//                "Zumi Crab Apple",
                 "Common Apple"
         ));
         foodMap.put("Beech", List.of(
@@ -57,7 +50,6 @@ public class FoodMapper {
         ));
         foodMap.put("Strawberry", List.of(
                 "Strawberry Tree"
-//                "Cyprus Strawberry Tree"
         ));
         foodMap.put("Sweet Chestnut", List.of(
                 "Sweet Chestnut"
@@ -81,21 +73,18 @@ public class FoodMapper {
         foodMap.put("Apricot", List.of(
                 "Apricot",
                 "Flowering Apricot"
-//                "Japanese Apricot"
         ));
         foodMap.put("Sweet bay", List.of(
                 "Bay laurel"
         ));
         foodMap.put("Mulberry", List.of(
                 "Common Mulberry"
-//                "Weeping Mulberry"
         ));
         foodMap.put("Loquat", List.of(
                 "Loquat Tree"
         ));
         foodMap.put("Quince", List.of(
                 "Quince"
-//                "Chinese Quince"
         ));
         foodMap.put("Almond", List.of(
                 "Almond"
@@ -141,16 +130,16 @@ public class FoodMapper {
     }
 
     /**
-     * Method to confirm that nothing in the fruit enum doesn't exist in FoodMapper
+     * Method to confirm that nothing in the filter category enum doesn't exist in FoodMapper
      */
     private void validateFoodMap() {
         List<String> missing = new ArrayList<>();
 
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            String fruitName = filterCategory.toString();
+            String foodName = filterCategory.toString();
 
-            if (!foodMap.containsKey(fruitName)) {
-                missing.add(fruitName);
+            if (!foodMap.containsKey(foodName)) {
+                missing.add(foodName);
             }
         }
 
@@ -164,7 +153,7 @@ public class FoodMapper {
     /**
      * Given a food name get its type
      * @param foodName a name that is the key of foodMap
-     * @return Fruit, nut of leaf
+     * @return food type
      */
     public String getFoodType(String foodName) {
         for (Map.Entry<String, List<String>> entry : typeMap.entrySet()) {

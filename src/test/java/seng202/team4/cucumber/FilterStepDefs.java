@@ -30,8 +30,8 @@ public class FilterStepDefs {
     }
 
     @When("the user toggles the {string} filter")
-    public void toggleFilter(String fruit) {
-        FilterCategory category = FilterCategory.valueOf(fruit.toUpperCase());
+    public void toggleFilter(String food) {
+        FilterCategory category = FilterCategory.valueOf(food.toUpperCase());
 
         filterManager.toggleFilters(category);
     }
@@ -46,8 +46,8 @@ public class FilterStepDefs {
     }
 
     @Then("the {string} filter is selected")
-    public void filterIsSelected(String fruit) {
-        FilterCategory filterCategory = FilterCategory.valueOf(fruit.toUpperCase());
+    public void filterIsSelected(String food) {
+        FilterCategory filterCategory = FilterCategory.valueOf(food.toUpperCase());
 
         assertTrue(filterManager.isSelected(filterCategory));
     }

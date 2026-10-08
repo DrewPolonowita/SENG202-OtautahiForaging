@@ -1,7 +1,7 @@
 package seng202.team4.models;
 
 /**
- * An enum class to handle different fruits using for filtering and querying.
+ * An enum class to handle different foods using for filtering and querying.
  */
 public enum FilterCategory {
     APPLE,
@@ -11,8 +11,8 @@ public enum FilterCategory {
     WALNUT,
     STRAWBERRY;
     /**
-     * Returns the string format of a given fruit for the api and database
-     * @return the string format of a given fruit for the api and database
+     * Returns the string format of a given food for the api and database
+     * @return the string format of a given food for the api and database
      */
     @Override
     public String toString() {
