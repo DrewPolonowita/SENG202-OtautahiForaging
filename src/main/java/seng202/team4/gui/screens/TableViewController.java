@@ -29,7 +29,7 @@ public class TableViewController extends ScreenController {
 
     private final FilterManager filterManager;
 
-    private List<TreeModel> filteredTrees = new ArrayList<>();
+    private final List<TreeModel> filteredTrees = new ArrayList<>();
 
     @FXML
     private TableView<TreeModel> treeTableView;
@@ -102,8 +102,6 @@ public class TableViewController extends ScreenController {
         treeTableView.getColumns().add(genusCol);
         treeTableView.getColumns().add(fruitCol);
         treeTableView.getColumns().add(nameCol);
-        List<TreeModel> trees = treeService.getAllTrees();
-
         reloadTable();
     }
 

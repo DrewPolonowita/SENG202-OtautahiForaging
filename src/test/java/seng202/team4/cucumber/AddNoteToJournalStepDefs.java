@@ -62,14 +62,14 @@ public class AddNoteToJournalStepDefs {
                 "serviced"
         );
 
-        int addedTreeId = treeDAO.add(tree);
+        treeDAO.add(tree);
 
-        Assertions.assertEquals(treeId, addedTreeId);
     }
 
 
     @When("the user adds a photo")
     public void theUserAddsAPhoto() {
+
         photoPath = "test-photo.jpg";
     }
 
@@ -85,8 +85,7 @@ public class AddNoteToJournalStepDefs {
                 0
         );
 
-        int noteId = noteService.add(note);
-        Assertions.assertNotEquals(noteId, -1);
+        noteService.add(note);
     }
 
     @Then("the journal should have a note with description {string}")

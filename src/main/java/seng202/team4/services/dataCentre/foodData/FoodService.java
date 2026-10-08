@@ -95,8 +95,6 @@ public class FoodService implements FoodDataManager {
         return foodApiHandler.getFoodBySearchFromApi(foodName);
     }
 
-
-    @Override
     /**
      * Looks for food details by name.
      * The local database is checked first, with the API tried if database doesn't have
@@ -104,6 +102,7 @@ public class FoodService implements FoodDataManager {
      * @param foodName food to find
      * @return the food or null if it can't be found
      */
+    @Override
     public Food getFood(String foodName) {
         return foodCache.get(foodName);
     }

@@ -34,11 +34,6 @@ public interface TreeDataManager {
     List<TreeModel> updateTreesByRegion(String type, double north, double east, double south, double west);
 
     /**
-     * Returns a list of all trees from the api
-     */
-    List<TreeModel> getAllTrees();
-
-    /**
      * Returns true if all intersecting regions have been updated within the buffer time
      *
      * @param type the commonName of the tree being requested

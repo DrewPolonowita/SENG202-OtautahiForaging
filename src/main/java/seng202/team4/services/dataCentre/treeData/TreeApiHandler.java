@@ -96,24 +96,6 @@ public class TreeApiHandler {
     }
 
     /**
-     * Method to return all trees from API
-     *
-     * @return List of all trees from API
-     */
-    public List<TreeModel> getAllTreesFromApi() {
-
-        List<TreeModel> allTrees = new ArrayList<>();
-        allTrees.addAll(getTreesFromApiByFood("Apple"));
-        allTrees.addAll(getTreesFromApiByFood("Pear"));
-        allTrees.addAll(getTreesFromApiByFood("Cherry"));
-        allTrees.addAll(getTreesFromApiByFood("Peach"));
-        allTrees.addAll(getTreesFromApiByFood("Apricot"));
-
-        return allTrees;
-
-    }
-
-    /**
      * Logic for requesting trees of a food from API
      * @param food tree food requested by common name
      * @return List of tree models of requested food from API

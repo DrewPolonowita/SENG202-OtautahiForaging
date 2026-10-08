@@ -55,7 +55,7 @@ public class FruitFilterUtilities {
     /**
      * Formats the enum FRUIT values to a string format
      * which will be shown to the user when filter button is clicked
-     *
+     * @param filterCategory category to be managed
      */
     public static String formatFruitName(FilterCategory filterCategory) {
         String name = filterCategory.name().toLowerCase();

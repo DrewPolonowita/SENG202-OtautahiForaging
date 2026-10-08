@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class TreeApiClient implements TreeClientInterface {
     private static final Logger LOG = LogManager.getLogger(TreeApiClient.class);
-    static final String API_LINK = "https://gis.ccc.govt.nz/server/rest/services/OpenData/Tree/FeatureServer/0/";
+    private static final String API_LINK = "https://gis.ccc.govt.nz/server/rest/services/OpenData/Tree/FeatureServer/0/";
 
 
     private final ApiClientInterface apiClient;
@@ -37,7 +37,7 @@ public class TreeApiClient implements TreeClientInterface {
      * @param outFields and ARC-GIS outField clause e.g. TreeID,Ownership,Genus
      * @return a {@link String} to be appended to the end of an API link
      */
-    public String urlEncodeParams(String params, String outFields, int maxTuples) {
+    private String urlEncodeParams(String params, String outFields, int maxTuples) {
         return "query?where=" + URLEncoder
                 .encode(params.isEmpty() ? "1=1" : params, StandardCharsets.UTF_8)
                 .replace("+", "%20")
@@ -75,9 +75,9 @@ public class TreeApiClient implements TreeClientInterface {
 
 
     /**
-     * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
+     * Makes a request to the API and returns an {@link ApiResponseWrapper} with the JSON data
      *
-     * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
+     * @return {@link ApiResponseWrapper} if the request is valid, otherwise returns a null
      */
     @Override
     public ApiResponseWrapper<TreeApiResponse> getTrees(

@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 /**
- * https://medium.com/@alxkm/concurrenthashmap-for-caching-05c48d1d6bf0
- * https://github.com/alxkm/evictor/tree/master/src/main/java/org/cache
+ * <a href="https://medium.com/@alxkm/concurrenthashmap-for-caching-05c48d1d6bf0">...</a>
+ * <a href="https://github.com/alxkm/evictor/tree/master/src/main/java/org/cache">...</a>
  * Adapted for use with an external database instead of storing the data itself in the concurrent map
  * Class to handle data concurrency issues. This helps stop spam requests for API/Database data
  * run into race conditions.
@@ -69,6 +69,7 @@ public class LoadingCache<K, V> {
     }
 
     /**
+     * Debug
      * Get access to repository vs api data
      * @return CacheStats object with data
      */
@@ -77,6 +78,7 @@ public class LoadingCache<K, V> {
     }
 
     /**
+     * Debug
      * Reset the cache stats count
      */
     public synchronized void resetStats() {

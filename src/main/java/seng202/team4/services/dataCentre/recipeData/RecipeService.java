@@ -113,7 +113,6 @@ public class RecipeService implements RecipeDataManager {
         }
 
         return summaries;
-
     }
 
     /**

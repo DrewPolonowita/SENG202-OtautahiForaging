@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A service class for the Map to handle getting trees and filtering the map
- *
  * Simulates a stack of
  */
 public class MapService {
