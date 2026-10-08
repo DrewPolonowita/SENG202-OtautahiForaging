@@ -200,20 +200,6 @@
         .serving-select {
             font-family: inherit;
         }
-        /*
-
-        .marker-cluster-small {
-            scale: 90%;
-        }
-
-       .marker-cluster-medium {
-            scale: 100%;
-        }
-
-       .marker-cluster-large {
-           scale: 110%;
-        }
-         */
 
     </style>
 </head>
@@ -339,17 +325,8 @@
         clusterGroups[food] = L.markerClusterGroup({
             iconCreateFunction: function(cluster) {
                 foodCluster = food.toString();
-                let childCount = cluster.getChildCount();
-                let clusterSize = 'medium';
-                if (childCount < 5) {
-                    clusterSize = 'small';
-                } else if (childCount < 10) {
-                    clusterSize = 'medium';
-                } else {
-                    clusterSize = 'large';
-                }
-                return L.divIcon({ html: '<div><span><b>' + childCount + '</b></span></div>',
-                                   className: 'marker-cluster marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, "") + ' marker-cluster-' + clusterSize,
+                return L.divIcon({ html: '<div><span><b>' + cluster.getChildCount() + '</b></span></div>',
+                                   className: 'marker-cluster marker-cluster-'+ foodCluster.trim().toLowerCase().replace(/\s+/g, ""),
                                    iconSize: L.point(40, 40)
                 });
             }
