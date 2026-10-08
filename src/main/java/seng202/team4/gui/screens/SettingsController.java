@@ -12,7 +12,7 @@ import seng202.team4.gui.ScreenController;
 import seng202.team4.services.StateManager;
 
 /**
- * Controller for the map_screen.fxml window which controls the map
+ * Controller for the settings_screen.fxml window which controls the settings screen
  * @author Team 4
  */
 public class SettingsController extends ScreenController {
