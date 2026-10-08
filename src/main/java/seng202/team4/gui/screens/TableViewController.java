@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.FilterManager;
-import seng202.team4.gui.utilities.FruitFilterUtilities;
+import seng202.team4.gui.utilities.FoodFilterUtilities;
 import seng202.team4.models.TreeModel;
 import seng202.team4.services.StateManager;
 import seng202.team4.services.dataCentre.treeData.TreeDataManager;
@@ -66,7 +66,7 @@ public class TableViewController extends ScreenController {
     @FXML
     private void initialize() {
         initTable();
-        createFruitButtons();
+        createFilterButtons();
         hideFilterList();
     }
 
@@ -91,8 +91,8 @@ public class TableViewController extends ScreenController {
         TableColumn<TreeModel, String> genusCol = new TableColumn<>("Genus");
         genusCol.setCellValueFactory(new PropertyValueFactory<>("genus"));
 
-        TableColumn<TreeModel, String> fruitCol = new TableColumn<>("Food Type");
-        fruitCol.setCellValueFactory(new PropertyValueFactory<>("food"));
+        TableColumn<TreeModel, String> foodCol = new TableColumn<>("Food Type");
+        foodCol.setCellValueFactory(new PropertyValueFactory<>("food"));
 
         TableColumn<TreeModel, String> nameCol = new TableColumn<>("Common Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("commonName"));
@@ -100,7 +100,7 @@ public class TableViewController extends ScreenController {
         treeTableView.getColumns().add(idCol);
         treeTableView.getColumns().add(ownerCol);
         treeTableView.getColumns().add(genusCol);
-        treeTableView.getColumns().add(fruitCol);
+        treeTableView.getColumns().add(foodCol);
         treeTableView.getColumns().add(nameCol);
         List<TreeModel> trees = treeService.getAllTrees();
 
@@ -134,14 +134,14 @@ public class TableViewController extends ScreenController {
     }
 
     /**
-     *For each fruit name in the enum FilterCategory, a filter button is created
+     * For each filter category in the enum FilterCategory, a filter button is created
      */
-    private void createFruitButtons() {
+    private void createFilterButtons() {
         filterList.getChildren().clear();
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            Button filterButton = FoodFilterUtilities.createFilterButton(filterCategory);
             if (filterManager.isSelected(filterCategory)) {
-                FruitFilterUtilities.toggleButtonStyle(filterButton);
+                FoodFilterUtilities.toggleButtonStyle(filterButton);
             }
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterList.getChildren().add(filterButton);
@@ -149,20 +149,20 @@ public class TableViewController extends ScreenController {
     }
 
     /**
-     *Toggles the fruit button being clicked, and updates the
-     *table contents to show only the relevant fruit trees
+     * Toggles the filter button being clicked, and updates the
+     * table contents to show only the relevant trees
      * @param button
      * @param filterCategory
      */
     public void filterButtonClicked(Button button, FilterCategory filterCategory) {
-        FruitFilterUtilities.toggleButtonStyle(button);
+        FoodFilterUtilities.toggleButtonStyle(button);
 
-        String fruitName = FruitFilterUtilities.formatFruitName(filterCategory);
+        String foodName = FoodFilterUtilities.formatFilterName(filterCategory);
 
-        if (FruitFilterUtilities.isSelected(button)) {
-            filteredTrees.addAll(treeService.getTreesByFood(fruitName));
+        if (FoodFilterUtilities.isSelected(button)) {
+            filteredTrees.addAll(treeService.getTreesByFood(foodName));
         } else {
-            filteredTrees.removeAll(treeService.getTreesByFood(fruitName));
+            filteredTrees.removeAll(treeService.getTreesByFood(foodName));
         }
 
         filterManager.toggleFilters(filterCategory);
@@ -177,8 +177,8 @@ public class TableViewController extends ScreenController {
         List<TreeModel> filteredTrees = new ArrayList<>();
 
         for (FilterCategory filterCategory : filterManager.getPossibleFilters()) {
-            String fruitName = FruitFilterUtilities.formatFruitName(filterCategory);
-            filteredTrees.addAll(treeService.getTreesByFood(fruitName));
+            String foodName = FoodFilterUtilities.formatFilterName(filterCategory);
+            filteredTrees.addAll(treeService.getTreesByFood(foodName));
         }
         treeTableView.setItems(
                 FXCollections.observableArrayList(
@@ -195,8 +195,8 @@ public class TableViewController extends ScreenController {
         filterManager.deselectAllFilters();
         for (int i = 0; i < filterList.getChildren().size(); i++) {
             Button button = (Button) filterList.getChildren().get(i);
-            if (FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
+            if (FoodFilterUtilities.isSelected(button)) {
+                FoodFilterUtilities.toggleButtonStyle(button);
             }
         }
         reloadTable();
@@ -212,8 +212,8 @@ public class TableViewController extends ScreenController {
         filterManager.selectAllFilters();
         for (int i = 0; i < filterList.getChildren().size(); i++) {
             Button button = (Button) filterList.getChildren().get(i);
-            if (!FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
+            if (!FoodFilterUtilities.isSelected(button)) {
+                FoodFilterUtilities.toggleButtonStyle(button);
             }
         }
         reloadTable();

@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.ScreenController;
-import seng202.team4.gui.utilities.FruitFilterUtilities;
+import seng202.team4.gui.utilities.FoodFilterUtilities;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Food;
 import seng202.team4.models.FoodServing;
@@ -233,7 +233,7 @@ public class ExpandNoteController extends ScreenController {
         FilterManager filterManager = getStateManager().getFilterManager();
 
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            if (FruitFilterUtilities.formatFruitName(filterCategory).equalsIgnoreCase(tree.getFood())) {
+            if (FoodFilterUtilities.formatFilterName(filterCategory).equalsIgnoreCase(tree.getFood())) {
                 filterManager.selectFilter(filterCategory);
                 break;
             }

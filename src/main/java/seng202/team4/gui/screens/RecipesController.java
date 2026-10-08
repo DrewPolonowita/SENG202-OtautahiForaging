@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
-import seng202.team4.gui.utilities.FruitFilterUtilities;
+import seng202.team4.gui.utilities.FoodFilterUtilities;
 import seng202.team4.gui.utilities.RecipeFilterService;
 import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
@@ -130,7 +130,7 @@ public class RecipesController extends ScreenController {
         recipeService = getStateManager().getRecipeService();
         ImageView attribution = FatSecretAttributionUtilities.createStandardAttributionImage(stateManager.getWindowManager().getThemeService().isDarkMode());
         attributionPane.getChildren().add(attribution);
-        createFruitButtons();
+        createFoodButtons();
         this.recipeFilterService = new RecipeFilterService(recipeService);
         fullRecipeImageArea.setClip(new Rectangle(200, 200));
         setUpEvents();
@@ -159,7 +159,7 @@ public class RecipesController extends ScreenController {
     }
 
     /**
-     * Toggles the visibility of the fruit filters.
+     * Toggles the visibility of the food filters.
      */
     @FXML
     private void onFilterClicked() {
@@ -387,15 +387,15 @@ public class RecipesController extends ScreenController {
     }
 
     /**
-     *For each fruit name in the enum FRUIT, a filter button is creaated
+     * For each food name in the enum FilterCategory, a filter button is created
      */
-    private void createFruitButtons() {
+    private void createFoodButtons() {
         filterList.getChildren().clear();
 
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            Button filterButton = FoodFilterUtilities.createFilterButton(filterCategory);
             if (filterManager.isSelected(filterCategory)) {
-                FruitFilterUtilities.toggleButtonStyle(filterButton);
+                FoodFilterUtilities.toggleButtonStyle(filterButton);
             }
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterList.getChildren().add(filterButton);
@@ -404,12 +404,12 @@ public class RecipesController extends ScreenController {
 
 
     /**
-     * Toggles the fruit button being clicked, and updates the
-     * map to show only the relevant fruit trees
+     * Toggles the filter button being clicked, and updates the
+     * map to show only the relevant trees
      * @param buttons filter buttons
      */
     public void filterButtonClicked(Button buttons, FilterCategory filterCategory) {
-        FruitFilterUtilities.toggleButtonStyle(buttons);
+        FoodFilterUtilities.toggleButtonStyle(buttons);
         filterManager.toggleFilters(filterCategory);
         refreshRecipesForSelectedFilters();
     }
@@ -441,7 +441,7 @@ public class RecipesController extends ScreenController {
 
 
         for (FilterCategory filterCategory : filterManager.getPossibleFilters()) {
-            selectedFoods.add(FruitFilterUtilities.formatFruitName(filterCategory));
+            selectedFoods.add(FoodFilterUtilities.formatFilterName(filterCategory));
         }
 
 
@@ -499,8 +499,8 @@ public class RecipesController extends ScreenController {
     private void updateFilterStyles(boolean selected) {
         for (int i = 0; i < filterList.getChildren().size(); i++) {
             Button button = (Button) filterList.getChildren().get(i);
-            if (FruitFilterUtilities.isSelected(button) != selected) {
-                FruitFilterUtilities.toggleButtonStyle(button);
+            if (FoodFilterUtilities.isSelected(button) != selected) {
+                FoodFilterUtilities.toggleButtonStyle(button);
             }
         }
     }
@@ -547,13 +547,13 @@ public class RecipesController extends ScreenController {
 
         filterManager.deselectAllFilters();
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            String foodName = FruitFilterUtilities.formatFruitName(filterCategory);
+            String foodName = FoodFilterUtilities.formatFilterName(filterCategory);
 
             if (startingSelectedFoods.contains(foodName)) {
                 filterManager.toggleFilters(filterCategory);
             }
         }
 
-        createFruitButtons();
+        createFoodButtons();
     }
 }

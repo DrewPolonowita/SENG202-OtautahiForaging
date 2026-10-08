@@ -301,8 +301,8 @@
      * Returns the marker icon for a food.
      */
     function getIcon(food) {
-        const fruitName = food.trim().toLowerCase().replace(/\s+/g, "");
-        const pinFileName = fruitName + "Pin.png";
+        const foodName = food.trim().toLowerCase().replace(/\s+/g, "");
+        const pinFileName = foodName + "Pin.png";
 
         if (!iconCache[pinFileName]) {
             iconCache[pinFileName] = new L.Icon({
