@@ -50,7 +50,9 @@ public class TreeService implements TreeDataManager {
     }
 
     /**
-     * Returns a list of trees from the database within a given region
+     * Returns a list of all the trees of a given CommonName within the given region.
+     * This method will update the database with trees from the api for future retrieval.
+     * This method will prioritize taking information from the database where applicable.
      *
      * @param type the commonName of the tree being requested
      * @param north the max y value for the region
@@ -103,33 +105,6 @@ public class TreeService implements TreeDataManager {
         }
 
         return trees;
-    }
-
-    /**
-     * Returns a list of trees from the api within a given region and updates the database
-     *
-     * @param type the commonName of the tree being requested
-     * @param north the max y value for the region
-     * @param east the max x value for the region
-     * @param south the min y value for the region
-     * @param west the min x value for the region
-     */
-    public List<TreeModel> updateTreesByRegion(String type, double north, double east, double south, double west) {
-        return treeApiHandler.getTreesByRegion(type, north, east, south, west);
-
-    }
-
-    /**
-     * Returns true if all intersecting regions have been updated within the buffer time
-     *
-     * @param type the commonName of the tree being requested
-     * @param north the max y value for the region
-     * @param east the max x value for the region
-     * @param south the min y value for the region
-     * @param west the min x value for the region
-     */
-    public boolean isRegionRecent(String type, double north, double east, double south, double west) {
-        return true;
     }
 
     /**
