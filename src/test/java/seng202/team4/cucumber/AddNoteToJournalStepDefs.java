@@ -106,6 +106,11 @@ public class AddNoteToJournalStepDefs {
         Assertions.assertEquals(photoPath, testNote.getImagePath());
     }
 
+    @Then("the journal should be linked to the chosen tree")
+    public void theJournalLinkedToTheChosenTree() {
+        Assertions.assertNotNull(testNote);
+        Assertions.assertEquals(treeId, testNote.getTreeId());
+    }
 
     private Note findNoteByDescription(String description) {
         List<Note> notes = noteService.getNotesByTreeId(treeId);

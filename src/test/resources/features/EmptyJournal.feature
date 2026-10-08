@@ -1,4 +1,4 @@
-Feature: Empty journal AT_15 (not the displayed message) TODO
+Feature: Empty journal AT_17 (not the displayed message) TODO
 
 Scenario: Retrieve an empty journal
     Given no journal notes have been saved
