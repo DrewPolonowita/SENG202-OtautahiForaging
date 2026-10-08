@@ -122,17 +122,17 @@
 }
 
 .guidelines-button {
-     -fx-background-color: -primary-bg-color;
-     -fx-text-fill: -primary-color;
-     -fx-font-size: 16px;
-     -fx-font-weight: bold;
+    -fx-background-color: -primary-bg-color;
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
 }
 
 .guidelines-button:hover {
-     -fx-background-color: -primary-color-highlight;
-     -fx-text-fill: -primary-bg-color;
-     -fx-font-size: 16px;
-     -fx-font-weight: bold;
+    -fx-background-color: -primary-color-highlight;
+    -fx-text-fill: -primary-bg-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
 }
 
 .guidelines-box {
@@ -487,5 +487,18 @@
     -fx-background-color: -primary-color-highlight;
 }
 .context-menu .menu-item:focused .label {
+    -fx-text-fill: -primary-bg-color;
+}
+.resetSetting {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 8;
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+.resetSetting:hover {
+    -fx-background-color: -primary-color-highlight;
     -fx-text-fill: -primary-bg-color;
 }

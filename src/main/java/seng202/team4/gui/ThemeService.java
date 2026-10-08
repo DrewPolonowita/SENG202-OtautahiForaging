@@ -126,4 +126,9 @@ public class ThemeService {
             stylesheets.remove(darkCss);
         }
     }
+
+    public void setDefaultColor() {
+        System.out.println("Setting");
+        setPrimaryColor(Color.web(STARTINGPRIMARY));
+    }
 }
