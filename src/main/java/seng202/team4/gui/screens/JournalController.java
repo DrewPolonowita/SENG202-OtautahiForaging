@@ -100,7 +100,7 @@ public class JournalController extends ScreenController {
             thumbnail.setFitWidth(90);
             thumbnail.setFitHeight(90);
             thumbnail.setPreserveRatio(true);
-            thumbnail.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
+            thumbnail.setImage(new Image(getClass().getResource("/images/iconBW.png").toExternalForm()));
         }
 
         Label name = new Label(note.getName());

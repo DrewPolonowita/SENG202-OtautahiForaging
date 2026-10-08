@@ -472,7 +472,7 @@ public class RecipesController extends ScreenController {
         emptyState.setPrefWidth(300);
         emptyState.setAlignment(Pos.CENTER);
 
-        ImageView icon = new ImageView(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
+        ImageView icon = new ImageView(new Image(getClass().getResource("/images/iconBW.png").toExternalForm()));
         icon.getStyleClass().add("empty-state-icon");
 
         Label title = new Label("No filters selected yet");

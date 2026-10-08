@@ -213,7 +213,7 @@
     -fx-padding: 10 14 0 14;
 }
 .note-card-date {
-    -fx-text-fill: -primary-color-dark;
+    -fx-text-fill: -text-color;
     -fx-font-size: 10px;
     -fx-padding: 4 14 0 14;
 }

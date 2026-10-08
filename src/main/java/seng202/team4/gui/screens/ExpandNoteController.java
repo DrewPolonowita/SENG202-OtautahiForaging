@@ -108,7 +108,7 @@ public class ExpandNoteController extends ScreenController {
             photoView.setFitWidth(360);
             photoView.setFitHeight(360);
             photoView.setPreserveRatio(true);
-            photoView.setImage(new Image(getClass().getResource("/images/icon.png").toExternalForm()));
+            photoView.setImage(new Image(getClass().getResource("/images/iconBW.png").toExternalForm()));
         }
     }
 
