@@ -66,8 +66,7 @@ public class FoodService implements FoodDataManager {
         if (foodId == null || foodId == 0) {
             return null;
         }
-        Food food = foodApiHandler != null ? foodApiHandler
-                .getFoodById(foodId, foodName, foodMapper.getFoodType(foodName)) : null;
+        Food food = foodApiHandler.getFoodById(foodId, foodName, foodMapper.getFoodType(foodName));
 
         if (food != null) {
             foodDao.replaceFood(food);
