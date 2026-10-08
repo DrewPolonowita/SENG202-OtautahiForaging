@@ -27,6 +27,7 @@ public class RecipeApiHandler {
 
     /**
      * Constructor for the RecipeApiHandler
+     * @param recipeApiClient access to api methods
      */
     public RecipeApiHandler(RecipeClientInterface recipeApiClient) {
         this.recipeApiClient = recipeApiClient;

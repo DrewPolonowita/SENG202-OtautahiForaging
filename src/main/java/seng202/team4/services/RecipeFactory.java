@@ -98,6 +98,11 @@ public final class RecipeFactory {
         );
     }
 
+    /**
+     * Method for turning the recipe search result into a summary
+     * @param record search result
+     * @return {@link RecipeSummary} being returned
+     */
     public static RecipeSummary createRecipeSummaryFromSearch(RecipeSearchRecord record) {
         return new RecipeSummary(
                 record.id(),

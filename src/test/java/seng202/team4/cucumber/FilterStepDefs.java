@@ -7,7 +7,6 @@ import io.cucumber.java.en.When;
 import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,16 +45,20 @@ public class FilterStepDefs {
         filterManager.deselectAllFilters();
     }
 
-    @Then("the {string} filter is deselected")
-    public void filterIsDeselected(String fruit) {
+    @Then("the {string} filter is selected")
+    public void filterIsSelected(String fruit) {
         FilterCategory filterCategory = FilterCategory.valueOf(fruit.toUpperCase());
 
-        assertFalse(filterManager.isSelected(filterCategory));
+        assertTrue(filterManager.isSelected(filterCategory));
     }
 
-    @Then("the other tree filters remain selected")
-    public void otherFiltersStaySelected() {
-        assertEquals(FilterCategory.values().length - 1, filterManager.getPossibleFilters().size());
+    @Then("the other tree filters remain deselected")
+    public void otherFiltersStayDeselected() {
+        for (FilterCategory category : FilterCategory.values()) {
+            if (category != FilterCategory.APPLE) {
+                assertFalse(filterManager.isSelected(category));
+            }
+        }
     }
 
     @Then("every tree filter should be selected")

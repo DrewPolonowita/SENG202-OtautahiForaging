@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Manages methods for accessing the database for recipe summaries
+ */
 public class RecipeSummaryDAO implements RecipeSummaryRepository {
     private static final Logger LOG = LogManager.getLogger(RecipeSummaryDAO.class);
     private static final String RECIPE_ID_REFERENCE = "recipe_id";

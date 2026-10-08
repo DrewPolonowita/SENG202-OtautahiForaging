@@ -1,10 +1,10 @@
-Feature: Filter trees by type AT_4, AT_5 TODO: Update
+Feature: Filter trees by type AT_4, AT_5, AT_6 TODO: Update
 
-Scenario: Deselect a tree type
-    Given all the tree filters are selected
+Scenario: Select a tree type
+    Given none of the tree filters are selected
     When the user toggles the "Apple" filter
-    Then the "Apple" filter is deselected
-    And the other tree filters remain selected
+    Then the "Apple" filter is selected
+    And the other tree filters remain deselected
 
 Scenario: Select all tree filters
     Given none of the tree filters are selected

@@ -29,6 +29,10 @@ public class TreePopupBuilder {
         private Food food;
         private String message;
 
+        /**
+         * Constructor
+         * @param tree tree with popup being built
+         */
         public Builder(TreeModel tree) {
             this.tree = tree;
         }

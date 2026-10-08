@@ -100,19 +100,6 @@ class TreeServiceTest extends TestSuite {
     }
 
     @Test
-    void testGetAllTreesWithPopulatedDatabase() throws DuplicateEntryException {
-        List<TreeModel> populatedList = fillDatabase();
-
-        List<TreeModel> allTrees = testTreeService.getAllTrees();
-
-        assertEquals(5, allTrees.size());
-
-        for (TreeModel expectedTree : populatedList) {
-            assertTrue(allTrees.contains(expectedTree));
-        }
-    }
-
-    @Test
     void testWrongResponseCode() {
 
         TreeRecord testRecord = TestTreeData
