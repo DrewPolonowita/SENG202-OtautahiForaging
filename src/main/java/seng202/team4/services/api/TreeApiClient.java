@@ -101,12 +101,6 @@ public class TreeApiClient implements TreeClientInterface {
     public ApiResponseWrapper<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
         String url = API_LINK
                 + urlEncodeParams(params, outFields, maxTuples);
-        return apiClient.get(url, new TypeReference<TreeApiResponse>() {
-
-        });
+        return apiClient.get(url, new TypeReference<TreeApiResponse>() {});
     }
-
-
 }
-
-

@@ -30,7 +30,7 @@ class ApiClientTest {
     final int INVALID_URL = -1;
 
     @BeforeEach
-    void setUp() {
+    void setUpTest() {
         apiClient = new ApiClient();
         connection = mock(HttpsURLConnection.class);
 
