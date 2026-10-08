@@ -103,7 +103,10 @@ public class TreePopupBuilder {
                 .orElse(null);
 
         if (baseline == null) {
-            return "a";
+            return String.format(
+                    "<div class=\"nutrition-info\">%s>/div>",
+                    message == null ? "" : message
+            );
         }
 
         return String.format(

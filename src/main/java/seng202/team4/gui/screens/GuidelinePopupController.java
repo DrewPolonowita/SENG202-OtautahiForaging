@@ -25,17 +25,31 @@ public class GuidelinePopupController extends ScreenController {
         super(stateManager);
     }
 
-
+    /**
+     * Methods to exit guidelines pop up
+     */
     @FXML
     private void exitPopUp() {
         ((Stage) guidelinesPopup.getScene().getWindow()).close();
     }
 
+    /**
+     * Returns the FXML file used to create the guidelines pop up
+     * @return the guidelines pop up FXML path file
+     */
     @Override
-    public String getFxmlFile() { return "/fxml/guidelines_popup.fxml"; }
+    public String getFxmlFile() {
+        return "/fxml/guidelines_popup.fxml";
+    }
 
+    /**
+     * Returns the title displayed for the guidelines pop up
+     * @return the title of the window.
+     */
     @Override
-    public String getTitle() { return "Guidelines"; }
+    public String getTitle() {
+        return "Guidelines";
+    }
 
 
 

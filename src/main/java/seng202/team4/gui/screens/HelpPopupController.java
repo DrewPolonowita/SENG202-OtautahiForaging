@@ -74,6 +74,9 @@ public class HelpPopupController extends ScreenController {
         }
     }
 
+    /**
+     * Sets the pop up information to fit the map page
+     */
     @FXML
     private void setPageMap() {
         pageTextBox.setText("The Map Page");
@@ -81,6 +84,9 @@ public class HelpPopupController extends ScreenController {
         mapPageScrollPane.setVisible(true);
     }
 
+    /**
+     * Sets the pop up information to fit the journal page
+     */
     @FXML
     private void setPageJournal() {
         pageTextBox.setText("The Journal Page");
@@ -88,6 +94,9 @@ public class HelpPopupController extends ScreenController {
         journalPageScrollPane.setVisible(true);
     }
 
+    /**
+     * Sets the pop up information to fit the recipe page
+     */
     @FXML
     private void setPageRecipe() {
         pageTextBox.setText("The Recipe Page");
@@ -95,17 +104,27 @@ public class HelpPopupController extends ScreenController {
         recipePageScrollPane.setManaged(true);
     }
 
+    /**
+     * Exits the help pop up
+     */
     @FXML
     private void exitPopUp() {
         ((Stage) helpPopup.getScene().getWindow()).close();
     }
 
+    /**
+     * Returns the FXML file used to create the help pop up
+     * @return the guidelines pop up FXML path file
+     */
     @Override
     public String getFxmlFile() {
         return "/fxml/help_popup.fxml";
     }
 
+    /**
+     * Returns the title displayed for the help pop up
+     * @return the title of the window.
+     */
     @Override
     public String getTitle() { return "Help"; }
-
 }

@@ -196,7 +196,18 @@ class RecipeServiceTest extends TestSuite {
                 10,
                 10
         );
-        assertEquals(expected, actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getMethod(), actual.getMethod());
+        assertEquals(expected.getIngredients(), actual.getIngredients());
+        assertEquals(expected.getCarbohydrates(), actual.getCarbohydrates());
+        assertEquals(expected.getCalories(), actual.getCalories());
+        assertEquals(expected.getProtein(), actual.getProtein());
+        assertEquals(expected.getFat(), actual.getFat());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getImage(), actual.getImage());
+        assertEquals(expected.getCookingTime(), actual.getCookingTime());
+        assertEquals(expected.getPreparationTime(), actual.getPreparationTime());
     }
 
     @Test
