@@ -13,6 +13,40 @@
     -fx-text-fill: -text-color;
 }
 
+.scroll-bar {
+    -fx-background-color: -medium-background-color;
+}
+.scroll-bar .track {
+    -fx-background-color: -medium-background-color;
+    -fx-background-radius: 10px;
+}
+.scroll-bar .thumb {
+    -fx-background-color: -primary-color;
+    -fx-background-radius: 10px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: -primary-color-highlight;
+}
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+.scroll-bar:vertical {
+    -fx-pref-width: 8px;
+}
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
 .titleBarText {
     -fx-text-fill: -primary-color;
     -fx-font-size: 32px;
@@ -504,37 +538,4 @@
 .resetSetting:hover {
     -fx-background-color: -primary-color-highlight;
     -fx-text-fill: -primary-bg-color;
-}
-.scroll-bar {
-    -fx-background-color: -medium-background-color;
-}
-.scroll-bar .track {
-    -fx-background-color: -medium-background-color;
-    -fx-background-radius: 10px;
-}
-.scroll-bar .thumb {
-    -fx-background-color: -primary-color;
-    -fx-background-radius: 10px;
-}
-.scroll-bar .thumb:hover {
-    -fx-background-color: -primary-color-highlight;
-}
-.scroll-bar .increment-arrow,
-.scroll-bar .decrement-arrow {
-    -fx-shape: " ";
-    -fx-padding: 0;
-}
-.scroll-bar:vertical {
-    -fx-pref-width: 8px;
-}
-.scroll-pane {
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-    -fx-background-color: transparent;
-}
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-.scroll-pane:focused {
-    -fx-background-insets: 0;
 }

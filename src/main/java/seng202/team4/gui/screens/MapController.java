@@ -2,7 +2,6 @@ package seng202.team4.gui.screens;
 
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -118,7 +117,7 @@ public class MapController extends ScreenController {
 
     /**
      * Initialises the bridge and loads the map once FXML is loaded with lambda functionality passed in.
-     * Also creates filter buttons from enum FRUIT values
+     * Also creates filter buttons from enum FilterCategory values
      */
     @FXML
     private void initialize() {
@@ -135,7 +134,7 @@ public class MapController extends ScreenController {
                 this::loadNutritionForTree,
                 this::mapMoved
         );
-        createFruitButtons();
+        createFilterButtons();
         initMap();
     }
 
@@ -190,14 +189,25 @@ public class MapController extends ScreenController {
                 });
     }
 
+    /**
+     * Returns the FXML file used to create the map screen
+     * @return the map screen FXML path file
+     */
     public String getFxmlFile() {
         return "/fxml/map_screen.fxml";
     }
 
+    /**
+     * Returns the title displayed for the map screen
+     * @return the title of the map screen
+     */
     public String getTitle() {
         return "Map";
     }
 
+    /**
+     * Controls visibility and styling of filters
+     */
     @FXML
     public void filterClicked() {
         if (filterOpened) {
@@ -265,6 +275,13 @@ public class MapController extends ScreenController {
                 stateManager.getMapZoom());
     }
 
+    /**
+     * Sets the current bounds of the map
+     * @param north the north bound
+     * @param east the east bound
+     * @param south the south bound
+     * @param west the west bound
+     */
     private void setCurrentBounds(double north, double east, double south, double west) {
         this.northBound = north;
         this.eastBound = east;
@@ -452,9 +469,9 @@ public class MapController extends ScreenController {
     }
 
     /**
-     * For each fruit name in the enum FRUIT, a filter button is created
+     * For each filter category in the enum FilterCategory a filter button is created
      */
-    private void createFruitButtons() {
+    private void createFilterButtons() {
         filterBox.getChildren().clear();
         for (FilterCategory filterCategory : FilterCategory.values()) {
             Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
@@ -467,18 +484,19 @@ public class MapController extends ScreenController {
         }
     }
 
+    /**
+     * Passes filter category types to the createClusterGroups method using the javaScript connector
+     * to allow markers to be clustered by food type on the map
+     */
     private void createClusterGroups() {
         for (FilterCategory food : FilterCategory.values()) {
             javaScriptConnector.call("createClusterGroups", food);
         }
     }
 
-
-
-
     /**
-     * Toggles the fruit button being clicked, and updates the
-     * map to show only the relevant fruit trees
+     * Toggles the filter button being clicked, and updates the
+     * map to show only the relevant trees
      * @param button
      * @param filterCategory
      */
