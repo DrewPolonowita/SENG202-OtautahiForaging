@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Represents the list of recipes returned itself
- * @param recipe
+ * @param recipe takes a recipe
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeSearchDetails(

@@ -55,9 +55,7 @@ public class RegionService {
                     double east = (j + 1) * REGION_SIZE + WEST_BOUND;
                     double west = j * REGION_SIZE + WEST_BOUND;
 
-                    if (eastBound > west && westBound < east &&
-                        !(doubleService.equalityTolerance(west, eastBound) ||
-                                doubleService.equalityTolerance(east, westBound))
+                    if (eastBound > west && westBound < east && !(doubleService.equalityTolerance(west, eastBound) || doubleService.equalityTolerance(east, westBound))
                     ) {
                         Region region = new Region(type, north, east, south, west);
                         try {

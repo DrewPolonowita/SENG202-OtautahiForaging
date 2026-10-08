@@ -75,6 +75,9 @@ public class SettingsController extends ScreenController {
         getStateManager().getWindowManager().getThemeService().setPrimaryColor(colorPicker.getValue());
     }
 
+    /**
+     * Resets the main theme off a button
+     */
     @FXML
     public void resetThemes() {
         if (getStateManager().getWindowManager().getThemeService().isDarkMode()) {
@@ -85,4 +88,3 @@ public class SettingsController extends ScreenController {
         getStateManager().getWindowManager().getThemeService().setDefaultColor();
     }
 }
-

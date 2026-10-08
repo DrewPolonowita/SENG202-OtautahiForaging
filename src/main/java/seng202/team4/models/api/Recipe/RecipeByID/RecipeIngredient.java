@@ -11,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param ingredientName name of the ingredient from API
  * @param servingId id for a particular portion or servings of a food item API
  * @param ingredientUnitNumber the number part of a measurement without the unit (e.g. 100 in 100g)
- * @param ingredientMeasurementDescription the unit part of a measurement without the number (e.g. g in 100g)
+ * @param ingredientMeasurementDescription the number part of a measurement without the unit (e.g. 100 in 100g)
+ * @param ingredientDescription ingredient description
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeIngredient(
