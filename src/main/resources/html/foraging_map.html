@@ -195,6 +195,11 @@
         .marker-cluster span {
 	        line-height: 30px;
 	    }
+        .journal-btn,
+        .recipe-btn,
+        .serving-select {
+            font-family: inherit;
+        }
         /*
 
         .marker-cluster-small {
@@ -208,6 +213,7 @@
        .marker-cluster-large {
            scale: 110%;
         }
+         */
 
     </style>
 </head>
@@ -337,7 +343,7 @@
                 let clusterSize = 'medium';
                 if (childCount < 5) {
                     clusterSize = 'small';
-                } else if (clusterSize < 10) {
+                } else if (childCount < 10) {
                     clusterSize = 'medium';
                 } else {
                     clusterSize = 'large';
