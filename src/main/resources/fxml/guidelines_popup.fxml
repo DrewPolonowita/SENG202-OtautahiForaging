@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="guidelinesPopup" prefHeight="378.0" prefWidth="621.0" spacing="10" styleClass="guidelines-box" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.GuidelinePopupController">
+<VBox fx:id="guidelinesPopup" prefHeight="401.0" prefWidth="621.0" spacing="10" styleClass="guidelines-box" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.GuidelinePopupController">
    <children>
       <HBox alignment="TOP_RIGHT">
          <padding>
@@ -34,10 +34,18 @@
          </children>
       </HBox>
       <Label styleClass="settings-text" text="Keep foraging fun, safe, and sustainable by following these guidelines" wrapText="true" />
-      <HBox alignment="CENTER" prefHeight="206.0" prefWidth="500.0" spacing="20" styleClass="guidelines-textbox">
+      <HBox alignment="CENTER" prefHeight="201.0" prefWidth="622.0" spacing="20" styleClass="guidelines-textbox">
          <children>
-            <Label alignment="CENTER" lineSpacing="10.0" prefHeight="206.0" prefWidth="575.0" styleClass="generic-text" text="• Carefully identify fruit BEFORE you eat anything. Make sure that all foraged food is safe to consume!&#10;• Take care of yourself and others! Do not risk injury for the sake of getting a fruit or nut that's hard to get to&#10;• Don't tresspass. If you are unsure if fruit is on private property, leave it. If in doubt, stick to the trees on the map&#10;• Don't damage any tress or property while foraging&#10;• Be considerate to other foragers. Don't take more than you need.&#10;&#10;" wrapText="true" />
+            <Label alignment="CENTER" ellipsisString="" lineSpacing="10.0" prefHeight="195.0" prefWidth="575.0" styleClass="generic-text" text="• Carefully identify food BEFORE you eat anything. Make sure that all foraged food is safe to consume!&#10;• Take care of yourself and others. Do not risk injury for the sake of getting a fruit or nut that is hard to get to&#10;• Do not tresspass. If you are unsure if a tree is on private property, leave it be. If in doubt, stick to the trees on the map&#10;• Do not damage any trees or property while foraging&#10;• Be considerate to other foragers. Do not take more than you need&#10;&#10;" wrapText="true" />
          </children>
+      </HBox>
+      <HBox alignment="CENTER">
+         <children>
+            <Label styleClass="guideline-help-text" text="For help using Ōtautahi Foraging click the '?' button on the top right of a page" wrapText="true" />
+         </children>
+         <opaqueInsets>
+            <Insets bottom="50.0" />
+         </opaqueInsets>
       </HBox>
    </children>
 </VBox>
