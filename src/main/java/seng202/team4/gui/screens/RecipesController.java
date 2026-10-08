@@ -513,7 +513,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private void deselectAllFilters() {
         filterManager.deselectAllFilters();
-        updateFilterStyles(true);
+        updateFilterStyles(false);
         refreshRecipesForSelectedFilters();
     }
 
@@ -525,7 +525,7 @@ public class RecipesController extends ScreenController {
     @FXML
     private void selectAllFilters() {
         filterManager.selectAllFilters();
-        updateFilterStyles(false);
+        updateFilterStyles(true);
         refreshRecipesForSelectedFilters();
     }
 
