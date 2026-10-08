@@ -464,3 +464,28 @@
 .table-cell {
     -fx-text-fill: -text-color;
 }
+.sort-journal > .label {
+    -fx-text-fill: -primary-color;
+}
+.sort-journal:hover > .label {
+    -fx-text-fill: -primary-bg-color;
+}
+.sort-journal > .arrow-button > .arrow {
+    -fx-background-color: -primary-color;
+}
+.sort-journal:hover > .arrow-button > .arrow {
+    -fx-background-color: -primary-bg-color;
+}
+.context-menu {
+    -fx-background-color: -primary-bg-color;
+    -fx-background-radius: 8;
+}
+.context-menu .menu-item .label {
+    -fx-text-fill: -text-color;
+}
+.context-menu .menu-item:focused {
+    -fx-background-color: -primary-color-highlight;
+}
+.context-menu .menu-item:focused .label {
+    -fx-text-fill: -primary-bg-color;
+}
