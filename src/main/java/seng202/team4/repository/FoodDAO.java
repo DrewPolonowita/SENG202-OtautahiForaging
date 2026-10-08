@@ -55,7 +55,7 @@ public class FoodDAO implements FoodRepository {
     @Override
     public List<Food> getAll() {
         List<Food> food = new ArrayList<>();
-            String sql = "SELECT * FROM food";
+        String sql = "SELECT * FROM food";
         try (Connection conn = databaseManager.connect();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)

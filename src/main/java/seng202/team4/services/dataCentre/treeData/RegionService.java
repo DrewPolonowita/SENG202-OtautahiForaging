@@ -47,9 +47,7 @@ public class RegionService {
             double north = (i + 1) * REGION_SIZE + SOUTH_BOUND;
             double south = i * REGION_SIZE + SOUTH_BOUND;
 
-            if (northBound > south && southBound < north &&
-                    !(doubleService.equalityTolerance(north, southBound) ||
-                            doubleService.equalityTolerance(south, northBound))
+            if (northBound > south && southBound < north && !(doubleService.equalityTolerance(north, southBound) || doubleService.equalityTolerance(south, northBound))
             ) {
                 for (int j = 0; doubleService.greaterThanTolerance(EAST_BOUND - WEST_BOUND, j * REGION_SIZE); j++) {
                     double east = (j + 1) * REGION_SIZE + WEST_BOUND;
@@ -70,7 +68,11 @@ public class RegionService {
         }
         return regionsList;
     }
-
+    /**
+     * Quary region based off region parameter
+     *
+     * @param regions passes in region parameter to query
+     */
     public Region getQueryRegion(List<Region> regions) {
         ArrayList<Region> notUpToDateRegions = new ArrayList<>();
 

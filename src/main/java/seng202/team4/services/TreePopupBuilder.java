@@ -66,7 +66,7 @@ public class TreePopupBuilder {
 
     /**
      * Gives the HTML for our marker popup
-     * @return
+     * @return returns
      */
     private String buildHtml() {
         String popup = String.format(

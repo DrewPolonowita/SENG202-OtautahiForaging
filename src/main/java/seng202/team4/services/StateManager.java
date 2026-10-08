@@ -128,19 +128,21 @@ public class StateManager {
         return treeRepository;
     }
 
-    public double getMapLatitude(){
+    public double getMapLatitude() {
         return mapLatitude;
     }
 
-    public double getMapLongitude(){
+    public double getMapLongitude() {
         return mapLongitude;
     }
 
-    public double getMapZoom(){
+    public double getMapZoom() {
         return mapZoom;
     }
 
-    public FilterManager getFilterManager() { return filterManager; }
+    public FilterManager getFilterManager() {
+        return filterManager;
+    }
 
     public void setMapView(double latitude, double longitude, double zoom) {
         mapLatitude = latitude;

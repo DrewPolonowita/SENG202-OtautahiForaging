@@ -132,7 +132,7 @@ public class TableViewController extends ScreenController {
     }
 
     /**
-     *For each fruit name in the enum FilterCategory, a filter button is created
+     * For each fruit name in the enum FilterCategory, a filter button is created
      */
     private void createFruitButtons() {
         filterList.getChildren().clear();
@@ -147,10 +147,10 @@ public class TableViewController extends ScreenController {
     }
 
     /**
-     *Toggles the fruit button being clicked, and updates the
-     *table contents to show only the relevant fruit trees
-     * @param button
-     * @param filterCategory
+     * Toggles the fruit button being clicked, and updates the
+     * table contents to show only the relevant fruit trees
+     * @param button fxml button
+     * @param filterCategory filters
      */
     public void filterButtonClicked(Button button, FilterCategory filterCategory) {
         FruitFilterUtilities.toggleButtonStyle(button);

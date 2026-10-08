@@ -84,7 +84,6 @@ public class SettingsController extends ScreenController {
             darkModeToggle.setSelected(false);
             onDarkModeToggle();
         }
-        System.out.println(getStateManager().getWindowManager().getThemeService().isDarkMode());
         getStateManager().getWindowManager().getThemeService().setDefaultColor();
     }
 }

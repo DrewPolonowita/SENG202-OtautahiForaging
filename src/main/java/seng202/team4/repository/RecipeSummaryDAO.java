@@ -45,13 +45,13 @@ public class RecipeSummaryDAO implements RecipeSummaryRepository {
     @Override
     public int add(RecipeSummary summary) throws DuplicateEntryException {
         String sql = """
-                INSERT INTO recipe_summary (
-                    recipe_id,
-                    recipe_name,
-                    recipe_image
-                )
-                VALUES (?, ?, ?);
-                """;
+                    INSERT INTO recipe_summary (
+                        recipe_id,
+                        recipe_name,
+                        recipe_image
+                    )
+                    VALUES (?, ?, ?);
+                    """;
 
         try (Connection conn = databaseManager.connect();
             PreparedStatement ps = conn.prepareStatement(sql)) {

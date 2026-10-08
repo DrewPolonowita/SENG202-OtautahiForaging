@@ -48,6 +48,9 @@ public class FruitFilterUtilities {
         }
     }
 
+    /**
+     * Returns true or false based off of the buttons styling
+     */
     public static boolean isSelected(Button button) {
         return button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED);
     }

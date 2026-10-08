@@ -7,7 +7,8 @@ import seng202.team4.models.api.FatSecretError;
 
 /**
  * Top level record from json response
- * @param recipes
+ * @param recipes recipes
+ * @param error errors returned from API
  * */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RecipeSearchResponse(
