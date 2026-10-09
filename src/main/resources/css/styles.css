@@ -259,7 +259,7 @@
 }
 .note-card-subtitle {
     -fx-text-fill: -primary-color;
-    -fx-font-size: 11px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 .note-card-edited-title {
