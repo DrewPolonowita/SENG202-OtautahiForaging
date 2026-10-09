@@ -3,7 +3,6 @@ package seng202.team4.unittests.gui.bridge;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import seng202.team4.gui.bridge.AddToJournalInterface;
-import seng202.team4.gui.bridge.AddTreeInterface;
 import seng202.team4.gui.bridge.GoToRecipesInterface;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 
@@ -18,11 +17,10 @@ class JavaScriptBridgeTest {
         int testId = 45;
         AtomicInteger receivedId = new AtomicInteger(-1);
         AddToJournalInterface journalCallback = receivedId::set;
-        AddTreeInterface addCallback = tree -> {};
         GoToRecipesInterface recipeCallback = foodname -> { };
 
 
-        JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, recipeCallback, addCallback, id->{}, null);
+        JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, recipeCallback, id->{}, null);
         testBridge.addTreeToJournal(testId);
         assertEquals(testId, receivedId.get());
     }
@@ -33,7 +31,6 @@ class JavaScriptBridgeTest {
         JavaScriptBridge testBridge = new JavaScriptBridge(
                 id -> { },
                 foodname -> { },
-                tree -> { },
                 id -> {},
                 ((north, east, south, west, latitude, longitude, zoom) -> {
                     double[] values = {north, east, south, west, latitude, longitude, zoom};
