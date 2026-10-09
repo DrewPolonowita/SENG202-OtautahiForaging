@@ -22,8 +22,6 @@ DROP TABLE IF EXISTS trees;
 --SPLIT
 DROP TABLE IF EXISTS regions;
 --SPLIT
-DROP TABLE IF EXISTS theme;
---SPLIT
 CREATE TABLE IF NOT EXISTS trees (
     id INTEGER PRIMARY KEY,
     x REAL NOT NULL,
@@ -141,9 +139,4 @@ CREATE TABLE IF NOT EXISTS recipe_uses_food (
         REFERENCES recipe_summary(recipe_id)
         ON DELETE CASCADE
 );
---SPLIT
-CREATE TABLE IF NOT EXISTS theme (
-    id INTEGER PRIMARY KEY CHECK (id = 1),
-    primary_color TEXT NOT NULL,
-    dark_mode INTEGER NOT NULL CHECK (dark_mode IN (0, 1))
-);
+

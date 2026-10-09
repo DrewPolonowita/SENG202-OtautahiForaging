@@ -1,7 +1,6 @@
 package seng202.team4.services;
 
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
 import seng202.team4.gui.FilterManager;
 import seng202.team4.gui.WindowManager;
 import seng202.team4.repository.DatabaseManager;
@@ -11,8 +10,6 @@ import seng202.team4.repository.NoteRepository;
 import seng202.team4.repository.RecipeDAO;
 import seng202.team4.repository.RecipeSummaryDAO;
 import seng202.team4.repository.RegionDAO;
-import seng202.team4.repository.ThemeDAO;
-import seng202.team4.repository.ThemeRepository;
 import seng202.team4.repository.TreeDAO;
 import seng202.team4.repository.TreeRepository;
 import seng202.team4.services.api.ApiClient;
@@ -46,7 +43,6 @@ public class StateManager {
     private final RecipeDataManager recipeService;
     private final FoodMapper foodMapper;
     private final FilterManager filterManager = new FilterManager();
-    private final ThemeRepository themeRepository;
 
     private double mapLatitude = -43.53;
     private double mapLongitude = 172.63;
@@ -70,11 +66,6 @@ public class StateManager {
         this.recipeService = new RecipeService(new RecipeDAO(databaseManager), new RecipeSummaryDAO(databaseManager), new RecipeApiClient(apiClient));
         this.noteRepository = new NoteDAO(databaseManager);
         this.noteService = new NoteService(noteRepository);
-        this.themeRepository = new ThemeDAO(databaseManager);
-        themeRepository.load().ifPresent(theme -> {
-            windowManager.getThemeService().setPrimaryColor(Color.web(theme.primaryColor()));
-            windowManager.getThemeService().setDarkMode(theme.darkMode());
-        });
         this.windowManager.launchMapScreen(this);
         this.windowManager.launchNavScreen(this);
         Platform.runLater(() -> {
@@ -136,14 +127,6 @@ public class StateManager {
      */
     public TreeRepository getTreeRepository() {
         return treeRepository;
-    }
-
-    /**
-     * Getter for theme repository
-     * @return theme repository
-     */
-    public ThemeRepository getThemeRepository() {
-        return themeRepository;
     }
 
     public double getMapLatitude() {
