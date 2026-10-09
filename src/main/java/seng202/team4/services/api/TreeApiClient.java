@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Implementation for TreeClientInterface, used to link specifically to the Christchurch
- * City Council's arcgis tree api
+ * City Council's ARCGIS tree api
  * @author Team 4
  */
 public class TreeApiClient implements TreeClientInterface {
@@ -101,12 +101,6 @@ public class TreeApiClient implements TreeClientInterface {
     public ApiResponseWrapper<TreeApiResponse> getTrees(String params, String outFields, int maxTuples) {
         String url = API_LINK
                 + urlEncodeParams(params, outFields, maxTuples);
-        return apiClient.get(url, new TypeReference<TreeApiResponse>() {
-
-        });
+        return apiClient.get(url, new TypeReference<TreeApiResponse>() {});
     }
-
-
 }
-
-

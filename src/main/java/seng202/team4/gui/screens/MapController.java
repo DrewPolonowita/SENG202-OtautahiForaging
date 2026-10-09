@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.gui.bridge.JavaScriptBridge;
 import seng202.team4.gui.utilities.FatSecretAttributionUtilities;
-import seng202.team4.gui.utilities.FruitFilterUtilities;
+import seng202.team4.gui.utilities.FoodFilterUtilities;
 import seng202.team4.gui.FilterManager;
 import seng202.team4.models.FilterCategory;
 import seng202.team4.models.Food;
@@ -130,7 +130,6 @@ public class MapController extends ScreenController {
         javaScriptBridge = new JavaScriptBridge(
                 this::handleAddJournalInput,
                 this::handleGoToRecipeInput,
-                tree -> { },
                 this::loadNutritionForTree,
                 this::mapMoved
         );
@@ -237,12 +236,12 @@ public class MapController extends ScreenController {
     private void selectAllFilters() {
         filterManager.selectAllFilters();
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            mapService.addSelectedFruit(filterCategory);
+            mapService.addSelectedFood(filterCategory);
         }
         for (int i = 0; i < filterBox.getChildren().size(); i++) {
             Button button = (Button) filterBox.getChildren().get(i);
-            if (!FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
+            if (!FoodFilterUtilities.isSelected(button)) {
+                FoodFilterUtilities.toggleButtonStyle(button);
             }
         }
 
@@ -261,12 +260,12 @@ public class MapController extends ScreenController {
     private void deselectAllFilters() {
         filterManager.deselectAllFilters();
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            mapService.removeSelectedFruit(filterCategory);
+            mapService.removeSelectedFood(filterCategory);
         }
         for (int i = 0; i < filterBox.getChildren().size(); i++) {
             Button button = (Button) filterBox.getChildren().get(i);
-            if (FruitFilterUtilities.isSelected(button)) {
-                FruitFilterUtilities.toggleButtonStyle(button);
+            if (FoodFilterUtilities.isSelected(button)) {
+                FoodFilterUtilities.toggleButtonStyle(button);
             }
         }
         mapMoved(northBound, eastBound, southBound, westBound,
@@ -474,10 +473,10 @@ public class MapController extends ScreenController {
     private void createFilterButtons() {
         filterBox.getChildren().clear();
         for (FilterCategory filterCategory : FilterCategory.values()) {
-            Button filterButton = FruitFilterUtilities.createFruitButton(filterCategory);
+            Button filterButton = FoodFilterUtilities.createFilterButton(filterCategory);
             if (filterManager.isSelected(filterCategory)) {
-                FruitFilterUtilities.toggleButtonStyle(filterButton);
-                mapService.addSelectedFruit(filterCategory);
+                FoodFilterUtilities.toggleButtonStyle(filterButton);
+                mapService.addSelectedFood(filterCategory);
             }
             filterButton.setOnAction(event -> filterButtonClicked(filterButton, filterCategory));
             filterBox.getChildren().add(filterButton);
@@ -501,13 +500,13 @@ public class MapController extends ScreenController {
      * @param filterCategory
      */
     public void filterButtonClicked(Button button, FilterCategory filterCategory) {
-        FruitFilterUtilities.toggleButtonStyle(button);
+        FoodFilterUtilities.toggleButtonStyle(button);
         filterManager.toggleFilters(filterCategory);
 
         if (filterManager.isSelected(filterCategory)) {
-            mapService.addSelectedFruit(filterCategory);
+            mapService.addSelectedFood(filterCategory);
         } else {
-            mapService.removeSelectedFruit(filterCategory);
+            mapService.removeSelectedFood(filterCategory);
         }
         mapMoved(northBound, eastBound, southBound, westBound,
                 stateManager.getMapLatitude(),

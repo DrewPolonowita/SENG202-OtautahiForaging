@@ -18,7 +18,6 @@ public class Region {
 
     /**
      * Creates a region with the given bounds in Christchurch
-     *
      * @param northBound the northbound
      * @param eastBound the eastbound
      * @param southBound the southbound

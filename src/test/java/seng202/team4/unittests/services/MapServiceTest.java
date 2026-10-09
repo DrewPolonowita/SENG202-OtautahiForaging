@@ -30,62 +30,62 @@ class MapServiceTest {
     }
 
     /**
-     * Tests that no selected fruits returns an empty list
+     * Tests that no selected foods returns an empty list
      * @throws Exception if waiting for the result fails
      */
     @Test
-    void testNoFruitsSelected() throws Exception {
+    void testNoFoodsSelected() throws Exception {
         List<TreeModel> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5).get(2, TimeUnit.SECONDS);
         assertTrue(result.isEmpty());
         verifyNoInteractions(testTreeDataManager);
     }
 
     /**
-     * Tests that adding a null fruit throws NullPointerException
+     * Tests that adding a null food throws NullPointerException
      */
     @Test
-    void testAddNullFruit() {
+    void testAddNullFood() {
         assertThrows(NullPointerException.class, () -> {
-            mapService.addSelectedFruit(null);
+            mapService.addSelectedFood(null);
         }, "Expected NullPointerException");
     }
 
     /**
-     * Tests that removing a null fruit throws NullPointerException
+     * Tests that removing a null food throws NullPointerException
      */
     @Test
-    void testRemoveNullFruit() {
+    void testRemoveNullFood() {
         assertThrows(NullPointerException.class, () -> {
-            mapService.removeSelectedFruit(null);
+            mapService.removeSelectedFood(null);
         }, "Expected NullPointerException");
     }
 
     /**
-     * Tests that selecting one fruit returns its trees and queries the correct bounds
+     * Tests that selecting one food returns its trees and queries the correct bounds
      * @throws Exception if waiting for the result fails
      */
     @Test
-    void testOneFruitSelected() throws Exception {
+    void testOneFoodSelected() throws Exception {
         TreeModel appleTree = mock(TreeModel.class);
         when(testTreeDataManager.getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(appleTree));
-        mapService.addSelectedFruit(FilterCategory.APPLE);
+        mapService.addSelectedFood(FilterCategory.APPLE);
         CompletableFuture<List<TreeModel>> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5);
         assertEquals(List.of(appleTree), result.get(2, TimeUnit.SECONDS));
         verify(testTreeDataManager).getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5);
     }
 
     /**
-     * Tests that selecting multiple fruits combines their trees and queries the correct bounds
+     * Tests that selecting multiple foods combines their trees and queries the correct bounds
      * @throws Exception if waiting for the result fails
      */
     @Test
-    void testMultipleFruitsSelected() throws Exception {
+    void testMultipleFoodsSelected() throws Exception {
         TreeModel appleTree = mock(TreeModel.class);
         TreeModel pearTree = mock(TreeModel.class);
         when(testTreeDataManager.getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(appleTree));
         when(testTreeDataManager.getTreesByRegion("Pear", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(pearTree));
-        mapService.addSelectedFruit(FilterCategory.APPLE);
-        mapService.addSelectedFruit(FilterCategory.PEAR);
+        mapService.addSelectedFood(FilterCategory.APPLE);
+        mapService.addSelectedFood(FilterCategory.PEAR);
         List<TreeModel> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5).get(2, TimeUnit.SECONDS);
         assertEquals(2, result.size());
         assertTrue(result.containsAll(List.of(appleTree, pearTree)));
@@ -94,13 +94,13 @@ class MapServiceTest {
     }
 
     /**
-     * Tests that removing the only selected fruit leaves no trees to query
+     * Tests that removing the only selected food leaves no trees to query
      * @throws Exception if waiting for the result fails
      */
     @Test
-    void removeSelectedFruit() throws Exception {
-        mapService.addSelectedFruit(FilterCategory.APPLE);
-        mapService.removeSelectedFruit(FilterCategory.APPLE);
+    void removeSelectedFood() throws Exception {
+        mapService.addSelectedFood(FilterCategory.APPLE);
+        mapService.removeSelectedFood(FilterCategory.APPLE);
 
         List<TreeModel> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5).get(2, TimeUnit.SECONDS);
         assertTrue(result.isEmpty());
@@ -108,16 +108,16 @@ class MapServiceTest {
     }
 
     /**
-     * Test removing one fruit keeps the other selected
+     * Test removing one food keeps the others selected
      * @throws Exception if waiting for the result fails
      */
     @Test
-    void testRemoveOneOfTwoFruits() throws Exception {
+    void testRemoveOneOfTwoFoods() throws Exception {
         TreeModel pearTree = mock(TreeModel.class);
         when(testTreeDataManager.getTreesByRegion("Pear", -43.4, 172.7, -43.6, 172.5)).thenReturn(List.of(pearTree));
-        mapService.addSelectedFruit(FilterCategory.APPLE);
-        mapService.addSelectedFruit(FilterCategory.PEAR);
-        mapService.removeSelectedFruit(FilterCategory.APPLE);
+        mapService.addSelectedFood(FilterCategory.APPLE);
+        mapService.addSelectedFood(FilterCategory.PEAR);
+        mapService.removeSelectedFood(FilterCategory.APPLE);
         CompletableFuture<List<TreeModel>> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5);
         assertEquals(List.of(pearTree), result.get(2, TimeUnit.SECONDS));
         verify(testTreeDataManager).getTreesByRegion("Pear", -43.4, 172.7, -43.6, 172.5);
@@ -131,13 +131,11 @@ class MapServiceTest {
     void testBackendFailure() {
         RuntimeException failure = new RuntimeException("API ISSUE");
         when(testTreeDataManager.getTreesByRegion("Apple", -43.4, 172.7, -43.6, 172.5)).thenThrow(failure);
-        mapService.addSelectedFruit(FilterCategory.APPLE);
+        mapService.addSelectedFood(FilterCategory.APPLE);
         CompletableFuture<List<TreeModel>> result = mapService.getAllTreesInRegion(-43.4, 172.7, -43.6, 172.5);
         ExecutionException thrown = assertThrows(ExecutionException.class, () -> {
             result.get(2, TimeUnit.SECONDS);
         });
         assertSame(failure, thrown.getCause());
     }
-
-
 }

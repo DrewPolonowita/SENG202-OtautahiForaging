@@ -9,7 +9,7 @@ import java.awt.Desktop;
 import java.net.URI;
 
 /**
- * Class to provide utilities for a FatSecret Atribution Image
+ * Class to provide utilities for a FatSecret Attribution Image
  * @author Team 4
  */
 public final class FatSecretAttributionUtilities {
@@ -25,7 +25,8 @@ public final class FatSecretAttributionUtilities {
     }
 
     /**
-     * Creates a FatSecret Atribution Image
+     * Creates a FatSecret Attribution Image
+     * @param darkMode boolean whether darkMode is enabled or not
      */
     public static ImageView createStandardAttributionImage(boolean darkMode) {
         ImageView imageView = new ImageView();

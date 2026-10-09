@@ -11,7 +11,6 @@ import seng202.team4.models.TreeModel;
  */
 
 public class JavaScriptBridge {
-    private final AddTreeInterface addTreeInterface;
     private final GoToRecipesInterface goToRecipesInterface;
     private final AddToJournalInterface addToJournalInterface;
     private final LoadNutritionInterface loadNutritionInterface;
@@ -21,12 +20,10 @@ public class JavaScriptBridge {
     /**
      * Creates JavaScript bridge object with a callback lambda function for displaying the tree on the map after creation
      * @param addToJournalLambda add a note to the journal for the given tree id
-     * @param addTreeLambda add tree lambda function to add tree to js map
      */
-    public JavaScriptBridge(AddToJournalInterface addToJournalLambda, GoToRecipesInterface goToRecipesInterface, AddTreeInterface addTreeLambda,  LoadNutritionInterface loadNutritionInterface, MapMovedInterface mapMovedInterface) {
+    public JavaScriptBridge(AddToJournalInterface addToJournalLambda, GoToRecipesInterface goToRecipesInterface,  LoadNutritionInterface loadNutritionInterface, MapMovedInterface mapMovedInterface) {
         this.addToJournalInterface = addToJournalLambda;
         this.goToRecipesInterface = goToRecipesInterface;
-        this.addTreeInterface = addTreeLambda;
         this.loadNutritionInterface = loadNutritionInterface;
         this.mapMovedInterface = mapMovedInterface;
     }
@@ -37,7 +34,6 @@ public class JavaScriptBridge {
     public JavaScriptBridge() {
         addToJournalInterface = (int i) -> { };
         goToRecipesInterface = (String name) -> { };
-        addTreeInterface = (TreeModel tree) -> { };
         loadNutritionInterface = id -> { };
         mapMovedInterface = null;
     }

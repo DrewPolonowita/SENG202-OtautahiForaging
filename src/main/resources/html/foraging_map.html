@@ -205,8 +205,8 @@
 </head>
 <body>
 <div id="map"></div>
-<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="anonymous"></script>
 <script>
     const NORTH_BOUND = -43.40;
     const EAST_BOUND = 172.85;
@@ -217,9 +217,7 @@
     const MIN_ZOOM = 12;
 
     let map;
-    let markers = [];
     let markersById = {};
-    let markerClusterGroup;
     let revealingTree = false; // prevents marker refresh while revealing journal target's tree.
     let pendingTreeId = null; // specific tree from journal.
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
@@ -301,8 +299,8 @@
      * Returns the marker icon for a food.
      */
     function getIcon(food) {
-        const fruitName = food.trim().toLowerCase().replace(/\s+/g, "");
-        const pinFileName = fruitName + "Pin.png";
+        const foodName = food.trim().toLowerCase().replace(/\s+/g, "");
+        const pinFileName = foodName + "Pin.png";
 
         if (!iconCache[pinFileName]) {
             iconCache[pinFileName] = new L.Icon({
@@ -361,7 +359,6 @@
         });
 
         clusterGroups[food].addLayer(marker);
-        markers.push(marker);
         markersById[id] = marker;
 
         if (id == pendingTreeId && pendingTreeId != null) {
@@ -382,7 +379,6 @@
         Object.values(clusterGroups).forEach((clusterGroup) => {
             clusterGroup.clearLayers();
         });
-        markers = [];
         markersById = {};
     }
 

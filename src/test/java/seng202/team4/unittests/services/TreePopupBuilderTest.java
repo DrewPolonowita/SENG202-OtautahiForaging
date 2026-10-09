@@ -61,7 +61,7 @@ class TreePopupBuilderTest {
     }
 
     /**
-     * Checks that the popup shows the nutrition for the right fruit type
+     * Checks that the popup shows the nutrition for the right food type
      */
     @Test
     void popupButtonsUseCorrectAttributes() {

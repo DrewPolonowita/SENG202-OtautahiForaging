@@ -1,6 +1,12 @@
 # Otautahi Foraging - Team 4
 
-A JavaFX desktop application for discovering forageable trees around Christchurch.
+A desktop JavaFX application on Windows, Linux and MacOS for discovering and locating forageable trees around the Christchurch region.
+The application features an interactive map with map markers, personal journals, recipes
+for provided fruits and a data view table. This is to aid users in achieving their foraging
+needs.
+
+The application uses publicly available API's such as CCC GIS database's and FatSecretAPI
+to gather information and thus requires an internet connection.
 
 ## Authors
 - Drew Polonowita
@@ -13,6 +19,7 @@ A JavaFX desktop application for discovering forageable trees around Christchurc
 ## Prerequisites
 - JDK >= 21
 - Gradle (wrapper included)
+- An internet connection
 
 
 ## Features

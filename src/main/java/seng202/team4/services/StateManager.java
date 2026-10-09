@@ -16,6 +16,7 @@ import seng202.team4.services.api.ApiClient;
 import seng202.team4.services.api.ApiClientInterface;
 import seng202.team4.services.api.FoodApiClient;
 import seng202.team4.services.api.RecipeApiClient;
+import seng202.team4.services.dataCentre.foodData.FoodDataManager;
 import seng202.team4.services.dataCentre.foodData.FoodService;
 import seng202.team4.services.dataCentre.recipeData.RecipeDataManager;
 import seng202.team4.services.dataCentre.recipeData.RecipeService;
@@ -38,7 +39,7 @@ public class StateManager {
     private final TreeDataManager treeService;
     private final NoteRepository noteRepository;
     private final NoteService noteService;
-    private final FoodService foodService;
+    private final FoodDataManager foodService;
     private final RecipeDataManager recipeService;
     private final FoodMapper foodMapper;
     private final FilterManager filterManager = new FilterManager();
@@ -100,7 +101,7 @@ public class StateManager {
      * Getter for food service
      * @return food service
      */
-    public FoodService getFoodService() {
+    public FoodDataManager getFoodService() {
         return foodService;
     }
 
