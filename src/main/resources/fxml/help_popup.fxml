@@ -200,7 +200,7 @@
                <children>
                   <HBox maxWidth="600.0" prefWidth="600.0">
                      <children>
-                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and it's associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and its associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." wrapText="true" />
                      </children>
                   </HBox>
                </children>
