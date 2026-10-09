@@ -168,6 +168,9 @@ public class NavController extends ScreenController {
         selectedButton = newSelection;
     }
 
+    /**
+     * Sets recipe button from navcontroller
+     */
     public void setRecipeButton() {
         setSelectedButton(recipesButton);
     }

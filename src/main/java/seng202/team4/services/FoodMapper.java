@@ -16,7 +16,6 @@ import java.util.Map;
  * @author Team 4
  */
 public class FoodMapper {
-
     private static final Logger log = LogManager.getLogger(FoodMapper.class);
     private final Map<String, List<String>> foodMap = new HashMap<>();
     private final Map<String, List<String>> typeMap = new HashMap<>();
