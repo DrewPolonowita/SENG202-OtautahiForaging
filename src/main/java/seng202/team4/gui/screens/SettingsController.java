@@ -14,11 +14,14 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 
+
 /**
  * Controller for the settings_screen.fxml window which controls the settings screen
  * @author Team 4
  */
 public class SettingsController extends ScreenController {
+
+    static final String DEFAULT_ACCENT = "#67AF76";
 
     @FXML private ToggleButton darkModeToggle;
     @FXML private StackPane switchTrack;
@@ -41,7 +44,7 @@ public class SettingsController extends ScreenController {
      */
     @FXML
     public void initialize() {
-        colorPicker.setValue(Color.web("#67AF76"));
+        colorPicker.setValue(Color.web(DEFAULT_ACCENT));
         boolean isDark = getStateManager().getWindowManager().getThemeService().isDarkMode();
         darkModeToggle.setSelected(isDark);
         switchCircle.setTranslateX(isDark ? 24 : 2);
@@ -85,6 +88,6 @@ public class SettingsController extends ScreenController {
             onDarkModeToggle();
         }
         getStateManager().getWindowManager().getThemeService().setDefaultColor();
-        colorPicker.setValue(Color.web("#67AF76"));
+        colorPicker.setValue(Color.web(DEFAULT_ACCENT));
     }
 }
