@@ -22,7 +22,6 @@ public class ThemeService {
 
     /**
      * Creates a ThemeService bound to the app's main Scene and its root GridPane.
-     *
      * @param scene the Scene whose stylesheets control dark mode
      * @param sceneRoot the root node used to apply primary-color overrides
      */
@@ -32,7 +31,8 @@ public class ThemeService {
     }
 
     /**
-     * sets the webEngine for use of filter theming
+     * Sets the webEngine for use of filter theming
+     * @param webEngine for the web page to set
      */
     public void setWebEngine(WebEngine webEngine) {
         this.webEngine = webEngine;
@@ -41,7 +41,7 @@ public class ThemeService {
     }
 
     /**
-     * Checks to see if darkmode theme is applied
+     * Checks to see if dark mode theme is applied
      * @return true/false bool
      */
     public boolean isDarkMode() {
@@ -50,7 +50,6 @@ public class ThemeService {
 
     /**
      * Builds the inline style that defines the primary colour variables for a scene root.
-     *
      * @param color the primary colour
      * @return a style string such as "-primary-color: #67af76; ..."
      */
@@ -63,6 +62,7 @@ public class ThemeService {
 
     /**
      * Method used to change the primary scene colour
+     * @param color the colour the user is setting
      */
     public void setPrimaryColor(Color color) {
         primaryColor = color;
@@ -111,7 +111,6 @@ public class ThemeService {
     /**
      * Applies the current theme (primary colour and dark mode) to a separate Scene, such as a dialog.
      * Call this after the scene's base stylesheets have been added so dark-theme.css is loaded last.
-     *
      * @param target the scene to theme; its root must already be set
      */
     public void applyTo(Scene target) {
@@ -128,7 +127,7 @@ public class ThemeService {
     }
 
     /**
-     * Returns the color to the default
+     * Sets the colour of the scene back to default.
      */
     public void setDefaultColor() {
         setPrimaryColor(Color.web(STARTINGPRIMARY));

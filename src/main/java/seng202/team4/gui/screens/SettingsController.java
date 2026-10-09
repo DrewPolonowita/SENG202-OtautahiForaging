@@ -10,6 +10,9 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import seng202.team4.gui.ScreenController;
 import seng202.team4.services.StateManager;
+import javafx.scene.paint.Color;
+
+import java.awt.*;
 
 /**
  * Controller for the settings_screen.fxml window which controls the settings screen
@@ -17,14 +20,10 @@ import seng202.team4.services.StateManager;
  */
 public class SettingsController extends ScreenController {
 
-    @FXML
-    private ToggleButton darkModeToggle;
-    @FXML
-    private StackPane switchTrack;
-    @FXML
-    private Circle switchCircle;
-    @FXML
-    private ColorPicker colorPicker;
+    @FXML private ToggleButton darkModeToggle;
+    @FXML private StackPane switchTrack;
+    @FXML private Circle switchCircle;
+    @FXML private ColorPicker colorPicker;
     @FXML private Button tableButton;
 
     /**
@@ -42,6 +41,7 @@ public class SettingsController extends ScreenController {
      */
     @FXML
     public void initialize() {
+        colorPicker.setValue(Color.web("#67AF76"));
         boolean isDark = getStateManager().getWindowManager().getThemeService().isDarkMode();
         darkModeToggle.setSelected(isDark);
         switchCircle.setTranslateX(isDark ? 24 : 2);
@@ -85,5 +85,6 @@ public class SettingsController extends ScreenController {
             onDarkModeToggle();
         }
         getStateManager().getWindowManager().getThemeService().setDefaultColor();
+        colorPicker.setValue(Color.web("#67AF76"));
     }
 }

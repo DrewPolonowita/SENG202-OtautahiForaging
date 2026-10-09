@@ -13,14 +13,12 @@ public interface TreeClientInterface {
 
     /**
      * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
-     *
      * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
     ApiResponseWrapper<TreeApiResponse> getTrees(String params, String outFields, int maxTuples);
 
     /**
      * Makes a request to the API and returns an {@link TreeApiResponse} with the JSON data
-     * TODO Update function name and usage
      * @return {@link TreeApiResponse} if the request is valid, otherwise returns a null
      */
     ApiResponseWrapper<TreeApiResponse> getTrees(

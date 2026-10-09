@@ -181,6 +181,12 @@
     -fx-padding: 0 12 0 12;
 }
 
+.guideline-help-text {
+    -fx-text-fill: -primary-color;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
 .help-box {
     -fx-background-color: -primary-bg-color;
 }

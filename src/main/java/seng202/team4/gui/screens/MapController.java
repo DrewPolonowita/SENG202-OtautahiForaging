@@ -130,7 +130,6 @@ public class MapController extends ScreenController {
         javaScriptBridge = new JavaScriptBridge(
                 this::handleAddJournalInput,
                 this::handleGoToRecipeInput,
-                tree -> { },
                 this::loadNutritionForTree,
                 this::mapMoved
         );
