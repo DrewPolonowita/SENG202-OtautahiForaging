@@ -1,6 +1,6 @@
 # Otautahi Foraging - Team 4
 
-A desktop JavaFX application on Windows, Linux and MacOS for discovering and locating forageable trees around the Christchurch region.
+A desktop JavaFX application on Linux for discovering and locating forageable trees around the Christchurch region.
 The application features an interactive map with map markers, personal journals, recipes
 for provided fruits and a data view table. This is to aid users in achieving their foraging
 needs.
@@ -24,12 +24,12 @@ to gather information and thus requires an internet connection.
 
 ## Features
 New features in final product version:
-- Journalling how much of a food you foraged, food nutrition values
+- **Journalling how much of a food you foraged, food nutrition values** This helps nutrition conscious users understand what the value of the food on a tree is.
 - Consistent filtering, select all deselect all
 - Foraging guidelines and ettiquette page
 - Help section
-- Map marker clustering
-- Major performance improvements when loading recipes
+- **Map marker clustering** This helps the map look less like noise, so users can find what they are looking for easier 
+- **Major performance improvements when loading recipes** This makes the user experience much better as they don't have to wait for 10+ seconds to load data
 - Quality of life improvements  
 
 
