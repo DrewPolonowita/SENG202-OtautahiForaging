@@ -23,6 +23,15 @@ to gather information and thus requires an internet connection.
 
 
 ## Features
+New features in final product version:
+- Journalling how much of a food you foraged, food nutrition values
+- Consistent filtering, select all deselect all
+- Foraging guidelines and ettiquette page
+- Help section
+- Map marker clustering
+- Major performance improvements when loading recipes
+- Quality of life improvements
+
 - **Map** - Browse forageable trees sourced from Christchurch City Council's ArcGIS Tree API,
 overlaid on an OpenStreetMap based Leaflet map.
 - **Journal** - Add a field note with an optional photo to any tree directly from its map popup,
