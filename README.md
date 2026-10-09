@@ -17,7 +17,7 @@ to gather information and thus requires an internet connection.
 - Bridget Candy
 
 ## Prerequisites
-- JDK >= 21
+- JDK >= 25
 - Gradle (wrapper included)
 - An internet connection
 
