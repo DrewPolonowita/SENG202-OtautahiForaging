@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.3" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team4.gui.screens.JournalController">
    <top>
       <StackPane BorderPane.alignment="CENTER">
          <children>
