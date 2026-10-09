@@ -66,6 +66,48 @@ public class AddNoteToJournalStepDefs {
 
     }
 
+    @Given("a note exists with description {string}")
+    public void aNoteExistsWithDescription(String description) throws DuplicateEntryException {
+
+        Note note = new Note(
+                0,
+                treeName,
+                null,
+                treeId,
+                description,
+                null,
+                0
+        );
+        int noteId = noteService.add(note);
+        testNote = new Note(
+                noteId,
+                treeName,
+                null,
+                treeId,
+                description,
+                null,
+                0
+        );
+    }
+
+    @When("the user updates the note description to {string}")
+    public void theUserUpdatesTheNoteDescription(String description) {
+        Note updatedNote = new Note(
+                testNote.getId(),
+                testNote.getName(),
+                testNote.getTimeCreated(),
+                testNote.getTreeId(),
+                description,
+                testNote.getImagePath(),
+                testNote.getWeightGrams()
+        );
+        noteService.update(updatedNote);
+    }
+
+    @When("the user deletes the note")
+    public void theUserDeletesTheNot() {
+        noteService.delete(testNote);
+    }
 
     @When("the user adds a photo")
     public void theUserAddsAPhoto() {
@@ -86,6 +128,12 @@ public class AddNoteToJournalStepDefs {
         );
 
         noteService.add(note);
+    }
+
+    @Then("the journal shouldn't have a note with description {string}")
+    public void theJournalShouldntHaveANoteWithDescription(String description) {
+        Note note = findNoteByDescription(description);
+        Assertions.assertNull(note);
     }
 
     @Then("the journal should have a note with description {string}")
