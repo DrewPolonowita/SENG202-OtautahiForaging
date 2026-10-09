@@ -10,8 +10,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Class to test the JavaScriptBridge callback functionality
+ */
 class JavaScriptBridgeTest {
 
+    /**
+     * Tests that the correct tree ID is passed to the journal callback
+     * when addTreeToJournal is called
+     */
     @Test
     void testAddTreeToJournal() {
         int testId = 45;
@@ -19,12 +26,15 @@ class JavaScriptBridgeTest {
         AddToJournalInterface journalCallback = receivedId::set;
         GoToRecipesInterface recipeCallback = foodname -> { };
 
-
         JavaScriptBridge testBridge = new JavaScriptBridge(journalCallback, recipeCallback, id->{}, null);
         testBridge.addTreeToJournal(testId);
         assertEquals(testId, receivedId.get());
     }
 
+    /**
+     * Tests that mapMoved forwards the correct map bounds, coordinates,
+     * and zoom level to the callback.
+     */
     @Test
     void testMapMoveValuesReachCallback() {
         double[] receivedValues = new double[7];

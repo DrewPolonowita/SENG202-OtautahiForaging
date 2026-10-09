@@ -7,7 +7,7 @@ import java.util.EnumSet;
 
 
 /**
- * Manger handles a shared filter state across the application screens
+ * Manager handles a shared filter state across the application screens
  * this includes the MapController, the TableViewController
  * and the RecipesController
  * @author Team 4

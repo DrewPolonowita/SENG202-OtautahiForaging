@@ -49,16 +49,12 @@ public class WindowManager {
 
     /**
      * Launches the application and creates a base border pane for the screens to be built with
-     * This method should eventually own its own FXML screen instead of constructing the element
-     *
      * @param primaryStage The JavaFX stage
      */
     public WindowManager(Stage primaryStage) {
         this.stage = primaryStage;
 
-        // Creates a GridPane and sets it as the primaryStage
         gridPane = new GridPane();
-        // Creates the BorderPane for the navBar and the mainScreen
         rootPane = new BorderPane();
         navPane = new BorderPane();
 
@@ -69,29 +65,39 @@ public class WindowManager {
         themeService = new ThemeService(stage.getScene(), gridPane);
     }
 
+    /**
+     * Sets up the applications dimensions, title, and icon
+     * Also sets fullscreen to true.
+     */
     private void configureStage() {
         stage.setResizable(true);
         stage.setScene(new Scene(gridPane));
-        // Scaling minimum sizes
         stage.setMinWidth(600);
         stage.setMinHeight(360);
         stage.setTitle("Ōtautahi Foraging");
         stage.setMaximized(true);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
-
     }
 
+    /**
+     * Applies the style classes to the applications scene.
+     */
     private void configureStyles() {
         Scene scene = stage.getScene();
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/css/icons.css").toExternalForm());
     }
 
+    /**
+     * Method to initially configure the layout of the windows
+     * Sets up the row and column constraints to stretch correctly
+     * for any window resolution.
+     * Adds the navBar and the root main screen to the primary stage
+     */
     private void configureLayout() {
-        // Places the navBar and the mainScreen into the primaryStage
         gridPane.add(navPane, 0, 0);
         gridPane.add(rootPane, 1, 0);
-        // Setup Row and Column constraints to stretch content correctly
+
         ColumnConstraints navigationColumn = new ColumnConstraints();
         RowConstraints navigationRow = new RowConstraints();
         navigationColumn.setHgrow(Priority.NEVER);
@@ -113,7 +119,6 @@ public class WindowManager {
 
     /**
      * Gets the ThemeService used to control dark mode and primary color.
-     *
      * @return the ThemeService instance for this window
      */
     public ThemeService getThemeService() {
@@ -122,7 +127,6 @@ public class WindowManager {
 
     /**
      * Launches the nav screen
-     *
      * @param stateManager the state manager for the application
      */
     public void launchNavScreen(StateManager stateManager) {
@@ -139,8 +143,8 @@ public class WindowManager {
     }
 
     /**
-     * Launches the map centred on the target tree, or at the default location if null.
-     *
+     * Overloads the launch map screen method
+     * with the map centred on the target tree, or at the default location if null.
      * @param stateManager the state manager for the application
      * @param targetTree the tree from the note.
      */
@@ -154,7 +158,6 @@ public class WindowManager {
 
     /**
      * Launches the journals screen
-     *
      * @param stateManager the state manager for the application
      */
     public void launchJournalScreen(StateManager stateManager) {
@@ -164,8 +167,8 @@ public class WindowManager {
 
     /**
      * Launches the recipes screen
-     *
      * @param stateManager the state manager for the application
+     * @param filterManager the global filter manager for the application
      */
     public void launchRecipesScreen(StateManager stateManager, FilterManager filterManager) {
         ScreenController controller = new RecipesController(stateManager, filterManager);
@@ -173,20 +176,20 @@ public class WindowManager {
     }
 
     /**
-     * Launches the recipe screen with initial foods loaded
-     *
+     * Overloads the launch recipe method, with initial foods loaded
      * @param stateManager the state manager for the application
+     * @param filterManager the global filter manager for the application
      * @param selectedFoods foods to be loaded on launch
      */
     public void launchRecipesScreen(StateManager stateManager, FilterManager filterManager, List<String> selectedFoods) {
         ScreenController controller = new RecipesController(stateManager, filterManager, selectedFoods);
         launchScreen(controller, rootPane);
-
         navController.setRecipeButton();
     }
 
     /**
      * Launches the table screen
+     * @param stateManager the provided state manager for the application
      */
     public void launchTableScreen(StateManager stateManager) {
         ScreenController controller = new TableViewController(stateManager);
@@ -194,7 +197,8 @@ public class WindowManager {
     }
 
     /**
-     * Launches the table screen
+     * Launches the settings screen
+     * @param stateManager the provided state manager for the application
      */
     public void launchSettingsScreen(StateManager stateManager) {
         ScreenController controller = new SettingsController(stateManager);
@@ -222,7 +226,6 @@ public class WindowManager {
         try {
             Parent setupParent = loadScreen(controller);
             pane.setCenter(setupParent);
-            //stage.setTitle(controller.getTitle());
         } catch (IOException e) {
             LOG.error(e);
         }
@@ -263,6 +266,7 @@ public class WindowManager {
 
     /**
      * Launches the guidelines for foraging pop up
+     * @param stateManager the provided state manager for the application
      */
     public void openGuidelines(StateManager stateManager) {
         try {
@@ -274,6 +278,7 @@ public class WindowManager {
 
     /**
      * Launches the help pop up
+     * @param stateManager the provided state manager for the application
      */
     public void openMapHelpPopup(StateManager stateManager) {
         try {
@@ -284,7 +289,8 @@ public class WindowManager {
     }
 
     /**
-     * Launches the help pop up
+     * Launches the help pop up for the journal screen
+     * @param stateManager the provided state manager for the application
      */
     public void openJournalHelpPopup(StateManager stateManager) {
         try {
@@ -295,7 +301,8 @@ public class WindowManager {
     }
 
     /**
-     * Launches the help pop up
+     * Launches the help pop up for the recipes screen
+     * @param stateManager the provided state manager for the application
      */
     public void openRecipeHelpPopup(StateManager stateManager) {
         try {
