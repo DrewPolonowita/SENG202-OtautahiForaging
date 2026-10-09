@@ -30,7 +30,7 @@
          </HBox>
          <Label styleClass="settings-text" text="Accent Colour" />
          <ColorPicker fx:id="colorPicker" onAction="#changeThemeColour" />
-         <Button mnemonicParsing="false" onAction="#resetThemes" styleClass="resetSetting" text="Reset To Default" />
+         <Button mnemonicParsing="false" onAction="#resetThemes" styleClass="resetSetting" text="Reset Theme" />
       </VBox>
    </center>
    <padding>
