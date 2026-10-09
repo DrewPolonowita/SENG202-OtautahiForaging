@@ -47,7 +47,7 @@ import java.util.Objects;
  */
 public class MapController extends ScreenController {
 
-    private static final double LOADER_TIMER = 1;
+    private static final double LOADER_TIMER = 0;
     private static final Logger LOG = LogManager.getLogger(MapController.class);
     private static final String ICON_SELECTED = "icon-selected";
     private static final String UPDATE_POPUP_MARKER = "updateMarkerPopup";
@@ -325,7 +325,6 @@ public class MapController extends ScreenController {
             if (!(ex instanceof java.util.concurrent.CancellationException)) {
                 javafx.application.Platform.runLater(() -> {
                     LOG.error("Error fetching trees for map view: " + ex);
-                    hideMapLoadingBar();
                 });
             }
             return null;
