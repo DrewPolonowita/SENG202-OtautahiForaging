@@ -32,13 +32,15 @@ and browse saved notes in a dedicated journal screen.
 - **Table** - View the tree data as a table.
 
 ## Running the app
+Find the PDF User Manual for more details about how to the app
 To run the application through Gradle:
 Include .env file found on Mattermost in Team 4 Teaching comms in the root directory.
 
 Example .env:
+```bash
 CONSUMER_SECRET=consumer_secret_key
 CONSUMER_KEY=consumer_key
-
+```
 ```bash
 ./gradlew run
 ```
