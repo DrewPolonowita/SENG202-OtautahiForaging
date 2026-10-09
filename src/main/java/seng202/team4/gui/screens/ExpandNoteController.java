@@ -3,6 +3,8 @@ package seng202.team4.gui.screens;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -113,13 +115,31 @@ public class ExpandNoteController extends ScreenController {
     }
 
     /**
-     * Deletes note and refreshes screen
+     * Checks the delete alert
+     * Closes dialogue on CANCEL
+     * Deletes note and refreshes journal on OK
      */
     @FXML
     private void handleDelete() {
+        if (!deleteAlert()) {
+            return;
+        }
         getStateManager().getNoteService().delete(note);
         handleClose();
         journalController.refreshNotes();
+    }
+
+    /**
+     * Creates an alert warning the user if they try to delete a note
+     * @return true if the user confirms deletion
+     */
+    private boolean deleteAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Your note will be deleted",
+                ButtonType.CANCEL, ButtonType.OK);
+        alert.initOwner(nameLabel.getScene().getWindow());
+        alert.setTitle("Deleting note");
+        alert.setHeaderText("Are you sure you want to delete this note?");
+        return alert.showAndWait().filter(button -> button == ButtonType.OK).isPresent();
     }
 
     /**
