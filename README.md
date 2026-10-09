@@ -31,6 +31,7 @@ New features in final product version:
 - Map marker clustering
 - Major performance improvements when loading recipes
 - Quality of life improvements
+Feature overview
 
 - **Map** - Browse forageable trees sourced from Christchurch City Council's ArcGIS Tree API,
 overlaid on an OpenStreetMap based Leaflet map.
