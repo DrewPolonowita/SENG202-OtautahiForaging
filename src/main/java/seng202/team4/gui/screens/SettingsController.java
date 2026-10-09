@@ -6,13 +6,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import seng202.team4.gui.ScreenController;
+import seng202.team4.gui.ThemeService;
+import seng202.team4.gui.utilities.CssUtilities;
 import seng202.team4.services.StateManager;
-import javafx.scene.paint.Color;
-
-import java.awt.*;
 
 
 /**
@@ -44,11 +44,13 @@ public class SettingsController extends ScreenController {
      */
     @FXML
     public void initialize() {
-        colorPicker.setValue(getStateManager().getWindowManager().getThemeService().getPrimaryColor());
-        boolean isDark = getStateManager().getWindowManager().getThemeService().isDarkMode();
+        ThemeService theme = getStateManager().getWindowManager().getThemeService();
+        colorPicker.setValue(theme.getPrimaryColor());
+        boolean isDark = theme.isDarkMode();
         darkModeToggle.setSelected(isDark);
         switchCircle.setTranslateX(isDark ? 24 : 2);
     }
+
 
     public String getFxmlFile() {
         return "/fxml/settings_screen.fxml";
@@ -68,6 +70,7 @@ public class SettingsController extends ScreenController {
         slide.setToX(isDark ? 24 : 2);
         slide.play();
         getStateManager().getWindowManager().getThemeService().setDarkMode(isDark);
+        saveTheme();
     }
 
     /**
@@ -76,6 +79,7 @@ public class SettingsController extends ScreenController {
     @FXML
     public void changeThemeColour() {
         getStateManager().getWindowManager().getThemeService().setPrimaryColor(colorPicker.getValue());
+        saveTheme();
     }
 
     /**
@@ -89,5 +93,14 @@ public class SettingsController extends ScreenController {
         }
         getStateManager().getWindowManager().getThemeService().setDefaultColor();
         colorPicker.setValue(Color.web(DEFAULT_ACCENT));
+        saveTheme();
+    }
+
+    /**
+     * Saves the current theme (primary colour and dark mode) to the database
+     */
+    private void saveTheme() {
+        ThemeService theme = getStateManager().getWindowManager().getThemeService();
+        getStateManager().getThemeRepository().save(CssUtilities.toHex(theme.getPrimaryColor()), theme.isDarkMode());
     }
 }
