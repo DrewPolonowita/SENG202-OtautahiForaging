@@ -15,7 +15,8 @@ public final class CssUtilities {
     }
 
     /**
-     * Convers string to text
+     * Converts string to text
+     * @param color the color chosen
      */
     public static String toHex(Color color) {
         return String.format("#%02x%02x%02x",
@@ -25,7 +26,8 @@ public final class CssUtilities {
     }
 
     /**
-     * Used to refreash Scenes stylesheets
+     * Used to refresh Scenes stylesheets
+     * @param scene the current scene
      */
     public static void refreshStylesheets(Scene scene) {
         var stylesheets = scene.getStylesheets();

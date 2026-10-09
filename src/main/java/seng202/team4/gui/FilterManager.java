@@ -38,8 +38,10 @@ public class FilterManager {
     public void deselectAllFilters() {
         possibleFilters.clear();
     }
+
     /**
      * Toggles the selection state of a filter to change it accordingly
+     * @param filterCategory the filter selected
      */
     public void toggleFilters(FilterCategory filterCategory) {
         if (!possibleFilters.remove(filterCategory)) {
@@ -48,8 +50,8 @@ public class FilterManager {
     }
 
     /**
-     * returns selected filters from the FilterCategory
-     * @param filterCategory
+     * Returns selected filters from the FilterCategory
+     * @param filterCategory the filter selected
      *
      */
     public boolean isSelected(FilterCategory filterCategory) {
@@ -57,8 +59,8 @@ public class FilterManager {
     }
 
     /**
-     * adds one filter to selection
-     * @param filterCategory filter selected
+     * Adds one specified filter to selection
+     * @param filterCategory the filter selected
      */
     public void selectFilter(FilterCategory filterCategory) {
         possibleFilters.add(filterCategory);

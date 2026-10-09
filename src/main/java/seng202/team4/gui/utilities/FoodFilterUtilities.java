@@ -5,17 +5,23 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import seng202.team4.models.FilterCategory;
 
+/**
+ * Class to provide utilities for the food filters
+ */
 public class FoodFilterUtilities {
     private static final String SIDEBAR_BUTTON = "sideBar-button";
     private static final String SIDEBAR_BUTTON_SELECTED = "filter-buttons-selected";
     private static final String ICON = "icon";
     private static final String ICON_SELECTED = "icon-selected";
 
-    private FoodFilterUtilities() {
-    }
+    /**
+     * Empty constructor to hide the implicit public one
+     */
+    private FoodFilterUtilities() {}
 
     /**
      * For each filter category in the enum FilterCategory, a filter button is created
+     * @param filterCategory the specific filter for each food
      */
     public static Button createFilterButton(FilterCategory filterCategory) {
 
@@ -37,6 +43,7 @@ public class FoodFilterUtilities {
 
     /**
      * Toggles styling of the food filter buttons on the Map screen
+     * @param button for the filters
      */
     public static void toggleButtonStyle(Button button) {
         if (isSelected(button)) {
@@ -50,6 +57,7 @@ public class FoodFilterUtilities {
 
     /**
      * Returns true or false based off of the buttons styling
+     * @param button for the filters
      */
     public static boolean isSelected(Button button) {
         return button.getStyleClass().contains(SIDEBAR_BUTTON_SELECTED);
