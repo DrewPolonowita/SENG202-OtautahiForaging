@@ -187,7 +187,7 @@
                <children>
                   <HBox maxWidth="600.0" prefWidth="600.0">
                      <children>
-                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Journals are made through the map page by clicking on a marker and then using the add to journal button. Saved notes are stored here. To have the option to view, edit, delete a note or view the associated tree on the map, click on the relevant note. Notes can be filtered using the sort by button at the top left." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Journals are made through the map page by clicking on a marker and then using the add to journal button. Saved notes are stored here. To have the option to view, edit, delete a note or view the associated tree on the map, click on the relevant note. Notes can be filtered using the sort by button at the top left." textAlignment="CENTER" wrapText="true" />
                      </children>
                   </HBox>
                </children>
@@ -200,7 +200,7 @@
                <children>
                   <HBox maxWidth="600.0" prefWidth="600.0">
                      <children>
-                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and it's associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." wrapText="true" />
+                        <Label alignment="TOP_LEFT" lineSpacing="1.0" maxWidth="590.0" minHeight="-Infinity" prefWidth="600.0" styleClass="help-text" text="Select a food from the filter to get relevant recipes. Click on a recipe card for the recipe and its associated nutritional information. Filters selected on the map page will automatically appear on the recipe page and vice versa, so you can easily forage with a goal in mind." textAlignment="CENTER" wrapText="true" />
                      </children>
                   </HBox>
                </children>
