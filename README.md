@@ -23,22 +23,48 @@ to gather information and thus requires an internet connection.
 
 
 ## Features
+New features in final product version:
+- Journalling how much of a food you foraged, food nutrition values
+- Consistent filtering, select all deselect all
+- Foraging guidelines and ettiquette page
+- Help section
+- Map marker clustering
+- Major performance improvements when loading recipes
+- Quality of life improvements  
+
+
+Feature overview
+
 - **Map** - Browse forageable trees sourced from Christchurch City Council's ArcGIS Tree API,
 overlaid on an OpenStreetMap based Leaflet map.
 - **Journal** - Add a field note with an optional photo to any tree directly from its map popup,
 and browse saved notes in a dedicated journal screen.
 - **Recipes** - Browse recipes sourced from the FatSecret API.
 - **Settings** - Toggle dark mode, change the app's accent colour.
-- **Table** - View the tree data as a table.
+- **Table** - View the tree data as a table.  
+
+Features not implemented
+
+- Adding and deleting user discovered trees
+    - We judged this as being of lower importance to making the existing markers give the users more value. Would involve updating the database schema to differentiate between api trees and user generated trees and it would involve designing the interface for what details we allow them to include.  
+- Adding a note to a recipe
+    - We decided to focus on adding notes to trees in our time, because it provides more to our stakeholders who focus more on the foraging aspect of our app. Would require updating the database schema to allow notes to work for both trees and recipe, and it would require new UI design.
+- Persistent storage of the users theme Settings
+    - It wasn't worth the implementation time for a minor quality of life improvement. It would require integrating into our database system and new testing. 
+
+
+
 
 ## Running the app
+Find the PDF User Manual for more details about how to the app
 To run the application through Gradle:
 Include .env file found on Mattermost in Team 4 Teaching comms in the root directory.
 
 Example .env:
+```bash
 CONSUMER_SECRET=consumer_secret_key
 CONSUMER_KEY=consumer_key
-
+```
 ```bash
 ./gradlew run
 ```
