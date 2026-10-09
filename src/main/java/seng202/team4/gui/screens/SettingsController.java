@@ -44,7 +44,7 @@ public class SettingsController extends ScreenController {
      */
     @FXML
     public void initialize() {
-        colorPicker.setValue(Color.web(DEFAULT_ACCENT));
+        colorPicker.setValue(getStateManager().getWindowManager().getThemeService().getPrimaryColor());
         boolean isDark = getStateManager().getWindowManager().getThemeService().isDarkMode();
         darkModeToggle.setSelected(isDark);
         switchCircle.setTranslateX(isDark ? 24 : 2);

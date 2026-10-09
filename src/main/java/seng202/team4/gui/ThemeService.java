@@ -132,4 +132,12 @@ public class ThemeService {
     public void setDefaultColor() {
         setPrimaryColor(Color.web(STARTINGPRIMARY));
     }
+
+    /**
+     * Getter for the primary app colour
+     * @return the colour
+     */
+    public Color getPrimaryColor() {
+        return primaryColor;
+    }
 }
